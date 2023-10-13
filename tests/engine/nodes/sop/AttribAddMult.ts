@@ -1,5 +1,9 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import type {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import type {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+
+const _points:CorePoint<CoreObjectType>[]=[]
+
 export function testenginenodessopAttribAddMult(qUnit: QUnit) {
 	qUnit.test('sop/attribAddMult simple', async (assert) => {
 		const geo1 = window.geo1;
@@ -18,12 +22,12 @@ export function testenginenodessopAttribAddMult(qUnit: QUnit) {
 		let container, core_group, values;
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
-		values = core_group.points().map((p: BaseCorePoint) => p.attribValue('test'));
+		values = core_group.points(_points).map((p: BaseCorePoint) => p.attribValue('test'));
 		assert.deepEqual(values, [0, 1, 2, 3]);
 
 		container = await attrib_add_mult1.compute();
 		core_group = container.coreContent()!;
-		values = core_group.points().map((p: BaseCorePoint) => p.attribValue('test'));
+		values = core_group.points(_points).map((p: BaseCorePoint) => p.attribValue('test'));
 		assert.deepEqual(values, [0, 0.5, 1, 1.5]);
 	});
 }

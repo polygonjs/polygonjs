@@ -13,6 +13,14 @@ import {CoreMath} from '../../../core/math/_Module';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
 import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreType} from '../../../core/Type';
+import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {AttribType} from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 export enum NoiseOperation {
 	ADD = 'add',
@@ -35,13 +43,18 @@ interface FbmParams {
 	freqIncrease: number;
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
-import {CoreType} from '../../../core/Type';
-import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {AttribType} from '../../../core/geometry/Constant';
-import {SopType} from '../../poly/registers/nodes/types/Sop';
+const position = new Vector3();
+const normal = new Vector3();
+const _destPoints: CorePoint<CoreObjectType>[] = [];
+const _restPos = new Vector3();
+const _restValue2 = new Vector2();
+const _restValue4 = new Vector4();
+const _noiseValueV = new Vector3();
+let _currentAttribValueF = 0;
+const _currentAttribValueV2 = new Vector2();
+const _currentAttribValueV3 = new Vector3();
+const _currentAttribValueV4 = new Vector4();
+
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
@@ -93,9 +106,6 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new NoiseSopParamsConfig();
 
-const position = new Vector3();
-const normal = new Vector3();
-
 export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -103,14 +113,6 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	}
 
 	private _simplexBySeed: Map<number, SimplexNoise> = new Map();
-	private _restPos = new Vector3();
-	private _restValue2 = new Vector2();
-	private _restValue4 = new Vector4();
-	private _noiseValueV = new Vector3();
-	private _currentAttribValueF = 0;
-	private _currentAttribValueV2 = new Vector2();
-	private _currentAttribValueV3 = new Vector3();
-	private _currentAttribValueV4 = new Vector4();
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
@@ -121,9 +123,9 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		this.p.operation.set(OPERATIONS.indexOf(operation));
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const coreGroup = input_contents[0];
-		const destPoints = coreGroup.points();
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		coreGroup.points(_destPoints);
 		const destAttribName = this.pv.attribName;
 
 		if (!coreGroup.hasPointAttrib(destAttribName)) {
@@ -140,7 +142,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 		const targetAttribSize = coreGroup.pointAttribSize(this.pv.attribName);
 
-		const firstPt = destPoints[0];
+		const firstPt = _destPoints[0];
 		if (!firstPt) {
 			this.setCoreGroup(coreGroup);
 			return;
@@ -161,19 +163,19 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		try {
 			switch (targetAttribSize) {
 				case 1: {
-					this._cookForFloat(destPoints, fbmParams);
+					this._cookForFloat(_destPoints, fbmParams);
 					break;
 				}
 				case 2: {
-					this._cookForV2(destPoints, fbmParams);
+					this._cookForV2(_destPoints, fbmParams);
 					break;
 				}
 				case 3: {
-					this._cookForV3(destPoints, fbmParams);
+					this._cookForV3(_destPoints, fbmParams);
 					break;
 				}
 				case 4: {
-					this._cookForV4(destPoints, fbmParams);
+					this._cookForV4(_destPoints, fbmParams);
 					break;
 				}
 			}
@@ -210,13 +212,13 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				if (useNormals) {
 					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
-				this._currentAttribValueF = position.x;
+				_currentAttribValueF = position.x;
 			} else {
 				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				this._currentAttribValueF = destPoint.attribValueNumber(attribName);
+				_currentAttribValueF = destPoint.attribValueNumber(attribName);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -224,11 +226,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			const noiseResult = this._noiseValue(useNormals, simplex, amplitude, fbmParams, position, normal);
 			const noiseValue = noiseResult.x; //this._makeNoiseValueCorrectSize(noiseResult, targetAttribSize);
 
-			const newAttribValueF = NoiseSopNode._newAttribValueFromFloat(
-				operation,
-				this._currentAttribValueF,
-				noiseValue
-			);
+			const newAttribValueF = NoiseSopNode._newAttribValueFromFloat(operation, _currentAttribValueF, noiseValue);
 			destPoint.setAttribValueFromNumber(attribName, newAttribValueF);
 		}
 	}
@@ -246,24 +244,24 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				if (useNormals) {
 					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
-				this._currentAttribValueV2.set(position.x, position.y);
+				_currentAttribValueV2.set(position.x, position.y);
 			} else {
 				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValueVector2(attribName, this._currentAttribValueV2);
+				destPoint.attribValueVector2(attribName, _currentAttribValueV2);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
 
 			const noiseResult = this._noiseValue(useNormals, simplex, amplitude, fbmParams, position, normal);
-			this._restValue2.set(noiseResult.x, noiseResult.y);
-			const noiseValue = this._restValue2;
+			_restValue2.set(noiseResult.x, noiseResult.y);
+			const noiseValue = _restValue2;
 
 			const newAttribValueV = NoiseSopNode._newAttribValueFromVector2(
 				operation,
-				this._currentAttribValueV2,
+				_currentAttribValueV2,
 				noiseValue
 			);
 			destPoint.setAttribValueFromVector2(attribName, newAttribValueV);
@@ -283,13 +281,13 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				if (useNormals) {
 					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
-				this._currentAttribValueV3.copy(position);
+				_currentAttribValueV3.copy(position);
 			} else {
 				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValueVector3(attribName, this._currentAttribValueV3);
+				destPoint.attribValueVector3(attribName, _currentAttribValueV3);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -299,7 +297,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 			const newAttribValueV = NoiseSopNode._newAttribValueFromVector3(
 				operation,
-				this._currentAttribValueV3,
+				_currentAttribValueV3,
 				noiseValue
 			);
 			destPoint.setAttribValueFromVector3(attribName, newAttribValueV);
@@ -319,24 +317,24 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				if (useNormals) {
 					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
-				this._currentAttribValueV4.set(position.x, position.y, position.z, 0);
+				_currentAttribValueV4.set(position.x, position.y, position.z, 0);
 			} else {
 				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValueVector4(attribName, this._currentAttribValueV4);
+				destPoint.attribValueVector4(attribName, _currentAttribValueV4);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
 
 			const noiseResult = this._noiseValue(useNormals, simplex, amplitude, fbmParams, position, normal);
-			this._restValue4.set(noiseResult.x, noiseResult.y, noiseResult.z, 0);
-			const noiseValue = this._restValue4; //this._makeNoiseValueCorrectSize(noiseResult, targetAttribSize);
+			_restValue4.set(noiseResult.x, noiseResult.y, noiseResult.z, 0);
+			const noiseValue = _restValue4; //this._makeNoiseValueCorrectSize(noiseResult, targetAttribSize);
 
 			const newAttribValueV = NoiseSopNode._newAttribValueFromVector4(
 				operation,
-				this._currentAttribValueV4,
+				_currentAttribValueV4,
 				noiseValue
 			);
 			destPoint.setAttribValueFromVector4(attribName, newAttribValueV);
@@ -351,40 +349,19 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		position: Vector3,
 		normal?: Vector3
 	) {
-		this._restPos.copy(position).add(this.pv.offset).multiply(this.pv.freq);
+		_restPos.copy(position).add(this.pv.offset).multiply(this.pv.freq);
 		// const pos = rest_point.position(this._rest_pos)
 		if (useNormals && normal) {
-			const noise = amplitude * this._fbm(simplex, fmbParams, this._restPos.x, this._restPos.y, this._restPos.z);
-			this._noiseValueV.copy(normal);
-			return this._noiseValueV.multiplyScalar(noise);
+			const noise = amplitude * this._fbm(simplex, fmbParams, _restPos.x, _restPos.y, _restPos.z);
+			_noiseValueV.copy(normal);
+			return _noiseValueV.multiplyScalar(noise);
 		} else {
-			this._noiseValueV.set(
-				amplitude *
-					this._fbm(
-						simplex,
-						fmbParams,
-						this._restPos.x + 545,
-						this._restPos.y + 125454,
-						this._restPos.z + 2142
-					),
-				amplitude *
-					this._fbm(
-						simplex,
-						fmbParams,
-						this._restPos.x - 425,
-						this._restPos.y - 25746,
-						this._restPos.z + 95242
-					),
-				amplitude *
-					this._fbm(
-						simplex,
-						fmbParams,
-						this._restPos.x + 765132,
-						this._restPos.y + 21,
-						this._restPos.z - 9245
-					)
+			_noiseValueV.set(
+				amplitude * this._fbm(simplex, fmbParams, _restPos.x + 545, _restPos.y + 125454, _restPos.z + 2142),
+				amplitude * this._fbm(simplex, fmbParams, _restPos.x - 425, _restPos.y - 25746, _restPos.z + 95242),
+				amplitude * this._fbm(simplex, fmbParams, _restPos.x + 765132, _restPos.y + 21, _restPos.z - 9245)
 			);
-			return this._noiseValueV;
+			return _noiseValueV;
 		}
 	}
 

@@ -9,7 +9,7 @@ import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute} from 'three';
 import {Mesh} from 'three';
@@ -25,6 +25,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
 	updateX = ParamConfig.BOOLEAN(0);
@@ -107,7 +108,8 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = pointsFromObject(object);
+		const points: CorePoint<CoreObjectType>[] = [];
+		pointsFromObject(object, points);
 
 		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array as number[];
 

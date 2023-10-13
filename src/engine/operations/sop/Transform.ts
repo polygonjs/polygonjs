@@ -25,6 +25,7 @@ import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObjectFromGroup} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 
 // const _t = new Vector3();
 const _r = new Vector3();
@@ -48,7 +49,7 @@ interface TransformSopParams extends DefaultOperationParams {
 	scale: number;
 	pivot: Vector3;
 }
-
+const _points: CorePoint<CoreObjectType>[] = [];
 export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
@@ -129,8 +130,8 @@ export class TransformSopOperation extends BaseSopOperation {
 			// });
 		} else {
 			// const coreGroup = CoreGroup._fromObjects(objects);
-			const points = pointsFromObjectFromGroup(object, pointGroup);
-			for (let point of points) {
+			pointsFromObjectFromGroup(object, pointGroup, _points);
+			for (const point of _points) {
 				const position = point.position(_pointPos).sub(params.pivot);
 				position.applyMatrix4(matrix);
 				point.setPosition(position.add(params.pivot));

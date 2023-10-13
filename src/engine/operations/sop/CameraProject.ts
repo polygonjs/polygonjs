@@ -4,7 +4,10 @@ import {Camera, OrthographicCamera, PerspectiveCamera, Vector3} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
 
+const _points:CorePoint<CoreObjectType>[]=[]
 interface CameraProjectSopParams extends DefaultOperationParams {
 	project: boolean;
 }
@@ -46,9 +49,9 @@ export class CameraProjectSopOperation extends BaseSopOperation {
 			(cameraObject as PerspectiveCamera).updateProjectionMatrix();
 		}
 
-		const points = inputCoreGroup.points();
+		inputCoreGroup.points(_points);
 		const project = isBooleanTrue(params.project);
-		for (let point of points) {
+		for (const point of _points) {
 			point.position(this._pointPosition);
 			if (project) {
 				this._pointPosition.project(cameraObject);

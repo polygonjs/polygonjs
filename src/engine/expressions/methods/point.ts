@@ -19,8 +19,11 @@ import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 
 const EXPECTED_ARGS_COUNT = 3;
+const _pointsSrc: CorePoint<CoreObjectType>[] = [];
 export class PointExpression extends BaseMethod {
 	static override requiredArguments() {
 		return [
@@ -58,9 +61,10 @@ export class PointExpression extends BaseMethod {
 	}
 
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
-		const core_group = container.coreContent();
-		if (core_group) {
-			const point = core_group.points()[point_index];
+		const coreGroup = container.coreContent();
+		if (coreGroup) {
+			coreGroup.points(_pointsSrc);
+			const point = _pointsSrc[point_index];
 
 			if (point) {
 				return point.attribValue(attrib_name);

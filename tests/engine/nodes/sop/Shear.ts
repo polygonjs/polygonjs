@@ -3,12 +3,15 @@ import {pointsFromObject} from '../../../../src/core/geometry/entities/point/Cor
 import {GeometryContainer} from '../../../../src/engine/containers/Geometry';
 import {ShearMode} from '../../../../src/engine/operations/sop/Shear';
 import {Vector3} from 'three';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
 export function testenginenodessopShear(qUnit: QUnit) {
 	const _position = new Vector3();
 	function getMinMaxPointYPos(container: GeometryContainer) {
 		const object = container.coreContent()!.threejsObjectsWithGeo()[0];
 		object.geometry.computeBoundingBox();
-		const points = pointsFromObject(object);
+		const points:CorePoint<CoreObjectType>[]=[]
+		pointsFromObject(object, points);
 		const posYs = points
 			.map((point) => {
 				point.position(_position);

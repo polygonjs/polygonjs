@@ -11,7 +11,8 @@ import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
 import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
 import {BaseObject3DLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
-import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 // import { Constructor } from 'vue/types/options';
 
 // interface FileMultSopNodeParamConfigOptions {
@@ -25,6 +26,7 @@ import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoi
 // 	defaultUrlExpression: string;
 // 	createLoader: (url: string, node: BaseNodeType) => BaseGeoLoaderHandler<O>;
 // }
+const _points: CorePoint<CoreObjectType>[] = [];
 
 class BaseFileMultiParamsConfigResult extends NodeParamsConfig {
 	url = ParamConfig.STRING('');
@@ -82,7 +84,7 @@ export abstract class BaseFileMultiSopNode<
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const points = inputCoreGroup.points();
+		inputCoreGroup.points(_points);
 		// const urls: string[] = new Array(points.length);
 		const urls: string[] = [];
 		const urlByIndex: Map<number, string> = new Map();
@@ -104,9 +106,9 @@ export abstract class BaseFileMultiSopNode<
 				}
 			};
 			if (param.expressionController.entitiesDependent()) {
-				await param.expressionController.computeExpressionForPoints(points, _applyUrlToPoint);
+				await param.expressionController.computeExpressionForPoints(_points, _applyUrlToPoint);
 			} else {
-				for (const point of points) {
+				for (const point of _points) {
 					_applyUrlToPoint(point, param.value);
 				}
 			}
@@ -125,7 +127,7 @@ export abstract class BaseFileMultiSopNode<
 		await Promise.all(promises);
 		// move each loaded result and transform it according to its template point
 		this._instancer.setCoreGroup(inputCoreGroup);
-		for (const point of points) {
+		for (const point of _points) {
 			const index = point.index();
 			const url = urlByIndex.get(index) || this.pv.url;
 

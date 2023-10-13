@@ -1,5 +1,10 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3} from 'three';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 const _p = new Vector3();
 
 export function testenginenodessopCurveGetPoint(qUnit: QUnit) {
@@ -31,7 +36,7 @@ export function testenginenodessopCurveGetPoint(qUnit: QUnit) {
 		let container = await curveGetPoint1.compute();
 		let coreGroup = container.coreContent()!;
 		assert.equal(coreGroup.pointsCount(), 1);
-		let point = coreGroup.points()[0];
+		let point = coreGroup.points(_points)[0];
 		point.position(_p);
 		assert.in_delta(_p.x, 0, 0.1);
 		assert.in_delta(_p.y, 0, 0.1);
@@ -41,7 +46,7 @@ export function testenginenodessopCurveGetPoint(qUnit: QUnit) {
 		container = await curveGetPoint1.compute();
 		coreGroup = container.coreContent()!;
 		assert.equal(coreGroup.pointsCount(), 1);
-		point = coreGroup.points()[0];
+		point = coreGroup.points(_points)[0];
 		point.position(_p);
 		assert.in_delta(_p.x, 9.125, 0.1);
 		assert.in_delta(_p.y, 16.125, 0.1);

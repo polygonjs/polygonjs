@@ -2,9 +2,13 @@ import {Vector2, BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
 import {arrayChunk, arrayIntersection} from '../../ArrayUtils';
 import {pointsFromObject} from '../entities/point/CorePointUtils';
 import {ThreejsPoint} from '../modules/three/ThreejsPoint';
+import {CorePoint} from '../entities/point/CorePoint';
+import {CoreObjectType} from '../ObjectContent';
 
 const dummyMeshSmallest = new Mesh();
 const dummyMeshLargest = new Mesh();
+const _smallestPoints: CorePoint<CoreObjectType>[] = [];
+const _largestPoints: CorePoint<CoreObjectType>[] = [];
 
 function segments(geometry: BufferGeometry) {
 	const index: Array<number> = (geometry.index?.array || []) as Array<number>;
@@ -36,13 +40,13 @@ export class CoreGeometryOperationSkin {
 		const smallest_segments = segments(smallest_geometry);
 		const largest_segments = segments(largest_geometry);
 
-		const smallest_points = pointsFromObject(dummyMeshSmallest);
-		const largest_points = pointsFromObject(dummyMeshLargest);
+		pointsFromObject(dummyMeshSmallest, _smallestPoints);
+		pointsFromObject(dummyMeshLargest, _largestPoints);
 		const smallestGeometryAttribNames = ThreejsPoint.attributeNames(dummyMeshSmallest);
 		const largestGeometryAttribNames = ThreejsPoint.attributeNames(dummyMeshLargest);
-		const smallest_points_count = smallest_points.length;
+		const smallest_points_count = _smallestPoints.length;
 		// const largest_points_count = largest_points.length;
-		const all_points = smallest_points.concat(largest_points);
+		const all_points = _smallestPoints.concat(_largestPoints);
 
 		// const half_faces_count = smallest_segments.length;
 		const points_indices: number[] = [];

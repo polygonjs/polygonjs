@@ -249,7 +249,7 @@ export function testenginenodessopWFCSolver(qUnit: QUnit) {
 		async function compute() {
 			const container = await WFCBuilder1.compute();
 			const objects = container.coreContent()?.allObjects();
-			const objectNames = objects?.map((o: ObjectContent<CoreObjectType>) => o.name);
+			const objectNames = objects ? objects![0].children?.map((o: ObjectContent<CoreObjectType>) => o.name) : [];
 			return {objectNames};
 		}
 		await compute();

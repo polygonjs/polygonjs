@@ -1,5 +1,9 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 export function testengineexpressionsmethodsopname(qUnit: QUnit) {
 	qUnit.test('expression opname works', async (assert) => {
 		const geo1 = window.geo1;
@@ -14,7 +18,7 @@ export function testengineexpressionsmethodsopname(qUnit: QUnit) {
 		assert.deepEqual(
 			container
 				.coreContent()!
-				.points()
+				.points(_points)
 				.map((p: BaseCorePoint) => p.attribValue('geo1')),
 			[1, 1]
 		);
@@ -24,7 +28,7 @@ export function testengineexpressionsmethodsopname(qUnit: QUnit) {
 		assert.deepEqual(
 			container
 				.coreContent()!
-				.points()
+				.points(_points)
 				.map((p: BaseCorePoint) => p.attribValue('myGeo')),
 			[1, 1]
 		);

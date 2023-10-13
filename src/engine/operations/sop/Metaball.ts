@@ -9,6 +9,8 @@ import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface MetaballSopParams extends DefaultOperationParams {
 	resolution: number;
@@ -21,6 +23,7 @@ interface MetaballSopParams extends DefaultOperationParams {
 	enableColors: boolean;
 }
 const pos = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 export class MetaballSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MetaballSopParams = {
 		resolution: 40,
@@ -58,8 +61,8 @@ export class MetaballSopOperation extends BaseSopOperation {
 		);
 		metaballs.isolation = params.isolation;
 
-		const points = inputCoreGroup.points();
-		for (let point of points) {
+		inputCoreGroup.points(_points);
+		for (const point of _points) {
 			point.position(pos);
 			pos.multiplyScalar(0.5).addScalar(0.5);
 

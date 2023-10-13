@@ -19,6 +19,9 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+
+const _points: CorePoint<CoreObjectType>[] = [];
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to remap */
 	name = ParamConfig.STRING();
@@ -51,8 +54,8 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 	}
 
 	private _remapAttribute<T extends CoreObjectType>(object: ObjectContent<T>) {
-		const points = pointsFromObject(object);
-		if (points.length === 0) {
+		pointsFromObject(object, _points);
+		if (_points.length === 0) {
 			return;
 		}
 		if (this.pv.name === '') {
@@ -61,10 +64,10 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		const corePointClass = corePointClassFactory(object);
 
 		const attribSize = corePointClass.attribSize(object, this.pv.name);
-		const values = points.map((point) => point.attribValue(this.pv.name));
+		const values = _points.map((point) => point.attribValue(this.pv.name));
 		// let min: NumericAttribValue, max: NumericAttribValue;
-		let remaped_values: NumericAttribValue[] = new Array(points.length);
-		this._get_remaped_values(attribSize, values, remaped_values);
+		const remapedValues: NumericAttribValue[] = new Array(_points.length);
+		this._get_remaped_values(attribSize, values, remapedValues);
 
 		let targetName = this.pv.name;
 		if (isBooleanTrue(this.pv.changeName)) {
@@ -75,9 +78,8 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		}
 
 		let i = 0;
-		for (const normalized_value of remaped_values) {
-			const point = points[i];
-			point.setAttribValue(targetName, normalized_value);
+		for (const normalized_value of remapedValues) {
+			_points[i].setAttribValue(targetName, normalized_value);
 			i++;
 		}
 	}

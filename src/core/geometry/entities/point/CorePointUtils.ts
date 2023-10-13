@@ -1,19 +1,40 @@
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {arrayCompact} from '../../../ArrayUtils';
+import {arrayCompact, arrayPushItems} from '../../../ArrayUtils';
 import {CoreString} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {corePointClassFactory, corePointInstanceFactory} from '../../CoreObjectFactory';
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import type {CorePoint} from './CorePoint';
+import type {BaseCoreObject} from '../object/BaseCoreObject';
 
 const _indices: number[] = [];
+const _tmpPoints: CorePoint<CoreObjectType>[] = [];
 
-export function points(coreGroup: CoreGroup) {
-	return coreGroup
-		.allCoreObjects()
-		.map((o) => pointsFromObject(o.object()))
-		.flat();
+export function pointsFromCoreGroup<T extends CoreObjectType>(coreGroup: CoreGroup, target: CorePoint<T>[]) {
+	return pointsFromObjects(coreGroup.allObjects(), target);
+}
+export function pointsFromCoreObjects<T extends CoreObjectType>(
+	coreObjects: BaseCoreObject<CoreObjectType>[],
+	target: CorePoint<T>[]
+) {
+	target.length = 0;
+	for (const coreObject of coreObjects) {
+		pointsFromObject(coreObject.object(), _tmpPoints);
+		arrayPushItems(_tmpPoints, target);
+	}
+	return target;
+}
+export function pointsFromObjects<T extends CoreObjectType>(
+	objects: ObjectContent<CoreObjectType>[],
+	target: CorePoint<T>[]
+) {
+	target.length = 0;
+	for (const object of objects) {
+		pointsFromObject(object, _tmpPoints);
+		arrayPushItems(_tmpPoints, target);
+	}
+	return target;
 }
 export function pointsAttribNamesFromCoreGroup(coreGroup: CoreGroup): string[] {
 	const firstObject = coreGroup.allObjects()[0];
@@ -44,30 +65,37 @@ export function pointsCountFromObject<T extends CoreObjectType>(object: ObjectCo
 	const pointClass = corePointClassFactory(object);
 	return pointClass.entitiesCount(object);
 }
-export function pointsFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CorePoint<T>[] {
+export function pointsFromObject<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	target: CorePoint<T>[]
+): CorePoint<T>[] {
 	const pointClass = corePointClassFactory(object);
 	const pointsCount = pointClass.entitiesCount(object);
-	const points: CorePoint<T>[] = new Array(pointsCount);
+	target.length = pointsCount;
 	for (let i = 0; i < pointsCount; i++) {
-		points[i] = corePointInstanceFactory(object, i);
+		target[i] = corePointInstanceFactory(object, i);
 	}
-	return points;
+	return target;
 }
 
 export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 	object: ObjectContent<T>,
-	group: GroupString
+	group: GroupString,
+	target: CorePoint<T>[]
 ): CorePoint<T>[] {
 	if (group) {
 		CoreString.indices(group, _indices);
-		const points = pointsFromObject(object);
+		const points = pointsFromObject(object, _tmpPoints);
 		const compactPoints: CorePoint<T>[] = [];
-		return arrayCompact(
+		const selectedPoints = arrayCompact(
 			_indices.map((i) => points[i]),
 			compactPoints
 		);
+		target.length = 0;
+		arrayPushItems(selectedPoints, target);
+		return target;
 	} else {
-		return pointsFromObject(object);
+		return pointsFromObject(object, target);
 	}
 }
 

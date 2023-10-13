@@ -28,11 +28,15 @@ const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
 	wireframe: false,
 	center: false,
+	innerRadius: false,
+	outerRadius: false,
 };
 function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.triangles = params.QUADTriangles;
 	QUAD_TESSELATION_PARAMS.wireframe = params.QUADWireframe;
 	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
+	QUAD_TESSELATION_PARAMS.innerRadius = params.QUADInnerRadius;
+	QUAD_TESSELATION_PARAMS.outerRadius = params.QUADOuterRadius;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,

@@ -1,15 +1,20 @@
 import type {QUnit} from '../../../helpers/QUnit';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+
+const _points:CorePoint<CoreObjectType>[]=[]
+
 export function testenginenodessopAdd(qUnit: QUnit) {
-qUnit.test('add simple', async (assert) => {
+qUnit.test('sop/add simple', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 
 	const container = await add1.compute();
 	const core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 1);
+	assert.equal(core_group.points(_points).length, 1);
 });
 
-qUnit.test('add connect input points', async (assert) => {
+qUnit.test('sop/add connect input points', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 	const add2 = geo1.createNode('add');
@@ -30,12 +35,12 @@ qUnit.test('add connect input points', async (assert) => {
 
 	let container = await add.compute();
 	let core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 3);
+	assert.equal(core_group.points(_points).length, 3);
 
 	add.p.connectToLastPoint.set(true);
 	container = await add.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 4);
+	assert.equal(core_group.points(_points).length, 4);
 });
 
 }

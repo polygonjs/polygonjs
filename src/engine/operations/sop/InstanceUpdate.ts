@@ -6,6 +6,10 @@ import {BufferAttribute, InstancedBufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+
+const _instancePts:CorePoint<CoreObjectType>[]=[]
 
 export enum InstanceUpdateMode {
 	GEO = 'geo',
@@ -18,6 +22,7 @@ interface InstanceUpdateSopParams extends DefaultOperationParams {
 	geoAttributes: string;
 	pointAttributes: string;
 }
+
 
 export class InstanceUpdateSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: InstanceUpdateSopParams = {
@@ -78,9 +83,9 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 				updateTransforms = true;
 			}
 		}
-		const instancePts = updatingCoreGroup.points();
+		updatingCoreGroup.points(_instancePts);
 		if (updateTransforms) {
-			CoreInstancer.updateTransformInstanceAttributes(instancePts, updatingCoreGroup, instanceBufferGeo);
+			CoreInstancer.updateTransformInstanceAttributes(_instancePts, updatingCoreGroup, instanceBufferGeo);
 			for (let attribName of CoreInstancer.transformAttributeNames) {
 				const attrib = instanceBufferGeo.getAttribute(attribName);
 				if (attrib) {

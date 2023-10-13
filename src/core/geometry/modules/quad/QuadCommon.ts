@@ -9,9 +9,17 @@ export interface QUADTesselationParams {
 	triangles: boolean;
 	wireframe: boolean;
 	center: boolean;
+	innerRadius: boolean;
+	outerRadius: boolean;
 }
 export interface QUADOBJTesselationParams {
 	QUADTriangles: boolean;
 	QUADWireframe: boolean;
 	QUADCenter: boolean;
+	QUADInnerRadius: boolean;
+	QUADOuterRadius: boolean;
+}
+export enum QuadTriangulationAttribute {
+	INNER_RADIUS = 'innerRadius',
+	OUTER_RADIUS = 'outerRadius',
 }

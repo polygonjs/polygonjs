@@ -8,6 +8,7 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {pointsFromObject, pointsFromObjectFromGroup} from '../../../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {ObjectContent, CoreObjectType} from '../../../../../core/geometry/ObjectContent';
+import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 // import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
@@ -52,7 +53,8 @@ async function _addNumericAttributeToPoints<T extends CoreObjectType>(
 ) {
 	const corePointClass = corePointClassFactory(object);
 
-	const points = pointsFromObjectFromGroup(object, params.group.value);
+	const points: CorePoint<CoreObjectType>[] = [];
+	pointsFromObjectFromGroup(object, params.group.value, points);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
@@ -135,7 +137,8 @@ async function _addStringAttributeToPoints<T extends CoreObjectType>(
 ) {
 	const corePointClass = corePointClassFactory(object);
 
-	const points = pointsFromObjectFromGroup(object, params.group.value);
+	const points: CorePoint<CoreObjectType>[] = [];
+	pointsFromObjectFromGroup(object, params.group.value, points);
 	const param = params.string;
 	const attribName = params.name.value;
 
@@ -149,7 +152,8 @@ async function _addStringAttributeToPoints<T extends CoreObjectType>(
 				const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 				corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 			}
-			const allPoints = pointsFromObject(object);
+			const allPoints: CorePoint<CoreObjectType>[] = [];
+			pointsFromObject(object, allPoints);
 			stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
 			for (const point of allPoints) {
 				let currentValue = point.stringAttribValue(attribName);

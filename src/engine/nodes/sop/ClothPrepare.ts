@@ -16,6 +16,8 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {populateAdjacency3, POPULATE_ADJACENCY_DEFAULT} from '../../../core/geometry/operation/Adjacency';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 class ClothPrepareSopParamsConfig extends NodeParamsConfig {
 	fuseDist = ParamConfig.FLOAT(0.001);
@@ -95,7 +97,8 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 			const attrib = corePointClass.attribute(mesh, attribName) as BufferAttribute;
 			attrib.needsUpdate = true;
 			const array = attrib.array as number[];
-			const points = pointsFromObject(mesh);
+			const points: CorePoint<CoreObjectType>[] = [];
+			pointsFromObject(mesh, points);
 			await param.expressionController.computeExpressionForPoints(points, (point, value: number) => {
 				array[point.index()] = value;
 			});

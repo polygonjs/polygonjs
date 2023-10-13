@@ -6,6 +6,8 @@ import {CircleSopNode} from '../../../../src/engine/nodes/sop/Circle';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
 export function testenginenodesutilsBypass(qUnit: QUnit) {
 	const tmpBox = new Box3();
 	const tmpSize = new Vector3();
@@ -295,7 +297,8 @@ export function testenginenodesutilsBypass(qUnit: QUnit) {
 
 			async function getPoints() {
 				const container = await attribCreate2b.compute();
-				const points = container.coreContent()!.points();
+				const points:CorePoint<CoreObjectType>[]=[]
+				container.coreContent()!.points(points);
 				return points;
 			}
 

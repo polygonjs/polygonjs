@@ -1,6 +1,10 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {InstancedBufferGeometry} from 'three';
 import {InstanceSopNode} from '../../../../src/engine/nodes/sop/Instance';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+
+const _points:CorePoint<CoreObjectType>[]=[]
 
 export function createRequiredNodes(node: InstanceSopNode) {
 	const MAT = window.MAT;
@@ -34,6 +38,6 @@ export function testenginenodessopInstance(qUnit: QUnit) {
 		const first_object = objects[0];
 		const first_geo = first_object.geometry as InstancedBufferGeometry;
 		assert.equal(first_geo.instanceCount, Infinity);
-		assert.equal(container.coreContent()!.points().length, 4);
+		assert.equal(container.coreContent()!.points(_points).length, 4);
 	});
 }

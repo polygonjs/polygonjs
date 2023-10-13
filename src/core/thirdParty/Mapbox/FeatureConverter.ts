@@ -8,10 +8,13 @@ import {CoreMapboxString} from './String';
 import {corePointClassFactory} from '../../geometry/CoreObjectFactory';
 import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 import {pointsFromObject} from '../../geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../geometry/ObjectContent';
 
 const MULTILINESTRING = 'MultiLineString';
 const LINESTRING = 'LineString';
 const dummyMesh = new Mesh();
+const _points: CorePoint<CoreObjectType>[] = [];
 export class FeatureConverter {
 	id: number | undefined;
 	constructor(private node: BaseSopNodeType, private name: string, private features: any[]) {}
@@ -37,10 +40,10 @@ export class FeatureConverter {
 
 		// pti
 		dummyMesh.geometry = mergedGeometry;
-		const points = pointsFromObject(dummyMesh);
-		const pointsCount = points.length;
+		pointsFromObject(dummyMesh, _points);
+		const pointsCount = _points.length;
 		for (let i = 0; i < pointsCount; i++) {
-			const point = points[i];
+			const point = _points[i];
 			const pti = i / (pointsCount - 1);
 			point.setAttribValue('pti', pti);
 		}

@@ -1,6 +1,10 @@
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3} from 'three';
+
 const _p = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export function testenginenodessopData(qUnit: QUnit) {
 	async function with_data(data_json?: object) {
@@ -16,13 +20,13 @@ export function testenginenodessopData(qUnit: QUnit) {
 	qUnit.test('sop/data default', async (assert) => {
 		const {geo1, data1, container} = await with_data();
 		assert.equal(container.coreContent()!.pointsCount(), 13);
-		assert.equal((container.coreContent()!.points()[0].attribValue('position') as Vector3).x, 0);
-		assert.equal((container.coreContent()!.points()[0].attribValue('position') as Vector3).y, 0);
-		assert.equal((container.coreContent()!.points()[0].attribValue('position') as Vector3).z, 0);
-		assert.equal((container.coreContent()!.points()[1].attribValue('position') as Vector3).x, 0);
-		assert.equal((container.coreContent()!.points()[2].attribValue('position') as Vector3).y, 0);
-		assert.equal((container.coreContent()!.points()[3].attribValue('position') as Vector3).z, 0);
-		assert.equal(container.coreContent()!.points()[0].attribValue('value'), -40);
+		assert.equal((container.coreContent()!.points(_points)[0].attribValue('position') as Vector3).x, 0);
+		assert.equal((container.coreContent()!.points(_points)[0].attribValue('position') as Vector3).y, 0);
+		assert.equal((container.coreContent()!.points(_points)[0].attribValue('position') as Vector3).z, 0);
+		assert.equal((container.coreContent()!.points(_points)[1].attribValue('position') as Vector3).x, 0);
+		assert.equal((container.coreContent()!.points(_points)[2].attribValue('position') as Vector3).y, 0);
+		assert.equal((container.coreContent()!.points(_points)[3].attribValue('position') as Vector3).z, 0);
+		assert.equal(container.coreContent()!.points(_points)[0].attribValue('value'), -40);
 
 		const point1 = geo1.createNode('point');
 		point1.setInput(0, data1);
@@ -30,9 +34,13 @@ export function testenginenodessopData(qUnit: QUnit) {
 		point1.p.x.set('@value / 100');
 
 		const container2 = await point1.compute();
-		assert.in_delta((container2.coreContent()!.points()[0].attribValue('position') as Vector3).x, -0.4, 0.001);
-		assert.equal((container2.coreContent()!.points()[0].attribValue('position') as Vector3).y, 0);
-		assert.equal((container2.coreContent()!.points()[0].attribValue('position') as Vector3).z, 0);
+		assert.in_delta(
+			(container2.coreContent()!.points(_points)[0].attribValue('position') as Vector3).x,
+			-0.4,
+			0.001
+		);
+		assert.equal((container2.coreContent()!.points(_points)[0].attribValue('position') as Vector3).y, 0);
+		assert.equal((container2.coreContent()!.points(_points)[0].attribValue('position') as Vector3).z, 0);
 	});
 
 	qUnit.test('sop/data with position', async (assert) => {
@@ -42,11 +50,11 @@ export function testenginenodessopData(qUnit: QUnit) {
 		];
 		const {container} = await with_data(data);
 		assert.equal(container.coreContent()!.pointsCount(), 2);
-		const points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('value'), 1);
-		assert.equal(points[1].attribValue('value'), 2);
-		assert.deepEqual(points[0].position(_p).toArray(), [-1, 0, 1]);
-		assert.deepEqual(points[1].position(_p).toArray(), [-2, 0, 1]);
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('value'), 1);
+		assert.equal(_points[1].attribValue('value'), 2);
+		assert.deepEqual(_points[0].position(_p).toArray(), [-1, 0, 1]);
+		assert.deepEqual(_points[1].position(_p).toArray(), [-2, 0, 1]);
 	});
 
 	qUnit.test('sop/data with position remaped', async (assert) => {
@@ -56,10 +64,10 @@ export function testenginenodessopData(qUnit: QUnit) {
 		];
 		const {container} = await with_data(data);
 		assert.equal(container.coreContent()!.pointsCount(), 2);
-		const points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('value'), 1);
-		assert.equal(points[1].attribValue('value'), 2);
-		assert.deepEqual(points[0].position(_p).toArray(), [-1, 0, 1]);
-		assert.deepEqual(points[1].position(_p).toArray(), [-2, 0, 1]);
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('value'), 1);
+		assert.equal(_points[1].attribValue('value'), 2);
+		assert.deepEqual(_points[0].position(_p).toArray(), [-1, 0, 1]);
+		assert.deepEqual(_points[1].position(_p).toArray(), [-2, 0, 1]);
 	});
 }

@@ -5,14 +5,15 @@ import mapboxgl from 'mapbox-gl';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {LngLat} from './Common';
 import {pointsFromObject} from '../../geometry/entities/point/CorePointUtils';
+import { CorePoint } from '../../geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../geometry/ObjectContent';
 
 const dummyMesh = new Mesh();
 const tmpBox = new Box3();
 const tmpCenter = new Vector3();
 const tmpSize = new Vector3();
 const _position = new Vector3();
-// const tmpSize1 = new Vector3()
-// const tmpSize2 = new Vector3()
+const _points:CorePoint<CoreObjectType>[]=[]
 
 const MAT_RX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), -Math.PI / 2);
 const POSITION_ATTRIB_NAME = 'position';
@@ -160,8 +161,8 @@ export class CoreMapboxTransform {
 	// }
 	private transform_geometry3(geometry: BufferGeometry) {
 		dummyMesh.geometry = geometry;
-		const points = pointsFromObject(dummyMesh);
-		for (const point of points) {
+		pointsFromObject(dummyMesh,_points);
+		for (const point of _points) {
 			point.position(_position);
 			this.transform_position_FINAL(_position);
 			point.setAttribValue(POSITION_ATTRIB_NAME, _position);
@@ -173,8 +174,8 @@ export class CoreMapboxTransform {
 
 	private transform_geometry_with_max_ratio(geometry: BufferGeometry, max_ratio: number) {
 		dummyMesh.geometry = geometry;
-		const points = pointsFromObject(dummyMesh);
-		for (const point of points) {
+		pointsFromObject(dummyMesh,_points);
+		for (const point of _points) {
 			point.position(_position);
 			this.transform_position_with_max_ratio(_position, max_ratio);
 			point.setAttribValue(POSITION_ATTRIB_NAME, _position);

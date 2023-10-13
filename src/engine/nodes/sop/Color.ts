@@ -5,18 +5,16 @@
  * Note that just like the attrib_create, it is possible to use an expression to set the attribute value
  *
  */
-import {Color} from 'three';
-import {BufferAttribute} from 'three';
+import {BufferAttribute,Mesh,BufferGeometry,Color} from 'three';
 import {CoreColor} from '../../../core/Color';
 import {TypedSopNode} from './_Base';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferGeometry} from 'three';
-import {Mesh} from 'three';
 
 const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';
+const _points:CorePoint<CoreObjectType>[]=[]
 
 type ValueArrayByName = PolyDictionary<number[]>;
 interface ArrayByGeometryUUID {
@@ -98,7 +96,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	_setFromAttribute<T extends CoreObjectType>(object: ObjectContent<T>) {
+	private _setFromAttribute<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
 
 		const attribName = this.pv.attribName;
@@ -111,7 +109,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 
 		this._createInitColor(object);
-		const points = pointsFromObject(object);
+		pointsFromObject(object,_points);
+		const pointsCount = _points.length
 
 		const srcAttribSize = corePointClass.attribSize(object, attribName);
 		const srcArray = srcAttrib.array;
@@ -119,7 +118,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 		switch (srcAttribSize) {
 			case 1: {
-				for (let i = 0; i < points.length; i++) {
+				for (let i = 0; i < pointsCount; i++) {
 					const dest_i = i * 3;
 					destArray[dest_i + 0] = srcArray[i];
 					destArray[dest_i + 1] = 1 - srcArray[i];
@@ -128,7 +127,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				break;
 			}
 			case 2: {
-				for (let i = 0; i < points.length; i++) {
+				for (let i = 0; i < pointsCount; i++) {
 					const dest_i = i * 3;
 					const src_i = i * 2;
 					destArray[dest_i + 0] = srcArray[src_i + 0];
@@ -144,7 +143,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				break;
 			}
 			case 4: {
-				for (let i = 0; i < points.length; i++) {
+				for (let i = 0; i < pointsCount; i++) {
 					const dest_i = i * 3;
 					const src_i = i * 4;
 					destArray[dest_i + 0] = srcArray[src_i + 0];
@@ -180,7 +179,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	}
 
 	async _evalExpressions<T extends CoreObjectType>(object: ObjectContent<T>) {
-		const points = pointsFromObject(object);
+		const points:CorePoint<CoreObjectType>[]=[]
+		pointsFromObject(object,points);
 
 		if (!isObject3D(object)) {
 			return;

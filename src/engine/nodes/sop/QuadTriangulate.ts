@@ -28,8 +28,8 @@ export class QuadTriangulateSopNode extends QuadSopNode<QuadTriangulateSopParams
 		const quadObjects = inputCoreGroups[0].quadObjects();
 		if (quadObjects) {
 			const newObjects: Object3D[] = [];
-			for (const tetObject of quadObjects) {
-				const objects = tetObject.toObject3D(this.pv);
+			for (const quadObject of quadObjects) {
+				const objects = quadObject.toObject3D(this.pv);
 				if (objects) {
 					if (CoreType.isArray(objects)) {
 						newObjects.push(...objects);

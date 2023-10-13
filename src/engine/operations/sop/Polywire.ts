@@ -5,7 +5,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
@@ -13,6 +13,7 @@ import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesF
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {copyObject3DProperties} from '../../../core/geometry/modules/three/ThreejsObjectUtils';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -31,6 +32,7 @@ const nextPos = new Vector3();
 const delta = new Vector3();
 const deltaNext = new Vector3();
 const deltaPrev = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export class PolywireSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PolywireSopParams = {
@@ -77,13 +79,13 @@ export class PolywireSopOperation extends BaseSopOperation {
 		const geometry = lineSegment.geometry as BufferGeometry;
 		const corePointClass = corePointClassFactory(lineSegment);
 		const attributeNames = corePointClass.attributeNamesMatchingMask(lineSegment, params.attributesToCopy);
-		const points = pointsFromObject(lineSegment);
+		pointsFromObject(lineSegment, _points);
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulatedCurvePointIndices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
 
 		for (let curvePointIndices of accumulatedCurvePointIndices) {
-			const currentPoints = curvePointIndices.map((index) => points[index]);
+			const currentPoints = curvePointIndices.map((index) => _points[index]);
 			this._createTubeFromPoints(currentPoints, attributeNames, params, geometries);
 		}
 	}

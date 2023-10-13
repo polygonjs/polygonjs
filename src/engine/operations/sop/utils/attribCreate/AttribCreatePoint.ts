@@ -7,6 +7,7 @@ import {hasGroupFromParamValues} from './Common';
 import {corePointClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
 import {pointsFromObject, pointsFromObjectFromGroup} from '../../../../../core/geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 
 export function addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
 	const objects = coreGroup.allObjects();
@@ -27,6 +28,8 @@ export function addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, 
 	TypeAssert.unreachable(attribType);
 }
 
+const _points: CorePoint<CoreObjectType>[] = [];
+const _allPoints: CorePoint<CoreObjectType>[] = [];
 function _addNumericAttributeToPoints<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopParams
@@ -47,8 +50,8 @@ function _addNumericAttributeToPoints<T extends CoreObjectType>(
 	}
 
 	if (params.group) {
-		const points = pointsFromObjectFromGroup(object, params.group);
-		for (let point of points) {
+		pointsFromObjectFromGroup(object, params.group, _points);
+		for (let point of _points) {
 			point.setAttribValue(attribName, value);
 		}
 	} else {
@@ -65,23 +68,23 @@ function _addStringAttributeToPoints<T extends CoreObjectType>(
 	// if (!coreGeometry) {
 	// 	return;
 	// }
-	const points = pointsFromObjectFromGroup(object, params.group);
+	pointsFromObjectFromGroup(object, params.group, _points);
 	const attribName = params.name;
 	const value = params.string;
 
-	let stringValues: string[] = new Array(points.length);
+	let stringValues: string[] = new Array(_points.length);
 
 	// if a group is given, we prefill the existing stringValues
 	if (hasGroupFromParamValues(params)) {
-		const allPoints = pointsFromObject(object);
-		stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
+		pointsFromObject(object, _allPoints);
+		stringValues = stringValues.length != _allPoints.length ? new Array(_allPoints.length) : stringValues;
 		// create attrib if non existent
 		if (!corePointClass.hasAttribute(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
-		for (const point of allPoints) {
+		for (const point of _allPoints) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';
@@ -90,7 +93,7 @@ function _addStringAttributeToPoints<T extends CoreObjectType>(
 		}
 	}
 
-	for (const point of points) {
+	for (const point of _points) {
 		stringValues[point.index()] = value;
 	}
 

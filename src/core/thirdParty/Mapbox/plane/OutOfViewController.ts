@@ -1,13 +1,14 @@
 import {Triangle, BufferGeometry, Vector2, Vector3} from 'three';
 import mapboxgl from 'mapbox-gl';
 import {expandTriangle} from '../../../math/_Module';
-import {BaseCorePoint} from '../../../geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../geometry/entities/point/CorePoint';
 import {Vector2Like} from '../../../../types/GlobalTypes';
 import {CoreGeometryBuilderMesh} from '../../../geometry/modules/three/builders/Mesh';
 import {CoreMapboxUtils} from '../Utils';
 import {CoreObjectType, ObjectContent} from '../../../geometry/ObjectContent';
 import {pointsFromObject} from '../../../geometry/entities/point/CorePointUtils';
 
+const _points: CorePoint<CoreObjectType>[] = [];
 export class MapboxPlaneFrustumController<T extends CoreObjectType> {
 	constructor() {}
 
@@ -54,7 +55,7 @@ export class MapboxPlaneFrustumController<T extends CoreObjectType> {
 		bound_pts: mapboxgl.LngLat[],
 		margin: number
 	): BufferGeometry | null {
-		const points = pointsFromObject(object);
+		pointsFromObject(object, _points);
 		const positions = bound_pts.map((bound_pt) => new Vector3(bound_pt.lng, 0, bound_pt.lat));
 		this._triangle_a.a.copy(positions[0]);
 		this._triangle_a.b.copy(positions[1]);
@@ -64,17 +65,17 @@ export class MapboxPlaneFrustumController<T extends CoreObjectType> {
 		this._triangle_b.c.copy(positions[1]);
 		expandTriangle(this._triangle_a, margin);
 		expandTriangle(this._triangle_b, margin);
-		const kept_points: BaseCorePoint[] = [];
-		for (const point of points) {
+		const keptPoints: BaseCorePoint[] = [];
+		for (const point of _points) {
 			point.position(this._point_pos);
 			if (
 				// this._triangle_a.containsPoint(this._point_pos) ||
 				this._triangle_b.containsPoint(this._point_pos)
 			) {
-				kept_points.push(point);
+				keptPoints.push(point);
 			}
 		}
 
-		return new CoreGeometryBuilderMesh().fromPoints(object, kept_points);
+		return new CoreGeometryBuilderMesh().fromPoints(object, keptPoints);
 	}
 }

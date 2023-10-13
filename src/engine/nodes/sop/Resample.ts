@@ -19,13 +19,16 @@ export const METHODS = [METHOD.POINTS_COUNT, METHOD.SEGMENT_LENGTH];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {Attribute} from '../../../core/geometry/Attribute';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+
+const _points:CorePoint<CoreObjectType>[]=[]
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
@@ -104,7 +107,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 	_resample(lineSegment: LineSegments) {
 		const geometry = lineSegment.geometry as BufferGeometry;
-		const points = pointsFromObject(lineSegment);
+		pointsFromObject(lineSegment,_points);
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
@@ -112,7 +115,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		const geometries: BufferGeometry[] = [];
 		for (let i = 0; i < accumulated_curve_point_indices.length; i++) {
 			const curve_point_indices = accumulated_curve_point_indices[i];
-			const current_points = curve_point_indices.map((index) => points[index]);
+			const current_points = curve_point_indices.map((index) => _points[index]);
 			const geometry = this._create_curve_from_points(current_points);
 			if (geometry) {
 				geometries.push(geometry);

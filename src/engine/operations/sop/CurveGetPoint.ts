@@ -7,8 +7,10 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
 
 const EPSILON = 0.001;
+const _points:CorePoint<CoreObjectType>[]=[]
 
 interface CurveGetPointSopParams extends DefaultOperationParams {
 	t: number;
@@ -54,12 +56,13 @@ export class CurveGetPointSopOperation extends BaseSopOperation {
 		params: CurveGetPointSopParams
 	) {
 		const {t, closed, curveType, tension, tTangent} = params;
-		const points = pointsFromObject(object).map((p) => p.position(new Vector3()));
-		if (points.length < 2) {
+		pointsFromObject(object, _points)
+		if (_points.length < 2) {
 			return;
 		}
+		const pointPositions = _points.map((p) => p.position(new Vector3()));
 		const curveTypeName = SPLINE_CURVE_TYPES[curveType];
-		const curve = new CatmullRomCurve3(points, closed, curveTypeName, tension);
+		const curve = new CatmullRomCurve3(pointPositions, closed, curveTypeName, tension);
 
 		const positions: number[] = new Array(3);
 

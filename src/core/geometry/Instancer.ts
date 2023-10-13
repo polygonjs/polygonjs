@@ -7,12 +7,13 @@ import {
 	Vector2,
 	Vector3,
 } from 'three';
-import {BaseCorePoint} from './entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
 // import {CoreGeometry} from './Geometry';
 import {CoreType} from '../Type';
 import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {CoreObjectType} from './ObjectContent';
 
 const DEFAULT = {
 	SCALE: new Vector3(1, 1, 1),
@@ -24,6 +25,7 @@ const DEFAULT = {
 const DEFAULT_COLOR = new Vector3(1, 1, 1);
 const DEFAULT_UV = new Vector2(0, 0);
 const _position = new Vector3();
+const _instancePts: CorePoint<CoreObjectType>[] = [];
 
 export enum InstanceAttrib {
 	POSITION = 'instancePosition',
@@ -192,19 +194,19 @@ export class CoreInstancer {
 		templateCoreGroup: CoreGroup,
 		attributesToCopy: string
 	) {
-		const instancePts = templateCoreGroup.points();
+		templateCoreGroup.points(_instancePts);
 
 		const geometry = new InstancedBufferGeometry();
 		geometry.copy(geometryToInstance as InstancedBufferGeometry);
 		geometry.instanceCount = Infinity;
 
-		const instancesCount = instancePts.length;
+		const instancesCount = _instancePts.length;
 
 		const has_uv = templateCoreGroup.hasPointAttrib(Attribute.UV);
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
-			for (const instancePt of instancePts) {
+			for (const instancePt of _instancePts) {
 				const index2 = i * 2;
 				const uv = has_uv ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
@@ -212,24 +214,26 @@ export class CoreInstancer {
 			}
 			geometry.setAttribute(InstanceAttrib.UV, new InstancedBufferAttribute(uvs, 2));
 		}
-		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
-		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
+		this.updateTransformInstanceAttributes(_instancePts, templateCoreGroup, geometry);
+		this.updateColorInstanceAttribute(_instancePts, templateCoreGroup, geometry);
 
 		const attribNames = templateCoreGroup.pointAttribNamesMatchingMask(attributesToCopy);
 
-		attribNames.forEach((attribName) => {
+		for (const attribName of attribNames) {
 			const attribSize = templateCoreGroup.pointAttribSize(attribName);
 			const values = new Float32Array(instancesCount * attribSize);
-			instancePts.forEach((pt, i) => {
+			let i = 0;
+			for (const pt of _instancePts) {
 				const value = pt.attribValue(attribName);
 				if (CoreType.isNumber(value)) {
 					values[i] = value;
 				} else {
 					(value as Vector3).toArray(values, i * attribSize);
 				}
-			});
+				i++;
+			}
 			geometry.setAttribute(attribName, new InstancedBufferAttribute(values, attribSize));
-		});
+		}
 
 		return geometry;
 	}

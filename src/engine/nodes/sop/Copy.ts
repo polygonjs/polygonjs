@@ -14,7 +14,7 @@ import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObj
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -27,7 +27,7 @@ import {CoreTransform, RotationOrder, TRANSFORM_TARGET_TYPES, TransformTargetTyp
 import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES, OBJECT_TRANSFORM_SPACES} from '../../../core/TransformSpace';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
-import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {pointsFromCoreObjects} from '../../../core/geometry/entities/point/CorePointUtils';
 
 // export enum TransformMode {
 // 	OBJECT = 'object',
@@ -137,10 +137,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const templateCoreObjects = filterThreejsCoreObjectsFromCoreGroup(templateCoreGroup, {
 			group: this.pv.templateGroup,
 		});
-		const templatePoints = templateCoreObjects
-			// .map((o) => o.coreGeometry())
-			.map((o) => pointsFromObject(o.object()))
-			.flat();
+		const templatePoints: CorePoint<CoreObjectType>[] = [];
+		pointsFromCoreObjects(templateCoreObjects, templatePoints);
 
 		this._instancer.setCoreGroup(templateCoreGroup);
 

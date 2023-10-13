@@ -2,11 +2,13 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D, BufferGeometry, Vector3, BufferAttribute, Float32BufferAttribute} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
 
 const _position = new Vector3();
+const _points:CorePoint<CoreObjectType>[]=[]
 interface AddSopParams extends DefaultOperationParams {
 	// create point
 	createPoint: boolean;
@@ -62,17 +64,17 @@ export class AddSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _createPolygon(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
+	private _createPolygon(coreGroup: CoreGroup, objects: Object3D[], params: AddSopParams) {
 		if (!isBooleanTrue(params.connectInputPoints)) {
 			return;
 		}
-		const points = core_group.points();
-		if (points.length > 0) {
+		coreGroup.points(_points);
+		if (_points.length > 0) {
 			// const is_polygon_closed = !params.open && points.length >= 3;
 			// if (is_polygon_closed) {
 			// 	this._create_polygon_closed(core_group, objects);
 			// } else {
-			this._create_polygon_open(core_group, objects, params);
+			this._create_polygon_open(coreGroup, objects, params);
 			// }
 		}
 	}
@@ -85,14 +87,15 @@ export class AddSopOperation extends BaseSopOperation {
 	// 	objects.push(object);
 	// }
 
-	private _create_polygon_open(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
-		const points = core_group.points();
+	private _create_polygon_open(coreGroup: CoreGroup, objects: Object3D[], params: AddSopParams) {
+		coreGroup.points(_points);
 
 		let positions: number[] = [];
 		const indices: number[] = [];
 		let point: BaseCorePoint;
-		for (let i = 0; i < points.length; i++) {
-			point = points[i];
+		const pointsCount = _points.length
+		for (let i = 0; i < pointsCount; i++) {
+			point = _points[i];
 			point.position(_position).toArray(positions, i * 3);
 			// positions.push(point.position().toArray());
 
@@ -102,8 +105,8 @@ export class AddSopOperation extends BaseSopOperation {
 			}
 		}
 
-		if (points.length > 2 && params.connectToLastPoint) {
-			points[0].position(_position).toArray(positions, positions.length);
+		if (pointsCount > 2 && params.connectToLastPoint) {
+			_points[0].position(_position).toArray(positions, positions.length);
 			const last_index = indices[indices.length - 1];
 			indices.push(last_index);
 			indices.push(0);

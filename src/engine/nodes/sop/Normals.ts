@@ -16,6 +16,8 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
@@ -96,7 +98,8 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	private async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = pointsFromObject(object);
+		const points: CorePoint<CoreObjectType>[] = [];
+		pointsFromObject(object, points);
 		const corePointClass = corePointClassFactory(object);
 
 		let attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;

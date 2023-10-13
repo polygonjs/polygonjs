@@ -1,8 +1,13 @@
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
 import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Box3} from 'three';
-export function testenginenodessopPolywire(qUnit: QUnit) {
+
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
+const _points:CorePoint<CoreObjectType>[]=[]
+
+export function testenginenodessopPolywire(qUnit: QUnit) {
 qUnit.test('polywire simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -66,7 +71,7 @@ qUnit.test('polywire preserves attributes', async (assert) => {
 	polywire1.p.closed.set(0);
 
 	const container = await polywire1.compute();
-	const point = container.coreContent()?.points()[0]!;
+	const point = container.coreContent()?.points(_points)[0]!;
 	assert.equal(point.attribValue('t'), 0.5);
 	assert.deepEqual((point.attribValue('v') as Vector3).toArray(), [1.5, 7, 5]);
 });

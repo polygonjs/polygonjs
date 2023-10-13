@@ -27,7 +27,10 @@ import {BufferAttribute} from 'three';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
+
+const _allPoints: CorePoint<CoreObjectType>[] = [];
 class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
 	index = ParamConfig.INTEGER(DEFAULT.index, {
@@ -260,12 +263,12 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
-		const allPoints = pointsFromObject(object);
+		pointsFromObject(object, _allPoints);
 
 		const param = this.p.string;
 
-		const stringValues: string[] = new Array(allPoints.length);
-		for (const point of allPoints) {
+		const stringValues: string[] = new Array(_allPoints.length);
+		for (const point of _allPoints) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';
@@ -273,7 +276,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 			stringValues[point.index()] = currentValue;
 		}
 
-		const indexPoint = allPoints[this.pv.index];
+		const indexPoint = _allPoints[this.pv.index];
 		if (indexPoint) {
 			stringValues[indexPoint.index()] = param.value;
 		}

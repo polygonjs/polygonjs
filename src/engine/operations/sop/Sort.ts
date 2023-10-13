@@ -15,6 +15,7 @@ import {setToArray} from '../../../core/SetUtils';
 import {isNumber} from '../../../core/Type';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
 
 const tmpPos = new Vector3();
 
@@ -34,7 +35,7 @@ export enum Axis {
 	Z = 'z',
 }
 export const AXISES: Axis[] = [Axis.X, Axis.Y, Axis.Z];
-
+const _points:CorePoint<CoreObjectType>[]=[]
 interface SortSopParams extends DefaultOperationParams {
 	targetType: number;
 	mode: number;
@@ -244,7 +245,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 	}
 	private _sortPointsForObject(object: Object3DWithGeometry, params: SortSopParams) {
-		const points = pointsFromObject(object);
+		 pointsFromObject(object,_points);
 
 		const oldIndexAttribute = object.geometry.getIndex();
 		if (!oldIndexAttribute) {
@@ -254,7 +255,7 @@ export class SortSopOperation extends BaseSopOperation {
 		const oldIndices = oldIndexAttribute.array;
 
 		// reset
-		this._positions = new Array(points.length);
+		this._positions = new Array(_points.length);
 		this._indicesByPos.clear();
 		this._indexDest.clear();
 
@@ -262,7 +263,7 @@ export class SortSopOperation extends BaseSopOperation {
 		const axis = AXISES[params.axis];
 		let axisValue: number = 0;
 		let i = 0;
-		for (let point of points) {
+		for (let point of _points) {
 			point.position(this._pointPos);
 			switch (axis) {
 				case Axis.X: {
@@ -290,7 +291,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 
 		// update the index attribute
-		const newIndices: number[] = new Array(points.length);
+		const newIndices: number[] = new Array(_points.length);
 		i = 0;
 		// const uniqSortedPositions = ArrayUtils.uniq(sortedPositions);
 		for (let position of sortedPositions) {

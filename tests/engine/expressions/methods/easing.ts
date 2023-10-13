@@ -3,6 +3,8 @@ import {CoreMath} from '../../../../src/core/math/_Module';
 import {CoreType} from '../../../../src/core/Type';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import { Vector3 } from 'three';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
 const _position = new Vector3()
 
 export function testengineexpressionsmethodseasing(qUnit: QUnit) {
@@ -61,9 +63,10 @@ async function createSopNodes(parentNode: GeoObjNode, expression: string) {
 
 	const container = await point1.compute();
 	// return [];
+	const points:CorePoint<CoreObjectType>[]=[]
 	const ys = container
 		.coreContent()!
-		.points()
+		.points(points)
 		.map((p) => p.position(_position).y);
 
 	ensureAllValuesValid(ys);

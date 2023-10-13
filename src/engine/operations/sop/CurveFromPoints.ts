@@ -17,6 +17,7 @@ import {ObjectUserData} from '../../../core/UserData';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 
 interface CurveFromPointsSopParams extends DefaultOperationParams {
 	pointsCount: number;
@@ -30,6 +31,7 @@ interface CurveFromPointsSopParams extends DefaultOperationParams {
 const tmpV2 = new Vector2();
 const current = new Vector3();
 const next = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export class CurveFromPointsSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CurveFromPointsSopParams = {
@@ -70,8 +72,8 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 		// 	return;
 		// }
 		const corePointClass = corePointClassFactory(object);
-		const geoPoints = pointsFromObject(object);
-		const pointPositions = geoPoints.map((p) => p.position(new Vector3()));
+		pointsFromObject(object, _points);
+		const pointPositions = _points.map((p) => p.position(new Vector3()));
 		if (pointPositions.length < 2) {
 			return;
 		}
@@ -107,18 +109,18 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 			let attribPositions: Vector3[] = [];
 			switch (attribSize) {
 				case 1: {
-					attribPositions = geoPoints.map((p) => new Vector3(p.attribValue(attribName) as number, 0, 0));
+					attribPositions = _points.map((p) => new Vector3(p.attribValue(attribName) as number, 0, 0));
 					break;
 				}
 				case 2: {
-					attribPositions = geoPoints.map((p) => {
+					attribPositions = _points.map((p) => {
 						p.attribValue(attribName, tmpV2);
 						return new Vector3(tmpV2.x, tmpV2.y, 0);
 					});
 					break;
 				}
 				case 3: {
-					attribPositions = geoPoints.map((p) => {
+					attribPositions = _points.map((p) => {
 						p.attribValue(attribName, current);
 						return current.clone();
 					});

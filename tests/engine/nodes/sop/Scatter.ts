@@ -1,8 +1,10 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 
 const _p = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export function testenginenodessopScatter(qUnit: QUnit) {
 	qUnit.test('sop/scatter simple', async (assert) => {
@@ -37,14 +39,14 @@ export function testenginenodessopScatter(qUnit: QUnit) {
 
 		let container = await scatter1.compute();
 		let object = container.coreContent()!.threejsObjectsWithGeo()[0];
-		let firstPt = container.coreContent()!.points()[0];
+		let firstPt = container.coreContent()!.points(_points)[0];
 		assert.equal(object.position.x, 0);
 		assert.in_delta(firstPt.position(_p).x, -0.23, 0.01);
 
 		add.p.position.x.set(5);
 		container = await scatter1.compute();
 		object = container.coreContent()!.threejsObjectsWithGeo()[0];
-		firstPt = container.coreContent()!.points()[0];
+		firstPt = container.coreContent()!.points(_points)[0];
 		assert.equal(object.position.x, 5);
 		assert.in_delta(firstPt.position(_p).x, -0.23, 0.01);
 	});
@@ -70,7 +72,7 @@ export function testenginenodessopScatter(qUnit: QUnit) {
 		function delayValues() {
 			return container
 				.coreContent()!
-				.points()
+				.points(_points)
 				.map((p: BaseCorePoint) => p.attribValue('delay'));
 		}
 		assert.deepEqual(delayValues(), [0, 0]);

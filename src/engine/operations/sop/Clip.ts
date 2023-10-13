@@ -25,6 +25,8 @@ import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/buil
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;
@@ -48,6 +50,7 @@ const objectsToRemove: Set<Object3D> = new Set();
 // const _matR = new Matrix4();
 // const _mat = new Matrix4();
 const BOOLEAN_SIZE = 10000;
+const _points: CorePoint<CoreObjectType>[] = [];
 export class ClipSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ClipSopParams = {
 		origin: new Vector3(0, 0, 0),
@@ -137,8 +140,8 @@ function _createClipped(mesh: Mesh, box: Mesh) {
 
 	// delete attributes where keep attribute == 0
 	// const outCoreGeometry = new CoreGeometry(output.geometry);
-	const points = pointsFromObject(output);
-	const keptPoints = points.filter((p) => p.attribValue(TMP_KEEP_ATTRIBUTE_NAME) == 1);
+	pointsFromObject(output, _points);
+	const keptPoints = _points.filter((p) => p.attribValue(TMP_KEEP_ATTRIBUTE_NAME) == 1);
 	const builder = new CoreGeometryBuilderMesh();
 	const newGeometry = builder.fromPoints(output, keptPoints);
 

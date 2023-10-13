@@ -12,6 +12,11 @@ import {Vector2Param} from '../../../../src/engine/params/Vector2';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 export function testenginenodessopAttribSetAtIndex(qUnit: QUnit) {
 	interface MultiTestOptions {
 		existingAttrib: boolean;
@@ -197,9 +202,9 @@ export function testenginenodessopAttribSetAtIndex(qUnit: QUnit) {
 			const container = await attribSetAtIndex1.compute();
 			// assert.notOk(attribCreate1.states.error.active());
 			// assert.notOk(attribCreate1.states.error.message());
-			const pts = container.coreContent()!.points();
+			container.coreContent()!.points(_points);
 			const coreObjects = container.coreContent()!.threejsCoreObjects();
-			const entities = attribClass == AttribClass.POINT ? pts : coreObjects;
+			const entities = attribClass == AttribClass.POINT ? _points : coreObjects;
 
 			// if (existingAttrib) {
 			const expectedValues = buildExpectedValues(options);

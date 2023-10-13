@@ -1,9 +1,10 @@
-import {BaseCorePoint} from '../entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../entities/point/CorePoint';
 import {Float32BufferAttribute, Vector2, BufferGeometry, Mesh} from 'three';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {CoreObjectType, ObjectContent, isObject3D} from '../ObjectContent';
 import {pointsFromObject, pointAttributeNames, pointAttributeSizes} from '../entities/point/CorePointUtils';
 
+const _points:CorePoint<CoreObjectType>[]=[]
 export class CoreGeometryUtilCurve {
 	static accumulatedCurvePointIndices(indices: number[]) {
 		let curve_point_indices: number[] = [];
@@ -97,8 +98,8 @@ export class CoreGeometryUtilCurve {
 
 	static line_segment_to_geometries<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometries: BufferGeometry[] = [];
-		const attrib_names = pointAttributeNames(object);
-		const points = pointsFromObject(object);
+		const attribNames = pointAttributeNames(object);
+		pointsFromObject(object,_points);
 
 		if (!isObject3D(object)) {
 			return;
@@ -113,14 +114,14 @@ export class CoreGeometryUtilCurve {
 		const accumulated_curve_point_indices = this.accumulatedCurvePointIndices(indices);
 
 		if (accumulated_curve_point_indices.length > 0) {
-			const attribute_sizes_by_name = pointAttributeSizes(object);
+			const attributeSizesByName = pointAttributeSizes(object);
 
-			accumulated_curve_point_indices.forEach((curve_point_indices, i) => {
+			accumulated_curve_point_indices.forEach((curvePointIndices, i) => {
 				const newGeometry = this.create_line_segment_geometry(
-					points,
-					curve_point_indices,
-					attrib_names,
-					attribute_sizes_by_name
+					_points,
+					curvePointIndices,
+					attribNames,
+					attributeSizesByName
 				);
 				geometries.push(newGeometry);
 			});

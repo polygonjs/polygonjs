@@ -7,9 +7,13 @@ import {
 	AttribType,
 	ATTRIBUTE_TYPES,
 } from '../../../../src/core/geometry/Constant';
-import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {QuadObject} from '../../../../src/core/geometry/modules/quad/QuadObject';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 export function testenginenodessopDelete(qUnit: QUnit) {
 	qUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
 		const geo1 = window.geo1;
@@ -182,19 +186,19 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		async function getPoints() {
 			let container = await delete1.compute();
 			let core_object = container.coreContent()!;
-			return core_object.points();
+			return core_object.points(_points);
 		}
 
 		let container = await delete1.compute();
 		let core_object = container.coreContent()!;
-		assert.equal(core_object.points().length, 1);
+		assert.equal(core_object.points(_points).length, 1);
 		assert.equal((await getPoints())[0].stringAttribValue('name'), 'eagle');
 
 		delete1.p.invert.set(true);
 		container = await delete1.compute();
 		core_object = container.coreContent()!;
-		assert.equal(core_object.points().length, 1);
-		assert.equal(core_object.points()[0].stringAttribValue('name'), 'beaver');
+		assert.equal(core_object.points(_points).length, 1);
+		assert.equal(core_object.points(_points)[0].stringAttribValue('name'), 'beaver');
 
 		delete1.p.attribString.set('mountain');
 		assert.deepEqual(

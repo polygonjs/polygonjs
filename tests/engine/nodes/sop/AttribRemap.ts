@@ -1,6 +1,10 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint,CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {RampPoint, RampValue, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+
+const _points:CorePoint<CoreObjectType>[]=[]
+
 export function testenginenodessopAttribRemap(qUnit: QUnit) {
 	qUnit.test('attrib_remap simple', async (assert) => {
 		const geo1 = window.geo1;
@@ -24,12 +28,12 @@ export function testenginenodessopAttribRemap(qUnit: QUnit) {
 		let container, core_group, values;
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
-		values = core_group.points().map((p: BaseCorePoint) => p.attribValue('test'));
+		values = core_group.points(_points).map((p: BaseCorePoint) => p.attribValue('test'));
 		assert.deepEqual(values, [0, 0.25, 0.5, 0.75]);
 
 		container = await attrib_remap1.compute();
 		core_group = container.coreContent()!;
-		values = core_group.points().map((p: BaseCorePoint) => p.attribValue('test') as number);
+		values = core_group.points(_points).map((p: BaseCorePoint) => p.attribValue('test') as number);
 		assert.equal(values[0], 0);
 		assert.equal(values[1], 0.625);
 		assert.equal(values[2], 1);

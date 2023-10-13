@@ -10,6 +10,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
 
 interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	index: number;
@@ -23,6 +24,7 @@ interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	value4: Vector4;
 	string: string;
 }
+const _points:CorePoint<CoreObjectType>[]=[]
 
 export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
@@ -208,15 +210,15 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 
 		const value = params.string;
 
-		const points = pointsFromObject(object);
-		const indexPoint = points[params.index];
-		let stringValues: string[] = new Array(points.length);
+		pointsFromObject(object,_points);
+		const indexPoint = _points[params.index];
+		let stringValues: string[] = new Array(_points.length);
 
 		// We prefill the existing stringValues
 		// const allPoints = coreObject.points();
-		stringValues = stringValues.length != points.length ? new Array(points.length) : stringValues;
+		stringValues = stringValues.length != _points.length ? new Array(_points.length) : stringValues;
 
-		for (let point of points) {
+		for (const point of _points) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';

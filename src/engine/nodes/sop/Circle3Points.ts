@@ -6,7 +6,7 @@
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {Object3D} from 'three';
@@ -18,10 +18,12 @@ import {
 	JOIN_MODES,
 	Circle3Points,
 } from '../../../core/geometry/operation/Circle3Points';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+
+const _points: CorePoint<CoreObjectType>[] = [];
 class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to create the arc */
 	arc = ParamConfig.BOOLEAN(1);
@@ -88,11 +90,11 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const points = coreGroup.points();
-		if (points.length < 3) {
-			this.states.error.set(`only ${points.length} points found, when 3 are required`);
+		coreGroup.points(_points);
+		if (_points.length < 3) {
+			this.states.error.set(`only ${_points.length} points found, when 3 are required`);
 		} else {
-			this._create_circle(points);
+			this._createCircle(_points);
 		}
 	}
 
@@ -100,7 +102,7 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 	private b: Vector3 = new Vector3();
 	private c: Vector3 = new Vector3();
 
-	private _create_circle(points: BaseCorePoint[]) {
+	private _createCircle(points: BaseCorePoint[]) {
 		const circle3points = new Circle3Points({
 			arc: isBooleanTrue(this.pv.arc),
 			center: isBooleanTrue(this.pv.center),

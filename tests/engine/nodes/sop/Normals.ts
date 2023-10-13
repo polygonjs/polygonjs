@@ -1,7 +1,9 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
 const _normal = new Vector3();
+const _points:CorePoint<CoreObjectType>[]=[]
 
 export function testenginenodessopNormals(qUnit: QUnit) {
 	qUnit.test('sop/normals simple', async (assert) => {
@@ -21,20 +23,20 @@ export function testenginenodessopNormals(qUnit: QUnit) {
 		let container, normal;
 
 		container = await noise1.compute();
-		normal = container.coreContent()!.points()[0].normal(_normal).toArray();
+		normal = container.coreContent()!.points(_points)[0].normal(_normal).toArray();
 		assert.in_delta(normal[0], 0, 0.05);
 		assert.in_delta(normal[1], 1, 0.05);
 		assert.in_delta(normal[2], 0, 0.05);
 
 		container = await normals1.compute();
-		normal = container.coreContent()!.points()[0].normal(_normal).toArray();
+		normal = container.coreContent()!.points(_points)[0].normal(_normal).toArray();
 		assert.in_delta(normal[0], 0.05, 0.05);
 		assert.in_delta(normal[1], -0.95, 0.05);
 		assert.in_delta(normal[2], -0.4, 0.05);
 
 		normals1.p.invert.set(1);
 		container = await normals1.compute();
-		normal = container.coreContent()!.points()[0].normal(_normal).toArray();
+		normal = container.coreContent()!.points(_points)[0].normal(_normal).toArray();
 		assert.in_delta(normal[0], -0.05, 0.05);
 		assert.in_delta(normal[1], 0.95, 0.05);
 		assert.in_delta(normal[2], 0.4, 0.05);
@@ -52,7 +54,7 @@ export function testenginenodessopNormals(qUnit: QUnit) {
 
 		async function _getFirstNormal() {
 			const container = await normals1.compute();
-			return container.coreContent()!.points()[0].normal(_normal);
+			return container.coreContent()!.points(_points)[0].normal(_normal);
 		}
 
 		normals1.p.edit.set(true);
@@ -82,7 +84,7 @@ export function testenginenodessopNormals(qUnit: QUnit) {
 			const container = await normals1.compute();
 			return container
 				.coreContent()!
-				.points()
+				.points(_points)
 				.map((p: BaseCorePoint) => p.normal(_normal).clone());
 		}
 

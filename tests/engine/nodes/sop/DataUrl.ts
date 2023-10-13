@@ -2,6 +2,11 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {DataType, DATA_TYPES} from '../../../../src/engine/nodes/sop/DataUrl';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 export function _dataUrlUrl(path: string) {
 	return `${ASSETS_ROOT}nodes/sop/DataUrl/${path}?t=${performance.now()}`;
 }
@@ -61,8 +66,8 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		assert.ok(!dataUrl1.isDirty());
 		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const core_group = container.coreContent()!;
-		const point0 = core_group.points()[0];
-		const point1 = core_group.points()[1];
+		const point0 = core_group.points(_points)[0];
+		const point1 = core_group.points(_points)[1];
 		assert.equal(point0.attribValue('attr1'), 1);
 		assert.equal(point0.attribValue('attr2'), 2);
 		assert.equal(point0.attribValue('attr3'), 3);
@@ -88,8 +93,8 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		assert.ok(!dataUrl1.isDirty());
 		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const core_group = container.coreContent()!;
-		const point0 = core_group.points()[0];
-		const point1 = core_group.points()[1];
+		const point0 = core_group.points(_points)[0];
+		const point1 = core_group.points(_points)[1];
 		assert.equal(point0.attribValue('rot'), 1);
 		assert.equal(point0.attribValue('scale'), 2);
 		assert.equal(point0.attribValue('mult'), 3);

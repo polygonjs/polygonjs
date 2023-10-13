@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import type {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import type {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreInterpolate} from '../../../core/math/Interpolate';
 import {CoreOctree} from '../../../core/math/octree/Octree';
@@ -18,9 +18,11 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {pointsFromObjectFromGroup} from '../../../core/geometry/entities/point/CorePointUtils';
+
 const _tmpBox = new Box3();
 const _position = new Vector3();
 const _nearestPoints: BaseCorePoint[] = [];
+const _pointsSrc: CorePoint<CoreObjectType>[] = [];
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
 	srcGroup = ParamConfig.STRING();
@@ -56,10 +58,10 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		const coreGroupSrc = inputCoreGroups[1];
 
 		// build octree
-		const pointsSrc = coreGroupSrc.pointsFromGroup(this.pv.srcGroup);
+		coreGroupSrc.pointsFromGroup(this.pv.srcGroup, _pointsSrc);
 		coreGroupSrc.boundingBox(_tmpBox);
 		const octree = new CoreOctree(_tmpBox);
-		octree.setPoints(pointsSrc);
+		octree.setPoints(_pointsSrc);
 
 		// transfer
 		const destObjects = coreGroupDest.allObjects();
@@ -84,7 +86,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		const callback = (destPoint: BaseCorePoint) => {
 			this._transferAttributesForPoint(destPoint, octree, attribNames);
 		};
-		const destPoints = pointsFromObjectFromGroup(object, this.pv.destGroup);
+		const destPoints: CorePoint<CoreObjectType>[] = [];
+		pointsFromObjectFromGroup(object, this.pv.destGroup, destPoints);
 		const _iterator = new CoreIterator();
 
 		await _iterator.startWithArray(destPoints, callback);

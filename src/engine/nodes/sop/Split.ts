@@ -18,11 +18,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {MapUtils} from '../../../core/MapUtils';
 import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+
+const _points:CorePoint<CoreObjectType>[]=[]
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */
 	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
@@ -70,22 +73,22 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 		let points_by_value: Map<string | number, BaseCorePoint[]> = new Map();
 		// if (core_geometry) {
 		// const object = core_object.object() as Object3DWithGeometry;
-		const points = pointsFromObject(object);
-		const first_point = points[0];
-		if (first_point) {
-			const attrib_size = first_point.attribSize(attribName);
-			if (!(attrib_size == AttribSize.FLOAT || first_point.isAttribIndexed(attribName))) {
+		pointsFromObject(object,_points);
+		const firstPoint = _points[0];
+		if (firstPoint) {
+			const attrib_size = firstPoint.attribSize(attribName);
+			if (!(attrib_size == AttribSize.FLOAT || firstPoint.isAttribIndexed(attribName))) {
 				this.states.error.set(`attrib '${attribName}' must be a float or a string`);
 				return;
 			}
 			let val: string | number | null;
-			if (first_point.isAttribIndexed(attribName)) {
-				for (let point of points) {
+			if (firstPoint.isAttribIndexed(attribName)) {
+				for (const point of _points) {
 					val = point.indexedAttribValue(attribName);
 					MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
 				}
 			} else {
-				for (let point of points) {
+				for (const point of _points) {
 					val = point.attribValue(attribName) as number;
 					MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
 				}

@@ -10,6 +10,8 @@ import {Plane} from 'three';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import { pointsFromObject } from '../../../core/geometry/entities/point/CorePointUtils';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
 
 export enum ShearMode {
 	MATRIX = 'matrix',
@@ -27,6 +29,8 @@ export const SHEAR_CENTER_MODES: ShearCenterMode[] = [
 	ShearCenterMode.BBOX_CENTER_OFFSET,
 	ShearCenterMode.CUSTOM,
 ];
+
+const _points:CorePoint<CoreObjectType>[]=[]
 
 interface ShearSopParams extends DefaultOperationParams {
 	mode: number;
@@ -119,8 +123,8 @@ export class ShearSopOperation extends BaseSopOperation {
 			if (geometry) {
 				this._getAxisModeCenter(geometry, params);
 				this._axisPlane.setFromNormalAndCoplanarPoint(params.planeAxis, this._center);
-				const points = pointsFromObject(object)
-				for (let point of points) {
+				 pointsFromObject(object,_points)
+				for (const point of _points) {
 					point.position(this._pointPos);
 					this._axisPlane.projectPoint(this._pointPos, this._pointOnPlane);
 					this._delta.copy(this._pointOnPlane).sub(this._pointPos);

@@ -21,7 +21,7 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
@@ -43,6 +43,9 @@ import {primitivesFromObject} from '../../../core/geometry/entities/primitive/Co
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+
+const _points:CorePoint<CoreObjectType>[]=[]
+		
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT), {
@@ -240,7 +243,8 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
 		for (const coreObject of coreObjects) {
 			const object = coreObject.object() as Object3DWithGeometry;
-			const entities = pointsFromObject(object);
+			const entities:CorePoint<CoreObjectType>[]=[]
+			pointsFromObject(object,entities);
 			this.entitySelectionHelper.init(entities);
 
 			const initEntitiesCount = entities.length;
@@ -361,10 +365,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private _pointObject<T extends CoreObjectType>(object: ObjectContent<T>) {
-		const points = pointsFromObject(object);
+		pointsFromObject(object,_points);
 		const builder = geometryBuilder(ObjectType.POINTS);
 		if (builder) {
-			const geometry = builder.fromPoints(object, points);
+			const geometry = builder.fromPoints(object, _points);
 			if (geometry) return this.createObject(geometry, ObjectType.POINTS);
 		}
 	}

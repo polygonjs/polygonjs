@@ -1,11 +1,12 @@
 import {Object3D, Mesh, LineSegments, BufferGeometry, Vector3, Vector4, BufferAttribute, Points} from 'three';
+import {ThreejsPrimitiveTriangle} from '../../three/ThreejsPrimitiveTriangle';
 import {QuadObject} from '../QuadObject';
-import {QUADTesselationParams} from '../QuadCommon';
+import {QUADTesselationParams, QuadTriangulationAttribute} from '../QuadCommon';
 import {Attribute} from '../../../Attribute';
 import {DEFAULT_MATERIALS} from '../../../Constant';
 import {ObjectType} from '../../../Constant';
 import {QuadPrimitive} from '../QuadPrimitive';
-import {ThreejsPrimitiveTriangle} from '../../three/ThreejsPrimitiveTriangle';
+import {quadInnerRadius, quadOuterRadius} from '../utils/QuadUtils';
 
 const _v4 = new Vector4();
 const _p0 = new Vector3();
@@ -108,7 +109,7 @@ function quadToLine(quadObject: QuadObject) {
 	geometry.setIndex(newIndices);
 	return new LineSegments(geometry, DEFAULT_MATERIALS[ObjectType.LINE_SEGMENTS]);
 }
-function quadToCenter(quadObject: QuadObject) {
+function quadToCenter(quadObject: QuadObject, options: QUADTesselationParams) {
 	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
 	const indices = quadGeometry.index;
@@ -146,7 +147,28 @@ function quadToCenter(quadObject: QuadObject) {
 			}
 		}
 	}
-
+	if (options.innerRadius) {
+		const innerRadiusValues = new Array(quadsCount);
+		for (let i = 0; i < quadsCount; i++) {
+			const innerRadius = quadInnerRadius(quadObject, i);
+			innerRadiusValues[i] = innerRadius;
+		}
+		geometry.setAttribute(
+			QuadTriangulationAttribute.INNER_RADIUS,
+			new BufferAttribute(new Float32Array(innerRadiusValues), 1)
+		);
+	}
+	if (options.outerRadius) {
+		const outerRadiusValues = new Array(quadsCount);
+		for (let i = 0; i < quadsCount; i++) {
+			const outerRadius = quadOuterRadius(quadObject, i);
+			outerRadiusValues[i] = outerRadius;
+		}
+		geometry.setAttribute(
+			QuadTriangulationAttribute.OUTER_RADIUS,
+			new BufferAttribute(new Float32Array(outerRadiusValues), 1)
+		);
+	}
 	return points;
 }
 
@@ -159,7 +181,7 @@ export function quadToObject3D(quadObject: QuadObject, options: QUADTesselationP
 		objects.push(quadToLine(quadObject));
 	}
 	if (options.center) {
-		objects.push(quadToCenter(quadObject));
+		objects.push(quadToCenter(quadObject, options));
 	}
 	return objects;
 }

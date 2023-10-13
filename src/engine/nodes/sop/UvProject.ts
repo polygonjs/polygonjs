@@ -12,9 +12,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 const UV_NAME = 'uv';
 const _position = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param camera node to use as projection */
@@ -70,9 +73,9 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 		// }
 		const parent = this.parent();
 		if (this._processed_core_group && parent) {
-			const points = this._processed_core_group.points();
+			this._processed_core_group.points(_points);
 			const obj_world_matrix = (parent as BaseObjNodeType).object.matrixWorld;
-			for (const point of points) {
+			for (const point of _points) {
 				point.position(_position);
 				const uvw = this._vectorInCameraSpace(_position, obj_world_matrix);
 				if (uvw) {

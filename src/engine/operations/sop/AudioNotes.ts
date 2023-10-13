@@ -10,12 +10,15 @@ import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 enum OutOfRangeBehavior {
 	RESTART = 'restart',
 	BOUNCE = 'bounce',
 }
 export const OUT_OF_RANGE_BEHAVIOR: OutOfRangeBehavior[] = [OutOfRangeBehavior.RESTART, OutOfRangeBehavior.BOUNCE];
+const _points: CorePoint<CoreObjectType>[] = [];
 
 interface AudioNotesSopParams extends DefaultOperationParams {
 	class: number;
@@ -74,9 +77,9 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 		const objects = coreGroup.allObjects();
 
 		for (let object of objects) {
-			const corePoints = pointsFromObject(object);
+			pointsFromObject(object, _points);
 			const corePointClass = corePointClassFactory(object);
-			const values = this._values(corePoints, params);
+			const values = this._values(_points, params);
 
 			// const coreGeometry = coreObject.coreGeometry();
 			// if (coreGeometry) {
@@ -88,7 +91,7 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 					corePointClass.addNumericAttribute(object, params.octaveName, 1, 1);
 				}
 				let i = 0;
-				for (let corePoint of corePoints) {
+				for (let corePoint of _points) {
 					corePoint.setAttribValue(params.octaveName, octavesArray[i]);
 					i++;
 				}

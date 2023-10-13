@@ -1,8 +1,11 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {Vector3} from 'three';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
 
 const _p = new Vector3();
+const _points:CorePoint<CoreObjectType>[]=[]
 
 export function testenginenodessopPolarTransform(qUnit: QUnit) {
 	qUnit.test('sop/polarTransform simple', async (assert) => {
@@ -21,10 +24,10 @@ export function testenginenodessopPolarTransform(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		assert.equal(container.coreContent()!.pointsCount(), 1);
-		let points = container.coreContent()!.points();
-		assert.equal(points[0].position(_p).x, 0);
-		assert.equal(points[0].position(_p).y, 0);
-		assert.equal(points[0].position(_p).z, 1);
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].position(_p).x, 0);
+		assert.equal(_points[0].position(_p).y, 0);
+		assert.equal(_points[0].position(_p).z, 1);
 
 		polarTransform1.p.latitude.set(90);
 
@@ -34,9 +37,9 @@ export function testenginenodessopPolarTransform(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		assert.equal(container.coreContent()!.pointsCount(), 1);
-		points = container.coreContent()!.points();
-		assert.equal(points[0].position(_p).x, 0);
-		assert.in_delta(points[0].position(_p).y, 1, 0.001);
-		assert.in_delta(points[0].position(_p).z, 0, 0.001);
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].position(_p).x, 0);
+		assert.in_delta(_points[0].position(_p).y, 1, 0.001);
+		assert.in_delta(_points[0].position(_p).z, 0, 0.001);
 	});
 }

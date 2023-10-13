@@ -10,6 +10,14 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		wireframe = ParamConfig.BOOLEAN(true);
 		/** @param center */
 		center = ParamConfig.BOOLEAN(false);
+		/** @param innerRadius */
+		innerRadius = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
+		/** @param outerRadius */
+		outerRadius = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
 	};
 }
 
@@ -21,6 +29,14 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		QUADWireframe = ParamConfig.BOOLEAN(true);
 		/** @param center */
 		QUADCenter = ParamConfig.BOOLEAN(false);
+		/** @param QUADInnerRadius */
+		QUADInnerRadius = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
+		/** @param QUADOuterRadius */
+		QUADOuterRadius = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
 	};
 }
 

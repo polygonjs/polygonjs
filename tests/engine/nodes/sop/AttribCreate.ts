@@ -18,6 +18,10 @@ import {ENTITY_CLASS_FACTORY, coreObjectInstanceFactory} from '../../../../src/c
 import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVertex';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+
+const _points: CorePoint<CoreObjectType>[] = [];
+
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;
@@ -369,20 +373,20 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		let container;
 		container = await bbox_scatter1.compute();
 		let core_group = container.coreContent()!;
-		assert.equal(core_group.points().length, 27);
+		assert.equal(core_group.points(_points).length, 27);
 		assert.less_than(bbox_scatter1.cookController.cooksCount(), 20);
 
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
 		assert.less_than(attrib_create1.cookController.cooksCount(), 20);
 
-		const point = core_group.points()[3];
+		const point = core_group.points(_points)[3];
 		assert.equal(point.attribValue('ptid'), 3);
 
 		bbox_scatter1.p.stepSize.set(0.1);
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
-		assert.equal(core_group.points().length, 1331);
+		assert.equal(core_group.points(_points).length, 1331);
 
 		assert.less_than(attrib_create1.cookController.cooksCount(), 80);
 
@@ -397,7 +401,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
 		container = await attrib_create2.compute();
 		core_group = container.coreContent()!;
-		assert.equal(core_group.points().length, 1331);
+		assert.equal(core_group.points(_points).length, 1331);
 	});
 
 	qUnit.test('sop/attribCreate for string on vertices with expr', async (assert) => {
@@ -414,24 +418,24 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		let container = await attrib_create1.compute();
 		assert.equal(container.coreContent()!.pointsCount(), 24, 'has 24 pts');
-		let points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('ids'), 'pt_0', 'pt 0 has pt_0');
-		assert.equal(points[1].attribValue('ids'), 'pt_2', 'pt 1 has pt_2');
-		assert.equal(points[2].attribValue('ids'), 'pt_4', 'pt 2 has pt_4');
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('ids'), 'pt_0', 'pt 0 has pt_0');
+		assert.equal(_points[1].attribValue('ids'), 'pt_2', 'pt 1 has pt_2');
+		assert.equal(_points[2].attribValue('ids'), 'pt_4', 'pt 2 has pt_4');
 
 		attrib_create1.p.string.set('`@ptnum*2`_pt');
 		container = await attrib_create1.compute();
-		points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('ids'), '0_pt', 'pt 0 has 0_pt');
-		assert.equal(points[1].attribValue('ids'), '2_pt', 'pt 1 has 2_pt');
-		assert.equal(points[2].attribValue('ids'), '4_pt', 'pt 2 has 4_pt');
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('ids'), '0_pt', 'pt 0 has 0_pt');
+		assert.equal(_points[1].attribValue('ids'), '2_pt', 'pt 1 has 2_pt');
+		assert.equal(_points[2].attribValue('ids'), '4_pt', 'pt 2 has 4_pt');
 
 		attrib_create1.p.string.set('`@ptnum*2`');
 		container = await attrib_create1.compute();
-		points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('ids'), '0');
-		assert.equal(points[1].attribValue('ids'), '2');
-		assert.equal(points[2].attribValue('ids'), '4');
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('ids'), '0');
+		assert.equal(_points[1].attribValue('ids'), '2');
+		assert.equal(_points[2].attribValue('ids'), '4');
 	});
 
 	qUnit.test('sop/attribCreate for string on vertices without expr', async (assert) => {
@@ -448,10 +452,10 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		let container = await attrib_create1.compute();
 		assert.equal(container.coreContent()!.pointsCount(), 24, 'has 24 pts');
-		let points = container.coreContent()!.points();
-		assert.equal(points[0].attribValue('ids'), 'test', 'pt 0 has pt_0');
-		assert.equal(points[1].attribValue('ids'), 'test', 'pt 1 has pt_2');
-		assert.equal(points[2].attribValue('ids'), 'test', 'pt 2 has pt_4');
+		container.coreContent()!.points(_points);
+		assert.equal(_points[0].attribValue('ids'), 'test', 'pt 0 has pt_0');
+		assert.equal(_points[1].attribValue('ids'), 'test', 'pt 1 has pt_2');
+		assert.equal(_points[2].attribValue('ids'), 'test', 'pt 2 has pt_4');
 
 		const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
 		const array = (geometry.getAttribute('ids') as BufferAttribute).array;
@@ -479,10 +483,10 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		let container = await attribCreate_html.compute();
 		const coreGroup = container.coreContent()!;
-		const points = coreGroup.points();
-		assert.equal(points[0].attribValue('html'), 'myId0-myClass0');
-		assert.equal(points[1].attribValue('html'), 'myId1-myClass3');
-		assert.equal(points[2].attribValue('html'), 'myId2-myClass6');
+		coreGroup.points(_points);
+		assert.equal(_points[0].attribValue('html'), 'myId0-myClass0');
+		assert.equal(_points[1].attribValue('html'), 'myId1-myClass3');
+		assert.equal(_points[2].attribValue('html'), 'myId2-myClass6');
 	});
 
 	qUnit.test(
@@ -505,10 +509,10 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 			let container = await attribCreate_html.compute();
 			const coreGroup = container.coreContent()!;
-			const points = coreGroup.points();
-			assert.equal(points[0].attribValue('html'), 'myId0-myClass0');
-			assert.equal(points[1].attribValue('html'), 'myId1-myClass1');
-			assert.equal(points[2].attribValue('html'), 'myId2-myClass0');
+			coreGroup.points(_points);
+			assert.equal(_points[0].attribValue('html'), 'myId0-myClass0');
+			assert.equal(_points[1].attribValue('html'), 'myId1-myClass1');
+			assert.equal(_points[2].attribValue('html'), 'myId2-myClass0');
 		}
 	);
 
@@ -979,9 +983,9 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 			const container = await attribCreate1.compute();
 			// assert.notOk(attribCreate1.states.error.active());
 			// assert.notOk(attribCreate1.states.error.message());
-			const pts = container.coreContent()!.points();
+			container.coreContent()!.points(_points);
 			const coreObjects = container.coreContent()!.allCoreObjects();
-			const entities = attribClass == AttribClass.POINT ? pts : coreObjects;
+			const entities = attribClass == AttribClass.POINT ? _points : coreObjects;
 
 			const expectedValues = buildExpectedValues(options);
 			assert.deepEqual(

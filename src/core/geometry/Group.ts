@@ -5,7 +5,7 @@ import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
 import {CoreType} from '../Type';
-import {arraySum, arrayCompact, arrayCopy} from '../ArrayUtils';
+import {arraySum, arrayCompact, arrayCopy, arrayPushItems} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectClassFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
@@ -21,12 +21,12 @@ import {object3DHasGeometry} from './GeometryUtils';
 import {CoreEntity} from './CoreEntity';
 import {
 	pointsCountFromObject,
-	pointsFromObject,
 	pointAttributeNames,
 	hasPointAttribute,
 	pointAttributeType,
 	pointAttributeSizes,
 	pointAttributeSize,
+	pointsFromObjects,
 } from './entities/point/CorePointUtils';
 import type {CorePoint} from './entities/point/CorePoint';
 
@@ -65,6 +65,7 @@ type AttributeDictionary = PolyDictionary<AttribValue>;
 const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
 const _indices: number[] = [];
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -276,10 +277,11 @@ export class CoreGroup extends CoreEntity {
 	// POINTS
 	//
 	//
-	points() {
-		return this.allObjects()
-			.map((o) => pointsFromObject(o))
-			.flat();
+	points(target: CorePoint<CoreObjectType>[]) {
+		return pointsFromObjects(this.allObjects(), target);
+		// return this.allObjects()
+		// 	.map((o) => pointsFromObject(o))
+		// 	.flat();
 		// .map((g) => g.points())
 		// .flat();
 	}
@@ -294,17 +296,20 @@ export class CoreGroup extends CoreEntity {
 		}
 		return sum;
 	}
-	pointsFromGroup(group: GroupString) {
+	pointsFromGroup(group: GroupString, target: CorePoint<CoreObjectType>[]) {
 		if (group) {
 			CoreString.indices(group, _indices);
-			const points = this.points();
+			this.points(_points);
 			const compactPoints: CorePoint<CoreObjectType>[] = [];
-			return arrayCompact(
-				_indices.map((i) => points[i]),
+			const pointsInGroup = arrayCompact(
+				_indices.map((i) => _points[i]),
 				compactPoints
 			);
+			target.length = 0;
+			arrayPushItems(pointsInGroup, target);
+			return target;
 		} else {
-			return this.points();
+			return this.points(target);
 		}
 	}
 	pointAttribNames(): string[] {

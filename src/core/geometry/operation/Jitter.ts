@@ -1,6 +1,8 @@
 import {Vector3} from 'three';
 import {CoreGroup} from '../Group';
 import {randFloat} from '../../math/_Module';
+import { CorePoint } from '../entities/point/CorePoint';
+import { CoreObjectType } from '../ObjectContent';
 
 interface JitterOptions {
 	amount: number;
@@ -10,6 +12,7 @@ interface JitterOptions {
 
 const _offset = new Vector3();
 const _p = new Vector3();
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export function jitterOffset(i: number, seed: number, mult: Vector3, amount: number, target: Vector3) {
 	target.set(
@@ -24,10 +27,10 @@ export function jitterOffset(i: number, seed: number, mult: Vector3, amount: num
 
 export function jitterPositions(coreGroup: CoreGroup, options: JitterOptions) {
 	const {amount, mult, seed} = options;
-	const points = coreGroup.points();
+	coreGroup.points(_points);
 
 	let i = 0;
-	for (const point of points) {
+	for (const point of _points) {
 		jitterOffset(i, seed, mult, amount, _offset);
 
 		point.position(_p);

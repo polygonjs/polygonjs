@@ -12,6 +12,8 @@ import {BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {createRaycaster} from '../../../core/RaycastHelper';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',
@@ -32,6 +34,7 @@ const DIST_ATTRIB_NAME = 'dist';
 
 const objectWorldMat = new Matrix4();
 const objectWorldMatInverse = new Matrix4();
+const _points:CorePoint<CoreObjectType>[]=[]
 
 export class RaySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: RaySopParams = {
@@ -94,8 +97,8 @@ export class RaySopOperation extends BaseSopOperation {
 		}
 
 		let direction: Vector3, firstIntersect: Intersection;
-		const points = coreGroup.points();
-		for (let point of points) {
+		coreGroup.points(_points);
+		for (const point of _points) {
 			point.position(this._pointPos);
 			direction = params.direction;
 			if (isBooleanTrue(params.useNormals)) {
@@ -142,8 +145,8 @@ export class RaySopOperation extends BaseSopOperation {
 
 		// find closest pt
 		const position = collisionGeometry.getAttribute('position') as BufferAttribute;
-		const points = coreGroup.points();
-		for (let point of points) {
+		coreGroup.points(_points);
+		for (const point of _points) {
 			point.position(this._pointPos);
 			// apply object inverse matrix
 			this._pointPos.applyMatrix4(objectWorldMatInverse);

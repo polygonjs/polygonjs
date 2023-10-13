@@ -2,6 +2,11 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {InstancedBufferGeometry} from 'three';
 import {InstancesCountSopNode} from '../../../../src/engine/nodes/sop/InstancesCount';
 import {createRequiredNodes} from './Instance';
+import { CorePoint } from '../../../../src/core/geometry/entities/point/CorePoint';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+
+const _points:CorePoint<CoreObjectType>[]=[]
+
 export function testenginenodessopInstancesCount(qUnit: QUnit) {
 
 async function get_first_geo(instances_count_node: InstancesCountSopNode) {
@@ -28,7 +33,7 @@ qUnit.test('instances_count simple', async (assert) => {
 	instances_count1.setInput(0, instance1);
 
 	let container = await instance1.compute();
-	assert.equal(container.coreContent()!.points().length, 4);
+	assert.equal(container.coreContent()!.points(_points).length, 4);
 
 	let first_geo = await get_first_geo(instances_count1);
 	assert.equal(first_geo.instanceCount, Infinity);
