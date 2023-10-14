@@ -10,7 +10,7 @@ import {CoreEventEmitter} from '../../../core/event/CoreEventEmitter';
 import {JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint} from '../utils/io/connections/Js';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-class OnObjectHoverJsParamsConfig extends NodeParamsConfig {
+export class BaseOnObjectPointerEventJsParamsConfig extends NodeParamsConfig {
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
@@ -18,11 +18,11 @@ class OnObjectHoverJsParamsConfig extends NodeParamsConfig {
 	/** @param lineThreshold */
 	lineThreshold = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new OnObjectHoverJsParamsConfig();
+const ParamsConfig = new BaseOnObjectPointerEventJsParamsConfig();
 
-export abstract class BaseOnObjectPointerEventJsNode extends BaseUserInputJsNode<OnObjectHoverJsParamsConfig> {
-	override readonly paramsConfig = ParamsConfig;
-
+export abstract class ExtendableOnObjectPointerEventJsNode<
+	T extends BaseOnObjectPointerEventJsParamsConfig
+> extends BaseUserInputJsNode<T> {
 	override isTriggering() {
 		return true;
 	}
@@ -36,4 +36,10 @@ export abstract class BaseOnObjectPointerEventJsNode extends BaseUserInputJsNode
 		]);
 		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold', 'element']);
 	}
+	protected _additionalInputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [];
+	}
+}
+export abstract class BaseOnObjectPointerEventJsNode extends ExtendableOnObjectPointerEventJsNode<BaseOnObjectPointerEventJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 }

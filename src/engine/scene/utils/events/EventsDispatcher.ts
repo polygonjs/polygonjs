@@ -139,6 +139,7 @@ export class SceneEventsDispatcher {
 			case JsType.ON_OBJECT_CLICK:
 			case JsType.ON_OBJECT_CONTEXT_MENU:
 			case JsType.ON_OBJECT_HOVER:
+			case JsType.ON_OBJECT_LONG_PRESS:
 			case JsType.ON_OBJECT_POINTERDOWN:
 			case JsType.ON_OBJECT_POINTERUP:
 			case JsType.ON_POINTERDOWN:

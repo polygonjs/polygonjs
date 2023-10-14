@@ -38,6 +38,7 @@ export enum JsType {
 	ON_OBJECT_CONTEXT_MENU = 'onObjectContextMenu',
 	ON_OBJECT_DISPATCH_EVENT = 'onObjectDispatchEvent',
 	ON_OBJECT_HOVER = 'onObjectHover',
+	ON_OBJECT_LONG_PRESS = 'onObjectLongPress',
 	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',
 	ON_OBJECT_POINTERUP = 'onObjectPointerup',
 	ON_OBJECT_SWIPEDOWN = 'onObjectSwipedown',
