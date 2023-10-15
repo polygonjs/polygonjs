@@ -2,22 +2,24 @@ import {GlobalsGlNode} from '../../Globals';
 import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {GlobalsBaseControllerType} from './Common';
 
 export abstract class GlobalsBaseController {
-	private static __next_id: number = 0;
-	private _id: number;
+	// private static __nextId: number = 0;
+	// private _id: number;
 
-	constructor() {
-		this._id = GlobalsBaseController.__next_id++;
-	}
-	id() {
-		return this._id;
-	}
+	// constructor() {
+	// 	this._id = GlobalsBaseController.__nextId++;
+	// }
+	// id() {
+	// 	return this._id;
+	// }
+	abstract type(): GlobalsBaseControllerType;
 
-	handle_globals_node(
-		globals_node: GlobalsGlNode,
-		output_name: string,
-		shaders_collection_controller: ShadersCollectionController
+	handleGlobalsNode(
+		globalsNode: GlobalsGlNode,
+		outputName: string,
+		shadersCollectionController: ShadersCollectionController
 		// definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
 		// body_lines_by_shader_name: Map<ShaderName, string[]>,
 		// body_lines: string[],
@@ -26,16 +28,16 @@ export abstract class GlobalsBaseController {
 	): void {}
 
 	handleGlobalVar(
-		globals_node: BaseGlNodeType,
-		output_name: string,
+		globalsNode: BaseGlNodeType,
+		outputName: string,
 		glType: GlConnectionPointType,
-		shaders_collection_controller: ShadersCollectionController
+		shadersCollectionController: ShadersCollectionController
 	): void {}
 
 	abstract readAttribute(
 		node: BaseGlNodeType,
-		gl_type: GlConnectionPointType,
-		attrib_name: string,
-		shaders_collection_controller: ShadersCollectionController
+		glType: GlConnectionPointType,
+		attribName: string,
+		shadersCollectionController: ShadersCollectionController
 	): string | undefined;
 }

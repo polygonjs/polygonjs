@@ -48,10 +48,15 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		this._spareParamsController = new GlAssemblerNodeSpareParamsController(this, this.node);
 	}
 	setAssemblerGlobalsHandler(globalsHandler: GlobalsBaseController) {
-		const current_id = this._globalsHandler ? this._globalsHandler.id() : null;
-		const new_id = globalsHandler ? globalsHandler.id() : null;
+		const currentType = this._globalsHandler?.type();
+		const newType = globalsHandler?.type();
 
-		if (current_id != new_id) {
+		if (currentType != newType) {
+			if (currentType != null) {
+				console.warn(
+					`set a new globals handler of type ${newType} on a node that already has a globals handler of type ${currentType}`
+				);
+			}
 			this._globalsHandler = globalsHandler;
 			this.setCompilationRequiredAndDirty();
 			this._assembler.reset_configs();

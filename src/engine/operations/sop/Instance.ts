@@ -35,20 +35,20 @@ export class InstanceSopOperation extends BaseSopOperation {
 	private _geometry: BufferGeometry | undefined;
 
 	override async cook(inputCoreGroups: CoreGroup[], params: InstanceSopParams) {
-		const core_group_to_instance = inputCoreGroups[0];
+		const coreGroupToInstance = inputCoreGroups[0];
 		this._geometry = undefined;
 
-		const object_to_instance = core_group_to_instance.threejsObjectsWithGeo()[0];
-		if (object_to_instance) {
-			const geometry_to_instance = object_to_instance.geometry;
-			if (geometry_to_instance) {
+		const objectToInstance = coreGroupToInstance.threejsObjectsWithGeo()[0];
+		if (objectToInstance) {
+			const geometryToInstance = objectToInstance.geometry;
+			if (geometryToInstance) {
 				const coreGroup = inputCoreGroups[1];
-				this._createInstance(geometry_to_instance, coreGroup, params);
+				this._createInstance(geometryToInstance, coreGroup, params);
 			}
 		}
 
 		if (this._geometry) {
-			const type = objectTypeFromConstructor(object_to_instance.constructor);
+			const type = objectTypeFromConstructor(objectToInstance.constructor);
 			if (type) {
 				const object = this.createObject(this._geometry, type);
 

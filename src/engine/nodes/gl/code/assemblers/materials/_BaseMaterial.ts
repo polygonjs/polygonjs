@@ -405,7 +405,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				this.handle_gl_PointCoord(options);
 				return;
 			default:
-				this.globalsHandler()?.handle_globals_node(
+				this.globalsHandler()?.handleGlobalsNode(
 					options.globals_node,
 					options.output_name,
 					options.shaders_collection_controller

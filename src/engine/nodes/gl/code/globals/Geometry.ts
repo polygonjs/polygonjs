@@ -13,6 +13,7 @@ import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {GlobalsOutput} from '../assemblers/materials/common/GlobalOutput';
+import {GlobalsBaseControllerType} from './Common';
 
 const VARIABLE_CONFIG_DEFAULT_BY_NAME: PolyDictionary<string> = {
 	position: 'vec3( position )',
@@ -37,7 +38,11 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		uv: 'defined( USE_MAP ) || defined( USE_BUMPMAP ) || defined( USE_NORMALMAP ) || defined( USE_SPECULARMAP ) || defined( USE_ALPHAMAP ) || defined( USE_EMISSIVEMAP ) || defined( USE_ROUGHNESSMAP ) || defined( USE_METALNESSMAP )',
 	};
 
-	override handle_globals_node(
+	type() {
+		return GlobalsBaseControllerType.GEOMETRY;
+	}
+
+	override handleGlobalsNode(
 		globals_node: GlobalsGlNode,
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController

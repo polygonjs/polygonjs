@@ -2,21 +2,23 @@ import {GlobalsJsNode} from '../../Globals';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseJsNodeType} from '../../_Base';
 import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
+import {GlobalsJsBaseControllerType} from './Common';
 
 export abstract class GlobalsJsBaseController {
-	private static __next_id: number = 0;
-	private _id: number;
+	// private static __nextId: number = 0;
+	// private _id: number;
 
-	constructor() {
-		this._id = GlobalsJsBaseController.__next_id++;
-	}
-	id() {
-		return this._id;
-	}
+	// constructor() {
+	// 	this._id = GlobalsJsBaseController.__nextId++;
+	// }
+	// id() {
+	// 	return this._id;
+	// }
+	abstract type(): GlobalsJsBaseControllerType;
 
-	handle_globals_node(
-		globals_node: GlobalsJsNode,
-		output_name: string,
+	handleGlobalsNode(
+		globalsNode: GlobalsJsNode,
+		outputName: string,
 		linesController: JsLinesCollectionController
 		// definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
 		// body_lines_by_shader_name: Map<ShaderName, string[]>,
@@ -26,16 +28,16 @@ export abstract class GlobalsJsBaseController {
 	): void {}
 
 	handleGlobalVar(
-		globals_node: BaseJsNodeType,
-		output_name: string,
+		globalsNode: BaseJsNodeType,
+		outputName: string,
 		glType: JsConnectionPointType,
 		linesController: JsLinesCollectionController
 	): void {}
 
 	abstract readAttribute(
 		node: BaseJsNodeType,
-		gl_type: JsConnectionPointType,
-		attrib_name: string,
+		jsType: JsConnectionPointType,
+		attribName: string,
 		linesController: JsLinesCollectionController
 	): string | undefined;
 }

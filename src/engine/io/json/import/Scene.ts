@@ -81,10 +81,14 @@ export class SceneJsonImporter {
 			const keys = Object.keys(embeddedPolyNodes);
 			for (let key of keys) {
 				const elements = key.split('/');
-				const node_context = elements[0] as NodeContext;
-				const node_type = elements[1];
+				const nodeContext = elements[0] as NodeContext;
+				const nodeType = elements[1];
 				const data = embeddedPolyNodes[key];
-				PolyNodeController.createNodeClassAndRegister({node_context, node_type, data});
+				PolyNodeController.createNodeClassAndRegister({
+					node_context: nodeContext,
+					node_type: nodeType,
+					data,
+				});
 			}
 		}
 

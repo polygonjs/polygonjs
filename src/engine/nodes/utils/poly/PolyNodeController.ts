@@ -214,24 +214,6 @@ export class PolyNodeController {
 			return;
 		}
 		return createFunction(nodeType, data, PolyNodeController) as any;
-		// switch (nodeContext) {
-		// 	// actor
-		// 	case NodeContext.ANIM:
-		// 		return createPolyAnimNode(nodeType, data, PolyNodeController) as any;
-		// 	// audio
-		// 	// cop
-		// 	// event
-		// 	case NodeContext.GL:
-		// 		return createPolyGlNode(nodeType, data, PolyNodeController) as any;
-		// 	// mat
-		// 	// obj
-		// 	case NodeContext.OBJ:
-		// 		return createPolyObjNode(nodeType, data, PolyNodeController) as any;
-		// 	// post
-		// 	// rop
-		// 	case NodeContext.SOP:
-		// 		return createPolySopNode(nodeType, data, PolyNodeController) as any;
-		// }
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {
 		const {node_context, node_type, data} = dataRegister;

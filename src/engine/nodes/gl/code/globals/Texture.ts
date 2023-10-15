@@ -11,6 +11,7 @@ import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {TextureVariable} from '../utils/TextureVariable';
 import {TypeAssert} from '../../../../poly/Assert';
+import {GlobalsBaseControllerType} from './Common';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'
 // import {UniformConfig} from '../Config/UniformConfig'
@@ -34,17 +35,20 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 	static UV_VARYING = 'particlesSimUvVarying';
 	static PARTICLE_SIM_UV = 'particleUv';
 
-	private globals_geometry_handler: GlobalsGeometryHandler | undefined;
+	private _globalsGeometryHandler: GlobalsGeometryHandler | undefined;
 
-	constructor(private _uv_name: string, private _purpose: GlobalsTextureHandlerPurpose) {
+	constructor(private _uvName: string, private _purpose: GlobalsTextureHandlerPurpose) {
 		super();
+	}
+	type() {
+		return GlobalsBaseControllerType.TEXTURE;
 	}
 
 	set_texture_allocations_controller(controller: TextureAllocationsController) {
 		this._textureAllocationsController = controller;
 	}
 
-	override handle_globals_node(
+	override handleGlobalsNode(
 		globals_node: GlobalsGlNode,
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController
@@ -69,8 +73,8 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
 			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		} else {
-			this.globals_geometry_handler = this.globals_geometry_handler || new GlobalsGeometryHandler();
-			this.globals_geometry_handler.handle_globals_node(globals_node, output_name, shaders_collection_controller);
+			this._globalsGeometryHandler = this._globalsGeometryHandler || new GlobalsGeometryHandler();
+			this._globalsGeometryHandler.handleGlobalsNode(globals_node, output_name, shaders_collection_controller);
 		}
 	}
 
@@ -100,7 +104,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				return {
 					textureName: attribTextureName,
 					component: component,
-					uvName: this._uv_name,
+					uvName: this._uvName,
 				};
 			}
 		}

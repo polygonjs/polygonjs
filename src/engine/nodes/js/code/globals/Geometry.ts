@@ -12,31 +12,18 @@ import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseJsNodeType} from '../../_Base';
 import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
+import {GlobalsJsBaseControllerType} from './Common';
 
 const VARIABLE_CONFIG_DEFAULT_BY_NAME: PolyDictionary<string> = {
 	position: 'vec3( position )',
 };
 
 export class GlobalsJsGeometryHandler extends GlobalsJsBaseController {
-	// static PRE_DEFINED_ATTRIBUTES = [
-	// 	'position',
-	// 	'color',
-	// 	'normal',
-	// 	'uv',
-	// 	'uv2',
-	// 	'morphTarget0',
-	// 	'morphTarget1',
-	// 	'morphTarget2',
-	// 	'morphTarget3',
-	// 	'skinIndex',
-	// 	'skinWeight',
-	// ];
+	type(): GlobalsJsBaseControllerType {
+		return GlobalsJsBaseControllerType.GEOMETRY;
+	}
 
-	// static IF_RULE = {
-	// 	uv: 'defined( USE_MAP ) || defined( USE_BUMPMAP ) || defined( USE_NORMALMAP ) || defined( USE_SPECULARMAP ) || defined( USE_ALPHAMAP ) || defined( USE_EMISSIVEMAP ) || defined( USE_ROUGHNESSMAP ) || defined( USE_METALNESSMAP )',
-	// };
-
-	override handle_globals_node(
+	override handleGlobalsNode(
 		globals_node: GlobalsJsNode,
 		output_name: string,
 		linesController: JsLinesCollectionController
