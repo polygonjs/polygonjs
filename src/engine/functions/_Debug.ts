@@ -3,7 +3,7 @@ import {_matchArrayLength} from './_ArrayUtils';
 import {Object3D} from 'three';
 import {JsDataType} from '../nodes/utils/io/connections/Js';
 import {Ref} from '@vue/reactivity';
-import {isVector, isColor, isBoolean, isNumber, isString, isArray} from '../../core/Type';
+import {isVector, isColor, isBoolean, isNumber, isString, isArray, isQuaternion} from '../../core/Type';
 import {ref} from '../../core/reactivity/CoreReactivity';
 import {PolyScene} from '../scene/PolyScene';
 
@@ -60,7 +60,7 @@ function _displayableValue(value: JsDataType): string {
 				.map((e) => e.toFixed(4))
 				.join(', ');
 		}
-		if (isVector(value)) {
+		if (isVector(value) || isQuaternion(value)) {
 			return value
 				.toArray()
 				.map((e) => e.toFixed(4))

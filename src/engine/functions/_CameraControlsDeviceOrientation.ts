@@ -56,10 +56,13 @@ class DeviceOrientationControlsHandler {
 		this._lastUpdatedFrame = currentFrame;
 	}
 	quaternion(target: Quaternion) {
+		// update must be before checking for controls,
+		// otherwise the controls are never created.
+		this.update();
 		if (!this._controls) {
+			console.warn('no controls');
 			return;
 		}
-		this.update();
 		target.copy(this._controls.quaternion);
 		if (compensateRotation) {
 			target.premultiply(compensateQuat);
