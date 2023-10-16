@@ -1,5 +1,5 @@
 import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
-import {ObjectUtils} from '../ObjectUtils';
+import {objectCloneDeep} from '../ObjectUtils';
 import type {CadGeometry} from './modules/cad/CadCommon';
 import type {CsgGeometry} from './modules/csg/CsgCommon';
 import type {QuadGeometry} from './modules/quad/QuadGeometry';
@@ -51,18 +51,30 @@ export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is 
 	return o instanceof Object3D;
 }
 
-export function objectContentCopyProperties(src: ObjectContent<CoreObjectType>, target: ObjectContent<CoreObjectType>) {
+export interface ObjectContentCopyPropertiesOptions {
+	castShadow?: boolean;
+	receiveShadow?: boolean;
+}
+export function objectContentCopyProperties(
+	src: ObjectContent<CoreObjectType>,
+	target: ObjectContent<CoreObjectType>,
+	options?: ObjectContentCopyPropertiesOptions
+) {
 	target.visible = src.visible;
 	target.name = src.name;
-	target.castShadow = src.castShadow;
-	target.receiveShadow = src.receiveShadow;
+	if (options == null || options.castShadow == null || options.castShadow == true) {
+		target.castShadow = src.castShadow;
+	}
+	if (options == null || options.receiveShadow == null || options.receiveShadow == true) {
+		target.receiveShadow = src.receiveShadow;
+	}
 	target.renderOrder = src.renderOrder;
 	target.frustumCulled = src.frustumCulled;
 	target.matrixAutoUpdate = src.matrixAutoUpdate;
 	if (src.material) {
 		target.material = src.material;
 	}
-	target.userData = ObjectUtils.cloneDeep(src.userData); //JSON.parse(JSON.stringify(this.userData));
+	target.userData =objectCloneDeep(src.userData); //JSON.parse(JSON.stringify(this.userData));
 }
 
 export interface MergeCompactOptions {

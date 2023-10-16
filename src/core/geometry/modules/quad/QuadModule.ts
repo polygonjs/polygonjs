@@ -1,4 +1,4 @@
-import {Object3D} from 'three';
+import {Object3D, Color} from 'three';
 import {PolyEngine} from '../../../../engine/Poly';
 import {SpecializedChildrenHook} from '../../../../engine/poly/PolySpecializedChildrenController';
 import {
@@ -23,10 +23,12 @@ import {QuadPoint} from './QuadPoint';
 import {QuadVertex} from './QuadVertex';
 import {QuadPrimitive} from './QuadPrimitive';
 import {QuadObject} from './QuadObject';
+import {ObjectType, registerObjectType} from '../../Constant';
 
 const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
-	wireframe: false,
+	wireframe: true,
+	wireframeColor: new Color(0, 0, 0),
 	center: false,
 	innerRadius: false,
 	outerRadius: false,
@@ -34,6 +36,7 @@ const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.triangles = params.QUADTriangles;
 	QUAD_TESSELATION_PARAMS.wireframe = params.QUADWireframe;
+	QUAD_TESSELATION_PARAMS.wireframeColor.copy(params.QUADWireframeColor);
 	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
 	QUAD_TESSELATION_PARAMS.innerRadius = params.QUADInnerRadius;
 	QUAD_TESSELATION_PARAMS.outerRadius = params.QUADOuterRadius;
@@ -146,4 +149,11 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 	//
 	//
 	poly.specializedChildren.registerHook('QUAD', onAddSpecializedChildren);
+	//
+	//
+	// DATA TYPES
+	//
+	//
+	const type = 'QuadObject';
+	registerObjectType({type: type as ObjectType, ctor: QuadObject, humanName: 'QuadObject'});
 }

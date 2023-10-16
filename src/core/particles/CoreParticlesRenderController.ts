@@ -1,5 +1,5 @@
 import {Material, Mesh} from 'three';
-import {ObjectUtils} from '../ObjectUtils';
+import {objectCloneDeep} from '../ObjectUtils';
 import {BaseBuilderMatNodeType} from '../../engine/nodes/mat/_BaseBuilder';
 // import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {assignUniforms, applyCustomMaterials, ShaderMaterialWithCustomMaterials} from '../geometry/Material';
@@ -180,7 +180,7 @@ export class CoreParticlesRenderController {
 					// otherwise it won't cook
 					// but we also need to check if the texture_allocation has changed,
 					// otherwise we'll have an infinite loop
-					this._texture_allocations_json = ObjectUtils.cloneDeep(new_texture_allocations_json);
+					this._texture_allocations_json = objectCloneDeep(new_texture_allocations_json);
 					// setting the material to dirty is not enough. We need to make it clear a recompile is required.
 					// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
 					if (matNodeAssemblerController) {

@@ -10,8 +10,8 @@ export const quadObjectFromPrimitives: ObjectBuilder<CoreObjectType.QUAD> = (
 	object: ObjectContent<CoreObjectType.QUAD>,
 	entities: CoreEntity[]
 ) => {
-	const mesh = object as ObjectContent<CoreObjectType.QUAD> as QuadObject;
-	const geometry = mesh.geometry;
+	const quadObject = object as ObjectContent<CoreObjectType.QUAD> as QuadObject;
+	const geometry = quadObject.geometry;
 	if (!geometry) {
 		return undefined;
 	}
@@ -21,17 +21,37 @@ export const quadObjectFromPrimitives: ObjectBuilder<CoreObjectType.QUAD> = (
 	}
 	const oldIndexArray = [...oldIndex];
 
-	const primitives = entities as QuadPrimitive[];
-
-	const newIndices = new Array(primitives.length * STRIDE);
+	const entitiesCount = entities.length;
+	const newIndices = new Array(entitiesCount * STRIDE);
 
 	let i = 0;
-	for (const primitive of primitives) {
+	for (const primitive of entities) {
 		_v4.fromArray(oldIndexArray, primitive.index() * STRIDE);
 		_v4.toArray(newIndices, i * STRIDE);
 		i++;
 	}
 	geometry.setIndex(newIndices);
 
-	return mesh;
+	// update primitive attributes
+	const primitiveAttributes = QuadPrimitive.attributes(object);
+	if (primitiveAttributes) {
+		const primitiveAttributeNames = Object.keys(primitiveAttributes);
+		for (const primitiveAttributeName of primitiveAttributeNames) {
+			const primitiveAttribute = primitiveAttributes[primitiveAttributeName];
+			const itemSize = primitiveAttribute.itemSize;
+			const srcArray = primitiveAttribute.array;
+			const newArray = new Array(entitiesCount * itemSize);
+			let i = 0;
+			for (const entity of entities) {
+				const index = entity.index();
+				for (let k = 0; k < itemSize; k++) {
+					newArray[i + k] = srcArray[index + k];
+				}
+				i++;
+			}
+			primitiveAttribute.array = newArray;
+		}
+	}
+
+	return quadObject;
 };

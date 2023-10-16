@@ -18,8 +18,8 @@ export function testenginenodesutilsMemory(qUnit: QUnit) {
 		const maxGraphNodesCount = graph.nodesCount();
 		assert.equal(
 			maxGraphNodesCount,
-			startGraphNodesCount + 122,
-			`122 created, started with ${startGraphNodesCount}`
+			startGraphNodesCount + 126,
+			`126 created, started with ${startGraphNodesCount}`
 		);
 
 		root.removeNode(geo);

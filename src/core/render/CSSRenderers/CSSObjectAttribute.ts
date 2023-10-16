@@ -11,7 +11,7 @@ import {Object3D} from 'three';
 import {isString, isNumber} from '../../Type';
 import type {CSS2DObject} from './CSS2DObject';
 import type {CSS3DObject} from './CSS3DObject';
-import {ObjectUtils} from '../../ObjectUtils';
+import {objectCloneDeep} from '../../ObjectUtils';
 import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 // export enum CSSObjectAttributeId {
@@ -97,7 +97,7 @@ export function CSSObjectElementCopyObjectAttributes(element: HTMLElement, optio
 	const {CSSObject, copyAttributes, attributesToCopy, object} = options;
 
 	CSSObject.name = object.name;
-	CSSObject.userData = ObjectUtils.cloneDeep(object.userData);
+	CSSObject.userData = objectCloneDeep(object.userData);
 
 	if (copyAttributes == true) {
 		const coreObjectClass = coreObjectClassFactory(object);

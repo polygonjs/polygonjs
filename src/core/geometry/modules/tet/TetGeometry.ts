@@ -13,6 +13,7 @@ import {Vector3, Triangle, Matrix4, Box3, Sphere} from 'three';
 import {circumSphere} from './utils/tetSphere';
 import {tetFaceTriangle} from './utils/tetTriangle';
 import {logRedBg} from '../../../logger/Console';
+import {objectCloneDeep} from '../../../ObjectUtils';
 const _triangle = new Triangle();
 const _triangleNormal = new Vector3();
 const _newPointDelta = new Vector3();
@@ -26,6 +27,7 @@ export class TetGeometry {
 	private _pointsCount = 0;
 	private _tetsCount = 0;
 	private _lastAddedTetId: number | null = null;
+	public userData: {[key: string]: any} = {};
 
 	addPoint(x: number, y: number, z: number) {
 		this._nextPointId++;
@@ -181,16 +183,16 @@ export class TetGeometry {
 	}
 
 	clone(): this {
-		const newGeometry = new TetGeometry();
+		const clonedGeometry = new TetGeometry();
 
 		this.points.forEach((point, id) => {
-			newGeometry.points.set(id, {
+			clonedGeometry.points.set(id, {
 				id: point.id,
 				position: point.position.clone(),
 			});
 		});
 		this.tetrahedrons.forEach((tetrahedron, id) => {
-			newGeometry.tetrahedrons.set(id, {
+			clonedGeometry.tetrahedrons.set(id, {
 				id: tetrahedron.id,
 				pointIds: tetrahedron.pointIds.map((id) => id) as Number4,
 				neighbours: tetrahedron.neighbours.map((d) => {
@@ -211,15 +213,17 @@ export class TetGeometry {
 			});
 		});
 		this.tetrahedronsByPointId.forEach((tetrahedrons, id) => {
-			newGeometry.tetrahedronsByPointId.set(id, new Set(tetrahedrons));
+			clonedGeometry.tetrahedronsByPointId.set(id, new Set(tetrahedrons));
 		});
-		newGeometry._nextPointId = this._nextPointId;
-		newGeometry._nextTetId = this._nextTetId;
-		newGeometry._pointsCount = this._pointsCount;
-		newGeometry._tetsCount = this._tetsCount;
-		newGeometry._lastAddedTetId = this._lastAddedTetId;
+		clonedGeometry._nextPointId = this._nextPointId;
+		clonedGeometry._nextTetId = this._nextTetId;
+		clonedGeometry._pointsCount = this._pointsCount;
+		clonedGeometry._tetsCount = this._tetsCount;
+		clonedGeometry._lastAddedTetId = this._lastAddedTetId;
 
-		return newGeometry as this;
+		clonedGeometry.userData = objectCloneDeep(this.userData);
+
+		return clonedGeometry as this;
 	}
 
 	applyMatrix4(matrix: Matrix4) {

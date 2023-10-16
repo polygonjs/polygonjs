@@ -12,7 +12,7 @@ import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {Attribute} from '../../Attribute';
-import {ObjectUtils} from '../../../ObjectUtils';
+import {objectCloneDeep} from '../../../ObjectUtils';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {markedAsInstance} from '../../GeometryUtils';
 import {pointsCountFromBufferGeometry, positionAttributeNameFromBufferGeometry} from './CoreThreejsPointUtils';
@@ -176,7 +176,7 @@ export class ThreejsPoint extends CorePoint<CoreObjectType.THREEJS> {
 			return;
 		}
 		if (this.isAttribIndexed(object, oldName)) {
-			this.userDataAttribs(object)[newName] = ObjectUtils.clone(this.userDataAttribs(object)[oldName]);
+			this.userDataAttribs(object)[newName] = objectCloneDeep(this.userDataAttribs(object)[oldName]);
 			delete this.userDataAttribs(object)[oldName];
 		}
 

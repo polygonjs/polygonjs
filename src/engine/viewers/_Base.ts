@@ -54,6 +54,8 @@ export interface TypedViewerInterectionObserverChangeOptions {
 export interface BaseViewerMountOptions {
 	updateAutoRenderOnIntersectionChange?: boolean;
 }
+type RenderFuncWithDelta = (delta: number) => void;
+type RenderFunc = () => void;
 
 /**
  *
@@ -75,6 +77,9 @@ export abstract class TypedViewer<C extends Camera> {
 	public readonly updateCameraAspect: UpdateCameraAspectCallback;
 	protected _doRender: boolean = true;
 	protected _controlsNode: ApplicableControlsNode | undefined;
+	protected _renderFunc: RenderFuncWithDelta | undefined;
+	protected _renderCSSFunc: RenderFunc | undefined;
+	protected _renderer: AbstractRenderer | undefined;
 
 	constructor(options: TypedViewerOptions<C>) {
 		this._id = TypedViewer._nextId();
@@ -183,9 +188,47 @@ export abstract class TypedViewer<C extends Camera> {
 		return (this._canvas = this._canvas || TypedViewer.createCanvas(this._id));
 	}
 
-	render(delta: number) {
-		this._scene.viewersRegister.markViewerAsRendered(this);
+	protected _tickAndRender(delta: number) {
+		this._tick(delta);
+		this.render(delta);
+		this._postRender(delta);
+	}
+	protected _tick(delta: number) {
+		// updating the camera controls
+		// must be done before the actor nodes are run.
+		// otherwise, we are bound to fetch an out of date camera matrix.
+		this.controlsController().update(delta);
+		//
 		this.raycastersController.updateRaycasters();
+		//
+		this._runOnBeforeTickCallbacks(delta);
+		this.scene().update(delta);
+		this._runOnAfterTickCallbacks(delta);
+	}
+	render(delta: number) {
+		// if (this._canvas) {
+		// super.render(delta);
+		const renderer = this._renderer;
+		if (!renderer) {
+			console.error('render: no renderer');
+			return;
+		}
+
+		this._runOnBeforeRenderCallbacks(delta, renderer);
+		if (this._renderFunc) {
+			this._renderFunc(delta);
+		}
+		if (this._renderCSSFunc) {
+			this._renderCSSFunc();
+		}
+		// this.controlsController().update(delta);
+		this._runOnAfterRenderCallbacks(delta, renderer);
+		// } else {
+		// 	console.warn('no canvas to render onto');
+		// }
+	}
+	protected _postRender(delta: number) {
+		this._scene.viewersRegister.markViewerAsRendered(this);
 		if (this.scene().timeController.playing()) {
 			this.performanceMonitor.measurePerformance(delta);
 		}

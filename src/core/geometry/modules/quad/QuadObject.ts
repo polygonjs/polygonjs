@@ -1,7 +1,13 @@
 import {Material, Matrix4, Box3, Sphere, Object3D, Vector3} from 'three';
 import {QUADObjectType, QUADTesselationParams} from './QuadCommon';
 import {QuadGeometry} from './QuadGeometry';
-import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../../ObjectContent';
+import {
+	ObjectContent,
+	CoreObjectType,
+	ObjectGeometryMap,
+	objectContentCopyProperties,
+	ObjectContentCopyPropertiesOptions,
+} from '../../ObjectContent';
 import {quadToObject3D} from './toObject3D/QuadToObject3D';
 import {CoreType} from '../../../Type';
 
@@ -53,13 +59,25 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 	}
 	toObject3D(tesselationParams: QUADTesselationParams): Object3D | Object3D[] | undefined {
 		const object = quadToObject3D(this, tesselationParams);
+
+		const _objectContentCopyProperties = (src: QuadObject, dest: Object3D) => {
+			const options: ObjectContentCopyPropertiesOptions = {
+				// the lineSegments objects have castShadow and receiveShadow set to false,
+				// we therefore should not take those properties into account
+				// if they are false in the dest object
+				castShadow: dest.castShadow,
+				receiveShadow: dest.receiveShadow,
+			};
+			objectContentCopyProperties(src, dest, options);
+		};
+
 		if (object) {
 			if (CoreType.isArray(object)) {
 				for (const element of object) {
-					objectContentCopyProperties(this, element);
+					_objectContentCopyProperties(this, element);
 				}
 			} else {
-				objectContentCopyProperties(this, object);
+				_objectContentCopyProperties(this, object);
 			}
 		}
 		return object;

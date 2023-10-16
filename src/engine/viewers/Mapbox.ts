@@ -30,18 +30,15 @@ export interface MapboxViewerOptions extends TypedViewerOptions<MapboxPerspectiv
 	// renderer?: AbstractRenderer;
 }
 
-type RenderFuncWithDelta = (delta: number) => void;
-type RenderFunc = () => void;
-
 const CSS_URL = 'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css';
 export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 	private _map: mapboxgl.Map;
 	private _canvasContainer: HTMLElement;
 	// private _requestAnimationFrameId: number | undefined;
-	private _renderer: WebGLRenderer | undefined;
+	protected override _renderer: WebGLRenderer | undefined;
 	// private _rendererConfig: AvailableRenderConfig | undefined;
-	private _renderFunc: RenderFuncWithDelta | undefined;
-	private _renderCSSFunc: RenderFunc | undefined;
+	// private _renderFunc: RenderFuncWithDelta | undefined;
+	// private _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 	private _effectComposer: EffectComposer | undefined;
 	// private _layersController: MapboxLayersController;
@@ -370,11 +367,7 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 	private _animateCommonBound = this.__animateCommon__.bind(this);
 	private __animateCommon__() {
 		const delta = this._scene.timeController.updateClockDelta();
-		this._runOnBeforeTickCallbacks(delta);
-		this.scene().update(delta);
-		this._runOnAfterTickCallbacks(delta);
-		// this._markerTrackingConfig?.renderFunction();
-		this.render(delta);
+		this._tickAndRender(delta);
 	}
 
 	// private _cancelAnimateCommon() {
@@ -387,29 +380,6 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 	// 		// this._cameraNode.renderController().deleteRenderer(this._canvas);
 	// 	}
 	// }
-
-	override render(delta: number) {
-		// if (this._canvas) {
-		super.render(delta);
-		const renderer = this._renderer;
-		if (!renderer) {
-			console.error('render: no renderer');
-			return;
-		}
-
-		this._runOnBeforeRenderCallbacks(delta, renderer);
-		if (this._renderFunc) {
-			this._renderFunc(delta);
-		}
-		if (this._renderCSSFunc) {
-			this._renderCSSFunc();
-		}
-		// this.controlsController().update(delta);
-		this._runOnAfterRenderCallbacks(delta, renderer);
-		// } else {
-		// 	console.warn('no canvas to render onto');
-		// }
-	}
 
 	/**
 	 * returns the current renderer

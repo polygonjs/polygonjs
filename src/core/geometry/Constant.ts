@@ -28,6 +28,7 @@ import type {
 	SpotLight,
 } from 'three';
 import {GroupCollectionData} from './EntityGroupCollection';
+import {CoreObjectType, ObjectContent} from './ObjectContent';
 
 // import {Poly} from '../../engine/Poly';
 
@@ -67,11 +68,11 @@ export const OBJECT_TYPES: ObjectType[] = [
 ];
 
 // type Object3DConstructor = any;// Object3D
-interface Object3DConstructor<O extends Object3D> {
-	new (args: any): O;
+interface ObjectContentConstructor<T extends CoreObjectType> {
+	new (args: any): ObjectContent<T>;
 	// Model: Model;
 }
-export type DefaultObject3DConstructor = Object3DConstructor<Object3D>;
+export type DefaultObjectContentConstructor = ObjectContentConstructor<CoreObjectType>;
 
 // type ObjectByObjectTypeMapGeneric = {[key in ObjectType]: DefaultObject3DConstructor};
 export interface ObjectByObjectType {
@@ -95,6 +96,8 @@ export interface ObjectByObjectType {
 	[ObjectType.SCENE]: Scene;
 	// [ObjectType.SKINNED_MESH]: typeof SkinnedMesh;
 	[ObjectType.SPOT_LIGHT]: SpotLight;
+	//
+	// [ObjectType.UNKNOWN]: Object3D;
 }
 // export const CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: Record<ObjectType, string> = {
 // 	// [ObjectType.BONE]: 'Bone',
@@ -141,10 +144,10 @@ export interface ObjectData {
 
 export interface ObjectTypeData {
 	type: ObjectType;
-	ctor: DefaultObject3DConstructor;
+	ctor: DefaultObjectContentConstructor;
 	humanName: string;
 }
-type DataByConstructor = Map<DefaultObject3DConstructor, ObjectTypeData>;
+type DataByConstructor = Map<DefaultObjectContentConstructor, ObjectTypeData>;
 type DataByObjectType = Map<ObjectType, ObjectTypeData>;
 interface ObjectTypeConstructorRegisters {
 	dataByConstructor: DataByConstructor;
@@ -154,7 +157,7 @@ function _initializeObjectTypeFromConstructor() {
 	const dataByConstructor: DataByConstructor = new Map();
 	const dataByObjectType: DataByObjectType = new Map();
 	const maps: ObjectTypeConstructorRegisters = {dataByConstructor, dataByObjectType};
-	function _register(type: ObjectType, ctor: DefaultObject3DConstructor, humanName?: string) {
+	function _register(type: ObjectType, ctor: DefaultObjectContentConstructor, humanName?: string) {
 		_registerObjectType_(maps, {
 			type,
 			ctor,
@@ -212,7 +215,7 @@ export function objectTypeFromConstructor(constructor: Function): ObjectType {
 	// }
 }
 export function dataFromConstructor(constructor: Function, level = 0): ObjectTypeData {
-	const foundData = dataByConstructor.get(constructor as DefaultObject3DConstructor);
+	const foundData = dataByConstructor.get(constructor as DefaultObjectContentConstructor);
 	// console.log(level, 'constructor', foundData, constructor);
 	if (foundData) {
 		return foundData;

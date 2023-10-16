@@ -32,8 +32,8 @@ export interface ThreejsViewerOptions<C extends Camera> extends TypedViewerOptio
 	// renderer?: AbstractRenderer;
 }
 
-type RenderFuncWithDelta = (delta: number) => void;
-type RenderFunc = () => void;
+// type RenderFuncWithDelta = (delta: number) => void;
+// type RenderFunc = () => void;
 export interface ThreejsViewerSetupData<C extends Camera> {
 	renderer: AbstractRenderer;
 	renderScene: Scene;
@@ -52,10 +52,10 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 	private _webXRConfig: CoreCameraWebXRControllerConfig | undefined;
 	private _markerTrackingConfig: MarkerTrackingControllerConfig | undefined;
-	protected _renderer: AbstractRenderer | undefined;
+	// protected  _renderer: AbstractRenderer | undefined;
 	private _rendererConfig: AvailableRenderConfig | undefined;
-	protected _renderFunc: RenderFuncWithDelta | undefined;
-	protected _renderCSSFunc: RenderFunc | undefined;
+	// protected _renderFunc: RenderFuncWithDelta | undefined;
+	// protected _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 	private _codeConfig: ViewerCodeConfig | undefined;
 	private _FPSConfig: ViewerFPSConfig | undefined;
@@ -360,8 +360,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			this._accumulatedDelta = 0;
 		}
 
-		this._preRender(delta);
-		this.render(delta);
+		this._tickAndRender(delta);
 	}
 
 	private _cancelAnimateCommon() {
@@ -375,35 +374,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		}
 	}
 
-	override render(delta: number) {
-		if (this._canvas) {
-			super.render(delta);
-			this._postRender(delta);
-		} else {
-			console.warn('no canvas to render onto');
-		}
-	}
-	protected _preRender(delta: number) {
-		this._runOnBeforeTickCallbacks(delta);
-		this.scene().update(delta);
-		this._runOnAfterTickCallbacks(delta);
+	protected override _tick(delta: number) {
+		super._tick(delta);
 		this._markerTrackingConfig?.renderFunction();
-	}
-	protected _postRender(delta: number) {
-		const renderer = this._renderer;
-		if (!renderer) {
-			return;
-		}
-
-		this._runOnBeforeRenderCallbacks(delta, renderer);
-		if (this._renderFunc) {
-			this._renderFunc(delta);
-		}
-		if (this._renderCSSFunc) {
-			this._renderCSSFunc();
-		}
-		this.controlsController().update(delta);
-		this._runOnAfterRenderCallbacks(delta, renderer);
 	}
 
 	/**

@@ -7,7 +7,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ColorConversion} from '../../../core/Color';
 import {CoreType, isFunction} from '../../../core/Type';
 import {arrayDifference, arrayCompact, arrayUniq} from '../../../core/ArrayUtils';
-import {ObjectUtils} from '../../../core/ObjectUtils';
+import {objectCloneDeep, objectIsEqual} from '../../../core/ObjectUtils';
 import {PolyScene} from '../../scene/PolyScene';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
 
@@ -280,12 +280,12 @@ export class OptionsController {
 			console.warn('options input invalid', options, typeof options);
 		}
 		this._default_options = options;
-		this._options = ObjectUtils.cloneDeep(this._default_options);
+		this._options = objectCloneDeep(this._default_options);
 		this.postSetOptions();
 	}
 	copy(options_controller: OptionsController) {
-		this._default_options = ObjectUtils.cloneDeep(options_controller.default());
-		this._options = ObjectUtils.cloneDeep(options_controller.current());
+		this._default_options = objectCloneDeep(options_controller.default());
+		this._options = objectCloneDeep(options_controller.current());
 		this.postSetOptions();
 	}
 	setOption<K extends keyof ParamOptions>(optionName: K, value: ParamOptions[K]) {
@@ -327,7 +327,7 @@ export class OptionsController {
 
 	// utils
 	hasOptionsOverridden(): boolean {
-		return !ObjectUtils.isEqual(this._options, this._default_options);
+		return !objectIsEqual(this._options, this._default_options);
 	}
 	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
@@ -335,8 +335,8 @@ export class OptionsController {
 		const optionNamesToCheck: Array<keyof ParamOptions> = [];
 		arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS, optionNamesToCheck);
 		for (const optionName of optionNamesToCheck) {
-			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
-				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
+			if (!objectIsEqual(this._options[optionName], this._default_options[optionName])) {
+				const cloned_option = objectCloneDeep(this._options[optionName]);
 				Object.assign(overriden, {[optionName]: cloned_option});
 			}
 		}

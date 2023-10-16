@@ -1,6 +1,6 @@
 import {Box3, Matrix4, Vector3, BufferAttribute} from 'three';
 import {Attribute} from '../../Attribute';
-import {ObjectUtils} from '../../../ObjectUtils';
+import {objectCloneDeep} from '../../../ObjectUtils';
 
 const _v3 = new Vector3();
 
@@ -43,7 +43,7 @@ export class QuadGeometry {
 			clonedGeometry.setAttribute(attributeName, this.attributes[attributeName].clone());
 		}
 		clonedGeometry.setIndex([...this.index]);
-		clonedGeometry.userData = ObjectUtils.cloneDeep(this.userData);
+		clonedGeometry.userData = objectCloneDeep(this.userData);
 		// prim attributes
 		// const primAttributes = QuadPrimitive.attributesFromGeometry(this);
 		// if (primAttributes) {

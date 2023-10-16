@@ -1,25 +1,25 @@
 import {DeleteSopNode} from '../../Delete';
-import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
-import {Mesh, Vector3, Raycaster, Intersection} from 'three';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
+import {Mesh, Vector3, Raycaster, Intersection, Box3} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';
 
 const UP = new Vector3(0, 1, 0);
 const DOWN = new Vector3(0, -1, 0);
 const _pointPosition = new Vector3();
+const _bbox = new Box3();
+const _raycaster = new Raycaster();
+const _intersections: Intersection[] = [];
 
 export class ByBoundingObjectHelper {
 	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
 
-	private _raycaster = new Raycaster();
-	private _intersections: Intersection[] = [];
-
 	constructor(private node: DeleteSopNode) {}
-	evalForPoints(points: BaseCorePoint[], core_group2?: CoreGroup) {
-		if (!core_group2) {
+	evalForEntities(points: CoreEntity[], coreGroup2?: CoreGroup) {
+		if (!coreGroup2) {
 			return;
 		}
-		const boundingObject = core_group2?.threejsObjectsWithGeo()[0];
+		const boundingObject = coreGroup2?.threejsObjectsWithGeo()[0];
 		if (!boundingObject) {
 			return;
 		}
@@ -27,16 +27,17 @@ export class ByBoundingObjectHelper {
 		if (!mesh.isMesh) {
 			return;
 		}
-		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(core_group2);
+		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(coreGroup2);
 
-		const geo = boundingObject.geometry;
-		geo.computeBoundingBox();
-		const bbox = geo.boundingBox!;
+		// const geo = boundingObject.geometry;
+		// geo.computeBoundingBox();
+		// _bbox.copy(geo.boundingBox!).applyMatrix4(boundingObject.matrixWorld);
+		_bbox.setFromObject(boundingObject);
 
 		for (const point of points) {
 			point.position(_pointPosition);
 
-			if (bbox.containsPoint(_pointPosition)) {
+			if (_bbox.containsPoint(_pointPosition)) {
 				if (
 					this._isPositionInObject(_pointPosition, mesh, UP) &&
 					this._isPositionInObject(_pointPosition, mesh, DOWN)
@@ -46,13 +47,13 @@ export class ByBoundingObjectHelper {
 			}
 		}
 
-		this._matDoubleSideTmpSetter.restoreMaterialSideProperty(core_group2);
+		this._matDoubleSideTmpSetter.restoreMaterialSideProperty(coreGroup2);
 	}
 	private _isPositionInObject(point: Vector3, object: Mesh, raydir: Vector3): boolean {
-		this._raycaster.ray.direction.copy(raydir);
-		this._raycaster.ray.origin.copy(point);
-		this._intersections.length = 0;
-		const intersections = this._raycaster.intersectObject(object, false, this._intersections);
+		_raycaster.ray.direction.copy(raydir);
+		_raycaster.ray.origin.copy(point);
+		_intersections.length = 0;
+		const intersections = _raycaster.intersectObject(object, false, _intersections);
 		if (!intersections) {
 			return false;
 		}
@@ -64,7 +65,7 @@ export class ByBoundingObjectHelper {
 		if (!normal) {
 			return false;
 		}
-		const dot = this._raycaster.ray.direction.dot(normal);
+		const dot = _raycaster.ray.direction.dot(normal);
 		return dot >= 0;
 	}
 }

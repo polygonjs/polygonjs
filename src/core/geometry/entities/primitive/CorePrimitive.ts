@@ -394,11 +394,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		TypeAssert.unreachable(attribClass);
 	}
 	static graph(object: ObjectContent<CoreObjectType>): PrimitiveGraph | undefined {
-		console.warn('CorePrimitive.graph needs to be override');
+		console.warn('CorePrimitive.graph needs to be overriden');
 		return undefined;
-	}
-	static neighboursCount(object: ObjectContent<CoreObjectType>, index: number, sharedEdgeOnly: boolean): number {
-		console.warn('CorePrimitive.neighboursCount needs to be override');
-		return 0;
 	}
 }

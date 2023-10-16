@@ -17,7 +17,7 @@ import {Object3DWithGeometry} from '../../Group';
 import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
-import {ObjectUtils} from '../../../ObjectUtils';
+import {objectCloneDeep} from '../../../ObjectUtils';
 import {ThreeMeshBVHHelper} from '../../bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
@@ -145,7 +145,7 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 				ThreeMeshBVHHelper.copyBVH(meshNode, srcNode);
 				// const mesh_node_geometry = meshNode.geometry as BufferGeometry;
 				// if (mesh_node_geometry.userData) {
-				// 	mesh_node_geometry.userData = ObjectUtils.cloneDeep(srcNodeGeometry.userData);
+				// 	mesh_node_geometry.userData = objectCloneDeep(srcNodeGeometry.userData);
 				// }
 			}
 			if (meshNode.material) {
@@ -165,7 +165,7 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			}
 			if (srcNode) {
 				if (srcNode.userData) {
-					node.userData = ObjectUtils.cloneDeep(srcNode.userData);
+					node.userData = objectCloneDeep(srcNode.userData);
 				}
 				const src_node_with_animations = (<unknown>srcNode) as Object3DWithAnimations;
 				if (src_node_with_animations.animations) {

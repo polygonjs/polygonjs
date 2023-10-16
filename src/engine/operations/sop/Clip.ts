@@ -22,7 +22,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/builders/Mesh';
-import {ObjectUtils} from '../../../core/ObjectUtils';
+import {objectCloneDeep} from '../../../core/ObjectUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
@@ -259,5 +259,5 @@ export function copyObjectProperties(src: Object3D, target: Object3D) {
 	target.name = src.name;
 	target.castShadow = src.castShadow;
 	target.receiveShadow = src.receiveShadow;
-	target.userData = ObjectUtils.cloneDeep(src.userData);
+	target.userData = objectCloneDeep(src.userData);
 }

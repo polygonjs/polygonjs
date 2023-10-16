@@ -11,6 +11,8 @@ import {BaseCorePoint, CorePoint} from '../../../../src/core/geometry/entities/p
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {QuadObject} from '../../../../src/core/geometry/modules/quad/QuadObject';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {QuadPrimitive} from '../../../../src/core/geometry/modules/quad/QuadPrimitive';
+import {TetPrimitive} from '../../../../src/core/geometry/modules/tet/TetPrimitive';
 
 const _points: CorePoint<CoreObjectType>[] = [];
 
@@ -216,13 +218,13 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 	qUnit.test('sop/delete byBoundingObject 1', async (assert) => {
 		const geo1 = window.geo1;
 
-		const sphere = geo1.createNode('sphere');
+		const sphere1 = geo1.createNode('sphere');
 		const bboxScatter = geo1.createNode('bboxScatter');
 		bboxScatter.p.stepSize.set(0.2);
 		const delete1 = geo1.createNode('delete');
-		bboxScatter.setInput(0, sphere);
+		bboxScatter.setInput(0, sphere1);
 		delete1.setInput(0, bboxScatter);
-		delete1.setInput(1, sphere);
+		delete1.setInput(1, sphere1);
 
 		let container = await delete1.compute();
 		assert.equal(container.coreContent()!.pointsCount(), 1210);
@@ -258,7 +260,7 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		transform1.setApplyOn(TransformTargetType.OBJECT);
 		transform1.p.t.z.set(1);
 		container = await delete1.compute();
-		assert.equal(container.coreContent()!.pointsCount(), 1110);
+		assert.equal(container.coreContent()!.pointsCount(), 1005);
 
 		transform1.setApplyOn(TransformTargetType.GEOMETRY);
 		container = await delete1.compute();
@@ -370,4 +372,111 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 			assert.notOk((await compute()).errorMessage);
 		}
 	);
+
+	qUnit.test('sop/delete primitives with quadObject preserves primitive attributes integrity', async (assert) => {
+		const geo1 = window.geo1;
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		const delete1 = geo1.createNode('delete');
+
+		attribCreate1.setInput(0, quadPlane1);
+		delete1.setInput(0, attribCreate1);
+
+		quadPlane1.p.size.set([2, 2]);
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.value1.set('@primnum');
+		delete1.setAttribClass(AttribClass.PRIMITIVE);
+		delete1.p.byExpression.set(1);
+
+		async function compute() {
+			const container = await delete1.compute();
+			const objects = container.coreContent()?.quadObjects()!;
+			const object = objects[0];
+			const primitiveAttribute = QuadPrimitive.attributes(object)!['t'];
+			return {values: primitiveAttribute.array};
+		}
+
+		delete1.p.expression.set('@primnum==-1');
+		assert.equal((await compute()).values.length, 4);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'delete @primnum==-1');
+
+		delete1.p.expression.set('@primnum==0');
+		assert.equal((await compute()).values.length, 3);
+		assert.deepEqual((await compute()).values, [1, 2, 3], 'delete @primnum==0');
+
+		delete1.p.expression.set('@primnum==1');
+		assert.equal((await compute()).values.length, 3);
+		assert.deepEqual((await compute()).values, [0, 2, 3], 'delete @primnum==1');
+
+		delete1.p.expression.set('@primnum==2');
+		assert.equal((await compute()).values.length, 3);
+		assert.deepEqual((await compute()).values, [0, 1, 3], 'delete @primnum==2');
+
+		delete1.p.expression.set('@primnum==3');
+		assert.equal((await compute()).values.length, 3);
+		assert.deepEqual((await compute()).values, [0, 1, 2], 'delete @primnum==3');
+
+		delete1.p.expression.set('@primnum==4');
+		assert.equal((await compute()).values.length, 4);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'delete @primnum==4');
+	});
+	qUnit.test('sop/delete primitives with tetObject preserves primitive attributes integrity', async (assert) => {
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const tetrahedralize1 = geo1.createNode('tetrahedralize');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		const delete1 = geo1.createNode('delete');
+
+		tetrahedralize1.setInput(0, box1);
+		attribCreate1.setInput(0, tetrahedralize1);
+		delete1.setInput(0, attribCreate1);
+
+		tetrahedralize1.p.innerPointsResolution.set(0);
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.value1.set('@primnum');
+		delete1.setAttribClass(AttribClass.PRIMITIVE);
+		delete1.p.byExpression.set(1);
+
+		async function compute() {
+			const container = await delete1.compute();
+			const objects = container.coreContent()?.tetObjects()!;
+			const object = objects[0];
+			const primitiveAttribute = TetPrimitive.attributes(object)!['t'];
+			return {values: primitiveAttribute.array};
+		}
+
+		delete1.p.expression.set('@primnum==-1');
+		assert.equal((await compute()).values.length, 6);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4, 5], 'delete @primnum==-1');
+
+		delete1.p.expression.set('@primnum==0');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [1, 2, 3, 4, 5], 'delete @primnum==0');
+
+		delete1.p.expression.set('@primnum==1');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [0, 2, 3, 4, 5], 'delete @primnum==1');
+
+		delete1.p.expression.set('@primnum==2');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [0, 1, 3, 4, 5], 'delete @primnum==2');
+
+		delete1.p.expression.set('@primnum==3');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 4, 5], 'delete @primnum==3');
+
+		delete1.p.expression.set('@primnum==4');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 5], 'delete @primnum==4');
+
+		delete1.p.expression.set('@primnum==5');
+		assert.equal((await compute()).values.length, 5);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4], 'delete @primnum==5');
+
+		delete1.p.expression.set('@primnum==6');
+		assert.equal((await compute()).values.length, 6);
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4, 5], 'delete @primnum==6');
+	});
 }

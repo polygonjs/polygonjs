@@ -2,7 +2,7 @@ import {PerformanceNode} from './PerformanceNode';
 import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {arraySortBy, arrayUniq} from '../ArrayUtils';
-import {ObjectUtils} from '../ObjectUtils';
+import {objectClone} from '../ObjectUtils';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {Poly} from '../../engine/Poly';
 
@@ -99,8 +99,8 @@ export class CorePerformance {
 	}
 
 	print_recordings() {
-		const durations_by_name = ObjectUtils.clone(this._durations_by_name);
-		const durations_count_by_name = ObjectUtils.clone(this._durations_count_by_name);
+		const durations_by_name = objectClone(this._durations_by_name);
+		const durations_count_by_name = objectClone(this._durations_count_by_name);
 
 		const durations = [];
 		const names_by_duration: PolyDictionary<string[]> = {};

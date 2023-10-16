@@ -19,7 +19,7 @@ import {
 	ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP,
 	AttribClassMenuEntriesWithoutCoreGroup,
 } from '../../../core/geometry/Constant';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
@@ -44,8 +44,8 @@ import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectConten
 import {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
-const _points:CorePoint<CoreObjectType>[]=[]
-		
+const _points: CorePoint<CoreObjectType>[] = [];
+
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT), {
@@ -142,32 +142,54 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	// byBbox
 	/** @param deletes objects that are inside a bounding box */
 	byBbox = ParamConfig.BOOLEAN(0, {
-		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
-		},
+		visibleIf: [
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
+			},
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.PRIMITIVE),
+			},
+		],
 	});
 	/** @param the bounding box size */
 	bboxSize = ParamConfig.VECTOR3([1, 1, 1], {
-		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
-			byBbox: true,
-		},
+		visibleIf: [
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
+				byBbox: true,
+			},
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.PRIMITIVE),
+				byBbox: true,
+			},
+		],
 	});
 	/** @param the bounding box center */
 	bboxCenter = ParamConfig.VECTOR3([0, 0, 0], {
-		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
-			byBbox: true,
-		},
+		visibleIf: [
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
+				byBbox: true,
+			},
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.PRIMITIVE),
+				byBbox: true,
+			},
+		],
 		separatorAfter: true,
 	});
 
 	// byBoundingObject
 	/** @param deletes objects that are inside an object. This uses the object from the 2nd input */
 	byBoundingObject = ParamConfig.BOOLEAN(0, {
-		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
-		},
+		visibleIf: [
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
+			},
+			{
+				class: ATTRIBUTE_CLASSES.indexOf(AttribClass.PRIMITIVE),
+			},
+		],
 	});
 
 	// by_visible
@@ -238,13 +260,12 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return ATTRIBUTE_TYPES[this.pv.attribType];
 	}
 
-	private async _evalForPoints(coreGroup: CoreGroup, core_group2?: CoreGroup) {
-		const coreObjects = coreGroup.threejsCoreObjects();
+	private async _evalForPoints(coreGroup: CoreGroup, coreGroup2?: CoreGroup) {
+		const objects = coreGroup.allObjects();
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
-		for (const coreObject of coreObjects) {
-			const object = coreObject.object() as Object3DWithGeometry;
-			const entities:CorePoint<CoreObjectType>[]=[]
-			pointsFromObject(object,entities);
+		for (const object of objects) {
+			const entities: CorePoint<CoreObjectType>[] = [];
+			pointsFromObject(object, entities);
 			this.entitySelectionHelper.init(entities);
 
 			const initEntitiesCount = entities.length;
@@ -257,10 +278,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				this.byAttributeHelper.evalForEntities(entities);
 			}
 			if (isBooleanTrue(this.pv.byBbox)) {
-				this.byBboxHelper.evalForPoints(entities);
+				this.byBboxHelper.evalForEntities(entities);
 			}
 			if (isBooleanTrue(this.pv.byBoundingObject)) {
-				this.byBoundingObjectHelper.evalForPoints(entities, core_group2);
+				this.byBoundingObjectHelper.evalForEntities(entities, coreGroup2);
 			}
 			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as BaseCorePoint[];
 
@@ -277,7 +298,11 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 								object.geometry = newGeo;
 								newObjects.push(object);
 							}
+						} else {
+							console.warn('no builder found for', objectType);
 						}
+					} else {
+						console.warn('no object type found for', object);
 					}
 				}
 			}
@@ -285,7 +310,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.setObjects(newObjects);
 	}
 
-	private async _evalForPrimitives(coreGroup: CoreGroup, core_group2?: CoreGroup) {
+	private async _evalForPrimitives(coreGroup: CoreGroup, coreGroup2?: CoreGroup) {
 		const objects = coreGroup.allObjects();
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
 		for (const object of objects) {
@@ -302,12 +327,12 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
 				this.byAttributeHelper.evalForEntities(entities);
 			}
-			// if (isBooleanTrue(this.pv.byBbox)) {
-			// 	this.byBboxHelper.evalForPoints(primitives);
-			// }
-			// if (isBooleanTrue(this.pv.byBoundingObject)) {
-			// 	this.byBoundingObjectHelper.evalForPoints(primitives, core_group2);
-			// }
+			if (isBooleanTrue(this.pv.byBbox)) {
+				this.byBboxHelper.evalForEntities(entities);
+			}
+			if (isBooleanTrue(this.pv.byBoundingObject)) {
+				this.byBoundingObjectHelper.evalForEntities(entities, coreGroup2);
+			}
 			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePrimitive<CoreObjectType>[];
 
 			if (keptEntities.length == initEntitiesCount) {
@@ -320,6 +345,9 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 						if (newObject) {
 							newObjects.push(newObject);
 						}
+					} else {
+						const attribClass = ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP[this.pv.class];
+						console.warn(`no ${attribClass} builder for object`, object);
 					}
 				}
 			}
@@ -365,7 +393,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private _pointObject<T extends CoreObjectType>(object: ObjectContent<T>) {
-		pointsFromObject(object,_points);
+		pointsFromObject(object, _points);
 		const builder = geometryBuilder(ObjectType.POINTS);
 		if (builder) {
 			const geometry = builder.fromPoints(object, _points);

@@ -62,6 +62,8 @@ export class vector3Unproject extends NamedFunction3<[Vector3, Object3D, Vector3
 		// so we need to depend on time for now
 		dummyReadRefVal(this.timeController.timeUniform().value);
 		//
+		// object3D.updateMatrix();
+		// object3D.updateProjectionMatrix();
 		target.copy(src);
 		target.unproject(object3D);
 		return target;

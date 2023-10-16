@@ -10,7 +10,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
-import {DefaultObject3DConstructor, ObjectType, registerObjectType} from '../../../core/geometry/Constant';
+import {DefaultObjectContentConstructor, ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateCubeCameraParams {
 	near: number;
 	far: number;
@@ -124,7 +124,7 @@ export class CubeCameraSopOperation extends BaseSopOperation {
 		const cubeRenderTarget = new WebGLCubeRenderTarget(params.resolution);
 		registerObjectType({
 			type: ObjectType.CUBE_CAMERA,
-			ctor: CubeCameraExtended as any as DefaultObject3DConstructor,
+			ctor: CubeCameraExtended as any as DefaultObjectContentConstructor,
 			humanName: ObjectType.CUBE_CAMERA,
 		});
 		const camera = new CubeCameraExtended(params.near, params.far, cubeRenderTarget);

@@ -5,9 +5,13 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param triangles */
-		triangles = ParamConfig.BOOLEAN(false);
+		triangles = ParamConfig.BOOLEAN(true);
 		/** @param wireframe */
 		wireframe = ParamConfig.BOOLEAN(true);
+		/** @param wireframe color */
+		wireframeColor = ParamConfig.COLOR([0, 0, 0], {
+			visibleIf: {wireframe: true},
+		});
 		/** @param center */
 		center = ParamConfig.BOOLEAN(false);
 		/** @param innerRadius */
@@ -24,9 +28,13 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param wireframe */
-		QUADTriangles = ParamConfig.BOOLEAN(false);
+		QUADTriangles = ParamConfig.BOOLEAN(true);
 		/** @param wireframe */
 		QUADWireframe = ParamConfig.BOOLEAN(true);
+		/** @param wireframe color */
+		QUADWireframeColor = ParamConfig.COLOR([0, 0, 0], {
+			visibleIf: {QUADWireframe: true},
+		});
 		/** @param center */
 		QUADCenter = ParamConfig.BOOLEAN(false);
 		/** @param QUADInnerRadius */

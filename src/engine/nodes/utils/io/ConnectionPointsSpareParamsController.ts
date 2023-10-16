@@ -11,7 +11,7 @@ import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSeri
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 import {CoreType} from '../../../../core/Type';
-import {ObjectUtils} from '../../../../core/ObjectUtils';
+import {objectClone} from '../../../../core/ObjectUtils';
 
 /*
 GlNodeSpareParamsController creates spare params from inputs on gl nodes
@@ -159,8 +159,8 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 								name: param_name,
 								type: paramType,
 								// TODO: I should really treat differently init_value and raw_input here
-								initValue: ObjectUtils.clone(init_value as any),
-								rawInput: ObjectUtils.clone(init_value as any),
+								initValue: objectClone(init_value as any),
+								rawInput: objectClone(init_value as any),
 								options: {
 									spare: true,
 									editable: !isConnected,

@@ -52,20 +52,18 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	geometry() {
 		return this._geometry;
 	}
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return (object as any as QuadObject).geometry.quadsCount();
+	}
 	override builder<T extends CoreObjectType>() {
 		return quadObjectFromPrimitives as any as ObjectBuilder<T>;
 	}
-	// static  addAttributeToGeometry(
-	// 	geometry: QuadGeometry,
-	// 	attribName: string,
-	// 	attribute: BasePrimitiveAttribute
-	// ) {
-	// 	const attributes = this.attributesFromGeometry(geometry);
-	// 	if (!attributes) {
-	// 		return;
-	// 	}
-	// 	attributes[attribName] = attribute;
-	// }
+
+	//
+	//
+	// ATTRIBUTES
+	//
+	//
 	static override addAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,
@@ -94,9 +92,6 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		};
 		this.addAttribute(object, attribName, attribute);
 	}
-	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
-		return (object as any as QuadObject).geometry.quadsCount();
-	}
 	static attributesFromGeometry(geometry: QuadGeometry): PrimitiveAttributesDict | undefined {
 		if (!geometry.userData.primAttributes) {
 			geometry.userData.primAttributes = {};
@@ -113,6 +108,11 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		return this.attributesFromGeometry(geometry);
 	}
 
+	//
+	//
+	// POSITION AND NORMAL
+	//
+	//
 	static position<T extends CoreObjectType>(
 		quadObject: ObjectContent<T> | undefined,
 		primitiveIndex: number,
@@ -167,12 +167,12 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		_triangle.getNormal(_n1);
 		return target.copy(_n0).add(_n1).divideScalar(2);
 	}
+
 	//
 	//
 	// RELATED ENTITIES
 	//
 	//
-
 	override relatedVertices(): CoreVertex<CoreObjectType>[] {
 		if (!this._object) {
 			return [];
@@ -190,13 +190,5 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	}
 	static override graph(object: ObjectContent<CoreObjectType>) {
 		return quadGraphFromQuadObject(object as QuadObject);
-	}
-
-	static override neighboursCount(
-		object: ObjectContent<CoreObjectType>,
-		index: number,
-		sharedEdgeOnly: boolean
-	): number {
-		return 0;
 	}
 }

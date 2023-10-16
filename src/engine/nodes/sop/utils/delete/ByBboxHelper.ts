@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {Box3, Vector3} from 'three';
 
 const _position = new Vector3();
@@ -7,7 +7,7 @@ const _bbox = new Box3();
 
 export class ByBboxHelper {
 	constructor(private node: DeleteSopNode) {}
-	evalForPoints(points: BaseCorePoint[]) {
+	evalForEntities(points: CoreEntity[]) {
 		this._setBbox(_bbox);
 
 		for (const point of points) {

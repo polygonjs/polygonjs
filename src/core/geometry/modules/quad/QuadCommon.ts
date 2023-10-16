@@ -1,3 +1,5 @@
+import {Color} from 'three';
+
 export enum QUADObjectType {
 	DEFAULT = 'Quad',
 }
@@ -8,6 +10,7 @@ export const QUAD_OBJECT_TYPES_SET: Set<QUADObjectType> = new Set(QUAD_OBJECT_TY
 export interface QUADTesselationParams {
 	triangles: boolean;
 	wireframe: boolean;
+	wireframeColor: Color;
 	center: boolean;
 	innerRadius: boolean;
 	outerRadius: boolean;
@@ -15,6 +18,7 @@ export interface QUADTesselationParams {
 export interface QUADOBJTesselationParams {
 	QUADTriangles: boolean;
 	QUADWireframe: boolean;
+	QUADWireframeColor: Color;
 	QUADCenter: boolean;
 	QUADInnerRadius: boolean;
 	QUADOuterRadius: boolean;
