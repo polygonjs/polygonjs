@@ -98,6 +98,7 @@ export class deviceOrientation extends NamedFunction2<[Quaternion, number]> {
 		// force time dependency
 		dummyReadRefVal(this.timeController.timeUniform().value);
 		_handler = _handler || new DeviceOrientationControlsHandler(this.scene);
+		_handler.setSmoothAmount(smoothAmount);
 		_handler.quaternion(target);
 		return target;
 	}
