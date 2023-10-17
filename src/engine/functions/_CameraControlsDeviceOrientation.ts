@@ -14,7 +14,7 @@ ios + chrome:		| yes				| no							| yes
 */
 
 import {Quaternion, Vector3} from 'three';
-import {NamedFunction1} from './_Base';
+import {NamedFunction2} from './_Base';
 import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls';
 import {PolyScene} from '../scene/PolyScene';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
@@ -71,6 +71,9 @@ class DeviceOrientationControlsHandler {
 			// target.copy(this._dummyObject.quaternion);
 		}
 	}
+	setSmoothAmount(smoothAmount: number) {
+		this._controls?.setSmoothAmount(smoothAmount);
+	}
 	// from aframe look-controls .updateMagicWindowOrientation()
 	// protected _compensate() {
 	// magicWindowAbsoluteEuler.setFromQuaternion(this._dummyObject.quaternion, ROTATION_ORDER);
@@ -87,11 +90,11 @@ class DeviceOrientationControlsHandler {
 }
 let _handler: DeviceOrientationControlsHandler | undefined;
 
-export class deviceOrientation extends NamedFunction1<[Quaternion]> {
+export class deviceOrientation extends NamedFunction2<[Quaternion, number]> {
 	static override type() {
 		return 'deviceOrientation';
 	}
-	func(target: Quaternion): Quaternion {
+	func(target: Quaternion, smoothAmount: number): Quaternion {
 		// force time dependency
 		dummyReadRefVal(this.timeController.timeUniform().value);
 		_handler = _handler || new DeviceOrientationControlsHandler(this.scene);

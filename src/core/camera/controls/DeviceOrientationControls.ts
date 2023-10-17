@@ -3,7 +3,7 @@
  */
 
 import {Euler, EventDispatcher, MathUtils, Quaternion, Vector2, Vector3, Matrix4} from 'three';
-import {smootherstep, fit01} from '../../math/_Module';
+import {smootherstep, fit01, clamp} from '../../math/_Module';
 // import {CoreUserAgent} from '../../UserAgent';
 
 interface DeviceOrientationEventExtended extends DeviceOrientationEvent {
@@ -81,6 +81,7 @@ function lerp(src: number, dest: number, lerp: number) {
 // function compassHeadingOrAlpha(e: DeviceOrientationEventExtended): number {
 // 	return e.webkitCompassHeading != null ? e.webkitCompassHeading : e.alpha != null ? e.alpha : 0;
 // }
+const DURATION_WITHOUT_SMOOTH = 3000;
 
 export class DeviceOrientationControls extends EventDispatcher {
 	public enabled: boolean = true;
@@ -91,9 +92,10 @@ export class DeviceOrientationControls extends EventDispatcher {
 	public absoluteUpdateFrequency = 5000;
 	protected _currentAngle = 0;
 	private __absoluteY: number | undefined;
-	private _yOffset: number = 0;
+	// private _yOffset: number = 0;
 	private __absoluteYUpdatedAt: number | undefined;
 	private _startTime = performance.now();
+	private _smoothAmount = 1;
 	constructor() {
 		super();
 
@@ -102,9 +104,12 @@ export class DeviceOrientationControls extends EventDispatcher {
 				'THREE.DeviceOrientationControls: DeviceOrientationEvent is only available in secure contexts (https)'
 			);
 		}
-		this._startTime = performance.now();
+		// this._startTime = performance.now();
 
 		this.connect();
+	}
+	setSmoothAmount(smoothAmount: number) {
+		this._smoothAmount = clamp(smoothAmount, 0, 1);
 	}
 	onDeviceOrientationChangeEvent(event: DeviceOrientationEventExtended) {
 		this.lastDeviceOrientationEvent = event;
@@ -154,13 +159,15 @@ export class DeviceOrientationControls extends EventDispatcher {
 		// lerp factor should be 1 in the beginning,
 		// for the first X seconds
 		const now = performance.now();
-		if (now - this._startTime < 3000) {
+		const timeSinceStart = now - this._startTime;
+		if (timeSinceStart < DURATION_WITHOUT_SMOOTH) {
 			return 1;
 		}
 		//
 		const updatedAt = this.__absoluteYUpdatedAt != null ? this.__absoluteYUpdatedAt : now;
 		const x = (now - updatedAt) / this.absoluteUpdateFrequency;
-		return fit01(smootherstep(x, 0, 1), 0.001, 0.01);
+		const lerpFactor = fit01(smootherstep(x, 0, 1), 0.001, 0.01);
+		return lerp(1, lerpFactor, this._smoothAmount);
 	}
 	// private _setAbsoluteDelta(absoluteAlpha: number | null | undefined, lastAlpha: number | null | undefined) {
 	// 	const now = performance.now();
@@ -251,7 +258,7 @@ export class DeviceOrientationControls extends EventDispatcher {
 			// compensate Y rotation for compass
 			const targetY = this._targetYOffset();
 			const lerpFactor = this._lerpFactor();
-			this._yOffset = lerp(this._yOffset, targetY, lerpFactor);
+			// this._yOffset = lerp(this._yOffset, targetY, lerpFactor);
 			// if (this._yOffsetHasReachedTargetYOnce == false && Math.abs(this._yOffset - targetY) < 5) {
 			// 	this._yOffsetHasReachedTargetYOnce = true;
 			// }
@@ -259,6 +266,7 @@ export class DeviceOrientationControls extends EventDispatcher {
 			_qOffset2.slerp(_qOffset, lerpFactor);
 			this.quaternion.copy(_qOffset2).multiply(_qTarget);
 
+			// dispatch event if quaternion has changed enough
 			if (8 * (1 - this.lastQuaternion.dot(this.quaternion)) > EPS) {
 				this.lastQuaternion.copy(this.quaternion);
 				this.dispatchEvent(_changeEvent);

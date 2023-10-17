@@ -5,13 +5,23 @@
  *
  */
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ParamlessTypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
-export class DeviceOrientationJsNode extends ParamlessTypedJsNode {
+class DeviceOrientationJsParamsConfig extends NodeParamsConfig {
+	smoothAmount = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+	});
+}
+const ParamsConfig = new DeviceOrientationJsParamsConfig();
+
+export class DeviceOrientationJsNode extends TypedJsNode<DeviceOrientationJsParamsConfig> {
+	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'deviceOrientation';
 	}
@@ -24,6 +34,7 @@ export class DeviceOrientationJsNode extends ParamlessTypedJsNode {
 	}
 	override setLines(linesController: JsLinesCollectionController) {
 		const varName = this.jsVarName(JsConnectionPointType.QUATERNION);
+		const smoothAmount = this.variableForInputParam(linesController, this.p.smoothAmount);
 		const func = Poly.namedFunctionsRegister.getFunction('deviceOrientation', this, linesController);
 		const variable = createVariable(JsConnectionPointType.QUATERNION);
 		if (variable) {
@@ -35,7 +46,7 @@ export class DeviceOrientationJsNode extends ParamlessTypedJsNode {
 					linesController,
 					JsConnectionPointType.QUATERNION,
 					varName,
-					func.asString(tmpVarName)
+					func.asString(tmpVarName, smoothAmount)
 				),
 			]);
 		}
