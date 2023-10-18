@@ -4,6 +4,10 @@ import {AttributeHelper} from '../../../helpers/AttributeHelper';
 import {BufferAttribute} from 'three';
 import {coreObjectClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
+import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVertex';
+import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 export function testenginenodessopAttribId(qUnit: QUnit) {
 	qUnit.test('sop/attribId simple on points', async (assert) => {
 		const geo1 = window.geo1;
@@ -50,6 +54,100 @@ export function testenginenodessopAttribId(qUnit: QUnit) {
 			AttributeHelper.toArray(geo.getAttribute('idn') as BufferAttribute)
 				.map((n) => n.toFixed(3))
 				.join(','),
+			[0].map((n) => n.toFixed(3)).join(',')
+		);
+	});
+
+	qUnit.test('sop/attribId simple on vertices', async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+		const attribId1 = geo1.createNode('attribId');
+
+		attribId1.setInput(0, plane1);
+		attribId1.setAttribClass(AttribClass.VERTEX);
+
+		let container = await attribId1.compute();
+		let coreGroup = container.coreContent()!;
+		const object = coreGroup.threejsObjectsWithGeo()[0];
+		const vertices: CoreVertex<CoreObjectType>[] = [];
+		verticesFromObject(object, vertices);
+		// assert.ok(primitives.has('id'));
+		// assert.ok(geo.getAttribute('idn'));
+		assert.deepEqual(vertices.map((p) => p.attribValue('id')).join(','), [0, 1, 2, 3, 4, 5].join(','));
+		assert.deepEqual(
+			vertices.map((p) => (p.attribValue('idn') as number).toFixed(3)).join(','),
+			[0, 1 / 5, 2 / 5, 3 / 5, 4 / 5, 1].map((n) => n.toFixed(3)).join(',')
+		);
+	});
+
+	qUnit.test('sop/attribId simple on 1 vertex', async (assert) => {
+		const geo1 = window.geo1;
+
+		const add1 = geo1.createNode('add');
+		const attribId1 = geo1.createNode('attribId');
+
+		attribId1.setInput(0, add1);
+		attribId1.setAttribClass(AttribClass.VERTEX);
+
+		let container = await attribId1.compute();
+		let coreGroup = container.coreContent()!;
+		const object = coreGroup.threejsObjectsWithGeo()[0];
+		const vertices: CoreVertex<CoreObjectType>[] = [];
+		verticesFromObject(object, vertices);
+		// assert.ok(primitives.has('id'));
+		// assert.ok(geo.getAttribute('idn'));
+		assert.deepEqual(vertices.map((p) => p.attribValue('id')).join(','), [0].join(','));
+		assert.deepEqual(
+			vertices.map((p) => (p.attribValue('idn') as number).toFixed(3)).join(','),
+			[0].map((n) => n.toFixed(3)).join(',')
+		);
+	});
+
+	qUnit.test('sop/attribId simple on primitives', async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+		plane1.p.useSegmentsCount.set(true);
+		plane1.p.segments.set([2, 1]);
+		const attribId1 = geo1.createNode('attribId');
+
+		attribId1.setInput(0, plane1);
+		attribId1.setAttribClass(AttribClass.PRIMITIVE);
+
+		let container = await attribId1.compute();
+		let coreGroup = container.coreContent()!;
+		const object = coreGroup.threejsObjectsWithGeo()[0];
+		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		primitivesFromObject(object, primitives);
+		// assert.ok(primitives.has('id'));
+		// assert.ok(geo.getAttribute('idn'));
+		assert.deepEqual(primitives.map((p) => p.attribValue('id')).join(','), [0, 1, 2, 3].join(','));
+		assert.deepEqual(
+			primitives.map((p) => (p.attribValue('idn') as number).toFixed(3)).join(','),
+			[0, 1 / 3, 2 / 3, 1].map((n) => n.toFixed(3)).join(',')
+		);
+	});
+
+	qUnit.test('sop/attribId simple on 1 primitive', async (assert) => {
+		const geo1 = window.geo1;
+
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const attribId1 = geo1.createNode('attribId');
+
+		attribId1.setInput(0, quadPlane1);
+		attribId1.setAttribClass(AttribClass.PRIMITIVE);
+
+		let container = await attribId1.compute();
+		let coreGroup = container.coreContent()!;
+		const object = coreGroup.allObjects()[0];
+		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		primitivesFromObject(object, primitives);
+		// assert.ok(primitives.has('id'));
+		// assert.ok(geo.getAttribute('idn'));
+		assert.deepEqual(primitives.map((p) => p.attribValue('id')).join(','), [0].join(','));
+		assert.deepEqual(
+			primitives.map((p) => (p.attribValue('idn') as number).toFixed(3)).join(','),
 			[0].map((n) => n.toFixed(3)).join(',')
 		);
 	});

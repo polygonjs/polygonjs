@@ -1,13 +1,9 @@
-import {Vector3} from 'three';
 import {mod} from '../math/_Module';
 import {TileConfig} from './WFCTileConfig';
 import {EMPTY_TILE_ID} from './WFCConstant';
+import {QuadPrimitivePointPositions} from '../geometry/modules/quad/utils/QuadUtils';
 
-export interface TileCorners {
-	p0: Vector3;
-	p1: Vector3;
-	p2: Vector3;
-	p3: Vector3;
+export interface TileCorners extends QuadPrimitivePointPositions {
 	height: number;
 }
 export type WFCAllHorizontalSides = 'snwe';
