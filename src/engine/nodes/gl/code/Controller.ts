@@ -54,7 +54,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		if (currentType != newType) {
 			if (currentType != null) {
 				console.warn(
-					`set a new globals handler of type ${newType} on a node that already has a globals handler of type ${currentType}`
+					`set a new globals handler of type ${newType} on a node that already has a globals handler of type ${currentType} (node: ${this.node.path()}))`
 				);
 			}
 			this._globalsHandler = globalsHandler;

@@ -1,7 +1,7 @@
 import * as WEB_IFC from 'web-ifc';
 import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
 import type {IFCManager} from 'web-ifc-three/IFC/components/IFCManager';
-import {SetUtils} from '../../SetUtils';
+import {setToArray} from '../../SetUtils';
 import {IFCLoaderHandler} from '../../loader/geometry/IFC';
 import {Object3D} from 'three';
 
@@ -53,7 +53,7 @@ export async function ifcElementIds(ifcManager: IFCManager, modelId: number, cat
 			_numberSet.add(id);
 		}
 	}
-	return SetUtils.toArray(_numberSet, []);
+	return setToArray(_numberSet, []);
 }
 
 export async function ifcCategoriesNames(ifcManager: IFCManager, modelID: number): Promise<string[]> {
@@ -62,7 +62,7 @@ export async function ifcCategoriesNames(ifcManager: IFCManager, modelID: number
 	traverseStructure(root, (item) => {
 		_stringSet.add(item.type);
 	});
-	const categoryNames = SetUtils.toArray(_stringSet, []);
+	const categoryNames = setToArray(_stringSet, []);
 
 	return categoryNames;
 }

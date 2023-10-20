@@ -1,7 +1,9 @@
-import {Vector3, Points} from 'three';
+import {Vector3, Points, BufferAttribute, Mesh} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {ThreejsPrimitive} from './ThreejsPrimitive';
+import {Attribute} from '../../Attribute';
 
+const _p0 = new Vector3();
 export class ThreejsPrimitivePoint extends ThreejsPrimitive {
 	constructor(object: Points, index: number) {
 		super(object, index);
@@ -21,14 +23,36 @@ export class ThreejsPrimitivePoint extends ThreejsPrimitive {
 		}
 		return index.count;
 	}
-	position(target: Vector3): Vector3 {
-		console.warn('PointPrimitive.position not implemented');
+	static override position<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(object && object.geometry)) {
+			return target;
+		}
+
+		const positionAttribute = (object as any as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+		if (!positionAttribute) {
+			return target;
+		}
+		const positionArray = positionAttribute.array;
+		_p0.fromArray(positionArray, primitiveIndex * 3 + 0);
+		target.copy(_p0);
 		return target;
 	}
+	static override normal<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		return target.set(0, 1, 0);
+	}
+	position(target: Vector3): Vector3 {
+		return (this.constructor as typeof ThreejsPrimitivePoint).position(this._object, this._index, target);
+	}
 	normal(target: Vector3): Vector3 {
-		console.warn('PointPrimitive.normal not implemented');
-		target.set(0, 0, 0);
-		return target;
+		return (this.constructor as typeof ThreejsPrimitivePoint).normal(this._object, this._index, target);
 	}
 	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {}
 	protected override stride() {

@@ -1,4 +1,5 @@
 import {testcoreArrayUtils} from './core/ArrayUtils';
+import {testcoreSetUtils} from './core/SetUtils';
 import {testcoreMath} from './core/Math';
 import {testcoreObjectUtils} from './core/ObjectUtils';
 import {testcoreSort} from './core/Sort';
@@ -594,6 +595,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 
 	const testFunctions = [
 		testcoreArrayUtils,
+		testcoreSetUtils,
 		testcoreMath,
 		testcoreObjectUtils,
 		testcoreSort,

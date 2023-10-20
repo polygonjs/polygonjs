@@ -1,5 +1,5 @@
 import {MapUtils} from './MapUtils';
-import {setUnion, setToArray, setIntersection, setDifference} from './SetUtils';
+import {setUnion, setToArray, setIntersection, setDifference, setXOR} from './SetUtils';
 import {CoreType} from './Type';
 import {randFloat} from './math/_Module';
 
@@ -169,6 +169,15 @@ export function arrayDifference<T extends number | string>(
 
 	return target;
 }
+export function arrayXOR<T extends number | string>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
+	setXOR(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
+	target.length = 0;
+	for (const item of _tmp) {
+		target.push(item);
+	}
+
+	return target;
+}
 export function arrayToSet<T>(array: Array<T>, target: Set<T>): Set<T> {
 	target.clear();
 	for (const elem of array) {
@@ -249,7 +258,6 @@ export class ArrayUtils {
 	static chunk = arrayChunk;
 	static union = arrayUnion;
 	static intersection = arrayIntersection;
-	static difference = arrayDifference;
 	static toSet = arrayToSet;
 	static isEqual = arrayIsEqual;
 	static sortBy = arraySortBy;

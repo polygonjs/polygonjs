@@ -33,7 +33,7 @@ export class TetPrimitive extends CorePrimitive<CoreObjectType.TET> {
 	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object as any as TetObject).tetGeometry().tetsCount();
 	}
-	static position<T extends CoreObjectType>(
+	static override position<T extends CoreObjectType>(
 		tetObject: ObjectContent<T> | undefined,
 		primitiveIndex: number,
 		target: Vector3

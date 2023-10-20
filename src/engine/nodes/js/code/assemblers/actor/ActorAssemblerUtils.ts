@@ -1,5 +1,5 @@
 import {MapUtils} from '../../../../../../core/MapUtils';
-import {SetUtils} from '../../../../../../core/SetUtils';
+import {setToArray} from '../../../../../../core/SetUtils';
 import {sanitizeName} from '../../../../../../core/String';
 import {NodeContext} from '../../../../../poly/NodeContext';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
@@ -223,7 +223,11 @@ export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOpti
 
 const _nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
 const _nonTriggerInputIndices: number[] = [];
-export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callback: ConnectionPointCallback) {
+function _inputNodesFromConnectionWithCallback(
+	node: BaseJsNodeType,
+	callback: ConnectionPointCallback,
+	target: BaseJsNodeType[]
+) {
 	_nonTriggerInputNodes.clear();
 	_nonTriggerInputIndices.length = 0;
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
@@ -242,16 +246,16 @@ export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callb
 			_nonTriggerInputNodes.add(connection.nodeSrc());
 		}
 	}
-	return SetUtils.toArray(_nonTriggerInputNodes, []);
+	return setToArray(_nonTriggerInputNodes, target);
 }
-export function inputNodesExceptTrigger(node: BaseJsNodeType) {
+export function inputNodesExceptTrigger(node: BaseJsNodeType, target: BaseJsNodeType[]) {
 	// return inputNodesFromConnectionWithCallback(node, (c) => c.type() != JsConnectionPointType.TRIGGER);
 	// update:
 	// I initially thought we should not take into account node when only connected via a trigger connection,
 	// but that fails with the onObjectAttributeUpdate,
 	// if it is only connected via its trigger, as its inputs are then not parsed,
 	// which is very much needed when using a different object as input
-	return inputNodesFromConnectionWithCallback(node, (c) => true);
+	return _inputNodesFromConnectionWithCallback(node, (c) => true, target);
 }
 
 export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode: BaseJsNodeType): number | null {
@@ -280,7 +284,7 @@ export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
 		triggerableNodes: _triggerableNodesSet,
 		recursive: false,
 	});
-	SetUtils.toArray(_triggerableNodesSet, _triggerableNodes);
+	setToArray(_triggerableNodesSet, _triggerableNodes);
 	// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
 	// 	nodeMethodName(n)
 	// );

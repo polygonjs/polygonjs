@@ -15,6 +15,8 @@ import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
 import {Number3} from '../../../types/GlobalTypes';
 import {sample} from '../../../core/ArrayUtils';
 import {TriangleGraph} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraph';
+import {objectContentCopyProperties} from '../../../core/geometry/ObjectContent';
+import {triangleGraphFindExpandedEdge} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraphUtils';
 
 const _v3 = new Vector3();
 const _p0 = new Vector3();
@@ -30,6 +32,27 @@ class QuadrangulateSopParamsConfig extends NodeParamsConfig {
 	// });
 	/** @param regular */
 	regular = ParamConfig.BOOLEAN(1);
+	/** @param test */
+	granular = ParamConfig.BOOLEAN(0, {
+		visibleIf: {
+			regular: 0,
+		},
+	});
+	/** @param irregularAmount */
+	irregularAmount = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+		visibleIf: {
+			granular: 1,
+			regular: 0,
+		},
+	});
+	/** @param subdivide */
+	subdivide = ParamConfig.BOOLEAN(1, {
+		visibleIf: {
+			regular: 0,
+		},
+	});
 	/** @param seed */
 	seed = ParamConfig.INTEGER(0, {
 		range: [-100, 100],
@@ -62,6 +85,8 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			if (geometry) {
 				const newQuadObject = this._processGeometry(geometry);
 				if (newQuadObject) {
+					objectContentCopyProperties(object, newQuadObject);
+					newQuadObject.geometry.applyMatrix(object.matrix);
 					newQuadObjects.push(newQuadObject);
 				}
 			}
@@ -82,9 +107,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		if (!positionAttribute) {
 			return;
 		}
-		// const expectedQuadsCount = this.pv.quadsCount;
-		const regular = this.pv.regular;
-		const seed = this.pv.seed;
+		const {regular, granular, irregularAmount, subdivide, seed} = this.pv;
 
 		const quadGeometry = new QuadGeometry();
 		const newPositionArray = [...(positionAttribute.clone().array as number[])];
@@ -96,7 +119,11 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			_v3.fromArray(index.array, i * 3);
 			graph.addTriangle(_v3.toArray() as Number3);
 		}
+		const edgeIds: string[] = [];
+		graph.edgeIds(edgeIds);
+		edgeIds.sort();
 
+		//
 		const edgeCenterIndexByEdgeIndices: Map<number, Map<number, number>> = new Map();
 		const _findOrCreateEdgeCenterIndex = (i0: number, i1: number) => {
 			const key0 = i0 < i1 ? i0 : i1;
@@ -120,12 +147,10 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			return edgeCenterIndex;
 		};
 
-		// let quadsCount = 0;
 		const _completeQuadObject = () => {
 			// if non regular, we also need to add the remaining triangles
-			if (!regular) {
+			if (regular == false && subdivide) {
 				graph.traverseTriangles((triangle) => {
-					// quadIndices.push(...triangle.triangle);
 					const i0 = triangle.triangle[0];
 					const i1 = triangle.triangle[1];
 					const i2 = triangle.triangle[2];
@@ -141,18 +166,6 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 					const i01 = _findOrCreateEdgeCenterIndex(i0, i1);
 					const i12 = _findOrCreateEdgeCenterIndex(i1, i2);
 					const i20 = _findOrCreateEdgeCenterIndex(i2, i0);
-					// add edge 0-1
-					// _v3.copy(_p0).add(_p1).multiplyScalar(0.5);
-					// const i01 = newPositionArray.length / 3;
-					// _v3.toArray(newPositionArray, newPositionArray.length);
-					// add edge 1-2
-					// _v3.copy(_p1).add(_p2).multiplyScalar(0.5);
-					// const i12 = newPositionArray.length / 3;
-					// _v3.toArray(newPositionArray, newPositionArray.length);
-					// add edge 2-0
-					// _v3.copy(_p2).add(_p0).multiplyScalar(0.5);
-					// const i20 = newPositionArray.length / 3;
-					// _v3.toArray(newPositionArray, newPositionArray.length);
 
 					// add 3 quads
 					quadIndices.push(i0, i01, iCenter, i20);
@@ -171,46 +184,96 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		const _nextEdgeIdWithRegularMethod = () => {
 			return edgeIds.pop();
 		};
-		const _nextEdgeidWithIrregularMethod = (i: number) => {
-			const edgeId = sample(edgeIds, seed + i);
+		// let _lastRemoveTriangles: TriangeNodePair | undefined;
+		let _preparedNextEdgeId: string | undefined;
+		const visitedEdgeIds: Set<string> = new Set();
+
+		const _prepareNextEdgeId = (startEdgeId: string, step: number) => {
+			const foundEdgeId = triangleGraphFindExpandedEdge(
+				graph,
+				startEdgeId,
+				seed,
+				step,
+				irregularAmount,
+				visitedEdgeIds
+			);
+
+			_preparedNextEdgeId = foundEdgeId;
+		};
+		const _nextEdgeIdWithIrregularMethod = (i: number) => {
+			const _randomSample = () => {
+				return sample(edgeIds, seed + i);
+			};
+			const _sampleFromIrregularity = () => {
+				if (_preparedNextEdgeId != null) {
+					return _preparedNextEdgeId;
+				}
+
+				return _randomSample();
+			};
+
+			const edgeId = granular == true ? _sampleFromIrregularity() : _randomSample();
 			if (edgeId != null) {
 				const index = edgeIds.indexOf(edgeId);
+
+				if (index < 0) {
+					console.log('bad edge found', edgeId, [...edgeIds].sort().join(', '));
+					throw 'internal error';
+				}
 				edgeIds.splice(index, 1);
 			}
 			return edgeId;
 		};
 
-		const edgeIds = graph.edgeIds([]);
 		let i = 0;
-		while (edgeIds.length > 0 /*&& quadsCount < expectedQuadsCount*/) {
+		while (edgeIds.length > 0) {
 			i++;
-			const edgeId = regular ? _nextEdgeIdWithRegularMethod() : _nextEdgeidWithIrregularMethod(i);
+			const edgeId = regular ? _nextEdgeIdWithRegularMethod() : _nextEdgeIdWithIrregularMethod(i);
+
 			if (edgeId == null) {
 				return _completeQuadObject();
 			}
 
+			visitedEdgeIds.add(edgeId);
+
+			const _prepareNextEdgeIdIfTest = () => {
+				if (granular == true && regular == false) {
+					_prepareNextEdgeId(edgeId, i);
+				}
+			};
+
 			const edge = graph.edge(edgeId);
 			if (!edge) {
+				_prepareNextEdgeIdIfTest();
 				continue;
 			}
 			const triangleIds = edge.triangleIds;
 			const triangle0 = graph.triangle(triangleIds[0]);
 			const triangle1 = graph.triangle(triangleIds[1]);
 			if (!triangle0 || !triangle1) {
+				_prepareNextEdgeIdIfTest();
 				continue;
 			}
+			// when using irregular method,
+			// we get the triangle neighbours now, before deleting the triangles
+			_prepareNextEdgeIdIfTest();
+
+			// remove triangles
 			graph.removeTriangle(triangle0.id);
 			graph.removeTriangle(triangle1.id);
 			// create quad
-			const i0 = triangle0.triangle.find((index) => index != edge.indices[0] && index != edge.indices[1])!;
-			const i2 = triangle1.triangle.find((index) => index != edge.indices[0] && index != edge.indices[1])!;
+			const i0 = triangle0.triangle.find(
+				(index) => index != edge.pointIdPair.id0 && index != edge.pointIdPair.id1
+			)!;
+			const i2 = triangle1.triangle.find(
+				(index) => index != edge.pointIdPair.id0 && index != edge.pointIdPair.id1
+			)!;
 			const triangle0UnsharedIndexIndex = triangle0.triangle.indexOf(i0);
 			const triangle1UnsharedIndexIndex = triangle1.triangle.indexOf(i2);
 			const i1 = triangle0.triangle[(triangle0UnsharedIndexIndex + 1) % 3];
 			const i3 = triangle1.triangle[(triangle1UnsharedIndexIndex + 1) % 3];
-			if (regular) {
+			if (regular == true || subdivide == false) {
 				quadIndices.push(i0, i1, i2, i3);
-				// quadsCount++;
 			} else {
 				// get center and add to position
 				_p0.fromArray(newPositionArray, i0 * 3);
@@ -226,30 +289,12 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 				const i12 = _findOrCreateEdgeCenterIndex(i1, i2);
 				const i23 = _findOrCreateEdgeCenterIndex(i2, i3);
 				const i30 = _findOrCreateEdgeCenterIndex(i3, i0);
-				// _v3.copy(_p0).add(_p1).multiplyScalar(0.5);
-				// const i01 = newPositionArray.length / 3;
-				// _v3.toArray(newPositionArray, newPositionArray.length);
-				// add edge 1-2
-				// _v3.copy(_p1).add(_p2).multiplyScalar(0.5);
-				// const i12 = newPositionArray.length / 3;
-				// _v3.toArray(newPositionArray, newPositionArray.length);
-				// add edge 2-3
-				// _v3.copy(_p2).add(_p3).multiplyScalar(0.5);
-				// const i23 = newPositionArray.length / 3;
-				// _v3.toArray(newPositionArray, newPositionArray.length);
-				// add edge 3-0
-				// _v3.copy(_p3).add(_p0).multiplyScalar(0.5);
-				// const i30 = newPositionArray.length / 3;
-				// _v3.toArray(newPositionArray, newPositionArray.length);
 				// add 4 quads
 				quadIndices.push(i0, i01, iCenter, i30);
 				quadIndices.push(i1, i12, iCenter, i01);
 				quadIndices.push(i2, i23, iCenter, i12);
 				quadIndices.push(i3, i30, iCenter, i23);
 			}
-			// we only add one quad per loop, even if not regular,
-			// as the count is too unpredictable otherwise
-			// quadsCount++;
 		}
 
 		return _completeQuadObject();

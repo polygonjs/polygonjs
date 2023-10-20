@@ -7,7 +7,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, MergeCompactOptions, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
-import {SetUtils} from '../../../core/SetUtils';
+import {setToArray} from '../../../core/SetUtils';
 import {NodeErrorState} from '../../nodes/utils/states/Error';
 import {NodeContext} from '../../poly/NodeContext';
 
@@ -142,7 +142,7 @@ function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
 	}
 	objectsByMaterial.forEach((objectSet, material) => {
 		coreObjectClass.mergeCompact({
-			objects: SetUtils.toArray(objectSet,[]),
+			objects: setToArray(objectSet,[]),
 			material,
 			objectType,
 			mergedObjects,

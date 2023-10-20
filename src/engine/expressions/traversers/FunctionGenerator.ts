@@ -139,6 +139,7 @@
  *
  *  */
 
+import {Vector4} from 'three';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
@@ -158,7 +159,7 @@ import {AttributeRequirementsController} from '../AttributeRequirementsControlle
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
-import {CoreType} from '../../../core/Type';
+import {CoreType, isArray, isVector, isColor} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
@@ -265,31 +266,52 @@ function getEntitiesAttributes(entities: CoreEntity[], attribName: string) {
 	if (firstEntity instanceof ThreejsPoint) {
 		return firstEntity.attribute(attribName);
 	} else {
-		return entities.map((e) => e.attribValue(attribName));
+		return entities.map((e) => e.attribValue(attribName, new Vector4()));
 	}
 }
+type PropertyOffset = 0 | 1 | 2 | 3;
+type VectorProperty = 'x' | 'y' | 'z' | 'w';
+type ColorProperty = 'r' | 'g' | 'b';
 function getCorePointAttribValue(
 	entity: ThreejsPoint,
 	attribName: string,
 	array: number[],
 	attributeSize: number,
-	propertyOffset: number
+	propertyOffset: PropertyOffset
 ) {
 	return array[entity.index() * attributeSize + propertyOffset];
 }
+const VECTOR_PROPERTY_NAME_BY_OFFSET: Record<PropertyOffset, VectorProperty> = {
+	0: 'x',
+	1: 'y',
+	2: 'z',
+	3: 'w',
+};
+const COLOR_PROPERTY_NAME_BY_OFFSET: Record<PropertyOffset, ColorProperty> = {
+	0: 'r',
+	1: 'g',
+	2: 'b',
+	3: 'r',
+};
+const _target = new Vector4();
 function getCoreEntityAttribValue(
 	entity: CoreEntity,
 	attribName: string,
 	array: number[],
 	attributeSize: number,
-	propertyOffset: number
+	propertyOffset: PropertyOffset
 ) {
-	const value = entity.attribValue(attribName);
-	if (CoreType.isArray(value)) {
+	const value = entity.attribValue(attribName, _target);
+	if (isArray(value)) {
 		return value[propertyOffset];
-	} else {
-		return value;
 	}
+	if (isVector(value)) {
+		return (value as Vector4)[VECTOR_PROPERTY_NAME_BY_OFFSET[propertyOffset]];
+	}
+	if (isColor(value)) {
+		return value[COLOR_PROPERTY_NAME_BY_OFFSET[propertyOffset]];
+	}
+	return value;
 }
 function getCoreEntityAttribValueFunc(entity: CoreEntity) {
 	if (entity instanceof ThreejsPoint) {

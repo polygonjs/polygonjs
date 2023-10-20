@@ -29,35 +29,50 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		}
 		return index.count / 3;
 	}
-	position(target: Vector3): Vector3 {
-		if (!this._geometry) {
+	static override position<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(object && object.geometry)) {
 			return target;
 		}
-		const positionAttribute = this._geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+
+		const positionAttribute = (object as any as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 		if (!positionAttribute) {
 			return target;
 		}
 		const positionArray = positionAttribute.array;
-		_p0.fromArray(positionArray, this._index * 3 + 0);
-		_p1.fromArray(positionArray, this._index * 3 + 1);
-		_p2.fromArray(positionArray, this._index * 3 + 2);
+		_p0.fromArray(positionArray, primitiveIndex * 3 + 0);
+		_p1.fromArray(positionArray, primitiveIndex * 3 + 1);
+		_p2.fromArray(positionArray, primitiveIndex * 3 + 2);
 		target.copy(_p0).add(_p1).add(_p2).divideScalar(3);
 		return target;
 	}
-	normal(target: Vector3): Vector3 {
-		if (!this._geometry) {
+	static override normal<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(object && object.geometry)) {
 			return target;
 		}
-		const positionAttribute = this._geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+		const positionAttribute = (object as any as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 		if (!positionAttribute) {
 			return target;
 		}
 		const positionArray = positionAttribute.array;
-		_triangle.a.fromArray(positionArray, this._index * 3 + 0);
-		_triangle.b.fromArray(positionArray, this._index * 3 + 1);
-		_triangle.c.fromArray(positionArray, this._index * 3 + 2);
+		_triangle.a.fromArray(positionArray, primitiveIndex * 3 + 0);
+		_triangle.b.fromArray(positionArray, primitiveIndex * 3 + 1);
+		_triangle.c.fromArray(positionArray, primitiveIndex * 3 + 2);
 		_triangle.getNormal(target);
 		return target;
+	}
+	position(target: Vector3): Vector3 {
+		return (this.constructor as typeof ThreejsPrimitiveTriangle).position(this._object, this._index, target);
+	}
+	normal(target: Vector3): Vector3 {
+		return (this.constructor as typeof ThreejsPrimitiveTriangle).normal(this._object, this._index, target);
 	}
 	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;

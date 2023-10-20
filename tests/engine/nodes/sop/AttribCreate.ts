@@ -19,6 +19,7 @@ import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVert
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
 import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {pointsFromObject} from '../../../../src/core/geometry/entities/point/CorePointUtils';
 
 const _points: CorePoint<CoreObjectType>[] = [];
 
@@ -769,6 +770,62 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.deepEqual(await _getAttribValue(attribCreate1), [1, 1, 1, 1]);
 		attribCreate1.p.value1.set('if( rand(@primnum)>0.77, 1, 0 )');
 		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 0]);
+	});
+
+	qUnit.test('sop/attribCreate can resolve P.x on points/primitives', async (assert) => {
+		const geo1 = window.geo1;
+
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const plane1 = geo1.createNode('plane');
+		const switch1 = geo1.createNode('switch');
+		const attribCreate1 = geo1.createNode('attribCreate');
+
+		switch1.setInput(0, plane1);
+		switch1.setInput(1, quadPlane1);
+		attribCreate1.setInput(0, switch1);
+
+		quadPlane1.p.size.set([1, 1]);
+		plane1.p.useSegmentsCount.set(1);
+		plane1.p.segments.set([1, 1]);
+		attribCreate1.setAttribClass(AttribClass.POINT);
+		attribCreate1.p.name.set('x');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@P.x');
+
+		async function _getPointAttribValue() {
+			const container = await attribCreate1.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.allObjects()![0];
+			const points: CorePoint<CoreObjectType>[] = [];
+			pointsFromObject(object, points);
+			return points.map((p) => p.attribValue('x'));
+		}
+		async function _getPrimAttribValue() {
+			const container = await attribCreate1.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.allObjects()![0];
+			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			primitivesFromObject(object, primitives);
+			return primitives.map((p) => p.attribValue('x'));
+		}
+
+		switch1.p.input.set(0);
+		assert.deepEqual(await _getPointAttribValue(), [-0.5, 0.5, -0.5, 0.5]);
+
+		switch1.p.input.set(1);
+		assert.deepEqual(await _getPointAttribValue(), [-0.5, -0.5, 0.5, 0.5]);
+
+		// prims
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		quadPlane1.p.size.set([2, 2]);
+		plane1.p.segments.set([2, 2]);
+		switch1.p.input.set(0);
+		assert.deepEqual(
+			(await _getPrimAttribValue()).map((n) => (n as number).toFixed(3)).join(','),
+			'-0.333,-0.167,0.000,-0.167,0.000,0.167,-0.000,0.167'
+		);
+		switch1.p.input.set(1);
+		assert.deepEqual(await _getPrimAttribValue(), [-0.5, 0.5, -0.5, 0.5]);
 	});
 
 	interface MultiTestOptions {

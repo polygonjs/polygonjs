@@ -10,7 +10,7 @@ import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {JsFunctionName} from '../../../../utils/shaders/ShaderName';
 import {connectedTriggerableNodes, findTriggeringNodes, inputNodesExceptTrigger} from './ActorAssemblerUtils';
 import {BaseJsNodeType} from '../../../_Base';
-import {SetUtils} from '../../../../../../core/SetUtils';
+import {setToArray} from '../../../../../../core/SetUtils';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
@@ -36,6 +36,8 @@ class CustomActorEvaluator extends ActorEvaluator {
 `;
 const CLOSE_CLASS_DEFINITION = `};
 return CustomActorEvaluator;`;
+
+const _tmp: BaseJsNodeType[] = [];
 
 export class JsAssemblerActor extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
@@ -114,12 +116,13 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		const _addComputedProps = () => {
 			const rootNodesSet: Set<BaseJsNodeType> = new Set();
 			triggerableNodes.forEach((trigerrableNode) => {
-				const rootNodes = inputNodesExceptTrigger(trigerrableNode);
+				const rootNodes = inputNodesExceptTrigger(trigerrableNode, _tmp);
 				for (const rootNode of rootNodes) {
 					rootNodesSet.add(rootNode);
 				}
 			});
-			const rootNodes = SetUtils.toArray(rootNodesSet, []).concat(additionalRootNodes);
+			setToArray(rootNodesSet, _tmp);
+			const rootNodes = _tmp.concat(additionalRootNodes);
 			this.set_root_nodes(rootNodes);
 			this.buildCodeFromNodes(this._root_nodes, {
 				actor: {

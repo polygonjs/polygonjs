@@ -20,11 +20,11 @@ export class TriangleGraph extends PrimitiveGraph {
 		// add edges
 		const edges: TriangleEdge[] = [];
 		for (let i = 0; i < 3; i++) {
-			const edgeIndices = triangleEdge(triangle, i);
-			const _edgeId = edgeId(edgeIndices);
+			const pointIdPair = triangleEdge(triangle, i);
+			const _edgeId = edgeId(pointIdPair);
 			let edge = this._edgesById.get(_edgeId);
 			if (!edge) {
-				edge = new TriangleEdge(_edgeId, edgeIndices);
+				edge = new TriangleEdge(_edgeId, pointIdPair);
 				this._edgesById.set(_edgeId, edge);
 			}
 			edge.addTriangle(triangleId);
@@ -45,13 +45,15 @@ export class TriangleGraph extends PrimitiveGraph {
 		if (!edges) {
 			return;
 		}
-		for (let edge of edges) {
+		for (const edge of edges) {
 			const index = edge.triangleIds.indexOf(triangleId);
 			if (index >= 0) {
 				edge.triangleIds.splice(index, 1);
 			}
-			this._edgesById.delete(edge.id);
-			this._edgeIds.delete(edge.id);
+			if (edge.triangleIds.length == 0) {
+				this._edgesById.delete(edge.id);
+				this._edgeIds.delete(edge.id);
+			}
 		}
 		this._edgesByTriangleId.delete(triangleId);
 	}
@@ -59,6 +61,9 @@ export class TriangleGraph extends PrimitiveGraph {
 		this._trianglesById.forEach((triangle) => {
 			callback(triangle);
 		});
+	}
+	edgesByTriangleId(id: number) {
+		return this._edgesByTriangleId.get(id);
 	}
 	// firstNeighbourId(triangleId: number): number | undefined {
 	// 	const edges = this._edgesByTriangleId.get(triangleId);

@@ -11,8 +11,8 @@ import {
 	coreObjectsAttribSizesByName,
 	coreObjectAttributeTypesByName,
 } from '../../..//core/geometry/entities/object/BaseCoreObjectUtils';
-import {MapUtils} from '../../..//core/MapUtils';
-import {SetUtils} from '../../..//core/SetUtils';
+import {addToSetAtEntry} from '../../../core/MapUtils';
+import {setToArray} from '../../..//core/SetUtils';
 import {ObjectData, AttribSize, AttribType} from '../../..//core/geometry/Constant';
 
 function _firstObject(sopContainer: GeometryContainer) {
@@ -22,20 +22,6 @@ function _firstObject(sopContainer: GeometryContainer) {
 	}
 	return coreGroup.allObjects()[0];
 }
-// private firstCoreObject() {
-// 	const object = this.firstObject();
-// 	if (object) {
-// 		return new CoreObject(object, 0);
-// 	}
-// }
-// function _firstGeometry(sopContainer: GeometryContainer): BufferGeometry | null {
-// 	const object = _firstObject(sopContainer);
-// 	if (object && isObject3D(object)) {
-// 		return (object as Mesh).geometry as BufferGeometry;
-// 	} else {
-// 		return null;
-// 	}
-// }
 
 //
 //
@@ -184,7 +170,7 @@ export function objectAttributeTypeAndSizesByName(
 				mapForName = new Map();
 			}
 			_sizesByTypeByName.set(attribName, mapForName);
-			MapUtils.addToSetAtEntry(mapForName, attribType, attribSize);
+			addToSetAtEntry(mapForName, attribType, attribSize);
 		}
 	}
 
@@ -193,7 +179,7 @@ export function objectAttributeTypeAndSizesByName(
 		// typesByName[attribName] = SetUtils.toArray(attribTypes);
 		sizesByTypeByName[attribName] = {[AttribType.NUMERIC]: [], [AttribType.STRING]: []};
 		mapForName.forEach((attribSizes, attribType) => {
-			sizesByTypeByName[attribName][attribType] = SetUtils.toArray(attribSizes, []);
+			sizesByTypeByName[attribName][attribType] = setToArray(attribSizes, []);
 		});
 	});
 	return sizesByTypeByName;

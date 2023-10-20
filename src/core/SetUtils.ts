@@ -42,18 +42,19 @@ export function setDifference<T extends string | number>(set0: Set<T>, set1: Set
 			target.add(val);
 		}
 	});
+	return target;
+}
+export function setXOR<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	set0.forEach((val) => {
+		if (!set1.has(val)) {
+			target.add(val);
+		}
+	});
 	set1.forEach((val) => {
 		if (!set0.has(val)) {
 			target.add(val);
 		}
 	});
 	return target;
-}
-
-export class SetUtils {
-	static setFirstValue = setFirstValue;
-	static toArray = setToArray;
-	static union = setUnion;
-	static intersection = setIntersection;
-	static difference = setDifference;
 }

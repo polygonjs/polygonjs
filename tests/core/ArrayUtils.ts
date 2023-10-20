@@ -1,7 +1,7 @@
 import type {QUnit} from '../helpers/QUnit';
-import {ArrayUtils, range, rangeWithEnd} from '../../src/core/ArrayUtils';
+import {ArrayUtils, arrayDifference, arrayXOR, range, rangeWithEnd} from '../../src/core/ArrayUtils';
 export function testcoreArrayUtils(qUnit: QUnit) {
-	const _string: string[] = [];
+	const _strings: string[] = [];
 	const _numbers: number[] = [];
 	const _numbersOrNull: Array<number | null | undefined> = [];
 
@@ -19,35 +19,42 @@ export function testcoreArrayUtils(qUnit: QUnit) {
 	});
 	qUnit.test('ArrayUtils.uniq', (assert) => {
 		assert.deepEqual(ArrayUtils.uniq([7, 3, 7], _numbers), [7, 3]);
-		assert.deepEqual(ArrayUtils.uniq(['7', '3', '7'], _string), ['7', '3']);
+		assert.deepEqual(ArrayUtils.uniq(['7', '3', '7'], _strings), ['7', '3']);
 	});
 	qUnit.test('ArrayUtils.uniq preserves order', (assert) => {
-		assert.deepEqual(ArrayUtils.uniq(['restP', 'pti', 'restN'], _string), ['restP', 'pti', 'restN']);
-		assert.deepEqual(ArrayUtils.uniq(['restP', 'restN', 'pti'], _string), ['restP', 'restN', 'pti']);
-		assert.deepEqual(ArrayUtils.uniq(['a', 'b', 'c', 'd', 'e'], _string), ['a', 'b', 'c', 'd', 'e']);
-		assert.deepEqual(ArrayUtils.uniq(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _string), ['a', 'b', 'c', 'd', 'e', 'f']);
+		assert.deepEqual(ArrayUtils.uniq(['restP', 'pti', 'restN'], _strings), ['restP', 'pti', 'restN']);
+		assert.deepEqual(ArrayUtils.uniq(['restP', 'restN', 'pti'], _strings), ['restP', 'restN', 'pti']);
+		assert.deepEqual(ArrayUtils.uniq(['a', 'b', 'c', 'd', 'e'], _strings), ['a', 'b', 'c', 'd', 'e']);
+		assert.deepEqual(ArrayUtils.uniq(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _strings), [
+			'a',
+			'b',
+			'c',
+			'd',
+			'e',
+			'f',
+		]);
 	});
 	qUnit.test('ArrayUtils.uniqWithoutPreservingOrder', (assert) => {
 		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder([7, 3, 7], _numbers), [7, 3]);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['7', '3', '7'], _string), ['7', '3']);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'pti', 'restN'], _string), [
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['7', '3', '7'], _strings), ['7', '3']);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'pti', 'restN'], _strings), [
 			'restP',
 			'pti',
 			'restN',
 		]);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'restN', 'pti'], _string), [
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'restN', 'pti'], _strings), [
 			'restP',
 			'restN',
 			'pti',
 		]);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e'], _string), [
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e'], _strings), [
 			'a',
 			'b',
 			'c',
 			'd',
 			'e',
 		]);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _string), [
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _strings), [
 			'a',
 			'b',
 			'c',
@@ -65,8 +72,13 @@ export function testcoreArrayUtils(qUnit: QUnit) {
 	qUnit.test('ArrayUtils.intersection', (assert) => {
 		assert.deepEqual(ArrayUtils.intersection([0, 1, 2], [2, 3, 4], _numbers), [2]);
 	});
-	qUnit.test('ArrayUtils.difference', (assert) => {
-		assert.deepEqual(ArrayUtils.difference([0, 1, 2], [2, 3, 4], _numbers), [0, 1, 3, 4]);
+	qUnit.test('ArrayUtils.arrayDifference', (assert) => {
+		assert.deepEqual(arrayDifference([0, 1, 2], [2, 3, 4], _numbers), [0, 1]);
+		assert.deepEqual(arrayDifference([2, 3, 4], [0, 1, 2], _numbers), [3, 4]);
+	});
+	qUnit.test('ArrayUtils.arrayXOR', (assert) => {
+		assert.deepEqual(arrayXOR([0, 1, 2], [2, 3, 4], _numbers), [0, 1, 3, 4]);
+		assert.deepEqual(arrayXOR([2, 3, 4], [0, 1, 2], _numbers), [3, 4, 0, 1]);
 	});
 	qUnit.test('ArrayUtils.isEqual', (assert) => {
 		assert.deepEqual(ArrayUtils.isEqual([7, 3, 7], [7, 3, 7]), true);

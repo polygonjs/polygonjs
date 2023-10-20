@@ -2,7 +2,7 @@ import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../../ObjectConte
 import {CoreEntity} from '../../../CoreEntity';
 import {TetPrimitive} from '../TetPrimitive';
 import {TetObject} from '../TetObject';
-import {setDifference} from '../../../../SetUtils';
+import {setXOR} from '../../../../SetUtils';
 import {primitivesFromObject} from '../../../entities/primitive/CorePrimitiveUtils';
 
 const currentEntities: TetPrimitive[] = [];
@@ -24,7 +24,7 @@ export const tetObjectFromPrimitives: ObjectBuilder<CoreObjectType.TET> = (
 	const currentEntitiesIndicesSet = new Set(currentEntitiesIndices);
 	const newEntitiesIndicesSet = new Set(newEntitiesIndices);
 	const toRemoveEntitiesIndicesSet: Set<number> = new Set();
-	setDifference(currentEntitiesIndicesSet, newEntitiesIndicesSet, toRemoveEntitiesIndicesSet);
+	setXOR(currentEntitiesIndicesSet, newEntitiesIndicesSet, toRemoveEntitiesIndicesSet);
 	// const removedEntitiesIndices: number[] = [];
 	// setToArray(removedEntitiesIndicesSet, removedEntitiesIndices);
 	const _tetrahedronsIds: number[] = [];

@@ -4,14 +4,27 @@ const EDGES: [Number2, Number2, Number2] = [
 	[1, 2],
 	[2, 0],
 ];
-function sortNumber2(n: Number2): Number2 {
-	return n[0] < n[1] ? n : [n[1], n[0]];
+export interface PointIdPair {
+	id0: number;
+	id1: number;
 }
-export function edgeId(edge: Number2): string {
-	return sortNumber2(edge).join('-');
+function sortPointIdPair(ids: PointIdPair): PointIdPair {
+	if (ids.id0 > ids.id1) {
+		const temp = ids.id0;
+		ids.id0 = ids.id1;
+		ids.id1 = temp;
+	}
+	return ids;
 }
-export function triangleEdge(triangle: Number3, edgeIndex: number): Number2 {
+export function edgeId(ids: PointIdPair): string {
+	sortPointIdPair(ids);
+	return `${ids.id0}-${ids.id1}`;
+}
+export function triangleEdge(triangle: Number3, edgeIndex: number): PointIdPair {
 	const edgeIndices = EDGES[edgeIndex];
-	const edge: Number2 = [triangle[edgeIndices[0]], triangle[edgeIndices[1]]];
-	return edge;
+	// const edge: Number2 = [triangle[edgeIndices[0]], triangle[edgeIndices[1]]];
+	return {
+		id0: triangle[edgeIndices[0]],
+		id1: triangle[edgeIndices[1]],
+	};
 }

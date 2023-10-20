@@ -74,7 +74,7 @@ export function objectContentCopyProperties(
 	if (src.material) {
 		target.material = src.material;
 	}
-	target.userData =objectCloneDeep(src.userData); //JSON.parse(JSON.stringify(this.userData));
+	target.userData = objectCloneDeep(src.userData);
 }
 
 export interface MergeCompactOptions {

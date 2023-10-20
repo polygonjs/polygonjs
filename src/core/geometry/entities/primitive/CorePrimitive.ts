@@ -146,7 +146,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	): AttribValue {
 		if (attribName === Attribute.PRIMITIVE_INDEX) {
 			return index;
-		} else {
+		}
 			let componentName = null;
 			let componentIndex = null;
 			if (attribName[attribName.length - 2] === DOT) {
@@ -156,7 +156,15 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
 
+			if(remapedName==Attribute.POSITION){
+				return this.position(object as any, index, target as Vector3);
+			}
+			if(remapedName==Attribute.NORMAL){
+				return this.normal(object as any, index, target as Vector3);
+			}
+
 			const attrib = this.attribute(object, remapedName);
+
 			if (attrib) {
 				const {array} = attrib;
 
@@ -203,7 +211,6 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 				console.warn(message);
 				throw message;
 			}
-		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (!this._object) {
@@ -260,13 +267,30 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		return this.attribValue(attribName) as string;
 	}
 
-	setPosition(newPosition: Vector3) {
-		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
+	// setPosition(newPosition: Vector3) {
+	// 	this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
+	// }
+
+	// setNormal(newNormal: Vector3) {
+	// 	return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
+	// }
+	static position<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		_warnOverloadRequired('position');
+		return target;
+	}
+	static normal<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		_warnOverloadRequired('normal');
+		return target;
 	}
 
-	setNormal(newNormal: Vector3) {
-		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
-	}
 	static computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {
 		_warnOverloadRequired('computeVertexNormalsIfAttributeVersionChanged');
 	}

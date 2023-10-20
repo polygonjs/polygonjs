@@ -16,7 +16,7 @@ import {arrayUniq} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
 // import {sanitizeName} from '../../../../../core/String';
 import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
-import {SetUtils} from '../../../../../core/SetUtils';
+import {setToArray} from '../../../../../core/SetUtils';
 import {ActorBuilderNode} from '../../../../scene/utils/ActorsManager';
 import {JsType} from '../../../../poly/registers/nodes/types/Js';
 import {CodeJsNode} from '../../Code';
@@ -148,7 +148,7 @@ export class JsCodeBuilder {
 		this.reset();
 		for (const shaderName of this.shaderNames()) {
 			let notUniqNodes = nodesByShaderName.get(shaderName) || [];
-			const nodes:BaseJsNodeType[] = []
+			const nodes: BaseJsNodeType[] = [];
 			arrayUniq(notUniqNodes, nodes);
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
@@ -340,8 +340,8 @@ export class JsCodeBuilder {
 		const allNodes =
 			options && options.actor
 				? nodes
-						.concat(SetUtils.toArray(options.actor.triggeringNodes, []))
-						.concat(SetUtils.toArray(options.actor.triggerableNodes, []))
+						.concat(setToArray(options.actor.triggeringNodes, []))
+						.concat(setToArray(options.actor.triggerableNodes, []))
 				: nodes;
 
 		this.addDefinitions(nodes, shaderName, JsDefinitionType.LOCAL_FUNCTION, LineType.DEFINE, additionalDefinitions);
@@ -378,7 +378,7 @@ export class JsCodeBuilder {
 		}
 		if (options?.actor.triggerableNodes) {
 			this.addDefinitions(
-				SetUtils.toArray(options.actor.triggerableNodes, []),
+				setToArray(options.actor.triggerableNodes, []),
 				shaderName,
 				JsDefinitionType.TRIGGERABLE,
 				LineType.BODY,

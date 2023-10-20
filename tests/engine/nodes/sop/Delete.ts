@@ -13,6 +13,7 @@ import {QuadObject} from '../../../../src/core/geometry/modules/quad/QuadObject'
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {QuadPrimitive} from '../../../../src/core/geometry/modules/quad/QuadPrimitive';
 import {TetPrimitive} from '../../../../src/core/geometry/modules/tet/TetPrimitive';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 
 const _points: CorePoint<CoreObjectType>[] = [];
 
@@ -478,5 +479,47 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.p.expression.set('@primnum==6');
 		assert.equal((await compute()).values.length, 6);
 		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4, 5], 'delete @primnum==6');
+	});
+	qUnit.test('sop/delete primitives with quadObject by position', async (assert) => {
+		const geo1 = window.geo1;
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		const delete1 = geo1.createNode('delete');
+
+		attribCreate1.setInput(0, quadPlane1);
+		delete1.setInput(0, attribCreate1);
+
+		quadPlane1.p.size.set([2, 2]);
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('x');
+		attribCreate1.p.value1.set('@P.x');
+		delete1.setAttribClass(AttribClass.PRIMITIVE);
+		delete1.p.byExpression.set(1);
+
+		async function compute() {
+			const container = await delete1.compute();
+			const objects = container.coreContent()?.quadObjects()!;
+			const object = objects[0];
+			const primitives: QuadPrimitive[] = [];
+			primitivesFromObject(object, primitives);
+			const attribValues = primitives.map((p) => p.attribValue('x') as number);
+			return {attribValues, primitivesCount: primitives.length};
+		}
+
+		delete1.p.expression.set('@primnum==6');
+		assert.equal((await compute()).primitivesCount, 4);
+		assert.deepEqual((await compute()).attribValues, [-0.5, 0.5, -0.5, 0.5]);
+
+		delete1.p.expression.set('@primnum==1');
+		assert.equal((await compute()).primitivesCount, 3);
+		assert.deepEqual((await compute()).attribValues, [-0.5, -0.5, 0.5]);
+
+		delete1.p.expression.set('@P.x>0');
+		assert.equal((await compute()).primitivesCount, 2);
+		assert.deepEqual((await compute()).attribValues, [-0.5, -0.5]);
+
+		delete1.p.expression.set('@P.x<0');
+		assert.equal((await compute()).primitivesCount, 2);
+		assert.deepEqual((await compute()).attribValues, [0.5, 0.5]);
 	});
 }
