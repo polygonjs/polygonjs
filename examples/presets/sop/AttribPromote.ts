@@ -8,6 +8,7 @@ const attribPromoteSopNodeNodePresetsCollectionFactory: PresetsCollectionFactory
 	const collection = new NodePresetsCollection();
 
 	const points = ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT);
+	const primitives = ATTRIBUTE_CLASSES.indexOf(AttribClass.PRIMITIVE);
 	const objects = ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT);
 
 	collection.addPreset(
@@ -15,8 +16,16 @@ const attribPromoteSopNodeNodePresetsCollectionFactory: PresetsCollectionFactory
 		new BasePreset().addEntry(node.p.classFrom, objects).addEntry(node.p.classTo, points)
 	);
 	collection.addPreset(
+		'Object -> Primitive',
+		new BasePreset().addEntry(node.p.classFrom, objects).addEntry(node.p.classTo, primitives)
+	);
+	collection.addPreset(
 		'Point -> Object',
 		new BasePreset().addEntry(node.p.classFrom, points).addEntry(node.p.classTo, objects)
+	);
+	collection.addPreset(
+		'Point -> Primitive',
+		new BasePreset().addEntry(node.p.classFrom, points).addEntry(node.p.classTo, primitives)
 	);
 
 	return collection;

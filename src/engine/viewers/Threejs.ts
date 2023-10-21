@@ -39,6 +39,9 @@ export interface ThreejsViewerSetupData<C extends Camera> {
 	renderScene: Scene;
 	camera: C;
 }
+interface SetAutoRenderOptions {
+	cancelAnimate?: boolean;
+}
 
 /**
  *
@@ -293,7 +296,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 *
 	 *
 	 */
-	override setAutoRender(state = true) {
+	override setAutoRender(state = true, options?: SetAutoRenderOptions) {
 		super.setAutoRender(state);
 		// if this._requestAnimationFrameId is already defined,
 		// calling this a second time would start another requestAnimationFrame
@@ -302,7 +305,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			this._startAnimate();
 		}
 		if (!this._doRender) {
-			this._cancelAnimate();
+			if (options && options.cancelAnimate == true) {
+				this._cancelAnimate();
+			}
 		}
 	}
 
