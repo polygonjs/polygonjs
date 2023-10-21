@@ -345,9 +345,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 	protected _animateWebBound: () => void = this._animateWeb.bind(this);
 	protected _animateWeb() {
-		if (!this._doRender) {
-			return;
-		}
 		this._requestAnimationFrameId = requestAnimationFrame(this._animateWebBound);
 		this.__animateCommon__();
 	}

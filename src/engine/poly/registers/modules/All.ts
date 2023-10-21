@@ -5,6 +5,7 @@ import {GSAPModule} from './entryPoints/GSAP';
 import {PBRModule} from './entryPoints/PBR';
 import {POLY_ANIMModule} from './entryPoints/POLY_ANIM';
 import {POLY_GLModule} from './entryPoints/POLY_GL';
+import {POLY_JSModule} from './entryPoints/POLY_JS';
 import {POLY_OBJModule} from './entryPoints/POLY_OBJ';
 import {POLY_SOPModule} from './entryPoints/POLY_SOP';
 import {QUADModule} from './entryPoints/QUAD';
@@ -19,6 +20,7 @@ export class AllModulesRegister {
 		poly.registerModule(PBRModule);
 		poly.registerModule(POLY_ANIMModule);
 		poly.registerModule(POLY_GLModule);
+		poly.registerModule(POLY_JSModule);
 		poly.registerModule(POLY_OBJModule);
 		poly.registerModule(POLY_SOPModule);
 		poly.registerModule(QUADModule);

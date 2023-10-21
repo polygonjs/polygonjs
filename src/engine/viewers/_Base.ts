@@ -206,6 +206,9 @@ export abstract class TypedViewer<C extends Camera> {
 		this._runOnAfterTickCallbacks(delta);
 	}
 	render(delta: number) {
+		if (!this._doRender) {
+			return;
+		}
 		// if (this._canvas) {
 		// super.render(delta);
 		const renderer = this._renderer;
