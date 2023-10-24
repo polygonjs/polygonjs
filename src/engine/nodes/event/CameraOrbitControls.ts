@@ -102,13 +102,23 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param rotation speed */
 	rotateSpeed = ParamConfig.FLOAT(0.5);
 	limits = ParamConfig.FOLDER();
-	/** @param smallest distance the camera can go to the target */
+	/** @param smallest distance the camera can go to the target (perspective cameras only) */
 	minDistance = ParamConfig.FLOAT(0.1, {
 		range: [0.1, 100],
 		rangeLocked: [true, false],
 	});
-	/** @param max distance the camera can go away the target */
+	/** @param max distance the camera can go away the target (perspective cameras only) */
 	maxDistance = ParamConfig.FLOAT(50, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
+	/** @param min zoom (orthographic cameras only) */
+	minZoom = ParamConfig.FLOAT(0.01, {
+		range: [0.01, 100],
+		rangeLocked: [true, false],
+	});
+	/** @param max zoom (orthographic cameras only) */
+	maxZoom = ParamConfig.FLOAT(50, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
@@ -256,6 +266,8 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 
 		controls.minDistance = this.pv.minDistance;
 		controls.maxDistance = this.pv.maxDistance;
+		controls.minZoom = this.pv.minZoom;
+		controls.maxZoom = this.pv.maxZoom;
 
 		this._set_azimuth_angle(controls);
 		controls.minPolarAngle = this.pv.polarAngleRange.x;
