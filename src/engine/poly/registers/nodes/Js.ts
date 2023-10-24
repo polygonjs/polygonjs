@@ -184,6 +184,7 @@ import {OnSceneResetJsNode} from '../../../nodes/js/OnSceneReset';
 import {OnScrollJsNode} from '../../../nodes/js/OnScroll';
 import {OnTickJsNode} from '../../../nodes/js/OnTick';
 import {OnVideoEventJsNode} from '../../../nodes/js/OnVideoEvent';
+import {OnViewerControlsEventJsNode} from '../../../nodes/js/OnViewerControlsEvent';
 import {OnWebXRControllerEventJsNode} from '../../../nodes/js/OnWebXRControllerEvent';
 import {OrJsNode} from '../../../nodes/js/Or';
 import {OutputJsNode} from '../../../nodes/js/Output';
@@ -547,6 +548,7 @@ export interface JsNodeChildrenMap {
 	onScroll: OnScrollJsNode;
 	onTick: OnTickJsNode;
 	onVideoEvent: OnVideoEventJsNode;
+	onViewerControlsEvent: OnViewerControlsEventJsNode;
 	onWebXRControllerEvent: OnWebXRControllerEventJsNode;
 	or: OrJsNode;
 	output: OutputJsNode;
@@ -987,6 +989,7 @@ export class JsRegister {
 		poly.registerNode(OnScrollJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR_AND_POINT);
 		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnViewerControlsEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);

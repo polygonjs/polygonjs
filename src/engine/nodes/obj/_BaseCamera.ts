@@ -2,10 +2,8 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {Camera} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
-// import {ThreejsCameraControlsController} from './utils/cameras/CameraControlsController';
 import {LayersController, LayerParamConfig} from './utils/LayersController';
-// import {PostProcessController} from './utils/cameras/PostProcessController';
-import {/*RenderController,*/ CameraRenderParamConfig} from './utils/cameras/RenderController';
+import {CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {ObjChildrenDisplayController} from './utils/ObjChildrenDisplayController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
@@ -19,14 +17,11 @@ import {TypedObjNode} from './_Base';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-// import {Raycaster} from 'three';
-// import {Vector2} from 'three';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessParamOptions';
-import {UpdateFromControlsMode, UPDATE_FROM_CONTROLS_MODES} from './utils/cameras/UpdateFromControlsMode';
 import {Poly} from '../../Poly';
 import {CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCamera';
 import {CameraControlsSopOperation} from '../../operations/sop/CameraControls';
@@ -66,18 +61,6 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			},
 			dependentOnFoundNode: true,
 		});
-		/** @param define when the camera node transform parameters are updated after the controls have moved the internal camera object */
-		updateFromControlsMode = ParamConfig.INTEGER(
-			UPDATE_FROM_CONTROLS_MODES.indexOf(UpdateFromControlsMode.ON_END),
-			{
-				menu: {
-					entries: UPDATE_FROM_CONTROLS_MODES.map((name, value) => {
-						return {name, value};
-					}),
-				},
-			}
-		);
-		// allowUpdateFromControls = ParamConfig.BOOLEAN(1);
 
 		/** @param near */
 		near = ParamConfig.FLOAT(CORE_CAMERA_DEFAULT.near, {

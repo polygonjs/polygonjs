@@ -55,6 +55,7 @@ export enum JsType {
 	ON_TICK = 'onTick',
 	ON_PERFORMANCE_CHANGE = 'onPerformanceChange',
 	ON_VIDEO_EVENT = 'onVideoEvent',
+	ON_VIEWER_CONTROLS_EVENT = 'onViewerControlsEvent',
 	ON_WEBXR_CONTROLLER_EVENT = 'onWebXRControllerEvent',
 	OUTPUT = 'output',
 	OUTPUT_AMBIENT_LIGHT = 'outputAmbientLight',

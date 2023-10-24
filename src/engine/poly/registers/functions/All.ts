@@ -321,6 +321,7 @@ import { objectDispatchEvent } from "../../../functions/objectDispatchEvent";
 import { objectUpdateMatrix } from "../../../functions/objectUpdateMatrix";
 import { objectUpdateWorldMatrix } from "../../../functions/objectUpdateWorldMatrix";
 import { onPerformanceChange } from "../../../functions/onPerformanceChange";
+import { onViewerControlsEvent } from "../../../functions/onViewerControlsEvent";
 import { orArrays } from "../../../functions/orArrays";
 import { orBooleans } from "../../../functions/orBooleans";
 import { particlesSystemReset } from "../../../functions/particlesSystemReset";
@@ -828,6 +829,7 @@ export interface NamedFunctionMap {
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
 	onPerformanceChange: onPerformanceChange;
+	onViewerControlsEvent: onViewerControlsEvent;
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -1338,6 +1340,7 @@ export class AllNamedFunctionRegister {
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
 			onPerformanceChange,
+			onViewerControlsEvent,
 			orArrays,
 			orBooleans,
 			particlesSystemReset,

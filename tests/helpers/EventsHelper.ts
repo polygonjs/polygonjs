@@ -77,16 +77,6 @@ export async function triggerPointerdownAndPointerupAside(canvas: HTMLCanvasElem
 	await CoreSleep.sleep(100);
 	triggerPointerEventAside('pointerup', canvas);
 }
-// click
-// export function triggerClick(canvas: HTMLCanvasElement, options?: EventPos) {
-// 	triggerPointerEvent('click', canvas, options);
-// }
-// export function triggerClickInMiddle(canvas: HTMLCanvasElement) {
-// 	triggerPointerEventInMiddle('click', canvas);
-// }
-// export function triggerClickAside(canvas: HTMLCanvasElement) {
-// 	triggerPointerEventAside('click', canvas);
-// }
 // contextmenu
 export function triggerContextMenu(canvas: HTMLCanvasElement, options?: EventPos) {
 	triggerPointerEvent('contextmenu', canvas, options);

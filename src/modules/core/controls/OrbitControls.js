@@ -168,7 +168,6 @@ class OrbitControls extends EventDispatcher {
 			const lastTargetPosition = new Vector3();
 
 			const twoPI = 2 * Math.PI;
-			let dampingEndEventSent = false;
 
 			return function update(deltaTime = null) {
 				const position = scope.object.position;
@@ -186,21 +185,8 @@ class OrbitControls extends EventDispatcher {
 				}
 
 				if (scope.enableDamping) {
-					// when the damping has done moving the camera, we send another endEvent.
-					// so that cameras using it can again update their transform params
-					// UPDATE:
-					// if using a return statement, this has actually side effects, where it seems that the controls
-					// stops working on some occasion.
 					const thetaDelta = sphericalDelta.theta * scope.dampingFactor;
 					const phiDelta = sphericalDelta.phi * scope.dampingFactor;
-					if (thetaDelta < EPS && phiDelta < EPS) {
-						if (!dampingEndEventSent) {
-							scope.dispatchEvent(_endEvent);
-							dampingEndEventSent = true;
-						}
-					} else {
-						dampingEndEventSent = false;
-					}
 					spherical.theta += thetaDelta;
 					spherical.phi += phiDelta;
 				} else {

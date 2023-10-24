@@ -485,7 +485,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getVideoPropertyMuted',
 		'getVideoPropertyPlaying',
 	],
-	Viewer: ['setViewer', 'setViewerControls'],
+	Viewer: ['onViewerControlsEvent', 'setViewer', 'setViewerControls'],
 	WebXR: [
 		'getWebXRARHitDetected',
 		'getWebXRARHitMatrix',
