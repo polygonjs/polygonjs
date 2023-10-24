@@ -1,4 +1,5 @@
-import {NamedFunction1, NamedFunction2} from './_Base';
+import {Vector3} from 'three';
+import {NamedFunction2, NamedFunction3} from './_Base';
 
 export class setViewer extends NamedFunction2<[string, boolean]> {
 	static override type() {
@@ -20,12 +21,19 @@ export class setViewer extends NamedFunction2<[string, boolean]> {
 	}
 }
 
-export class setViewerControls extends NamedFunction1<[boolean]> {
+export class setViewerControls extends NamedFunction3<[boolean, boolean, Vector3]> {
 	static override type() {
 		return 'setViewerControls';
 	}
-	func(active: boolean): void {
+	func(active: boolean, updateTarget: boolean, controlsTarget: Vector3): void {
 		const viewer = this.scene.viewersRegister.firstViewer();
-		viewer?.controlsController().setActive(active);
+		if (!viewer) {
+			return;
+		}
+		const controlsController = viewer.controlsController();
+		controlsController.setActive(active);
+		if (updateTarget) {
+			controlsController.setTarget(controlsTarget);
+		}
 	}
 }

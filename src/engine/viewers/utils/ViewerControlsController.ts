@@ -1,5 +1,6 @@
-import {Camera} from 'three';
+import {Camera, Vector3} from 'three';
 import {CameraControls} from '../../nodes/event/_BaseCameraControls';
+import type {OrbitControls} from '../../nodes/event/CameraOrbitControls';
 import {TypedViewer} from '../_Base';
 
 type UpdateControlsFunc = (delta: number) => void;
@@ -8,7 +9,7 @@ export class ViewerControlsController<C extends Camera> {
 	protected _active: boolean = false;
 	private _updateControlsFunc: UpdateControlsFunc | undefined;
 	protected _controls: CameraControls | undefined;
-	private _unmounted = false;
+	private _mounted = false;
 	constructor(private viewer: TypedViewer<C>) {}
 
 	controls() {
@@ -16,7 +17,10 @@ export class ViewerControlsController<C extends Camera> {
 	}
 
 	mount() {
-		this._unmounted = false;
+		if (this._mounted) {
+			return;
+		}
+		this._mounted = true;
 		const controlsNode = this.viewer.controlsNode();
 		const camera = this.viewer.camera();
 		if (!(controlsNode && camera)) {
@@ -29,13 +33,16 @@ export class ViewerControlsController<C extends Camera> {
 			// This messes up with the FirstPersoControls for instance.
 			this._updateControlsFunc = controls ? (delta) => controls.update(delta) : undefined;
 
-			if (this._unmounted) {
+			if (!this._mounted) {
 				this._disposeControls();
 			}
 		});
 	}
 	unmount() {
-		this._unmounted = true;
+		if (!this._mounted) {
+			return;
+		}
+		this._mounted = false;
 		this._disposeControls();
 		// dispose controls
 		// this._controlsNode = undefined;
@@ -55,9 +62,19 @@ export class ViewerControlsController<C extends Camera> {
 	}
 	setActive(active: boolean) {
 		if (active) {
-			this.unmount();
-		} else {
 			this.mount();
+		} else {
+			this.unmount();
 		}
+	}
+	setTarget(target: Vector3) {
+		if (!this._controls) {
+			return;
+		}
+		const orbitControls = this._controls as OrbitControls;
+		if (!orbitControls.target) {
+			return;
+		}
+		orbitControls.target.copy(target);
 	}
 }

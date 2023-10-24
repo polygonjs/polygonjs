@@ -1,4 +1,16 @@
-import {EventDispatcher, MOUSE, Quaternion, Spherical, TOUCH, Vector2, Vector3, Plane, Ray, MathUtils} from 'three';
+import {
+	EventDispatcher,
+	MOUSE,
+	Quaternion,
+	Spherical,
+	TOUCH,
+	Vector2,
+	Vector3,
+	Plane,
+	Ray,
+	MathUtils,
+	Box3,
+} from 'three';
 
 // OrbitControls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -66,6 +78,15 @@ class OrbitControls extends EventDispatcher {
 		this.screenSpacePanning = true; // if false, pan orthogonal to world-space direction camera.up
 		this.keyPanSpeed = 7.0; // pixels moved per arrow key push
 		this.zoomToCursor = false;
+		this.clampPosition = false;
+		this.positionBounds = new Box3(
+			new Vector3(-Infinity, -Infinity, -Infinity),
+			new Vector3(+Infinity, +Infinity, +Infinity)
+		);
+		// this.targetBounds = new Box3(
+		// 	new Vector3(-Infinity, -Infinity, -Infinity),
+		// 	new Vector3(+Infinity, +Infinity, +Infinity)
+		// );
 
 		// Set to true to automatically rotate around the target
 		// If auto-rotate is enabled, you must call controls.update() in your animation loop
@@ -221,6 +242,22 @@ class OrbitControls extends EventDispatcher {
 				} else {
 					scope.target.add(panOffset);
 				}
+				function _clampTarget() {
+					if (scope.clampPosition) {
+						// scope.targetBounds.copy(scope.positionBounds);
+						// scope.targetBounds.min.add(offset);
+						// scope.targetBounds.max.add(offset);
+						scope.target.clamp(scope.positionBounds.min, scope.positionBounds.max);
+						// console.log('clamp target', scope.target.toArray());
+					}
+				}
+				function _clampPosition() {
+					if (scope.clampPosition) {
+						position.clamp(scope.positionBounds.min, scope.positionBounds.max);
+						// console.log('clamp position', position.toArray());
+					}
+				}
+				_clampTarget();
 
 				// adjust the camera position based on zoom only if we're not zooming to the cursor or if it's an ortho camera
 				// we adjust zoom later in these cases
@@ -236,6 +273,7 @@ class OrbitControls extends EventDispatcher {
 				offset.applyQuaternion(quatInverse);
 
 				position.copy(scope.target).add(offset);
+				_clampPosition();
 
 				scope.object.lookAt(scope.target);
 
@@ -262,6 +300,7 @@ class OrbitControls extends EventDispatcher {
 
 						const radiusDelta = prevRadius - newRadius;
 						scope.object.position.addScaledVector(dollyDirection, radiusDelta);
+						_clampPosition();
 						scope.object.updateMatrixWorld();
 					} else if (scope.object.isOrthographicCamera) {
 						// adjust the ortho camera position based on zoom changes
@@ -276,6 +315,7 @@ class OrbitControls extends EventDispatcher {
 						mouseAfter.unproject(scope.object);
 
 						scope.object.position.sub(mouseAfter).add(mouseBefore);
+						_clampPosition();
 						scope.object.updateMatrixWorld();
 
 						newRadius = offset.length();
@@ -295,6 +335,7 @@ class OrbitControls extends EventDispatcher {
 								.transformDirection(scope.object.matrix)
 								.multiplyScalar(newRadius)
 								.add(scope.object.position);
+							_clampTarget();
 						} else {
 							// get the ray and translation plane to compute target
 							_ray.origin.copy(scope.object.position);
@@ -307,6 +348,7 @@ class OrbitControls extends EventDispatcher {
 							} else {
 								_plane.setFromNormalAndCoplanarPoint(scope.object.up, scope.target);
 								_ray.intersectPlane(_plane, scope.target);
+								_clampTarget();
 							}
 						}
 					}

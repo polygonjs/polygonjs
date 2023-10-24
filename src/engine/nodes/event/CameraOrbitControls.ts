@@ -21,6 +21,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 // which is really jarring
 import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
 // import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+export {OrbitControls};
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
@@ -130,6 +131,16 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param polar (left-right) angle range */
 	polarAngleRange = ParamConfig.VECTOR2([0, '$PI']);
+	/** @param clamp position */
+	clampPosition = ParamConfig.BOOLEAN(false);
+	/** @param min position */
+	positionMin = ParamConfig.VECTOR3([-10, -10, -10], {
+		visibleIf: {clampPosition: 1},
+	});
+	/** @param max position */
+	positionMax = ParamConfig.VECTOR3([10, 10, 10], {
+		visibleIf: {clampPosition: 1},
+	});
 	controls = ParamConfig.FOLDER();
 	/** @param leftMouseButton */
 	leftMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.ROTATE), {
@@ -163,6 +174,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	misc = ParamConfig.FOLDER();
+	updateTargetEndMoveEnd = ParamConfig.BOOLEAN(1);
 	/** @param target position. This is updated automatically as the camera is controlled by user events */
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
@@ -268,6 +280,9 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.maxDistance = this.pv.maxDistance;
 		controls.minZoom = this.pv.minZoom;
 		controls.maxZoom = this.pv.maxZoom;
+		controls.clampPosition = this.pv.clampPosition;
+		controls.positionBounds.min.copy(this.pv.positionMin);
+		controls.positionBounds.max.copy(this.pv.positionMax);
 
 		this._set_azimuth_angle(controls);
 		controls.minPolarAngle = this.pv.polarAngleRange.x;
@@ -315,6 +330,9 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	// }
 
 	private _on_controls_end(controls: OrbitControls) {
+		if (!isBooleanTrue(this.pv.updateTargetEndMoveEnd)) {
+			return;
+		}
 		if (!isBooleanTrue(this.pv.allowPan)) {
 			// target should not be updated if pan is not allowed
 			return;

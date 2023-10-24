@@ -1,4 +1,4 @@
-import {Camera, MOUSE, TOUCH, Vector3} from 'three';
+import {Camera, MOUSE, TOUCH, Vector3, Box3} from 'three';
 
 export class OrbitControls {
 	constructor(object: Camera, domElement?: HTMLElement);
@@ -41,6 +41,8 @@ export class OrbitControls {
 	keyPanSpeed: number;
 	keyRotateSpeedVertical: number;
 	keyRotateSpeedHorizontal: number;
+	clampPosition: boolean;
+	positionBounds: Box3;
 
 	autoRotate: boolean;
 	autoRotateSpeed: number;
