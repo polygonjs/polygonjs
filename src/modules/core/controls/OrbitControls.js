@@ -111,6 +111,10 @@ class OrbitControls extends EventDispatcher {
 		this._domElementKeyEvents = null;
 
 		//
+		const mouseBefore = new Vector3(0,0,0);
+		const mouseAfter = new Vector3(0,0,0);
+
+		//
 		// public methods
 		//
 
@@ -290,14 +294,18 @@ class OrbitControls extends EventDispatcher {
 						scope.object.updateMatrixWorld();
 					} else if (scope.object.isOrthographicCamera) {
 						// adjust the ortho camera position based on zoom changes
-						const mouseBefore = new Vector3(mouse.x, mouse.y, 0);
+						mouseBefore.x = mouse.x;
+						mouseBefore.y = mouse.y;
+						mouseBefore.z = 0;
 						mouseBefore.unproject(scope.object);
 
 						scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / scale));
 						scope.object.updateProjectionMatrix();
 						zoomChanged = true;
 
-						const mouseAfter = new Vector3(mouse.x, mouse.y, 0);
+						mouseAfter.x = mouse.x;
+						mouseAfter.y = mouse.y;
+						mouseAfter.z = 0;
 						mouseAfter.unproject(scope.object);
 
 						scope.object.position.sub(mouseAfter).add(mouseBefore);

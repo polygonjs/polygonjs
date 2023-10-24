@@ -103,6 +103,7 @@ export enum CameraControlsNodeType {
 	// DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
 	MAP = 'cameraMapControls',
 	ORBIT = 'cameraOrbitControls',
+	PAN_ZOOM = 'cameraPanZoomControls',
 	FIRST_PERSON = 'firstPersonControls',
 	PLAYER = 'playerControls',
 	MOBILE_JOYSTICK = 'mobileJoystickControls',

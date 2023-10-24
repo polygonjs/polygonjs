@@ -1,79 +1,53 @@
 /**
- * Creates a THREE OrbitControls
+ * Creates a pan/zoom controls for a camera
  *
  *
  */
-import {Number3} from '../../../types/GlobalTypes';
-import {Camera, Vector3, MOUSE, TOUCH} from 'three';
+// import {Number3} from '../../../types/GlobalTypes';
+import {Camera, MOUSE, TOUCH} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {BaseNodeType} from '../_Base';
+// import {BaseNodeType} from '../_Base';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-// Note:
-// currently keep using module from modules/core/controls/...
-// as otherwise there is a conflict when a TransformControls
-// is displayed, where the orbitControl seems to not release on pointerup,
-// which is really jarring
-import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
-// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-export {OrbitControls};
+import {PanZoomControls} from '../../../modules/core/controls/PanZoomControls';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
-const _targetArray: Number3 = [0, 0, 0];
+// const _targetArray: Number3 = [0, 0, 0];
 
 export enum MouseControl {
-	ROTATE = 'rotate',
 	PAN = 'pan',
 	DOLLY = 'dolly',
 }
-export const MOUSE_CONTROLS: MouseControl[] = [MouseControl.ROTATE, MouseControl.DOLLY, MouseControl.PAN];
+export const MOUSE_CONTROLS: MouseControl[] = [MouseControl.DOLLY, MouseControl.PAN];
 enum TouchControl {
-	ROTATE = 'rotate',
 	PAN = 'pan',
 	DOLLY_PAN = 'dolly + pan',
-	DOLLY_ROTATE = 'dolly + rotate',
 }
-const TOUCH_CONTROLS: TouchControl[] = [
-	TouchControl.ROTATE,
-	TouchControl.PAN,
-	TouchControl.DOLLY_PAN,
-	TouchControl.DOLLY_ROTATE,
-];
+const TOUCH_CONTROLS: TouchControl[] = [TouchControl.PAN, TouchControl.DOLLY_PAN];
 
 type ThreeMouseControl = 0 | 1 | 2;
 type ThreeTouchControl = 0 | 1 | 2 | 3;
 
 const THREE_MOUSE_BY_MOUSE_CONTROL: Record<MouseControl, ThreeMouseControl> = {
-	[MouseControl.ROTATE]: MOUSE.ROTATE,
 	[MouseControl.DOLLY]: MOUSE.DOLLY,
 	[MouseControl.PAN]: MOUSE.PAN,
 };
 const THREE_TOUCH_BY_TOUCH_CONTROL: Record<TouchControl, ThreeTouchControl> = {
-	[TouchControl.ROTATE]: TOUCH.ROTATE,
 	[TouchControl.PAN]: TOUCH.PAN,
 	[TouchControl.DOLLY_PAN]: TOUCH.DOLLY_PAN,
-	[TouchControl.DOLLY_ROTATE]: TOUCH.DOLLY_ROTATE,
 };
 
-// enum KeysMode {
-// 	PAN = 'pan',
-// 	ROTATE = 'rotate',
-// }
-// const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
-
-class CameraOrbitEventParamsConfig extends NodeParamsConfig {
+class CameraPanZoomEventParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
 	/** @param enable/disable */
 	enabled = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow pan */
 	allowPan = ParamConfig.BOOLEAN(1);
-	/** @param toggle on to allow rotate */
-	allowRotate = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow zoom */
 	allowZoom = ParamConfig.BOOLEAN(1);
 	/** @param zoom speed */
@@ -98,19 +72,17 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param toggle on to have the pan in screen space */
 	screenSpacePanning = ParamConfig.BOOLEAN(1);
-	/** @param rotation speed */
-	rotateSpeed = ParamConfig.FLOAT(0.5);
 	limits = ParamConfig.FOLDER();
 	/** @param smallest distance the camera can go to the target (perspective cameras only) */
-	minDistance = ParamConfig.FLOAT(0.1, {
-		range: [0.1, 100],
-		rangeLocked: [true, false],
-	});
-	/** @param max distance the camera can go away the target (perspective cameras only) */
-	maxDistance = ParamConfig.FLOAT(50, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-	});
+	// minDistance = ParamConfig.FLOAT(0.1, {
+	// 	range: [0.1, 100],
+	// 	rangeLocked: [true, false],
+	// });
+	// /** @param max distance the camera can go away the target (perspective cameras only) */
+	// maxDistance = ParamConfig.FLOAT(50, {
+	// 	range: [0, 100],
+	// 	rangeLocked: [true, false],
+	// });
 	/** @param min zoom (orthographic cameras only) */
 	minZoom = ParamConfig.FLOAT(0.01, {
 		range: [0.01, 100],
@@ -121,14 +93,6 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
-	/** @param toggle on to limit the azimuth (up-down) angle */
-	limitAzimuthAngle = ParamConfig.BOOLEAN(0);
-	/** @param azimuth angle range */
-	azimuthAngleRange = ParamConfig.VECTOR2(['-2*$PI', '2*$PI'], {
-		visibleIf: {limitAzimuthAngle: 1},
-	});
-	/** @param polar (left-right) angle range */
-	polarAngleRange = ParamConfig.VECTOR2([0, '$PI']);
 	/** @param clamp position */
 	clampPosition = ParamConfig.BOOLEAN(false);
 	/** @param min position */
@@ -141,7 +105,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	});
 	controls = ParamConfig.FOLDER();
 	/** @param leftMouseButton */
-	leftMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.ROTATE), {
+	leftMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.PAN), {
 		menu: {
 			entries: MOUSE_CONTROLS.map((name, value) => ({name, value})),
 		},
@@ -159,7 +123,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param 1 finger touch */
-	oneFingerTouch = ParamConfig.INTEGER(TOUCH_CONTROLS.indexOf(TouchControl.ROTATE), {
+	oneFingerTouch = ParamConfig.INTEGER(TOUCH_CONTROLS.indexOf(TouchControl.PAN), {
 		menu: {
 			entries: TOUCH_CONTROLS.map((name, value) => ({name, value})),
 		},
@@ -171,52 +135,13 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 			entries: TOUCH_CONTROLS.map((name, value) => ({name, value})),
 		},
 	});
-	misc = ParamConfig.FOLDER();
-	updateTargetEndMoveEnd = ParamConfig.BOOLEAN(1);
-	/** @param target position. This is updated automatically as the camera is controlled by user events */
-	target = ParamConfig.VECTOR3([0, 0, 0], {
-		cook: false,
-		computeOnDirty: true,
-		callback: (node: BaseNodeType) => {
-			CameraOrbitControlsEventNode.PARAM_CALLBACK_updateTarget(node as CameraOrbitControlsEventNode);
-		},
-	});
-	/** @param toggle on to enable keys */
-	// enableKeys = ParamConfig.BOOLEAN(0);
-	// /** @param key modes (pan or rotate) */
-	// keysMode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
-	// 	visibleIf: {enableKeys: 1},
-	// 	menu: {
-	// 		entries: KEYS_MODES.map((name, value) => {
-	// 			return {name, value};
-	// 		}),
-	// 	},
-	// });
-	// /** @param keys pan speed */
-	// keysPanSpeed = ParamConfig.FLOAT(7, {
-	// 	range: [0, 10],
-	// 	rangeLocked: [false, false],
-	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.PAN)},
-	// });
-	// /** @param keys rotate speed vertical */
-	// keysRotateSpeedVertical = ParamConfig.FLOAT(1, {
-	// 	range: [0, 1],
-	// 	rangeLocked: [false, false],
-	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
-	// });
-	// /** @param keys rotate speed horizontal */
-	// keysRotateSpeedHorizontal = ParamConfig.FLOAT(1, {
-	// 	range: [0, 1],
-	// 	rangeLocked: [false, false],
-	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
-	// });
 }
-const ParamsConfig = new CameraOrbitEventParamsConfig();
+const ParamsConfig = new CameraPanZoomEventParamsConfig();
 
-export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<CameraOrbitEventParamsConfig> {
+export class CameraPanZoomControlsEventNode extends TypedCameraControlsEventNode<CameraPanZoomEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return CameraControlsNodeType.ORBIT;
+		return CameraControlsNodeType.PAN_ZOOM;
 	}
 	endEventName() {
 		return 'end';
@@ -229,24 +154,24 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		]);
 	}
 
-	private _controlsByElementId: Map<string, OrbitControls> = new Map();
-	private _firstControls: OrbitControls | undefined;
+	private _controlsByElementId: Map<string, PanZoomControls> = new Map();
+	private _firstControls: PanZoomControls | undefined;
 
 	protected _createControls(camera: Camera, element: HTMLElement) {
-		return new OrbitControls(camera, element);
+		return new PanZoomControls(camera, element);
 	}
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		const controls = this._createControls(camera, element);
-		controls.addEventListener('end', () => {
-			this._on_controls_end(controls);
-		});
+		// controls.addEventListener('end', () => {
+		// 	this._on_controls_end(controls);
+		// });
 
 		this._controlsByElementId.set(element.id, controls);
 		this._updateCache();
 		this._bind_listeners_to_controls_instance(controls);
 		return controls;
 	}
-	protected _bind_listeners_to_controls_instance(controls: OrbitControls) {
+	protected _bind_listeners_to_controls_instance(controls: PanZoomControls) {
 		controls.addEventListener('start', () => {
 			this.dispatchEventToOutput(OUTPUT_START, {});
 		});
@@ -258,11 +183,10 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		});
 	}
 
-	setupControls(controls: OrbitControls) {
+	setupControls(controls: PanZoomControls) {
 		controls.enabled = isBooleanTrue(this.pv.enabled);
 
 		controls.enablePan = isBooleanTrue(this.pv.allowPan);
-		controls.enableRotate = isBooleanTrue(this.pv.allowRotate);
 		controls.enableZoom = isBooleanTrue(this.pv.allowZoom);
 		controls.zoomSpeed = this.pv.zoomSpeed;
 		controls.zoomToCursor = isBooleanTrue(this.pv.zoomToCursor);
@@ -270,24 +194,24 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.enableDamping = isBooleanTrue(this.pv.tdamping);
 		controls.dampingFactor = this.pv.damping;
 
-		controls.rotateSpeed = this.pv.rotateSpeed;
+		// controls.rotateSpeed = this.pv.rotateSpeed;
 
 		controls.screenSpacePanning = isBooleanTrue(this.pv.screenSpacePanning);
 
-		controls.minDistance = this.pv.minDistance;
-		controls.maxDistance = this.pv.maxDistance;
+		// controls.minDistance = this.pv.minDistance;
+		// controls.maxDistance = this.pv.maxDistance;
 		controls.minZoom = this.pv.minZoom;
 		controls.maxZoom = this.pv.maxZoom;
 		controls.clampPosition = this.pv.clampPosition;
 		controls.positionBounds.min.copy(this.pv.positionMin);
 		controls.positionBounds.max.copy(this.pv.positionMax);
 
-		this._set_azimuth_angle(controls);
-		controls.minPolarAngle = this.pv.polarAngleRange.x;
-		controls.maxPolarAngle = this.pv.polarAngleRange.y;
-		controls.target.copy(this.pv.target);
+		// this._set_azimuth_angle(controls);
+		// controls.minPolarAngle = this.pv.polarAngleRange.x;
+		// controls.maxPolarAngle = this.pv.polarAngleRange.y;
+		// controls.target.copy(this.pv.target);
 		if (controls.enabled) {
-			controls.update(); // necessary if target is not 0,0,0
+			controls.update(null); // necessary if target is not 0,0,0
 		}
 
 		// overrides
@@ -307,18 +231,19 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		// 	controls.keyPanSpeed = this.pv.keysPanSpeed;
 		// }
 	}
-	private _set_azimuth_angle(controls: OrbitControls) {
-		if (isBooleanTrue(this.pv.limitAzimuthAngle)) {
-			controls.minAzimuthAngle = this.pv.azimuthAngleRange.x;
-			controls.maxAzimuthAngle = this.pv.azimuthAngleRange.y;
-		} else {
-			controls.minAzimuthAngle = Infinity;
-			controls.maxAzimuthAngle = Infinity;
-		}
-	}
+	// private _set_azimuth_angle(controls: OrbitControls) {
+	// 	if (isBooleanTrue(this.pv.limitAzimuthAngle)) {
+	// 		controls.minAzimuthAngle = this.pv.azimuthAngleRange.x;
+	// 		controls.maxAzimuthAngle = this.pv.azimuthAngleRange.y;
+	// 	} else {
+	// 		controls.minAzimuthAngle = Infinity;
+	// 		controls.maxAzimuthAngle = Infinity;
+	// 	}
+	// }
 
 	updateRequired(): boolean {
-		return isBooleanTrue(this.pv.tdamping);
+		return false;
+		// return isBooleanTrue(this.pv.tdamping);
 	}
 
 	// set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void {
@@ -327,39 +252,39 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	// 	console.warn('set from camera node');
 	// }
 
-	private _on_controls_end(controls: OrbitControls) {
-		if (!isBooleanTrue(this.pv.updateTargetEndMoveEnd)) {
-			return;
-		}
-		if (!isBooleanTrue(this.pv.allowPan)) {
-			// target should not be updated if pan is not allowed
-			return;
-		}
-		controls.target.toArray(_targetArray);
-		this.p.target.set(_targetArray);
-	}
+	// private _on_controls_end(controls: OrbitControls) {
+	// 	if (!isBooleanTrue(this.pv.updateTargetEndMoveEnd)) {
+	// 		return;
+	// 	}
+	// 	if (!isBooleanTrue(this.pv.allowPan)) {
+	// 		// target should not be updated if pan is not allowed
+	// 		return;
+	// 	}
+	// 	controls.target.toArray(_targetArray);
+	// 	this.p.target.set(_targetArray);
+	// }
 
-	static PARAM_CALLBACK_updateTarget(node: CameraOrbitControlsEventNode) {
-		node._updateTarget();
-	}
-	private _updateTarget() {
-		this.setTarget(this.pv.target);
-	}
-	target(target: Vector3) {
-		if (!this._firstControls) {
-			return;
-		}
-		target.copy(this._firstControls.target);
-	}
-	setTarget(newTarget: Vector3) {
-		this._controlsByElementId.forEach((control, element_id) => {
-			const destTarget = control.target;
-			if (!destTarget.equals(newTarget)) {
-				destTarget.copy(newTarget);
-				control.update();
-			}
-		});
-	}
+	// static PARAM_CALLBACK_updateTarget(node: CameraPanZoomControlsEventNode) {
+	// 	node._updateTarget();
+	// }
+	// private _updateTarget() {
+	// 	this.setTarget(this.pv.target);
+	// }
+	// target(target: Vector3) {
+	// 	if (!this._firstControls) {
+	// 		return;
+	// 	}
+	// 	target.copy(this._firstControls.target);
+	// }
+	// setTarget(newTarget: Vector3) {
+	// 	this._controlsByElementId.forEach((control, element_id) => {
+	// 		const destTarget = control.target;
+	// 		if (!destTarget.equals(newTarget)) {
+	// 			destTarget.copy(newTarget);
+	// 			control.update();
+	// 		}
+	// 	});
+	// }
 
 	disposeControlsForHtmlElementId(html_element_id: string) {
 		// this method is important so that we can do the following steps:

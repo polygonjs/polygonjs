@@ -8,6 +8,7 @@ import {ButtonEventNode} from '../../../nodes/event/Button';
 // import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
+import {CameraPanZoomControlsEventNode} from '../../../nodes/event/CameraPanZoomControls';
 import {DebounceEventNode} from '../../../nodes/event/Debounce';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 import {CodeEventNode} from '../../../nodes/event/Code';
@@ -54,6 +55,7 @@ export interface EventNodeChildrenMap {
 	// cameraDeviceOrientationControls: CameraDeviceOrientationControlsEventNode;
 	cameraMapControls: CameraOrbitControlsEventNode;
 	cameraOrbitControls: CameraMapControlsEventNode;
+	cameraPanZoomControls: CameraPanZoomControlsEventNode;
 	debounce: DebounceEventNode;
 	delay: DelayEventNode;
 	drag: DragEventNode;
@@ -104,6 +106,7 @@ export class EventRegister {
 		// poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(CameraPanZoomControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(DebounceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
