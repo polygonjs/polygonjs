@@ -29,7 +29,7 @@ const EVENT_MAP_LOGIC: Record<EvaluatorMethodName, EventHandlerType> = {
 	[JsType.ON_MAPBOX_CAMERA_MOVE_START]: EventHandlerType.onTick,
 	[JsType.ON_MAPBOX_CAMERA_MOVE_END]: EventHandlerType.onTick,
 	[JsType.ON_OBJECT_ATTRIBUTE_UPDATE]: EventHandlerType.onTick,
-	['onClick']: EventHandlerType.onTick,
+	// ['onClick']: EventHandlerType.onTick,
 	['onContextMenu']: EventHandlerType.onTick,
 	[JsType.ON_OBJECT_DISPATCH_EVENT]: EventHandlerType.instant, // TODO
 	['onPointermove']: EventHandlerType.onTick,

@@ -36,12 +36,22 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 		return JsType.ON_OBJECT_LONG_PRESS;
 	}
 
-	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.pointerdown,
-			emitter: this.eventEmitter(),
-			jsType: JsType.ON_OBJECT_POINTERDOWN,
-		};
+	override eventData(): EvaluatorEventData[] | undefined {
+		// we need both pointerdown and pointerup events,
+		// to ensure that the raycaster gets its cursor updated
+		// on each event
+		return [
+			{
+				type: PointerEventType.pointerdown,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERDOWN,
+			},
+			{
+				type: PointerEventType.pointerup,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERUP,
+			},
+		];
 	}
 
 	override initializeNode() {
@@ -80,7 +90,7 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 		const onPointerUp = `onPointerUp`;
 
 		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-		const bodyLine = func.asString(
+		const isHovered = func.asString(
 			object3D,
 			traverseChildren,
 			lineThreshold,
@@ -90,12 +100,12 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 
 		//
 		const bodyLines = [
-			`if( ${bodyLine} ){`,
+			`if( ${isHovered} ){`,
 			`if (!${timerForCurrentObject}) {
 				// execute the triggered method after the duration
 				const ${wrappedTriggeredMethodName} = () => {
 					delete ${timerForCurrentObject};
-					if( ${bodyLine} ){
+					if( ${isHovered} ){
 						${triggeredMethods};
 					}
 				}

@@ -1,6 +1,6 @@
 // https://developer.mozilla.org/en-US/docs/Web/Events
 export enum PointerEventType {
-	click = 'click',
+	// click = 'click',
 	contextmenu = 'contextmenu',
 	pointerdown = 'pointerdown',
 	pointermove = 'pointermove',
@@ -18,7 +18,7 @@ export const ONLY_POINTER_EVENT_TYPES: PointerEventType[] = [
 ];
 
 export const ACCEPTED_POINTER_EVENT_TYPES: PointerEventType[] = [
-	PointerEventType.click,
+	// PointerEventType.click,
 	PointerEventType.contextmenu,
 	PointerEventType.pointerdown,
 	PointerEventType.pointermove,

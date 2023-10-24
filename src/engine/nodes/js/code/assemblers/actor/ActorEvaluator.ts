@@ -77,7 +77,7 @@ type TriggerCallback = () => void;
 export type EvaluatorKeyboardMethod = JsType.ON_KEY | JsType.ON_KEYDOWN | JsType.ON_KEYPRESS | JsType.ON_KEYUP;
 export type EvaluatorPointerMethod =
 	// | JsType.ON_OBJECT_CLICK
-	| 'onClick'
+	// | 'onClick'
 	| 'onContextMenu'
 	// | JsType.ON_OBJECT_HOVER
 	// | 'onPointerdown'
@@ -99,7 +99,7 @@ export type EvaluatorMethodName =
 	| JsType.ON_MAPBOX_CAMERA_MOVE_END
 	| JsType.ON_OBJECT_ATTRIBUTE_UPDATE
 	// | JsType.ON_OBJECT_CLICK
-	| 'onClick'
+	// | 'onClick'
 	| 'onContextMenu'
 	| JsType.ON_OBJECT_DISPATCH_EVENT
 	// | JsType.ON_OBJECT_HOVER
@@ -126,7 +126,7 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_MAPBOX_CAMERA_MOVE_END,
 	JsType.ON_OBJECT_ATTRIBUTE_UPDATE,
 	// JsType.ON_OBJECT_CLICK,
-	'onClick',
+	// 'onClick',
 	JsType.ON_OBJECT_DISPATCH_EVENT,
 	// JsType.ON_OBJECT_HOVER,
 	// JsType.ON_OBJECT_POINTERDOWN,

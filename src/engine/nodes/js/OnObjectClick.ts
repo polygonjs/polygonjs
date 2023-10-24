@@ -25,12 +25,22 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		return true;
 	}
 
-	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.click,
-			emitter: this.eventEmitter(),
-			jsType: JsType.ON_OBJECT_CLICK,
-		};
+	override eventData(): EvaluatorEventData[] | undefined {
+		// we need both pointerdown and pointerup events,
+		// to ensure that the raycaster gets its cursor updated
+		// on each event
+		return [
+			{
+				type: PointerEventType.pointerdown,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERDOWN,
+			},
+			{
+				type: PointerEventType.pointerup,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERUP,
+			},
+		];
 	}
 	override initializeNode() {
 		super.initializeNode();
@@ -47,26 +57,23 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
-			this._addIntersectionRef(shadersCollectionController);
+			this._addIntersectionRef(linesController);
 		}
 	}
 
-	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
-		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
-		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-		const outIntersection = this._addIntersectionRef(shadersCollectionController);
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
+		const object3D = inputObject3D(this, linesController);
+		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
+		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
+		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
+		const outIntersection = this._addIntersectionRef(linesController);
+		const onPointerUp = `onPointerUp`;
 
-		const func = Poly.namedFunctionsRegister.getFunction(
-			'getObjectHoveredState',
-			this,
-			shadersCollectionController
-		);
-		const bodyLine = func.asString(
+		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
+		const isHovered = func.asString(
 			object3D,
 			traverseChildren,
 			lineThreshold,
@@ -75,24 +82,28 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		);
 
 		//
-		const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
+		const bodyLines = [
+			`if( ${isHovered} ){
+				const ${onPointerUp} = ()=>{
+					document.removeEventListener('pointerup', ${onPointerUp});
+					if( ${isHovered} ){
+						${triggeredMethods};
+					}
+				}
+				document.addEventListener('pointerup', ${onPointerUp});
+			}`,
+		];
 
-		shadersCollectionController.addTriggeringLines(this, bodyLines, {
+		linesController.addTriggeringLines(this, bodyLines, {
 			gatherable: true,
-			triggeringMethodName: 'onClick',
+			triggeringMethodName: JsType.ON_POINTERDOWN,
 		});
 	}
 
-	private _addIntersectionRef(shadersCollectionController: JsLinesCollectionController) {
+	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
-		shadersCollectionController.addDefinitions(this, [
-			new RefJsDefinition(
-				this,
-				shadersCollectionController,
-				JsConnectionPointType.INTERSECTION,
-				outIntersection,
-				`null`
-			),
+		linesController.addDefinitions(this, [
+			new RefJsDefinition(this, linesController, JsConnectionPointType.INTERSECTION, outIntersection, `null`),
 		]);
 		return outIntersection;
 	}

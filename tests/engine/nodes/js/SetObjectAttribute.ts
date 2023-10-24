@@ -4,7 +4,10 @@ import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/Thr
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
-import {triggerClickAside, triggerClickInMiddle} from '../../../helpers/EventsHelper';
+import {
+	triggerPointerdownAndPointerupAside,
+	triggerPointerdownAndPointerupInMiddle,
+} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 export function testenginenodesjsSetObjectAttribute(qUnit: QUnit) {
 	qUnit.test('js/setObjectAttribute', async (assert) => {
@@ -58,15 +61,15 @@ export function testenginenodesjsSetObjectAttribute(qUnit: QUnit) {
 
 			assert.equal(coreObject.attribValue('increment'), 0);
 
-			triggerClickInMiddle(canvas);
+			await triggerPointerdownAndPointerupInMiddle(canvas);
 			await CoreSleep.sleep(100);
 			assert.equal(coreObject.attribValue('increment'), 1);
 
-			triggerClickAside(canvas);
+			await triggerPointerdownAndPointerupAside(canvas);
 			await CoreSleep.sleep(100);
 			assert.equal(coreObject.attribValue('increment'), 1);
 
-			triggerClickInMiddle(canvas);
+			await triggerPointerdownAndPointerupInMiddle(canvas);
 			await CoreSleep.sleep(100);
 			assert.equal(coreObject.attribValue('increment'), 2);
 		});

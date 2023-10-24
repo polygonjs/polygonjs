@@ -16,7 +16,7 @@ export interface RaycasterUpdateOptions {
 }
 
 const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
-	[PointerEventType.click]: 'onClick',
+	// [PointerEventType.click]: 'onClick',
 	[PointerEventType.contextmenu]: 'onContextMenu',
 	[PointerEventType.pointerdown]: JsType.ON_POINTERDOWN,
 	[PointerEventType.pointermove]: 'onPointermove',
