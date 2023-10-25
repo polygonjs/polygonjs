@@ -18,7 +18,7 @@ export function isTouchDevice(): boolean {
 		isIOS() ||
 		isAndroid() ||
 		'ontouchstart' in window ||
-		((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
+		((window as any).DocumentTouch != null && document instanceof (window as any).DocumentTouch)
 	);
 }
 export function isChrome(): boolean {
