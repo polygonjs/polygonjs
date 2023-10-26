@@ -13,20 +13,20 @@ ios + chrome:		| yes				| no							| yes
 
 */
 
-import {Quaternion, Vector3} from 'three';
+import {Quaternion} from 'three';
 import {NamedFunction2} from './_Base';
-import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls';
+import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls4';
 import {PolyScene} from '../scene/PolyScene';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
-import {CoreUserAgent} from '../../core/UserAgent';
+// import {CoreUserAgent} from '../../core/UserAgent';
 
 // const ROTATION_ORDER = 'YXZ';
 // const magicWindowAbsoluteEuler = new Euler();
 // const magicWindowDeltaEuler = new Euler();
-const compensateQuat = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
+// const compensateQuat = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
 // compensate for the inconsistency in rotation when starting in landscape vs starting in portrait,
 // but only if we are in landscape, and NOT in android + chrome
-const compensateRotation = CoreUserAgent.isLandscape() && !(CoreUserAgent.isAndroid() && CoreUserAgent.isChrome());
+// const compensateRotation = false; //CoreUserAgent.isLandscape() && !(CoreUserAgent.isAndroid() && CoreUserAgent.isChrome());
 class DeviceOrientationControlsHandler {
 	// private _dummyObject = new Object3D();
 	private _lastUpdatedFrame = -1;
@@ -63,13 +63,13 @@ class DeviceOrientationControlsHandler {
 			console.warn('no controls');
 			return;
 		}
-		target.copy(this._controls.quaternion);
-		if (compensateRotation) {
-			target.premultiply(compensateQuat);
-			// target.setFromEuler(magicWindowDeltaEuler, false);
-		} else {
-			// target.copy(this._dummyObject.quaternion);
-		}
+		this._controls.quaternion(target);
+		// if (compensateRotation) {
+		// 	target.premultiply(compensateQuat);
+		// 	// target.setFromEuler(magicWindowDeltaEuler, false);
+		// } else {
+		// 	// target.copy(this._dummyObject.quaternion);
+		// }
 	}
 	setSmoothAmount(smoothAmount: number) {
 		this._controls?.setSmoothAmount(smoothAmount);

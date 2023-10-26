@@ -246,6 +246,9 @@ export function arrayMap<T, U>(array: Readonly<Array<T>>, callback: (e: T) => U,
 	}
 	return target;
 }
+export function arrayAverage(array: number[]) {
+	return arraySum(array) / array.length;
+}
 
 export class ArrayUtils {
 	static shallowClone = arrayShallowClone;

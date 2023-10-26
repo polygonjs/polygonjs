@@ -4,9 +4,12 @@
 
 import {Euler, EventDispatcher, MathUtils, Quaternion, Vector2, Vector3, Matrix4} from 'three';
 import {smootherstep, fit01, clamp} from '../../math/_Module';
-import {DeviceOrientationEventExtended} from './DeviceOrientationControlsUtils';
 // import {CoreUserAgent} from '../../UserAgent';
 
+interface DeviceOrientationEventExtended extends DeviceOrientationEvent {
+	requestPermission?: () => Promise<string>;
+	webkitCompassHeading?: number;
+}
 interface WindowEventMapExtended extends WindowEventMap {
 	deviceorientationabsolute: DeviceOrientationEvent;
 }
