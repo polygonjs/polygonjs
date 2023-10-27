@@ -205,14 +205,8 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 							const dimensionsMatchWithoutSwap =
 								Math.round(videoElement.videoWidth) == Math.round(width) &&
 								Math.round(videoElement.videoHeight) == Math.round(height);
-							const dimensionsMatchWithSwap =
-								Math.round(videoElement.videoHeight) == Math.round(width) &&
-								Math.round(videoElement.videoWidth) == Math.round(height);
 
-							const finalVideoDimensionsMatch = swapDimensions
-								? dimensionsMatchWithSwap
-								: dimensionsMatchWithoutSwap;
-							if (finalVideoDimensionsMatch) {
+							if (swapDimensions || dimensionsMatchWithoutSwap) {
 								this.setTexture(texture);
 							} else {
 								resolve({dimensionsSwapRequired: true});
