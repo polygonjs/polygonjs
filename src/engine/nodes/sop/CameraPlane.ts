@@ -68,9 +68,9 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 	override async cook() {
 		this._updateWindowControllerDependency();
 
-		const mainCamera = await this.scene().camerasController.mainCamera();
-		if (mainCamera) {
-			this._computePlaneParams(mainCamera);
+		const camera = await this.scene().camerasController.mainCamera();
+		if (camera) {
+			this._computePlaneParams(camera);
 		} else {
 			this.states.error.set('no main camera found');
 		}
