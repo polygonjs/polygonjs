@@ -1,3 +1,5 @@
+// import {isNumber} from './Type';
+
 // function _createElement() {
 // 	const div = document.createElement('div');
 // 	div.style.position = 'absolute';
@@ -6,16 +8,27 @@
 // 	div.style.backgroundColor = 'darkblue';
 // 	div.style.padding = '5px';
 // 	div.style.color = 'white';
+// 	div.style.opacity = '70%';
+// 	div.style.pointerEvents = 'none';
 // 	return div;
 // }
 
 // const div = _createElement();
-// export function mountDebugElement() {
+// export function coreMountDebugElement() {
+// 	if (div.parentElement) {
+// 		return;
+// 	}
 // 	document.body.appendChild(div);
 // }
 // const elementByKey: Map<string, HTMLElement> = new Map();
+// const MAX_CHILDREN_COUNT = 10;
 
-// export function debug(values: Record<string, number | undefined>) {
+// export function coreDebug(values: Record<string, string | number | undefined>) {
+// 	while (div.children.length > MAX_CHILDREN_COUNT) {
+// 		const firstChild = div.children[0];
+// 		div.removeChild(firstChild);
+// 	}
+
 // 	const keys = Object.keys(values);
 // 	for (const key of keys) {
 // 		const value = values[key];
@@ -25,7 +38,14 @@
 // 			elementByKey.set(key, elementForKey);
 // 			div.appendChild(elementForKey);
 // 		}
-// 		const v = value != null ? value.toFixed(4) : 'null';
+// 		const v = value != null ? _getValue(value) : 'null';
 // 		elementForKey.innerHTML = `${key}: ${v}`;
+// 		// console.log(key, v);
 // 	}
+// }
+// function _getValue(value: string | number) {
+// 	if (isNumber(value)) {
+// 		return value.toFixed(4);
+// 	}
+// 	return value;
 // }

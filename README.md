@@ -1,7 +1,6 @@
 # Polygonjs
 
 [![NPM package][npm]][npm-url]
-[![Language Grade][lgtm]][lgtm-url]
 [![Twitter][twitter-img]][twitter-url]
 [![Discord][discord-img]][discord-url]
 [![Forum][forum-img]][forum-url]

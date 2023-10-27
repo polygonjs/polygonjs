@@ -1,30 +1,26 @@
 import {BaseViewerType} from '../../viewers/_Base';
 import {PolyScene} from '../../scene/PolyScene';
-// import {BaseCameraObjNodeType} from '../../nodes/obj/_BaseCamera';
 import {Camera} from 'three';
 import {Poly} from '../../Poly';
 import {ViewerCallbackOptions} from '../../poly/registers/cameras/PolyCamerasRegister';
+import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 
-// type CameraNode = BaseCameraObjNodeType;
 interface GetViewerOptions {
 	camera: Camera;
 	canvas?: HTMLCanvasElement;
 }
 export class ViewersRegister {
 	private _viewersById: Map<string, BaseViewerType> = new Map();
-	// private _viewersByCamera: Map<Camera, BaseViewerType> = new Map();
 	private _firstViewer: BaseViewerType | undefined;
 	private _lastRenderedViewer: BaseViewerType | undefined;
-	constructor(protected scene: PolyScene) {}
+	constructor(protected _scene: PolyScene) {}
 
 	registerViewer(viewer: BaseViewerType) {
 		this._viewersById.set(viewer.id(), viewer);
-		// this._viewersByCamera.set(viewer.camera(), viewer);
 		this._updateCache();
 	}
 	unregisterViewer(viewer: BaseViewerType) {
 		this._viewersById.delete(viewer.id());
-		// this._viewersByCamera.delete(viewer.camera());
 		this._updateCache();
 	}
 
@@ -33,14 +29,10 @@ export class ViewersRegister {
 	}
 
 	viewer(options: GetViewerOptions) {
-		// const existingViewer = this._viewersByCamera.get(camera);
-		// if (existingViewer) {
-		// 	return existingViewer;
-		// }
 		const createViewerOptions: ViewerCallbackOptions<Camera> = {
 			camera: options.camera,
 			canvas: options.canvas,
-			scene: this.scene,
+			scene: this._scene,
 		};
 		const newViewer = Poly.camerasRegister.createViewer(createViewerOptions); //cameraNode.createViewer();
 		return newViewer;
@@ -61,4 +53,43 @@ export class ViewersRegister {
 			this._firstViewer = this._firstViewer || viewer;
 		});
 	}
+	/**
+	 * resize graphNode
+	 */
+	private _graphNode: CoreGraphNode | undefined;
+	graphNode() {
+		return (this._graphNode = this._graphNode || this._createGraphNode());
+	}
+	private _createGraphNode() {
+		const coreGraphNode = new CoreGraphNode(this._scene, 'SceneViewersRegister');
+		return coreGraphNode;
+	}
+	// private _viewerWithResizeRequired: Set<string> = new Set();
+	markViewerAsSizeUpdated(viewer: BaseViewerType) {
+		if (!this._viewersById.has(viewer.id())) {
+			return;
+		}
+		// if (this._viewerWithResizeRequired.has(viewer.id())) {
+		// 	return;
+		// }
+		// this._viewerWithResizeRequired.add(viewer.id());
+		this._graphNode?.setDirty();
+	}
+	// markViewerAsResizeCompleted(viewer: BaseViewerType) {
+	// 	if (!this._viewersById.has(viewer.id())) {
+	// 		return;
+	// 	}
+	// 	this._viewerWithResizeRequired.delete(viewer.id());
+	// }
+	// isViewerResizeRequired(viewer: BaseViewerType) {
+	// 	return this._viewerWithResizeRequired.has(viewer.id());
+	// }
+	// updateViewersSize() {
+	// 	this._viewerWithResizeRequired.forEach((viewerId) => {
+	// 		const viewer = this._viewersById.get(viewerId);
+	// 		if (viewer) {
+	// 			viewer.updateSize();
+	// 		}
+	// 	});
+	// }
 }

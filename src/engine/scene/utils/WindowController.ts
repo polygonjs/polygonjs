@@ -2,10 +2,10 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../PolyScene';
 
 export class WindowController {
-	private _coreGraphNode: CoreGraphNode | undefined;
+	private _graphNode: CoreGraphNode | undefined;
 	constructor(private _scene: PolyScene) {}
 	graphNode() {
-		return (this._coreGraphNode = this._coreGraphNode || this._createGraphNode());
+		return (this._graphNode = this._graphNode || this._createGraphNode());
 	}
 	private _createGraphNode() {
 		const coreGraphNode = new CoreGraphNode(this._scene, 'SceneWindowController');

@@ -14,6 +14,7 @@ import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../
 import {MarkerTrackingControllerConfig} from '../../core/webXR/markerTracking/Common';
 import {CoreCameraMarkerTrackingController} from '../../core/camera/webXR/CoreCameraMarkerTracking';
 import {CoreCameraViewerFPSController, ViewerFPSConfig, isDeltaValid} from '../../core/camera/CoreCameraFPS';
+// import {coreDebug, coreMountDebugElement} from '../../core/DebugUtils';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -65,6 +66,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 	private _effectComposer: EffectComposer | undefined;
 	protected _errorMessage: string | undefined;
+	private _resizeObserver: ResizeObserver | undefined;
 
 	static override _canvasIdPrefix() {
 		return 'ThreejsViewer';
@@ -72,6 +74,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	constructor(options: ThreejsViewerOptions<C>) {
 		super(options);
 		this._setupFunctions(options);
+		// coreMountDebugElement();
 		// this._container.style.height = '100%'; // this should be app specific
 	}
 	rendererConfig() {
@@ -185,6 +188,10 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 		this._build();
 		this._setEvents();
+		const canvasParent = canvas.parentElement;
+		if (canvasParent) {
+			this._createResizeObserver(canvasParent);
+		}
 		this.onResize();
 
 		// display error if any
@@ -237,7 +244,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 		this._cancelAnimate();
 		// this.controlsController().dispose();
-		this._disposeEvents();
+		this._unlistenToWindowResize();
+		this._disposeResizeObserver();
 		// if I dispose the renderer here,
 		// this prevents env maps from displaying
 		// when the viewer is switched
@@ -251,29 +259,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this.eventsController().init();
 		this.webglController().init();
 
-		this._disposeEvents();
-		window.addEventListener('resize', this._onResizeBound, false);
-	}
-	private _disposeEvents() {
-		window.removeEventListener('resize', this._onResizeBound, false);
-	}
-	private _onResizeBound = this.onResize.bind(this);
-	onResize() {
-		const canvas = this._canvas;
-		if (!canvas) {
-			return;
-		}
-		if (!this._renderer) {
-			return;
-		}
-
-		const pixelRatio = this._renderer.getPixelRatio();
-		this.camerasController().computeSizeAndAspect(pixelRatio);
-		const size = this.camerasController().size;
-		CoreCameraRendererController.setRendererSize(canvas, size);
-		this._cssRendererConfig?.cssRenderer.setSize(size.x, size.y);
-		this._effectComposer?.setSize(size.x, size.y);
-		this.camerasController().updateCameraAspect();
+		this._unlistenToWindowResize();
+		this._listenToWindowResize();
 	}
 
 	private _initDisplay() {
@@ -406,5 +393,98 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	override markAsReady() {
 		this.preCompile();
 		this.setAutoRender(true);
+	}
+	/**
+	 * handle resize
+	 */
+	//
+	//
+	// resize
+	//
+	//
+	private _onResizeBound = this.onResize.bind(this);
+	// private _resizeRequired = false;
+	onResize() {
+		const renderUpdateRequired = this.updateSize();
+		if (!renderUpdateRequired) {
+			return;
+		}
+		if (this._renderFunc) {
+			this._updateRendererSize();
+			this._renderFunc(this.scene().timeController.delta());
+		}
+		return;
+		// if (this._resizeRequired) {
+		// 	return;
+		// }
+		// const prevRenderFunc = this._renderFunc;
+		// if (!prevRenderFunc) {
+		// 	return;
+		// }
+		// if (this._rendererSizeUpdateRequired) {
+		// 	return;
+		// }
+		// this._rendererSizeUpdateRequired = true;
+
+		// // instead of resizing the renderer on each resize event,
+		// // we set the size as recomputeRequired,
+		// // and we only recompute before next render.
+
+		// // this._scene.viewersRegister.markViewerAsResizeRequired(this);
+
+		// console.log('replace renderFunc');
+		// this._renderFunc = (delta) => {
+		// 	this._updateRendererSize();
+		// 	this._rendererSizeUpdateRequired = false;
+		// 	// restore previous render function
+		// 	this._renderFunc = prevRenderFunc;
+		// 	// render
+		// 	prevRenderFunc(delta);
+		// };
+	}
+	override updateSize(): boolean {
+		const renderer = this._renderer;
+
+		if (!renderer) {
+			return false;
+		}
+		const pixelRatio = renderer.getPixelRatio();
+		this.camerasController().computeSizeAndAspect(pixelRatio);
+		const size = this.camerasController().size;
+		if (this._size.equals(size)) {
+			return false;
+		}
+		this._size.copy(size);
+		this._scene.viewersRegister.markViewerAsSizeUpdated(this);
+		return true;
+	}
+	// private _rendererSizeUpdateRequired = false;
+	private _updateRendererSize() {
+		const canvas = this._canvas;
+		if (!canvas) {
+			return;
+		}
+		CoreCameraRendererController.setRendererSize(canvas, this._size);
+		this._cssRendererConfig?.cssRenderer.setSize(this._size.x, this._size.y);
+		this._effectComposer?.setSize(this._size.x, this._size.y);
+		this.camerasController().updateCameraAspect();
+	}
+	private _listenToWindowResize() {
+		// window.addEventListener('resize', this._onResizeBound, false);
+	}
+	private _unlistenToWindowResize() {
+		// window.removeEventListener('resize', this._onResizeBound, false);
+	}
+	private _createResizeObserver(canvasElementParent: HTMLElement) {
+		this._disposeResizeObserver();
+		this._resizeObserver = new ResizeObserver(this._onResizeBound);
+		this._resizeObserver.observe(canvasElementParent, {box: 'border-box'});
+		// this.onResize();
+	}
+	private _disposeResizeObserver() {
+		if (this._resizeObserver) {
+			this._resizeObserver.disconnect();
+			this._resizeObserver = undefined;
+		}
 	}
 }

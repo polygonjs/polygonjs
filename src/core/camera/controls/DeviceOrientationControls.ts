@@ -8,7 +8,6 @@ import {
 	setQuaternionFromEvent,
 	EPS,
 	CHANGE_EVENT,
-	screenOrientation,
 	DeviceOrientationEventExtended,
 	blendQuaternionToAbsoluteYAngle,
 	quaternionYAngle,
@@ -16,6 +15,7 @@ import {
 	PI_DEG,
 	PI_DEG2,
 } from './DeviceOrientationControlsUtils';
+import {screenOrientation} from '../../UserAgent';
 // import {mountDebugElement, debug} from './DeviceOrientationControlsDebug';
 export const DEFAULT_SMOOTH_AMOUNT = 0.01;
 export const COMPASS_READJUST_TIMESTEP_START = 1000;

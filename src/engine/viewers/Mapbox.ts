@@ -17,7 +17,7 @@ import {CoreStylesheetLoader} from '../../core/loader/Stylesheet';
 import {MapboxMapsController} from '../../core/thirdParty/Mapbox/MapboxMapsController';
 import {MapboxRaycaster} from '../../core/thirdParty/Mapbox/MapboxRaycaster';
 // import {MapboxLayersController} from '../../core/thirdParty/Mapbox/LayersController';
-import {Vector2, WebGLRenderer} from 'three';
+import {WebGLRenderer} from 'three';
 import {ThreeMeshBVHHelper} from '../../core/geometry/bvh/ThreeMeshBVHHelper';
 const CSS_CLASS = 'CoreMapboxViewer';
 
@@ -263,7 +263,6 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 	// 	window.removeEventListener('resize', this._onResizeBound, false);
 	// }
 	private _onResizeBound = this.onResize.bind(this);
-	private _size = new Vector2();
 	onResize() {
 		const canvas = this._map.getCanvas();
 		const rect = canvas.getBoundingClientRect();

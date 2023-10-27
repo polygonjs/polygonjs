@@ -27,6 +27,20 @@ export function isChrome(): boolean {
 export function isSafari(): boolean {
 	return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
+export function isPortrait(): boolean {
+	return window.innerHeight > window.innerWidth;
+}
+export function isLandscape(): boolean {
+	return !isPortrait();
+}
+export function screenOrientation() {
+	const windowOrientation = window.orientation;
+	if (windowOrientation != null) {
+		return windowOrientation;
+	}
+	const screenAngle: number | undefined = window?.screen?.orientation?.angle || 0;
+	return screenAngle;
+}
 
 export class CoreUserAgent {
 	// user agent on linux with chrome
@@ -83,10 +97,7 @@ export class CoreUserAgent {
 		}
 		return this._isTouchDevice;
 	}
-	static isPortrait(): boolean {
-		return window.innerHeight > window.innerWidth;
-	}
-	static isLandscape(): boolean {
-		return !this.isPortrait();
-	}
+	static isPortrait = isPortrait;
+	static isLandscape = isLandscape;
+	static screenOrientation = screenOrientation;
 }

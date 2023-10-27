@@ -33,6 +33,7 @@ import {StrCharsCountExpression} from '../../../expressions/methods/strCharsCoun
 import {StrConcatExpression} from '../../../expressions/methods/strConcat';
 import {StrIndexExpression} from '../../../expressions/methods/strIndex';
 import {StrSubExpression} from '../../../expressions/methods/strSub';
+import {ViewerSizeExpression} from '../../../expressions/methods/viewerSize';
 import {WindowSizeExpression} from '../../../expressions/methods/windowSize';
 
 import {BaseMethod} from '../../../expressions/methods/_Base';
@@ -72,6 +73,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	strConcat: typeof StrConcatExpression;
 	strIndex: typeof StrIndexExpression;
 	strSub: typeof StrSubExpression;
+	viewerSize: typeof ViewerSizeExpression;
 	windowSize: typeof WindowSizeExpression;
 }
 
@@ -115,6 +117,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(StrConcatExpression, ExpressionType.strConcat);
 		poly.expressionsRegister.register(StrIndexExpression, ExpressionType.strIndex);
 		poly.expressionsRegister.register(StrSubExpression, ExpressionType.strSub);
+		poly.expressionsRegister.register(ViewerSizeExpression, ExpressionType.viewerSize);
 		poly.expressionsRegister.register(WindowSizeExpression, ExpressionType.windowSize);
 	}
 }

@@ -34,5 +34,6 @@ export enum ExpressionType {
 	strConcat = 'strConcat',
 	strIndex = 'strIndex',
 	strSub = 'strSub',
+	viewerSize = 'viewerSize',
 	windowSize = 'windowSize',
 }

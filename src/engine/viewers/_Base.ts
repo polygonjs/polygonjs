@@ -299,6 +299,13 @@ export abstract class TypedViewer<C extends Camera> {
 	id() {
 		return this._id;
 	}
+	protected  _size=new Vector2()
+	size(target:Vector2){
+		target.copy(this._size)
+	}
+	updateSize(){
+
+	}
 
 	/**
 	 * disposes the viewer

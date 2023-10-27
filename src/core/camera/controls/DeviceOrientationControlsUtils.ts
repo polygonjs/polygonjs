@@ -96,15 +96,6 @@ export function blendQuaternionToAbsoluteYAngle(
 	target.setFromRotationMatrix(rotationHierarchy.rz.matrixWorld);
 }
 
-export function screenOrientation() {
-	const windowOrientation = window.orientation;
-	if (windowOrientation != null) {
-		return windowOrientation;
-	}
-	const screenAngle: number | undefined = window?.screen?.orientation?.angle || 0;
-	return screenAngle;
-}
-
 // export function ensureDeltaLessThan2PI(initValue: number, comparisonValue:number): number {
 // 	const delta = initValue - comparisonValue;
 // 	if (Math.abs(delta) > PI_DEG) {
