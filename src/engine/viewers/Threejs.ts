@@ -394,9 +394,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this.preCompile();
 		this.setAutoRender(true);
 	}
-	/**
-	 * handle resize
-	 */
+
 	//
 	//
 	// resize
