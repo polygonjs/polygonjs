@@ -15,7 +15,7 @@ ios + chrome:		| yes				| no							| yes
 
 import {Quaternion} from 'three';
 import {NamedFunction2} from './_Base';
-import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls4';
+import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls';
 import {PolyScene} from '../scene/PolyScene';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 // import {CoreUserAgent} from '../../core/UserAgent';

@@ -11,9 +11,10 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {DEFAULT_SMOOTH_AMOUNT} from '../../../core/camera/controls/DeviceOrientationControls';
 
 class DeviceOrientationJsParamsConfig extends NodeParamsConfig {
-	smoothAmount = ParamConfig.FLOAT(1, {
+	smoothAmount = ParamConfig.FLOAT(DEFAULT_SMOOTH_AMOUNT, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});

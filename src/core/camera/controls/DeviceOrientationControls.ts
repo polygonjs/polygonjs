@@ -1,16 +1,30 @@
 /**
- * adapted from threejs r133 DeviceOrientationControls
+ * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
  */
 
-import {Euler, EventDispatcher, MathUtils, Quaternion, Vector2, Vector3, Matrix4} from 'three';
-import {smootherstep, fit01, clamp} from '../../math/_Module';
-import {DeviceOrientationEventExtended} from './DeviceOrientationControlsUtils';
-// import {CoreUserAgent} from '../../UserAgent';
+import {EventDispatcher, Quaternion} from 'three';
+import {
+	ScreenOrientation,
+	setQuaternionFromEvent,
+	EPS,
+	CHANGE_EVENT,
+	screenOrientation,
+	DeviceOrientationEventExtended,
+	blendQuaternionToAbsoluteYAngle,
+	quaternionYAngle,
+	yAngleFromEvent,
+	PI_DEG,
+	PI_DEG2,
+} from './DeviceOrientationControlsUtils';
+// import {mountDebugElement, debug} from './DeviceOrientationControlsDebug';
+export const DEFAULT_SMOOTH_AMOUNT = 0.01;
+export const COMPASS_READJUST_TIMESTEP_START = 1000;
+export const COMPASS_READJUST_TIMESTEP_MAX = 5000;
+export const COMPASS_READJUST_TIMESTEP_INCREMENT = 1000;
 
 interface WindowEventMapExtended extends WindowEventMap {
 	deviceorientationabsolute: DeviceOrientationEvent;
 }
-
 declare global {
 	interface Window {
 		addEventListener<K extends keyof WindowEventMapExtended>(
@@ -25,256 +39,171 @@ declare global {
 		): void;
 	}
 }
+class DeviceOrientationControls extends EventDispatcher {
+	protected _relativeQuaternion = new Quaternion();
+	protected _blendedQuaternion = new Quaternion();
+	public enabled = true;
+	protected _relativeEvent: Partial<DeviceOrientationEvent> = {alpha: 0, beta: 0, gamma: 0};
+	protected _screenOrientation: ScreenOrientation = 0;
+	public alphaOffset = 0; // radians
+	protected _smoothAmount = DEFAULT_SMOOTH_AMOUNT;
+	protected _yAngleOffset: number | undefined;
+	protected _currentYAngleOffset: number = 0;
+	protected _targetYAngleOffset: number = 0;
+	// _absoluteYAngles was for an attempt to gather all absolute angles
+	// and average them. But this results in unwanted behaviour when we do large movements,
+	// we end up averaging with values which are not where we are looking at now.
+	// protected _absoluteYAngles: number[] = [];
+	protected _absoluteYAngle: number | undefined;
+	public _compassReadjustTimestep = COMPASS_READJUST_TIMESTEP_START; // in milliseconds
+	private _absoluteYAngleProcessedAt = -1;
 
-const EPS = 0.000001;
-const _zee = new Vector3(0, 0, 1);
-const _y = new Vector3(0, 1, 0);
-const _euler = new Euler();
-const _q0 = new Quaternion();
-const _q1 = new Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
-const _qTarget = new Quaternion();
-const _qOffset = new Quaternion();
-const _qOffset2 = new Quaternion();
-const _matrix = new Matrix4();
-const _localPos = new Vector3();
-const _localPos2D = new Vector2();
-const _changeEvent = {type: 'change'};
-
-function setObjectQuaternion(quaternion: Quaternion, alpha: number, beta: number, gamma: number, orient: number) {
-	_euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
-
-	quaternion.setFromEuler(_euler); // orient the device
-
-	quaternion.multiply(_q1); // camera looks out the back of the device, not the top
-
-	quaternion.multiply(_q0.setFromAxisAngle(_zee, -orient)); // adjust for screen orientation
-}
-function _setQuaternion(
-	_alpha: number | null,
-	_beta: number | null,
-	_gamma: number | null,
-	_screenOrientation: number | null,
-	target: Quaternion
-) {
-	const _alpha1 = _alpha != null ? _alpha : 0; // Z
-
-	const alpha = MathUtils.degToRad(_alpha1 /* - this.alphaOffset*/); // Z
-
-	const beta = _beta != null ? MathUtils.degToRad(_beta) : 0; // X'
-
-	const gamma = _gamma != null ? MathUtils.degToRad(_gamma) : 0; // Y''
-
-	const orient = _screenOrientation ? MathUtils.degToRad(_screenOrientation) : 0; // O
-
-	setObjectQuaternion(target, alpha, beta, gamma, orient);
-}
-
-function lerp(src: number, dest: number, lerp: number) {
-	return lerp * dest + (1 - lerp) * src;
-}
-// function _modAlpha(n: number): number {
-// 	return mod(n, 360);
-// }
-// function compassHeadingOrAlpha(e: DeviceOrientationEventExtended): number {
-// 	return e.webkitCompassHeading != null ? e.webkitCompassHeading : e.alpha != null ? e.alpha : 0;
-// }
-const DURATION_WITHOUT_SMOOTH = 3000;
-
-export class DeviceOrientationControls extends EventDispatcher {
-	public enabled: boolean = true;
-	private _screenOrientation: number | undefined;
-	private lastQuaternion = new Quaternion();
-	private _quaternion = new Quaternion();
-	private lastDeviceOrientationEvent: DeviceOrientationEventExtended | undefined;
-	public absoluteUpdateFrequency = 5000;
-	protected _currentAngle = 0;
-	private __absoluteY: number | undefined;
-	// private _yOffset: number = 0;
-	private __absoluteYUpdatedAt: number | undefined;
-	private _startTime = performance.now();
-	private _smoothAmount = 1;
 	constructor() {
 		super();
-
-		if (window.isSecureContext === false) {
-			console.error(
-				'THREE.DeviceOrientationControls: DeviceOrientationEvent is only available in secure contexts (https)'
-			);
-		}
-		// this._startTime = performance.now();
+		// mountDebugElement();
 
 		this.connect();
 	}
-	setSmoothAmount(smoothAmount: number) {
-		this._smoothAmount = clamp(smoothAmount, 0, 1);
-	}
-	onDeviceOrientationChangeEvent(event: DeviceOrientationEventExtended) {
-		this.lastDeviceOrientationEvent = event;
-		if (event.alpha != null) {
-			if (event.webkitCompassHeading != null) {
-				this._setAbsoluteY(event.webkitCompassHeading);
-			}
+
+	private onDeviceOrientationChangeEvent(event: DeviceOrientationEvent): void {
+		this._relativeEvent = event;
+		// webkitCompassHeading is defined on iOS, but not on Android
+		const webkitCompassHeading = (event as DeviceOrientationEventExtended).webkitCompassHeading;
+		if (webkitCompassHeading != null) {
+			// debug({webkitCompassHeading});
+			// webkitCompassHeading will be different depending on the device orientation,
+			// so we need to take it into account. Since the values are:
+			// 0 when the device is in portrait mode
+			// -90 when the device is in landscape mode with the top of the device pointing to the right
+			// +90 when the device is in landscape mode with the top of the device pointing to the left
+			// we can simply add it to webkitCompassHeading
+			this._setAbsoluteAngleY(webkitCompassHeading + this._screenOrientation);
 		}
 	}
-	onDeviceOrientationAbsoluteChangeEvent(event: DeviceOrientationEventExtended) {
-		if (event.alpha != null && event.beta != null) {
-			// TODO: try and see if .beta could be viable when in landscape
-			this._setAbsoluteY(Math.abs(event.alpha - 360));
+	private onDeviceOrientationAbsoluteChangeEvent(event: DeviceOrientationEvent): void {
+		if (event.alpha == null) {
+			return;
 		}
+		const yAngleAbsolute = yAngleFromEvent(event, this._screenOrientation);
+		this._setAbsoluteAngleY(yAngleAbsolute);
 	}
-	private _orientation() {
-		const screenAngle: number | undefined = window?.screen?.orientation?.angle;
-		const orientation = this._screenOrientation != null ? this._screenOrientation : screenAngle ? screenAngle : 0;
-		// debugOrientation(orientation);
-		return orientation;
-	}
-	private _setAbsoluteY(y: number) {
-		this.__absoluteY = y;
-		const now = performance.now();
-		if (this.__absoluteYUpdatedAt == null || now - this.__absoluteYUpdatedAt > this.absoluteUpdateFrequency) {
-			this.__absoluteYUpdatedAt = now;
-			this.__absoluteY = y;
-		}
-	}
-	private _absoluteY() {
-		if (this.__absoluteY == null) {
-			return undefined;
-		}
-		const y = this.__absoluteY + this._orientation();
-		// debugAbsoluteY(y);
-		return y;
-	}
-	private _targetYOffset() {
-		const y = this._absoluteY();
-		if (y == null) {
-			return 0;
-		}
-		return -y + this._currentAngle;
+	private _setAbsoluteAngleY(y: number) {
+		this._absoluteYAngle = y;
 	}
 
-	protected _lerpFactor() {
-		// lerp factor should be 1 in the beginning,
-		// for the first X seconds
-		const now = performance.now();
-		const timeSinceStart = now - this._startTime;
-		if (timeSinceStart < DURATION_WITHOUT_SMOOTH) {
-			return 1;
-		}
-		//
-		const updatedAt = this.__absoluteYUpdatedAt != null ? this.__absoluteYUpdatedAt : now;
-		const x = (now - updatedAt) / this.absoluteUpdateFrequency;
-		const lerpFactor = fit01(smootherstep(x, 0, 1), 0.001, 0.01);
-		return lerp(1, lerpFactor, this._smoothAmount);
-	}
-	// private _setAbsoluteDelta(absoluteAlpha: number | null | undefined, lastAlpha: number | null | undefined) {
-	// 	const now = performance.now();
-	// 	if (
-	// 		lastAlpha != null &&
-	// 		absoluteAlpha != null &&
-	// 		(this._lastAbsolutedAlphaDeltaUpdatedAt == null ||
-	// 			now - this._lastAbsolutedAlphaDeltaUpdatedAt > this.absoluteUpdateFrequency)
-	// 	) {
-	// 		this._lastAbsoluteAlphaDelta = absoluteAlpha - lastAlpha;
-	// 		if (this._startAbsoluteAlphaDelta == null) {
-	// 			this._startAbsoluteAlphaDelta = this._lastAbsoluteAlphaDelta;
-	// 			debugStartAlphaAbsolute(this._startAbsoluteAlphaDelta);
-	// 		}
-
-	// 		this._lastAbsolutedAlphaDeltaUpdatedAt = now;
-	// 		debugAlphaAbsolute(this._lastAbsoluteAlphaDelta);
-	// 	}
-	// }
-	onScreenOrientationChangeEvent() {
-		this._screenOrientation = window.orientation || 0;
+	private onScreenOrientationChangeEvent(): void {
+		this._screenOrientation = screenOrientation();
+		this._absoluteYAngleProcessedAt = -1;
 	}
 	private _bound = {
 		onDeviceOrientationChangeEvent: this.onDeviceOrientationChangeEvent.bind(this),
 		onDeviceOrientationAbsoluteChangeEvent: this.onDeviceOrientationAbsoluteChangeEvent.bind(this),
 		onScreenOrientationChangeEvent: this.onScreenOrientationChangeEvent.bind(this),
 	};
-	connect() {
+	connect(): void {
 		this.onScreenOrientationChangeEvent(); // run once on load
 
-		const requestPermission = (
-			window.DeviceOrientationEvent as unknown as DeviceOrientationEventExtended
-		)?.requestPermission?.bind(window.DeviceOrientationEvent);
+		// iOS 13+
 
-		if (requestPermission && typeof requestPermission === 'function') {
-			// iOS 13+
-			requestPermission()
-				.then((response) => {
+		if (
+			window.DeviceOrientationEvent !== undefined &&
+			// @ts-ignore
+			typeof window.DeviceOrientationEvent.requestPermission === 'function'
+		) {
+			// @ts-ignore
+			window.DeviceOrientationEvent.requestPermission()
+				.then((response: any) => {
 					if (response == 'granted') {
-						this._addEventListeners();
+						window.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
+						window.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+						window.addEventListener(
+							'deviceorientationabsolute',
+							this._bound.onDeviceOrientationAbsoluteChangeEvent
+						);
 					}
 				})
-				.catch(function (error: Error) {
+				.catch((error: any) => {
 					console.error('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:', error);
 				});
 		} else {
-			this._addEventListeners();
+			window.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
+			window.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+			window.addEventListener('deviceorientationabsolute', this._bound.onDeviceOrientationAbsoluteChangeEvent);
 		}
-	}
-	// private _useOrientationAbsolute() {
-	// 	return !CoreUserAgent.isiOS();
-	// }
-	private _addEventListeners() {
-		window.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
-		window.addEventListener('deviceorientationabsolute', this._bound.onDeviceOrientationAbsoluteChangeEvent);
-		window.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+
 		this.enabled = true;
 	}
 
-	disconnect() {
-		window.removeEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
-		window.removeEventListener('deviceorientationabsolute', this._bound.onDeviceOrientationAbsoluteChangeEvent);
-		window.removeEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+	disconnect(): void {
+		window.removeEventListener('orientationchange', this.onScreenOrientationChangeEvent);
+		window.removeEventListener('deviceorientation', this.onDeviceOrientationChangeEvent);
 
 		this.enabled = false;
 	}
 
-	update() {
+	private lastQuaternion = new Quaternion();
+	update(): void {
 		if (this.enabled === false) return;
 
-		const event = this.lastDeviceOrientationEvent;
+		setQuaternionFromEvent(this._relativeEvent, this._screenOrientation, this._relativeQuaternion);
+		const currentYAngle = quaternionYAngle(this._relativeQuaternion);
 
-		if (event) {
-			// if (event.alpha) {
-			// 	debugAlpha(event.alpha);
-			// }
-
-			_setQuaternion(event.alpha, event.beta, event.gamma, this._orientation(), _qTarget);
-
-			_matrix.makeRotationFromQuaternion(_qTarget); //.premultiply(_qOffset);
-
-			_localPos.set(1, 0, 0).applyMatrix4(_matrix);
-			_localPos.y = 0;
-			_localPos.normalize();
-			_localPos2D.set(_localPos.x, _localPos.z);
-			this._currentAngle = MathUtils.radToDeg(_localPos2D.angle()); //getYAngle(_localPos.x, _localPos.z);
-
-			// compensate Y rotation for compass
-			const targetY = this._targetYOffset();
-			const lerpFactor = this._lerpFactor();
-			// this._yOffset = lerp(this._yOffset, targetY, lerpFactor);
-			// if (this._yOffsetHasReachedTargetYOnce == false && Math.abs(this._yOffset - targetY) < 5) {
-			// 	this._yOffsetHasReachedTargetYOnce = true;
-			// }
-			_qOffset.setFromAxisAngle(_y, MathUtils.degToRad(targetY));
-			_qOffset2.slerp(_qOffset, lerpFactor);
-			this._quaternion.copy(_qOffset2).multiply(_qTarget);
-
-			// dispatch event if quaternion has changed enough
-			if (8 * (1 - this.lastQuaternion.dot(this._quaternion)) > EPS) {
-				this.lastQuaternion.copy(this._quaternion);
-				this.dispatchEvent(_changeEvent);
+		const now = performance.now();
+		const timeSinceLastCompassReadjust = now - this._absoluteYAngleProcessedAt;
+		const updateYAngleRequired =
+			this._absoluteYAngleProcessedAt < 0 || timeSinceLastCompassReadjust > this._compassReadjustTimestep;
+		if (updateYAngleRequired && this._absoluteYAngle != null) {
+			this._targetYAngleOffset = this._absoluteYAngle - currentYAngle;
+			// this._targetYAngleOffset = ensureDeltaLessThan2PI(this._absoluteYAngle, currentYAngle);
+			if (Math.abs(this._targetYAngleOffset) > PI_DEG) {
+				if (this._targetYAngleOffset > 0) {
+					this._targetYAngleOffset -= PI_DEG2;
+				} else {
+					this._targetYAngleOffset += PI_DEG2;
+				}
 			}
+
+			const delta = this._targetYAngleOffset - this._currentYAngleOffset;
+			// this._targetYAngleOffset = ensureDeltaLessThan2PI(this._targetYAngleOffset, this._currentYAngleOffset);
+			if (Math.abs(delta) > PI_DEG) {
+				if (delta > 0) {
+					this._targetYAngleOffset -= PI_DEG2;
+				} else {
+					this._targetYAngleOffset += PI_DEG2;
+				}
+			}
+
+			this._absoluteYAngle = undefined;
+			this._absoluteYAngleProcessedAt = now;
+			// we readjust against the compass after 1 second initially,
+			// and gradually increase the time between readjustments
+			// by 1 second, until reaching 5 seconds
+			this._compassReadjustTimestep = Math.min(
+				this._compassReadjustTimestep + COMPASS_READJUST_TIMESTEP_INCREMENT,
+				COMPASS_READJUST_TIMESTEP_MAX
+			);
+			// debug({timestep: this._compassReadjustTimestep});
+		}
+
+		// debug({smoothAmount: this._smoothAmount});
+		this._currentYAngleOffset =
+			(1 - this._smoothAmount) * this._currentYAngleOffset + this._smoothAmount * this._targetYAngleOffset;
+		blendQuaternionToAbsoluteYAngle(this._relativeQuaternion, this._currentYAngleOffset, this._blendedQuaternion);
+
+		if (8 * (1 - this.lastQuaternion.dot(this._blendedQuaternion)) > EPS) {
+			this.lastQuaternion.copy(this._blendedQuaternion);
+			this.dispatchEvent(CHANGE_EVENT);
 		}
 	}
+
 	quaternion(target: Quaternion) {
-		target.copy(this._quaternion);
+		target.copy(this._blendedQuaternion);
+	}
+	setSmoothAmount(smoothAmount: number) {
+		this._smoothAmount = smoothAmount;
 	}
 
-	dispose() {
-		this.disconnect();
-	}
+	public dispose = (): void => this.disconnect();
 }
+
+export {DeviceOrientationControls};
