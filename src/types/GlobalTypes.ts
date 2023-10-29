@@ -101,3 +101,7 @@ export type GuardedType<T extends PrimitiveOrConstructor> = T extends {new (...a
 	: T extends keyof typeMap
 	? typeMap[T]
 	: never;
+
+export type ConvertToStrings<T> = {
+	[P in keyof T]: string;
+};

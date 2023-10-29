@@ -12,6 +12,9 @@ import {ActorCompilationController} from '../../../core/actor/ActorCompilationCo
 import {ObjectContent, CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {hierarchyTraverse} from '../../../core/geometry/util/HierarchyTraverse';
 import {Poly} from '../../Poly';
+import {RayObjectIntersectionsHoverController} from './actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
+import {RayObjectIntersectionsPointerdownController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
+import {RayObjectIntersectionsPointerupController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -104,6 +107,9 @@ export class ActorsManager {
 		return (this._pointerEventsController =
 			this._pointerEventsController || new ActorPointerEventsController(this));
 	}
+	public readonly rayObjectIntersectionHover = new RayObjectIntersectionsHoverController(this);
+	public readonly rayObjectIntersectionPointerdown = new RayObjectIntersectionsPointerdownController(this);
+	public readonly rayObjectIntersectionPointerup = new RayObjectIntersectionsPointerupController(this);
 
 	/*
 	 *
@@ -111,6 +117,7 @@ export class ActorsManager {
 	 *
 	 */
 	tick() {
+		this.rayObjectIntersectionHover.process();
 		this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
 		hierarchyTraverse(this.scene.threejsScene(), (object) => {

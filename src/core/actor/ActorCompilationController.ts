@@ -24,12 +24,13 @@ const FUNCTION_ARG_NAMES = Object.keys(FUNCTION_ARGS_DICT);
 const FUNCTION_ARGS = FUNCTION_ARG_NAMES.map((argName) => (FUNCTION_ARGS_DICT as any)[argName]);
 
 type OnCompilationCompletedHook = () => void;
+export const ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT_NAME = 'ActorCompilationController-DUMMY';
 function _createDummyObject() {
 	const object = new Object3D();
-	object.name = 'ActorCompilationController-DUMMY';
+	object.name = ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT_NAME;
 	return object;
 }
-const dummyObject = _createDummyObject();
+export const ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT = _createDummyObject();
 export class ActorCompilationController {
 	constructor(protected node: ActorBuilderNode) {}
 
@@ -121,7 +122,7 @@ export class ActorCompilationController {
 				return this.node.scene().dispatchController.processActorEvaluator(evaluator) || evaluator;
 			});
 			//
-			const dummyEvaluator = _createEvaluator(dummyObject);
+			const dummyEvaluator = _createEvaluator(ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT);
 			evaluatorGenerator.setExpectedEvaluatorMethodNames(dummyEvaluator);
 
 			//

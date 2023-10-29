@@ -33,24 +33,18 @@ export class OnObjectBeforeDeleteJsNode extends TypedJsNode<OnObjectBeforeDelete
 		]);
 	}
 
-	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
-		const object3D = inputObject3D(this, shadersCollectionController);
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
+		const object3D = inputObject3D(this, linesController);
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'objectAddOnBeforeDeleteEventListener',
 			this,
-			shadersCollectionController
+			linesController
 		);
 		const bodyLine = func.asString(object3D, `this`, `this.${nodeMethodName(this)}.bind(this)`);
-		shadersCollectionController.addDefinitions(this, [
-			new InitFunctionJsDefinition(
-				this,
-				shadersCollectionController,
-				JsConnectionPointType.OBJECT_3D,
-				this.path(),
-				bodyLine
-			),
+		linesController.addDefinitions(this, [
+			new InitFunctionJsDefinition(this, linesController, JsConnectionPointType.OBJECT_3D, this.path(), bodyLine),
 		]);
 
-		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});
+		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});
 	}
 }

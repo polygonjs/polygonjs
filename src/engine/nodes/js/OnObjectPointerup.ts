@@ -13,7 +13,9 @@ import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
-import {RefJsDefinition} from './utils/JsDefinition';
+import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
+import {AddObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -49,31 +51,64 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 			this._addIntersectionRef(linesController);
 		}
 	}
-
 	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, linesController);
+		const blockObjectsBehind = this.variableForInputParam(linesController, this.p.blockObjectsBehind);
+		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
 		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
-		const outIntersection = this._addIntersectionRef(linesController);
+		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-		const bodyLine = func.asString(
-			object3D,
-			traverseChildren,
-			lineThreshold,
-			pointsThreshold,
-			`this.${outIntersection}`
-		);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerupCheck', this, linesController);
+		const options: AddObjectToPointerupOptionsAsString = {
+			priority:{
+				blockObjectsBehind,
+				skipIfObjectsInFront,
+			},
+			cpu:{
+				traverseChildren,
+				pointsThreshold,
+				lineThreshold,
+				intersectionRef: `this.${intersectionRef}`,
+			},
+			pointerup:{
+				callback: `this.${nodeMethodName(this)}.bind(this)`,
+			}
+		};
+		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
+		const bodyLine = func.asString(object3D, `this`, jsonOptions);
+		linesController.addDefinitions(this, [
+			new InitFunctionJsDefinition(this, linesController, JsConnectionPointType.OBJECT_3D, this.path(), bodyLine),
+		]);
 
-		//
-		const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
-
-		linesController.addTriggeringLines(this, bodyLines, {
-			gatherable: true,
-			triggeringMethodName: JsType.ON_POINTERUP,
-		});
+		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
+
+	// override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
+	// 	const object3D = inputObject3D(this, linesController);
+	// 	const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
+	// 	const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
+	// 	const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
+	// 	const outIntersection = this._addIntersectionRef(linesController);
+
+	// 	const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
+	// 	const bodyLine = func.asString(
+	// 		object3D,
+	// 		traverseChildren,
+	// 		lineThreshold,
+	// 		pointsThreshold,
+	// 		`this.${outIntersection}`
+	// 	);
+
+	// 	//
+	// 	const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
+
+	// 	linesController.addTriggeringLines(this, bodyLines, {
+	// 		gatherable: true,
+	// 		triggeringMethodName: JsType.ON_POINTERUP,
+	// 	});
+	// }
 	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		linesController.addDefinitions(this, [

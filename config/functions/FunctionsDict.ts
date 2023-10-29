@@ -269,13 +269,14 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Node: ['getNode'],
 	NoiseSimplex: ['noiseSimplexVector2', 'noiseSimplexVector3', 'noiseSimplexVector4'],
 	NoiseImproved: ['noiseImprovedVector3'],
+	Object3D: ['getGeometryNodeObjects', 'createObject', 'createObjects', 'objectDelete'],
 	ObjectDispatchEvent: [
 		'objectDispatchEvent',
 		'getObjectLastDispatchedEventName',
 		'objectAddEventListeners',
 		'objectAddOnBeforeDeleteEventListener',
 	],
-	Object3D: ['getGeometryNodeObjects', 'createObject', 'createObjects', 'objectDelete'],
+	ObjectRayIntersection: ['addObjectToHoveredCheck', 'addObjectToPointerdownCheck', 'addObjectToPointerupCheck'],
 	Param: [
 		'getParam',
 		'setParamBoolean',

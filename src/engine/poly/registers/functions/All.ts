@@ -10,6 +10,9 @@ import type { MathArrayVectorElement } from "../../../functions/_MathGeneric";
 
 import { addAudioStopEventListener } from "../../../functions/addAudioStopEventListener";
 import { addNumber } from "../../../functions/addNumber";
+import { addObjectToHoveredCheck } from "../../../functions/addObjectToHoveredCheck";
+import { addObjectToPointerdownCheck } from "../../../functions/addObjectToPointerdownCheck";
+import { addObjectToPointerupCheck } from "../../../functions/addObjectToPointerupCheck";
 import { addVector } from "../../../functions/addVector";
 import { addVectorNumber } from "../../../functions/addVectorNumber";
 import { addVideoEventListener } from "../../../functions/addVideoEventListener";
@@ -518,6 +521,9 @@ import { WFCBuild } from "../../../functions/WFCBuild";
 export interface NamedFunctionMap {
 	addAudioStopEventListener: addAudioStopEventListener;
 	addNumber: addNumber;
+	addObjectToHoveredCheck: addObjectToHoveredCheck;
+	addObjectToPointerdownCheck: addObjectToPointerdownCheck;
+	addObjectToPointerupCheck: addObjectToPointerupCheck;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
 	addVideoEventListener: addVideoEventListener;
@@ -1029,6 +1035,9 @@ export class AllNamedFunctionRegister {
 		[
 			addAudioStopEventListener,
 			addNumber,
+			addObjectToHoveredCheck,
+			addObjectToPointerdownCheck,
+			addObjectToPointerupCheck,
 			addVector,
 			addVectorNumber,
 			addVideoEventListener,

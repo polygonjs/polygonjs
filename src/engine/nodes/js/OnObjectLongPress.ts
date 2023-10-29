@@ -9,10 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
-import {
-	ExtendableOnObjectPointerEventJsNode,
-	BaseOnObjectPointerEventJsParamsConfig,
-} from './_BaseOnObjectPointerEvent';
+import {ExtendableOnObjectPointerEventJsNode, CPUOnObjectPointerEventJsParamsConfig} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
@@ -21,7 +18,7 @@ import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectLongPressJsParamsConfig extends BaseOnObjectPointerEventJsParamsConfig {
+export class OnObjectLongPressJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
 	/** @param press duration (in milliseconds) */
 	duration = ParamConfig.INTEGER(500, {
 		range: [0, 1000],

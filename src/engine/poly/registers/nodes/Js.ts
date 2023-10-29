@@ -168,6 +168,7 @@ import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
 import {OnObjectContextMenuJsNode} from '../../../nodes/js/OnObjectContextMenu';
 import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEvent';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
+import {OnObjectHoverGPUJsNode} from '../../../nodes/js/OnObjectHoverGPU';
 import {OnObjectLongPressJsNode} from '../../../nodes/js/OnObjectLongPress';
 import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
 import {OnObjectPointerupJsNode} from '../../../nodes/js/OnObjectPointerup';
@@ -532,6 +533,7 @@ export interface JsNodeChildrenMap {
 	onObjectContextMenu: OnObjectContextMenuJsNode;
 	onObjectDispatchEvent: OnObjectDispatchEventJsNode;
 	onObjectHover: OnObjectHoverJsNode;
+	onObjectHoverGPU: OnObjectHoverGPUJsNode;
 	onObjectLongPress: OnObjectLongPressJsNode;
 	onObjectPointerdown: OnObjectPointerdownJsNode;
 	onObjectPointerup: OnObjectPointerupJsNode;
@@ -973,6 +975,7 @@ export class JsRegister {
 		poly.registerNode(OnObjectContextMenuJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectDispatchEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectHoverGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectLongPressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

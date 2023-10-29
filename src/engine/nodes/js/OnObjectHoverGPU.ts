@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
+import {BaseOnObjectPointerGPUEventJsNode} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -19,12 +19,17 @@ import {AddObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjec
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum OnObjectHoverJsNodeOutputName {
-	hovered = 'hovered',
+enum OnObjectHoverGPUJsNodeInputName {
+	// colorMaterial = 'colorMaterial',
+	depthMaterial = 'depthMaterial',
 }
-export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
+enum OnObjectHoverGPUJsNodeOutputName {
+	hovered = 'hovered',
+	distance = 'distance',
+}
+export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 	static override type() {
-		return JsType.ON_OBJECT_HOVER;
+		return JsType.ON_OBJECT_HOVER_GPU;
 	}
 	override isTriggering() {
 		return true;
@@ -40,17 +45,28 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		super.initializeNode();
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			// new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
+			// new JsConnectionPoint(
+			// 	OnObjectHoverGPUJsNodeInputName.colorMaterial,
+			// 	JsConnectionPointType.MATERIAL,
+			// 	CONNECTION_OPTIONS
+			// ),
+			new JsConnectionPoint(
+				OnObjectHoverGPUJsNodeInputName.depthMaterial,
+				JsConnectionPointType.MATERIAL,
+				CONNECTION_OPTIONS
+			),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
-				OnObjectHoverJsNodeOutputName.hovered,
+				OnObjectHoverGPUJsNodeOutputName.hovered,
 				JsConnectionPointType.BOOLEAN,
 				CONNECTION_OPTIONS
 			),
 			new JsConnectionPoint(
-				JsConnectionPointType.INTERSECTION,
-				JsConnectionPointType.INTERSECTION,
+				OnObjectHoverGPUJsNodeOutputName.distance,
+				JsConnectionPointType.FLOAT,
 				CONNECTION_OPTIONS
 			),
 		]);
@@ -58,25 +74,21 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 
 	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
-		if (usedOutputNames.includes(OnObjectHoverJsNodeOutputName.hovered)) {
+		if (usedOutputNames.includes(OnObjectHoverGPUJsNodeOutputName.hovered)) {
 			this._addHoveredRef(linesController);
 		}
-		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
-			this._addIntersectionRef(linesController);
-
-			if (!usedOutputNames.includes(JsConnectionPointType.TRIGGER)) {
-				this.setTriggeringLines(linesController, '');
-			}
+		if (usedOutputNames.includes(OnObjectHoverGPUJsNodeOutputName.distance)) {
+			this._addDistanceRef(linesController);
 		}
 	}
 	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, linesController);
 		const blockObjectsBehind = this.variableForInputParam(linesController, this.p.blockObjectsBehind);
 		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
-		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
-		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
-		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
-		const intersectionRef = this._addIntersectionRef(linesController);
+		// const colorMaterial = this.variableForInput(linesController, OnObjectHoverGPUJsNodeInputName.colorMaterial);
+		// const alphaTest = this.variableForInputParam(linesController, this.p.alphaTest);
+		const depthMaterial = this.variableForInput(linesController, OnObjectHoverGPUJsNodeInputName.depthMaterial);
+		const distanceRef = this._addDistanceRef(linesController);
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToHoveredCheck', this, linesController);
@@ -85,11 +97,11 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 				blockObjectsBehind,
 				skipIfObjectsInFront,
 			},
-			cpu: {
-				traverseChildren,
-				pointsThreshold,
-				lineThreshold,
-				intersectionRef: `this.${intersectionRef}`,
+			gpu: {
+				// colorMaterial,
+				depthMaterial,
+				// alphaTest,
+				distanceRef: `this.${distanceRef}`,
 			},
 			hover: {
 				hoveredStateRef: `this.${hoveredStateRef}`,
@@ -105,47 +117,16 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
 
-	// override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
-	// 	const object3D = inputObject3D(this, linesController);
-	// 	const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
-	// 	const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
-	// 	const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
-
-	// 	const newHovered = `newHovered`;
-	// 	const currentHovered = `currentHovered`;
-	// 	const outIntersection = this._addIntersectionRef(linesController);
-	// 	const outHovered = this._addHoveredRef(linesController);
-
-	// 	const _getObjectHoveredState_ = () => {
-	// 		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-	// 		return func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold, `this.${outIntersection}`);
-	// 	};
-
-	// 	const _getObjectHoveredState = _getObjectHoveredState_();
-
-	// 	const bodyLines = [
-	// 		`const ${newHovered} = ${_getObjectHoveredState};`,
-	// 		`const ${currentHovered} = this.${outHovered}.value;`,
-	// 		`this.${outHovered}.value = ${newHovered};`,
-	// 		`if( ${newHovered} != ${currentHovered} ){`,
-	// 		`${triggeredMethods}`,
-	// 		`}`,
-	// 	];
-
-	// 	linesController.addTriggeringLines(this, bodyLines, {
-	// 		gatherable: true,
-	// 		triggeringMethodName: 'onPointermove',
-	// 	});
-	// }
-	private _addIntersectionRef(linesController: JsLinesCollectionController) {
-		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
+	private _addDistanceRef(linesController: JsLinesCollectionController) {
+		const outDistance = this.jsVarName(OnObjectHoverGPUJsNodeOutputName.distance);
 		linesController.addDefinitions(this, [
-			new RefJsDefinition(this, linesController, JsConnectionPointType.INTERSECTION, outIntersection, `null`),
+			new RefJsDefinition(this, linesController, JsConnectionPointType.FLOAT, outDistance, `-1`),
 		]);
-		return outIntersection;
+		return outDistance;
 	}
+
 	private _addHoveredRef(linesController: JsLinesCollectionController) {
-		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
+		const outHovered = this.jsVarName(OnObjectHoverGPUJsNodeOutputName.hovered);
 		linesController.addDefinitions(this, [
 			new RefJsDefinition(this, linesController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
 		]);

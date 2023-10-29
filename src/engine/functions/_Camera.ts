@@ -2,6 +2,7 @@ import {Camera, Object3D, OrthographicCamera, PerspectiveCamera, Vector2} from '
 import {isBooleanTrue} from '../../core/Type';
 import {NamedFunction0, ObjectNamedFunction2, ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
+import {coreGetDefaultCamera} from '../../core/render/renderPixel/CoreGetDefautCamera';
 
 export class setPerspectiveCameraFov extends ObjectNamedFunction3<[number, number, boolean]> {
 	static override type() {
@@ -48,11 +49,7 @@ export class getDefaultCamera extends NamedFunction0 {
 		// so we need to depend on time for now
 		dummyReadRefVal(this.timeController.timeUniform().value);
 		//
-		return (
-			this.scene.root().mainCameraController.cameraSync() ||
-			this.scene.viewersRegister.lastRenderedViewer()?.camera() ||
-			this.scene.root().mainCameraController.dummyPerspectiveCamera()
-		);
+		return coreGetDefaultCamera(this.scene);
 	}
 }
 
