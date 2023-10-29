@@ -15,12 +15,12 @@ import {
 	Color,
 	ColorSpace,
 	ToneMapping,
-	// DepthTexture,
-	// UnsignedInt248Type,
+	DepthTexture,
+	UnsignedInt248Type,
 } from 'three';
 import {coreGetDefaultCamera} from './CoreGetDefautCamera';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
-// import {setupDepthReadScene, updateDepthSetup} from './DepthRead';
+import {setupDepthReadScene, updateDepthSetup} from './DepthRead';
 
 export function coreCursorToUv(cursor: Vector2, target: Vector2) {
 	target.x = 0.5 * (cursor.x + 1);
@@ -29,26 +29,21 @@ export function coreCursorToUv(cursor: Vector2, target: Vector2) {
 
 interface Object3DRestoreContext {
 	parent: Object3D | null;
-	// background: Color | Texture | null;
 }
-// interface SceneRestoreContext {
-// 	overrideMaterial: Material | null;
-// 	// background: Color | Texture | null;
-// }
+
 interface RendererRestoreContext {
 	toneMapping: ToneMapping;
 	outputColorSpace: ColorSpace;
 }
 interface RestoreContext {
 	object: Object3DRestoreContext;
-	// scene: SceneRestoreContext;
 	renderer: RendererRestoreContext;
 }
-// function _createDepthTexture() {
-// 	const texture = new DepthTexture(1, 1);
-// 	// texture.type = UnsignedInt248Type;
-// 	return texture;
-// }
+function _createDepthTexture() {
+	const texture = new DepthTexture(1, 1);
+	texture.type = UnsignedInt248Type;
+	return texture;
+}
 
 export class RenderPixelController {
 	// Note for this to work on iOS:
@@ -60,17 +55,17 @@ export class RenderPixelController {
 		format: RGBAFormat,
 		type: FloatType,
 		colorSpace: NoColorSpace,
-		// depthTexture: _createDepthTexture(),
+		depthTexture: _createDepthTexture(),
 	});
-	// private _depthReadRenderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
-	// 	minFilter: LinearFilter,
-	// 	magFilter: NearestFilter,
-	// 	format: RGBAFormat,
-	// 	type: FloatType,
-	// 	colorSpace: NoColorSpace,
-	// });
+	private _depthReadRenderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
+		minFilter: NearestFilter,
+		magFilter: NearestFilter,
+		format: RGBAFormat,
+		type: FloatType,
+		colorSpace: NoColorSpace,
+	});
 	private _renderScene = new Scene();
-	// private _depthReadSetup = setupDepthReadScene();
+	private _depthReadSetup = setupDepthReadScene();
 	private _restoreContext: RestoreContext = {
 		object: {
 			parent: null,
@@ -98,18 +93,18 @@ export class RenderPixelController {
 
 		return target;
 	}
-	// renderDepth(
-	// 	scene: PolyScene,
-	// 	object3D: Object3D,
-	// 	camera: Camera,
-	// 	backgroundColor: Color,
-	// 	uv: Vector2,
-	// 	target: Vector4
-	// ): Vector4 {
-	// 	this._doRender(scene, object3D, camera, null, backgroundColor, uv, target, true);
+	renderDepth(
+		scene: PolyScene,
+		object3D: Object3D,
+		camera: Camera,
+		backgroundColor: Color | null,
+		uv: Vector2,
+		target: Vector4
+	): Vector4 {
+		this._doRender(scene, object3D, camera, null, backgroundColor, uv, target, true);
 
-	// 	return target;
-	// }
+		return target;
+	}
 	private _doRender(
 		scene: PolyScene,
 		object3D: Object3D,
@@ -173,10 +168,10 @@ export class RenderPixelController {
 
 		if (readDepth) {
 			// read depth
-			// updateDepthSetup(this._depthReadSetup, camera, this._depthWriteRenderTarget);
-			// renderer.setRenderTarget(this._depthReadRenderTarget);
-			// renderer.render(this._depthReadSetup.scene, this._depthReadSetup.camera);
-			// renderer.readRenderTargetPixels(this._depthReadRenderTarget, 0, 0, 1, 1, this._read);
+			updateDepthSetup(this._depthReadSetup, camera, this._colorWriteRenderTarget);
+			renderer.setRenderTarget(this._depthReadRenderTarget);
+			renderer.render(this._depthReadSetup.scene, this._depthReadSetup.camera);
+			renderer.readRenderTargetPixels(this._depthReadRenderTarget, 0, 0, 1, 1, this._read);
 		} else {
 			// There are some cases where .readRenderTargetPixels is slow,
 			// and this seems to be due to the calls to _gl.getParameters.

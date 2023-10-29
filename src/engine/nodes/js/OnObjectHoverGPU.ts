@@ -22,8 +22,6 @@ const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 enum OnObjectHoverGPUJsNodeInputName {
 	worldPosMaterial = 'worldPosMaterial',
 }
-// colorMaterial = 'colorMaterial',
-// depthMaterial = 'depthMaterial',
 enum OnObjectHoverGPUJsNodeOutputName {
 	hovered = 'hovered',
 	distance = 'distance',
@@ -46,12 +44,6 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		super.initializeNode();
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-			// new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
-			// new JsConnectionPoint(
-			// 	OnObjectHoverGPUJsNodeInputName.colorMaterial,
-			// 	JsConnectionPointType.MATERIAL,
-			// 	CONNECTION_OPTIONS
-			// ),
 			new JsConnectionPoint(
 				OnObjectHoverGPUJsNodeInputName.worldPosMaterial,
 				JsConnectionPointType.MATERIAL,
@@ -86,8 +78,6 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		const object3D = inputObject3D(this, linesController);
 		const blockObjectsBehind = this.variableForInputParam(linesController, this.p.blockObjectsBehind);
 		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
-		// const colorMaterial = this.variableForInput(linesController, OnObjectHoverGPUJsNodeInputName.colorMaterial);
-		// const alphaTest = this.variableForInputParam(linesController, this.p.alphaTest);
 		const worldPosMaterial = this.variableForInput(
 			linesController,
 			OnObjectHoverGPUJsNodeInputName.worldPosMaterial
@@ -102,9 +92,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 				skipIfObjectsInFront,
 			},
 			gpu: {
-				// colorMaterial,
 				worldPosMaterial,
-				// alphaTest,
 				distanceRef: `this.${distanceRef}`,
 			},
 			hover: {

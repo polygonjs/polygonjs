@@ -27,8 +27,9 @@ export interface CPUOptions {
 	intersectionRef: Ref<Intersection | null>;
 }
 export interface GPUOptions {
-	// currently using a worldPosMaterial, as it seems more precise than using the depth buffer
-	worldPosMaterial: Material;
+	// if a worldPosMaterial is given, we use it and only need a single render call.
+	// if not, we render need 2 renders, 1 to write to the depth buffer and another to read it (in addition to readRenderTargetPixels)
+	worldPosMaterial: Material | null;
 	distanceRef: Ref<number>;
 }
 export interface AddObjectOptions {
@@ -47,25 +48,15 @@ function intersectsSort(a: CPUOrGPUIntersection, b: CPUOrGPUIntersection) {
 }
 const pixelRenderUv = new Vector2();
 const pixelRenderTarget = new Vector4();
-// const raycasterDirNormalised = new Vector3();
-// const gpuCameraRayAtNearPlane = new Vector3();
-// const gpuCameraRayAtFarPlane = new Vector3();
+const raycasterDirNormalised = new Vector3();
+const gpuCameraRayAtNearPlane = new Vector3();
+const gpuCameraRayAtFarPlane = new Vector3();
 const gpuHitPos = new Vector3();
 
 interface GPUIntersection {
 	distance: number;
 }
 type CPUOrGPUIntersection = Intersection | GPUIntersection;
-
-// function remapDepthToDistance(pixelValue: number, near: number, far: number) {
-// 	// from src/renderers/shaders/ShaderChunk/packing.glsl.js
-// 	// const viewZ = (near * far) / ((far - near) * pixelValue - far);
-// 	// const result = (viewZ + near) / (near - far);
-// 	// console.log({pixelValue, viewZ, result});
-// 	// return result;
-// 	// const delta = far - near;
-// 	return near + (1 - pixelValue) * (far - near);
-// }
 
 export class BaseRayObjectIntersectionsController {
 	protected _scene: PolyScene;
@@ -93,15 +84,20 @@ export class BaseRayObjectIntersectionsController {
 		const objects = this._objects;
 
 		// prepare gpu options
-		const gpuObjects = this._gpuObjectsPresent();
+		const gpuObjectsPresent = this._gpuObjectsPresent();
 		const camera =
-			gpuObjects == true ? (coreGetDefaultCamera(this._scene) as PerspectiveCamera | OrthographicCamera) : null;
-		if (gpuObjects == true && camera) {
-			coreCursorToUv(pointerEventsController.cursor().value, pixelRenderUv);
-			// console.log(camera.position.toArray(), raycaster.ray.origin.toArray(), raycaster.ray.direction.toArray());
-			// raycasterDirNormalised.copy(raycaster.ray.direction).normalize();
-			// gpuCameraRayAtNearPlane.copy(raycasterDirNormalised).multiplyScalar(camera.near).add(raycaster.ray.origin);
-			// gpuCameraRayAtFarPlane.copy(raycasterDirNormalised).multiplyScalar(camera.far).add(raycaster.ray.origin);
+			gpuObjectsPresent == true
+				? (coreGetDefaultCamera(this._scene) as PerspectiveCamera | OrthographicCamera)
+				: null;
+		if (gpuObjectsPresent == true && camera) {
+			const cursor = pointerEventsController.cursor().value;
+			coreCursorToUv(cursor, pixelRenderUv);
+
+			if (this._gpuDepthBufferReadRequired()) {
+				raycasterDirNormalised.copy(raycaster.ray.direction).normalize();
+				gpuCameraRayAtNearPlane.set(cursor.x, cursor.y, -1).unproject(camera);
+				gpuCameraRayAtFarPlane.set(cursor.x, cursor.y, 1).unproject(camera);
+			}
 		}
 
 		// get intersects
@@ -125,24 +121,39 @@ export class BaseRayObjectIntersectionsController {
 				} else {
 					const gpuOptions = properties.gpu;
 					if (gpuOptions && camera) {
-						this._renderPixelController.renderColor(
-							this._scene,
-							object,
-							gpuOptions.worldPosMaterial,
-							camera,
-							null, //necessary to have alpha=0 when no object is hit
-							pixelRenderUv,
-							pixelRenderTarget
-						);
+						const worldPosMaterial = gpuOptions.worldPosMaterial;
+						if (worldPosMaterial != null) {
+							this._renderPixelController.renderColor(
+								this._scene,
+								object,
+								gpuOptions.worldPosMaterial,
+								camera,
+								null, //necessary to have alpha=0 when no object is hit
+								pixelRenderUv,
+								pixelRenderTarget
+							);
+						} else {
+							this._renderPixelController.renderDepth(
+								this._scene,
+								object,
+								// gpuOptions.worldPosMaterial,
+								camera,
+								null, //necessary to have alpha=0 when no object is hit
+								pixelRenderUv,
+								pixelRenderTarget
+							);
+						}
 						if (pixelRenderTarget.w > 0 /* pixelRenderTarget.w >= gpuOptions.alphaTest*/) {
-							// const NDCDistance = remapDepthToDistance(pixelRenderTarget.x, camera.near, camera.far);
-							// const lerp = remapDepthToDistance(pixelRenderTarget.x, camera.near, camera.far);
-							// gpuHitPos.copy(gpuCameraRayAtNearPlane).lerp(gpuCameraRayAtFarPlane, pixelRenderTarget.x);
-							gpuHitPos.set(pixelRenderTarget.x, pixelRenderTarget.y, pixelRenderTarget.z);
+							if (worldPosMaterial) {
+								gpuHitPos.set(pixelRenderTarget.x, pixelRenderTarget.y, pixelRenderTarget.z);
+							} else {
+								gpuHitPos
+									.copy(gpuCameraRayAtNearPlane)
+									.lerp(gpuCameraRayAtFarPlane, pixelRenderTarget.x);
+							}
 							const distance = gpuHitPos.distanceTo(raycaster.ray.origin);
-							// const distance = pixelRenderTarget.x * (camera.far - camera.near) + camera.near;
 							const gpuIntersect: GPUIntersection = {distance};
-							// console.log({object: object.name, x: pixelRenderTarget.x, distance});
+
 							this._closestIntersects.set(object, gpuIntersect);
 							if (gpuIntersect) {
 								this._objectByClosestIntersect.set(gpuIntersect, object);
@@ -193,22 +204,6 @@ export class BaseRayObjectIntersectionsController {
 				}
 			}
 		}
-
-		// commit new hovered state
-		// for (const object of objects) {
-		// 	const properties = this._propertiesByObject.get(object);
-		// 	if (properties) {
-		// 		const currentHoveredState = properties.hoveredStateRef.value;
-		// 		const newHoveredState = this._intersectedStateByObject.get(object) || false;
-		// 		if (newHoveredState != currentHoveredState) {
-		// 			properties.hoveredStateRef.value = newHoveredState;
-		// 			properties.onHoveredStateChange();
-		// 		}
-		// 	}
-		// }
-
-		// reset
-		// this._postProcess();
 	}
 	protected _postProcess() {
 		this._objectByClosestIntersect.clear();
@@ -218,6 +213,16 @@ export class BaseRayObjectIntersectionsController {
 		for (const object of objects) {
 			const properties = this._propertiesByObject.get(object);
 			if (properties && properties.gpu) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private _gpuDepthBufferReadRequired(): boolean {
+		const objects = this._objects;
+		for (const object of objects) {
+			const properties = this._propertiesByObject.get(object);
+			if (properties && properties.gpu && properties.gpu.worldPosMaterial == null) {
 				return true;
 			}
 		}
