@@ -20,9 +20,10 @@ import {AddObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjec
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 enum OnObjectHoverGPUJsNodeInputName {
-	// colorMaterial = 'colorMaterial',
-	depthMaterial = 'depthMaterial',
+	worldPosMaterial = 'worldPosMaterial',
 }
+// colorMaterial = 'colorMaterial',
+// depthMaterial = 'depthMaterial',
 enum OnObjectHoverGPUJsNodeOutputName {
 	hovered = 'hovered',
 	distance = 'distance',
@@ -52,7 +53,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 			// 	CONNECTION_OPTIONS
 			// ),
 			new JsConnectionPoint(
-				OnObjectHoverGPUJsNodeInputName.depthMaterial,
+				OnObjectHoverGPUJsNodeInputName.worldPosMaterial,
 				JsConnectionPointType.MATERIAL,
 				CONNECTION_OPTIONS
 			),
@@ -87,7 +88,10 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
 		// const colorMaterial = this.variableForInput(linesController, OnObjectHoverGPUJsNodeInputName.colorMaterial);
 		// const alphaTest = this.variableForInputParam(linesController, this.p.alphaTest);
-		const depthMaterial = this.variableForInput(linesController, OnObjectHoverGPUJsNodeInputName.depthMaterial);
+		const worldPosMaterial = this.variableForInput(
+			linesController,
+			OnObjectHoverGPUJsNodeInputName.worldPosMaterial
+		);
 		const distanceRef = this._addDistanceRef(linesController);
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
@@ -99,7 +103,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 			},
 			gpu: {
 				// colorMaterial,
-				depthMaterial,
+				worldPosMaterial,
 				// alphaTest,
 				distanceRef: `this.${distanceRef}`,
 			},

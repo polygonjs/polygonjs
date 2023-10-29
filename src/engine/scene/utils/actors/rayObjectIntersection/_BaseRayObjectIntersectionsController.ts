@@ -8,7 +8,6 @@ import {
 	Vector2,
 	Vector3,
 	Vector4,
-	Color,
 	PerspectiveCamera,
 	OrthographicCamera,
 } from 'three';
@@ -28,11 +27,9 @@ export interface CPUOptions {
 	intersectionRef: Ref<Intersection | null>;
 }
 export interface GPUOptions {
-	// colorMaterial: Material;
-	depthMaterial: Material;
+	// currently using a worldPosMaterial, as it seems more precise than using the depth buffer
+	worldPosMaterial: Material;
 	distanceRef: Ref<number>;
-	// alphaTest: number;
-	// colorRef: Ref<Vector4>;
 }
 export interface AddObjectOptions {
 	priority: PriorityOptions;
@@ -48,10 +45,9 @@ const RAYCAST_UPDATE_OPTIONS: RaycasterUpdateOptions = {
 function intersectsSort(a: CPUOrGPUIntersection, b: CPUOrGPUIntersection) {
 	return a.distance - b.distance;
 }
-const backgroundColor = new Color(-1, -1, -1);
 const pixelRenderUv = new Vector2();
 const pixelRenderTarget = new Vector4();
-const raycasterDirNormalised = new Vector3();
+// const raycasterDirNormalised = new Vector3();
 // const gpuCameraRayAtNearPlane = new Vector3();
 // const gpuCameraRayAtFarPlane = new Vector3();
 const gpuHitPos = new Vector3();
@@ -63,12 +59,12 @@ type CPUOrGPUIntersection = Intersection | GPUIntersection;
 
 // function remapDepthToDistance(pixelValue: number, near: number, far: number) {
 // 	// from src/renderers/shaders/ShaderChunk/packing.glsl.js
-// 	const viewZ = (near * far) / ((far - near) * pixelValue - far);
-// 	const result = (viewZ + near) / (near - far);
-// 	console.log({pixelValue, viewZ, result});
-// 	return result;
+// 	// const viewZ = (near * far) / ((far - near) * pixelValue - far);
+// 	// const result = (viewZ + near) / (near - far);
+// 	// console.log({pixelValue, viewZ, result});
+// 	// return result;
 // 	// const delta = far - near;
-// 	// return near + (1 - pixelValue) * (far - near);
+// 	return near + (1 - pixelValue) * (far - near);
 // }
 
 export class BaseRayObjectIntersectionsController {
@@ -103,7 +99,7 @@ export class BaseRayObjectIntersectionsController {
 		if (gpuObjects == true && camera) {
 			coreCursorToUv(pointerEventsController.cursor().value, pixelRenderUv);
 			// console.log(camera.position.toArray(), raycaster.ray.origin.toArray(), raycaster.ray.direction.toArray());
-			raycasterDirNormalised.copy(raycaster.ray.direction).normalize();
+			// raycasterDirNormalised.copy(raycaster.ray.direction).normalize();
 			// gpuCameraRayAtNearPlane.copy(raycasterDirNormalised).multiplyScalar(camera.near).add(raycaster.ray.origin);
 			// gpuCameraRayAtFarPlane.copy(raycasterDirNormalised).multiplyScalar(camera.far).add(raycaster.ray.origin);
 		}
@@ -124,29 +120,29 @@ export class BaseRayObjectIntersectionsController {
 					this._closestIntersects.set(object, closestIntersect);
 					if (closestIntersect) {
 						this._objectByClosestIntersect.set(closestIntersect, object);
-						console.log({object: object.name, distance: closestIntersect.distance});
+						// console.log({object: object.name, distance: closestIntersect.distance});
 					}
 				} else {
 					const gpuOptions = properties.gpu;
 					if (gpuOptions && camera) {
-						this._renderPixelController.process(
+						this._renderPixelController.renderColor(
 							this._scene,
 							object,
-							gpuOptions.depthMaterial,
+							gpuOptions.worldPosMaterial,
 							camera,
-							backgroundColor,
+							null, //necessary to have alpha=0 when no object is hit
 							pixelRenderUv,
 							pixelRenderTarget
 						);
-						console.log(pixelRenderTarget.toArray());
-						if (pixelRenderTarget.x >= 0 /* pixelRenderTarget.w >= gpuOptions.alphaTest*/) {
+						if (pixelRenderTarget.w > 0 /* pixelRenderTarget.w >= gpuOptions.alphaTest*/) {
 							// const NDCDistance = remapDepthToDistance(pixelRenderTarget.x, camera.near, camera.far);
 							// const lerp = remapDepthToDistance(pixelRenderTarget.x, camera.near, camera.far);
-							// gpuHitPos.copy(gpuCameraRayAtFarPlane).lerp(gpuCameraRayAtNearPlane, lerp);
+							// gpuHitPos.copy(gpuCameraRayAtNearPlane).lerp(gpuCameraRayAtFarPlane, pixelRenderTarget.x);
 							gpuHitPos.set(pixelRenderTarget.x, pixelRenderTarget.y, pixelRenderTarget.z);
 							const distance = gpuHitPos.distanceTo(raycaster.ray.origin);
+							// const distance = pixelRenderTarget.x * (camera.far - camera.near) + camera.near;
 							const gpuIntersect: GPUIntersection = {distance};
-							console.log({object: object.name, x: pixelRenderTarget.x, distance});
+							// console.log({object: object.name, x: pixelRenderTarget.x, distance});
 							this._closestIntersects.set(object, gpuIntersect);
 							if (gpuIntersect) {
 								this._objectByClosestIntersect.set(gpuIntersect, object);

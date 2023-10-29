@@ -67,7 +67,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		uv: Vector2,
 		target: Vector4
 	): Vector4 {
-		this._renderPixelController.process(this.scene, object3D, material, camera, backgroundColor, uv, target);
+		this._renderPixelController.renderColor(this.scene, object3D, material, camera, backgroundColor, uv, target);
 		// const renderer = this.scene.renderersRegister.lastRegisteredRenderer();
 		// if (!renderer) {
 		// 	return target;

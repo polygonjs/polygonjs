@@ -5,7 +5,6 @@ import {
 	Vector4,
 	Camera,
 	WebGLRenderTarget,
-	LinearFilter,
 	NearestFilter,
 	RGBAFormat,
 	FloatType,
@@ -16,9 +15,12 @@ import {
 	Color,
 	ColorSpace,
 	ToneMapping,
+	// DepthTexture,
+	// UnsignedInt248Type,
 } from 'three';
 import {coreGetDefaultCamera} from './CoreGetDefautCamera';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+// import {setupDepthReadScene, updateDepthSetup} from './DepthRead';
 
 export function coreCursorToUv(cursor: Vector2, target: Vector2) {
 	target.x = 0.5 * (cursor.x + 1);
@@ -42,19 +44,33 @@ interface RestoreContext {
 	// scene: SceneRestoreContext;
 	renderer: RendererRestoreContext;
 }
+// function _createDepthTexture() {
+// 	const texture = new DepthTexture(1, 1);
+// 	// texture.type = UnsignedInt248Type;
+// 	return texture;
+// }
 
 export class RenderPixelController {
 	// Note for this to work on iOS:
 	// The materials used for picking should have their transparency OFF.
 	// This could potentially be done automatically by traversing the scene first.
-	private _renderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
-		minFilter: LinearFilter,
+	private _colorWriteRenderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
+		minFilter: NearestFilter,
 		magFilter: NearestFilter,
 		format: RGBAFormat,
 		type: FloatType,
 		colorSpace: NoColorSpace,
+		// depthTexture: _createDepthTexture(),
 	});
+	// private _depthReadRenderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
+	// 	minFilter: LinearFilter,
+	// 	magFilter: NearestFilter,
+	// 	format: RGBAFormat,
+	// 	type: FloatType,
+	// 	colorSpace: NoColorSpace,
+	// });
 	private _renderScene = new Scene();
+	// private _depthReadSetup = setupDepthReadScene();
 	private _restoreContext: RestoreContext = {
 		object: {
 			parent: null,
@@ -69,15 +85,41 @@ export class RenderPixelController {
 	};
 	private _read = new Float32Array(4);
 
-	process(
+	renderColor(
 		scene: PolyScene,
 		object3D: Object3D,
 		material: Material | null,
 		camera: Camera,
-		backgroundColor: Color,
+		backgroundColor: Color | null,
 		uv: Vector2,
 		target: Vector4
 	): Vector4 {
+		this._doRender(scene, object3D, camera, material, backgroundColor, uv, target, false);
+
+		return target;
+	}
+	// renderDepth(
+	// 	scene: PolyScene,
+	// 	object3D: Object3D,
+	// 	camera: Camera,
+	// 	backgroundColor: Color,
+	// 	uv: Vector2,
+	// 	target: Vector4
+	// ): Vector4 {
+	// 	this._doRender(scene, object3D, camera, null, backgroundColor, uv, target, true);
+
+	// 	return target;
+	// }
+	private _doRender(
+		scene: PolyScene,
+		object3D: Object3D,
+		camera: Camera,
+		material: Material | null,
+		backgroundColor: Color | null,
+		uv: Vector2,
+		target: Vector4,
+		renderDepth: boolean
+	) {
 		const renderer = scene.renderersRegister.lastRegisteredRenderer();
 		if (!renderer) {
 			return target;
@@ -91,13 +133,18 @@ export class RenderPixelController {
 		}
 
 		this._prepare(object3D, material, backgroundColor, renderer);
-		this._render(uv, camera, renderer, target);
+		this._render(uv, camera, renderer, target, renderDepth);
 		this._restore(object3D, renderer);
 
 		return target;
 	}
 
-	private _prepare(object3D: Object3D, material: Material | null, backgroundColor: Color, renderer: WebGLRenderer) {
+	private _prepare(
+		object3D: Object3D,
+		material: Material | null,
+		backgroundColor: Color | null,
+		renderer: WebGLRenderer
+	) {
 		// save context
 		this._restoreContext.renderer.outputColorSpace = renderer.outputColorSpace;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
@@ -110,7 +157,7 @@ export class RenderPixelController {
 		renderer.toneMapping = NoToneMapping;
 		renderer.outputColorSpace = NoColorSpace;
 	}
-	private _render(uv: Vector2, camera: Camera, renderer: WebGLRenderer, target: Vector4) {
+	private _render(uv: Vector2, camera: Camera, renderer: WebGLRenderer, target: Vector4, readDepth: boolean) {
 		(camera as any).setViewOffset(
 			renderer.domElement.width,
 			renderer.domElement.height,
@@ -120,21 +167,30 @@ export class RenderPixelController {
 			1
 		);
 
-		renderer.setRenderTarget(this._renderTarget);
+		renderer.setRenderTarget(this._colorWriteRenderTarget);
 		renderer.clear();
 		renderer.render(this._renderScene, camera);
+
+		if (readDepth) {
+			// read depth
+			// updateDepthSetup(this._depthReadSetup, camera, this._depthWriteRenderTarget);
+			// renderer.setRenderTarget(this._depthReadRenderTarget);
+			// renderer.render(this._depthReadSetup.scene, this._depthReadSetup.camera);
+			// renderer.readRenderTargetPixels(this._depthReadRenderTarget, 0, 0, 1, 1, this._read);
+		} else {
+			// There are some cases where .readRenderTargetPixels is slow,
+			// and this seems to be due to the calls to _gl.getParameters.
+			// Here we are bypassing it.
+			// Note: this attempt to bypass needs "properties", which is internal to WebGLRenderer.
+			// const context = renderer.getContext();
+			// const textureFormat = context.RGBA; // RGBAFormat see three/WebGLUtils.js
+			// const textureType = context.FLOAT; // FloatType see three/WebGLUtils.js
+			// context.readPixels(0, 0, 1, 1, textureFormat, textureType, this._read);
+			renderer.readRenderTargetPixels(this._colorWriteRenderTarget, 0, 0, 1, 1, this._read);
+		}
+
 		renderer.setRenderTarget(null);
 		(camera as any).clearViewOffset();
-
-		// There are some cases where .readRenderTargetPixels is slow,
-		// and this seems to be due to the calls to _gl.getParameters.
-		// Here we are bypassing it.
-		// Note: this attempt to bypass needs "properties", which is internal to WebGLRenderer.
-		// const context = renderer.getContext();
-		// const textureFormat = context.RGBA; // RGBAFormat see three/WebGLUtils.js
-		// const textureType = context.FLOAT; // FloatType see three/WebGLUtils.js
-		// context.readPixels(0, 0, 1, 1, textureFormat, textureType, this._read);
-		renderer.readRenderTargetPixels(this._renderTarget, 0, 0, 1, 1, this._read);
 
 		// read buffer into target vector
 		target.fromArray(this._read);
