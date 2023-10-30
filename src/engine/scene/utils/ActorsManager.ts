@@ -5,7 +5,7 @@ import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsContro
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
-import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
+// import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
 import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
@@ -15,6 +15,10 @@ import {Poly} from '../../Poly';
 import {RayObjectIntersectionsHoverController} from './actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
 import {RayObjectIntersectionsPointerdownController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import {RayObjectIntersectionsPointerupController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import {RayObjectIntersectionsClickController} from './actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {RayObjectIntersectionsContextmenuController} from './actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
+import {RayObjectIntersectionsLongPressController} from './actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
+import {RayObjectIntersectionsSwipeController} from './actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -65,7 +69,6 @@ export abstract class ActorBuilderNode extends AssemblerControllerNode<JsAssembl
 export class ActorsManager {
 	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
-	private _pointerEventsController: ActorPointerEventsController | undefined;
 	constructor(public readonly scene: PolyScene) {}
 
 	registerEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
@@ -103,13 +106,13 @@ export class ActorsManager {
 		return (this._manualTriggerController =
 			this._manualTriggerController || new ActorManualTriggersController(this));
 	}
-	get pointerEventsController() {
-		return (this._pointerEventsController =
-			this._pointerEventsController || new ActorPointerEventsController(this));
-	}
+	public readonly rayObjectIntersectionClick = new RayObjectIntersectionsClickController(this);
+	public readonly rayObjectIntersectionContextmenu = new RayObjectIntersectionsContextmenuController(this);
 	public readonly rayObjectIntersectionHover = new RayObjectIntersectionsHoverController(this);
+	public readonly rayObjectIntersectionLongPress = new RayObjectIntersectionsLongPressController(this);
 	public readonly rayObjectIntersectionPointerdown = new RayObjectIntersectionsPointerdownController(this);
 	public readonly rayObjectIntersectionPointerup = new RayObjectIntersectionsPointerupController(this);
+	public readonly rayObjectIntersectionSwipe = new RayObjectIntersectionsSwipeController(this);
 
 	/*
 	 *
@@ -118,7 +121,6 @@ export class ActorsManager {
 	 */
 	tick() {
 		this.rayObjectIntersectionHover.process();
-		this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
 		hierarchyTraverse(this.scene.threejsScene(), (object) => {
 			this.triggerEventNodes(object, 'onPointermove');

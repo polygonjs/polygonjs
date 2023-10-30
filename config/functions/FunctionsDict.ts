@@ -119,7 +119,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	GetObjectAttributePrevious: ['getObjectAttributePrevious'],
 	GetObjectAttributeRef: ['getObjectAttributeRef'],
 	GetObjectChild: ['getObjectChild'],
-	GetObjectHoveredState: ['getObjectHoveredIntersection', 'getObjectHoveredState'],
+	// GetObjectHoveredState: ['getObjectHoveredIntersection', 'getObjectHoveredState'],
 	GetObjectProperty: [
 		'getObjectProperty',
 		'getObjectWorldPosition',
@@ -276,7 +276,15 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'objectAddEventListeners',
 		'objectAddOnBeforeDeleteEventListener',
 	],
-	ObjectRayIntersection: ['addObjectToHoveredCheck', 'addObjectToPointerdownCheck', 'addObjectToPointerupCheck'],
+	ObjectRayIntersection: [
+		'addObjectToClickCheck',
+		'addObjectToContextmenuCheck',
+		'addObjectToHoveredCheck',
+		'addObjectToLongPressCheck',
+		'addObjectToPointerdownCheck',
+		'addObjectToPointerupCheck',
+		'addObjectToSwipeCheck',
+	],
 	Param: [
 		'getParam',
 		'setParamBoolean',

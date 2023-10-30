@@ -5,29 +5,40 @@ interface EventPos {
 	x: number;
 	y: number;
 }
+function rectElement(emitter: HTMLElement | Document) {
+	const sizeElement = emitter instanceof Document ? document.body : emitter;
+	const rect = sizeElement.getBoundingClientRect();
+	return rect;
+}
 
 type PointerEventName = 'pointermove' | 'pointerdown' | 'pointerup' | 'click' | 'contextmenu';
 function triggerPointerEvent(eventName: PointerEventName, emitter: HTMLElement | Document, options?: EventPos) {
 	const offsetX = options?.x != null ? options.x : 0;
 	const offsetY = options?.y != null ? options.y : 0;
-	const sizeElement = emitter instanceof Document ? document.body : emitter;
-	const rect = sizeElement.getBoundingClientRect();
+	const rect = rectElement(emitter);
 	const x = rect.left + rect.width * (0.5 + offsetX);
 	const y = rect.top + rect.height * (0.5 + offsetY);
 	emitter.dispatchEvent(new PointerEvent(eventName, {clientX: x, clientY: y}));
 }
-function triggerPointerEventInMiddle(eventName: PointerEventName, emitter: HTMLElement | Document, offset?: Vector2) {
-	const sizeElement = emitter instanceof Document ? document.body : emitter;
-	const rect = sizeElement.getBoundingClientRect();
-	emitter.dispatchEvent(
-		new PointerEvent(eventName, {
-			clientX: rect.left + rect.width * 0.5 + (offset ? offset.x : 0),
-			clientY: rect.top + rect.height * 0.5 + (offset ? offset.y : 0),
-		})
-	);
+function triggerPointerEventInMiddle(
+	eventName: PointerEventName,
+	element: HTMLElement | Document,
+	offset?: Vector2,
+	emitterOverride?: HTMLElement | Document
+) {
+	const elementRect = rectElement(element);
+	const event = new PointerEvent(eventName, {
+		clientX: elementRect.left + elementRect.width * 0.5 + (offset ? offset.x : 0),
+		clientY: elementRect.top + elementRect.height * 0.5 + (offset ? offset.y : 0),
+	});
+	const emitter = emitterOverride || element;
+	// const emitterRect = rectElement(emitter);
+	// console.log({emitter, elementRect, emitterRect, clientX: event.clientX, clientY: event.clientY});
+
+	emitter.dispatchEvent(event);
 }
-function triggerPointerEventAside(eventName: PointerEventName, canvas: HTMLCanvasElement) {
-	canvas.dispatchEvent(new PointerEvent(eventName, {clientX: 0, clientY: 0}));
+function triggerPointerEventAside(eventName: PointerEventName, element: HTMLElement | Document) {
+	element.dispatchEvent(new PointerEvent(eventName, {clientX: 0, clientY: 0}));
 }
 
 // pointermove
@@ -51,13 +62,17 @@ export function triggerPointerdownAside(canvas: HTMLCanvasElement) {
 	triggerPointerEventAside('pointerdown', canvas);
 }
 // pointerup
-export function triggerPointerup(canvas: HTMLCanvasElement, options?: EventPos) {
+export function triggerPointerup(canvas: HTMLElement | Document, options?: EventPos) {
 	triggerPointerEvent('pointerup', canvas, options);
 }
-export function triggerPointerupInMiddle(canvas: HTMLCanvasElement, offset?: Vector2) {
-	triggerPointerEventInMiddle('pointerup', canvas, offset);
+export function triggerPointerupInMiddle(
+	element: HTMLElement | Document,
+	offset?: Vector2,
+	emitter?: HTMLElement | Document
+) {
+	triggerPointerEventInMiddle('pointerup', element, offset, emitter);
 }
-export function triggerPointerupAside(canvas: HTMLCanvasElement) {
+export function triggerPointerupAside(canvas: HTMLElement | Document) {
 	triggerPointerEventAside('pointerup', canvas);
 }
 // pointerdown and pointerup

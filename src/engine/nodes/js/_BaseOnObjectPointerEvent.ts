@@ -60,3 +60,11 @@ export abstract class BaseOnObjectPointerEventJsNode extends ExtendableOnObjectP
 export abstract class BaseOnObjectPointerGPUEventJsNode extends ExtendableOnObjectPointerEventJsNode<GPUOnObjectPointerEventJsParamsConfig> {
 	override readonly paramsConfig = GPUParamsConfig;
 }
+
+export enum OnObjectPointerEventGPUJsNodeInputName {
+	worldPosMaterial = 'worldPosMaterial',
+}
+
+export enum OnObjectPointerEventGPUJsNodeOutputName {
+	distance = 'distance',
+}

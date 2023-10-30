@@ -1,20 +1,15 @@
 import {Object3D} from 'three';
 import {ConvertToStrings} from '../../../../../types/GlobalTypes';
-import {
-	BaseRayObjectIntersectionsController,
-	AddObjectOptions,
-	GPUOptions,
-	CPUOptions,
-	PriorityOptions,
-} from './_BaseRayObjectIntersectionsController';
+import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
+import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
 
 interface PointerdownOptions {
 	callback: () => void;
 }
-export interface AddObjectToPointerdownOptions extends AddObjectOptions {
+export interface ObjectToPointerdownOptions extends ObjectOptions {
 	pointerdown: PointerdownOptions;
 }
-export interface AddObjectToPointerdownOptionsAsString {
+export interface ObjectToPointerdownOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
@@ -22,42 +17,34 @@ export interface AddObjectToPointerdownOptionsAsString {
 }
 
 export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIntersectionsController {
-	protected override _propertiesByObject: WeakMap<Object3D, AddObjectToPointerdownOptions> = new WeakMap();
+	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerdownOptions[]> = new Map();
+	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
 
-	private _processBound = this._process.bind(this);
-	private _process() {
-		this._preProcess();
+	// private _processBound = this._process.bind(this);
+	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
+		this._setIntersectedState(this._objects, this._intersectedStateByObject);
 
 		const objects = this._objects;
 
-		// commit new hovered state
 		for (const object of objects) {
-			const properties = this._propertiesByObject.get(object);
-			if (properties) {
+			const propertiesList = this._propertiesListByObject.get(object);
+			if (propertiesList) {
 				const isIntersecting = this._intersectedStateByObject.get(object);
 				if (isIntersecting == true) {
-					properties.pointerdown.callback();
+					for (const properties of propertiesList) {
+						properties.pointerdown.callback();
+					}
 				}
 			}
 		}
-
-		// reset
-		this._postProcess();
 	}
 
-	override addObject(object: Object3D, properties: AddObjectToPointerdownOptions) {
-		super.addObject(object, properties);
-		this._setEvent();
-	}
-	override removeObject(object: Object3D) {
-		super.removeObject(object);
-		this._setEvent();
-	}
-	private _setEvent() {
-		if (this._objects.length > 0) {
-			document.addEventListener('pointerdown', this._processBound);
-		} else {
-			document.removeEventListener('pointerdown', this._processBound);
-		}
-	}
+	// protected override _setEvent() {
+	// 	console.log('_setEvent', this._objects.length);
+	// 	if (this._objects.length > 0) {
+	// 		document.addEventListener('pointerdown', this._processBound);
+	// 	} else {
+	// 		document.removeEventListener('pointerdown', this._processBound);
+	// 	}
+	// }
 }

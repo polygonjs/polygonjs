@@ -1,57 +1,41 @@
 import {Object3D} from 'three';
 import {ConvertToStrings} from '../../../../../types/GlobalTypes';
-import {BaseRayObjectIntersectionsController, AddObjectOptions, PriorityOptions, CPUOptions, GPUOptions} from './_BaseRayObjectIntersectionsController';
+import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
+import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
 
 interface PointerupOptions {
 	callback: () => void;
 }
-export interface AddObjectToPointerupOptions extends AddObjectOptions {
+export interface ObjectToPointerupOptions extends ObjectOptions {
 	pointerup: PointerupOptions;
 }
-export interface AddObjectToPointerupOptionsAsString {
-	priority: ConvertToStrings<PriorityOptions>
+export interface ObjectToPointerupOptionsAsString {
+	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
-	pointerup: ConvertToStrings<PointerupOptions>
+	pointerup: ConvertToStrings<PointerupOptions>;
 }
 
 export class RayObjectIntersectionsPointerupController extends BaseRayObjectIntersectionsController {
-	protected override _propertiesByObject: WeakMap<Object3D, AddObjectToPointerupOptions> = new WeakMap();
+	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerupOptions[]> = new Map();
+	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
 
-	private _processBound = this._process.bind(this);
-	private _process() {
-		this._preProcess();
+	// private _processBound = this._process.bind(this);
+	onPointerup(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
+		this._setIntersectedState(this._objects, this._intersectedStateByObject);
 
 		const objects = this._objects;
 
-		// commit new hovered state
 		for (const object of objects) {
-			const properties = this._propertiesByObject.get(object);
-			if (properties) {
+			const propertiesList = this._propertiesListByObject.get(object);
+			if (propertiesList) {
 				const isIntersecting = this._intersectedStateByObject.get(object);
 				if (isIntersecting == true) {
-					properties.pointerup.callback();
+					for (const properties of propertiesList) {
+						properties.pointerup.callback();
+					}
 				}
 			}
-		}
-
-		// reset
-		this._postProcess();
-	}
-
-	override addObject(object: Object3D, properties: AddObjectToPointerupOptions) {
-		super.addObject(object, properties);
-		this._setEvent();
-	}
-	override removeObject(object: Object3D) {
-		super.removeObject(object);
-		this._setEvent();
-	}
-	private _setEvent() {
-		if (this._objects.length > 0) {
-			document.addEventListener('pointerup', this._processBound);
-		} else {
-			document.removeEventListener('pointerup', this._processBound);
 		}
 	}
 }

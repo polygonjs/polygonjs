@@ -9,22 +9,22 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {BaseOnObjectPointerGPUEventJsNode} from './_BaseOnObjectPointerEvent';
+import {
+	BaseOnObjectPointerGPUEventJsNode,
+	OnObjectPointerEventGPUJsNodeInputName,
+	OnObjectPointerEventGPUJsNodeOutputName,
+} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {AddObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
+import {ObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum OnObjectHoverGPUJsNodeInputName {
-	worldPosMaterial = 'worldPosMaterial',
-}
 enum OnObjectHoverGPUJsNodeOutputName {
 	hovered = 'hovered',
-	distance = 'distance',
 }
 export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 	static override type() {
@@ -45,7 +45,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
-				OnObjectHoverGPUJsNodeInputName.worldPosMaterial,
+				OnObjectPointerEventGPUJsNodeInputName.worldPosMaterial,
 				JsConnectionPointType.MATERIAL,
 				CONNECTION_OPTIONS
 			),
@@ -58,7 +58,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 				CONNECTION_OPTIONS
 			),
 			new JsConnectionPoint(
-				OnObjectHoverGPUJsNodeOutputName.distance,
+				OnObjectPointerEventGPUJsNodeOutputName.distance,
 				JsConnectionPointType.FLOAT,
 				CONNECTION_OPTIONS
 			),
@@ -70,7 +70,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		if (usedOutputNames.includes(OnObjectHoverGPUJsNodeOutputName.hovered)) {
 			this._addHoveredRef(linesController);
 		}
-		if (usedOutputNames.includes(OnObjectHoverGPUJsNodeOutputName.distance)) {
+		if (usedOutputNames.includes(OnObjectPointerEventGPUJsNodeOutputName.distance)) {
 			this._addDistanceRef(linesController);
 		}
 	}
@@ -80,13 +80,13 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
 		const worldPosMaterial = this.variableForInput(
 			linesController,
-			OnObjectHoverGPUJsNodeInputName.worldPosMaterial
+			OnObjectPointerEventGPUJsNodeInputName.worldPosMaterial
 		);
 		const distanceRef = this._addDistanceRef(linesController);
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToHoveredCheck', this, linesController);
-		const options: AddObjectToHoverOptionsAsString = {
+		const options: ObjectToHoverOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,
@@ -110,7 +110,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 	}
 
 	private _addDistanceRef(linesController: JsLinesCollectionController) {
-		const outDistance = this.jsVarName(OnObjectHoverGPUJsNodeOutputName.distance);
+		const outDistance = this.jsVarName(OnObjectPointerEventGPUJsNodeOutputName.distance);
 		linesController.addDefinitions(this, [
 			new RefJsDefinition(this, linesController, JsConnectionPointType.FLOAT, outDistance, `-1`),
 		]);

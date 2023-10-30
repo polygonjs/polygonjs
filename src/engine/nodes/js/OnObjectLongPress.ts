@@ -13,14 +13,19 @@ import {ExtendableOnObjectPointerEventJsNode, CPUOnObjectPointerEventJsParamsCon
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
-import {RefJsDefinition} from './utils/JsDefinition';
+import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {ParamConfig} from '../utils/params/ParamsConfig';
+import {
+	ObjectToLongPressOptionsAsString,
+	DEFAULT_LONG_PRESS_DURATION,
+} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 export class OnObjectLongPressJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
 	/** @param press duration (in milliseconds) */
-	duration = ParamConfig.INTEGER(500, {
+	duration = ParamConfig.INTEGER(DEFAULT_LONG_PRESS_DURATION, {
 		range: [0, 1000],
 		rangeLocked: [true, false],
 	});
@@ -34,15 +39,13 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 	}
 
 	override eventData(): EvaluatorEventData[] | undefined {
-		// we need both pointerdown and pointerup events,
-		// to ensure that the raycaster gets its cursor updated
-		// on each event
 		return [
 			{
 				type: PointerEventType.pointerdown,
 				emitter: this.eventEmitter(),
 				jsType: JsType.ON_OBJECT_POINTERDOWN,
 			},
+			// pointerup is currently needed to update the pointerEventsController cursor
 			{
 				type: PointerEventType.pointerup,
 				emitter: this.eventEmitter(),
@@ -76,55 +79,38 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 
 	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, linesController);
+		const blockObjectsBehind = this.variableForInputParam(linesController, this.p.blockObjectsBehind);
+		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
 		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 		const duration = this.variableForInputParam(linesController, this.p.duration);
-		const outIntersection = this._addIntersectionRef(linesController);
-		const timerPerObject = this._addTimerPerObjectRef(linesController);
-		const timerForCurrentObject = `this.${timerPerObject}[${object3D}.uuid]`;
-		const wrappedTriggeredMethodName = `wrappedTriggeredMethod`;
-		const onPointerUp = `onPointerUp`;
+		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-		const isHovered = func.asString(
-			object3D,
-			traverseChildren,
-			lineThreshold,
-			pointsThreshold,
-			`this.${outIntersection}`
-		);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToLongPressCheck', this, linesController);
+		const options: ObjectToLongPressOptionsAsString = {
+			priority: {
+				blockObjectsBehind,
+				skipIfObjectsInFront,
+			},
+			cpu: {
+				traverseChildren,
+				pointsThreshold,
+				lineThreshold,
+				intersectionRef: `this.${intersectionRef}`,
+			},
+			longPress: {
+				duration,
+				callback: `this.${nodeMethodName(this)}.bind(this)`,
+			},
+		};
+		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
+		const bodyLine = func.asString(object3D, `this`, jsonOptions);
+		linesController.addDefinitions(this, [
+			new InitFunctionJsDefinition(this, linesController, JsConnectionPointType.OBJECT_3D, this.path(), bodyLine),
+		]);
 
-		//
-		const bodyLines = [
-			`if( ${isHovered} ){`,
-			`if (!${timerForCurrentObject}) {
-				// execute the triggered method after the duration
-				const ${wrappedTriggeredMethodName} = () => {
-					delete ${timerForCurrentObject};
-					if( ${isHovered} ){
-						${triggeredMethods};
-					}
-				}
-				// cancel the triggered method if the pointer is released before the duration
-				const ${onPointerUp} = ()=>{
-					document.removeEventListener('pointerup', ${onPointerUp});
-					if (${timerForCurrentObject}) {
-						clearTimeout(${timerForCurrentObject});
-						delete ${timerForCurrentObject};
-					}
-				}
-				document.addEventListener('pointerup', ${onPointerUp});
-
-				${timerForCurrentObject} = setTimeout(${wrappedTriggeredMethodName}, ${duration});
-			}`,
-			`}`,
-		];
-
-		linesController.addTriggeringLines(this, bodyLines, {
-			gatherable: true,
-			triggeringMethodName: JsType.ON_POINTERDOWN,
-		});
+		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
 
 	private _addIntersectionRef(linesController: JsLinesCollectionController) {
@@ -133,12 +119,5 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 			new RefJsDefinition(this, linesController, JsConnectionPointType.INTERSECTION, outIntersection, `null`),
 		]);
 		return outIntersection;
-	}
-	private _addTimerPerObjectRef(linesController: JsLinesCollectionController) {
-		const outTimerPerObject = this.jsVarName('timerPerObject');
-		linesController.addDefinitions(this, [
-			new RefJsDefinition(this, linesController, JsConnectionPointType.INT, outTimerPerObject, `{}`),
-		]);
-		return outTimerPerObject;
 	}
 }

@@ -14,7 +14,7 @@ import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {AddObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import {ObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -61,20 +61,20 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 		const intersectionRef = this._addIntersectionRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerupCheck', this, linesController);
-		const options: AddObjectToPointerupOptionsAsString = {
-			priority:{
+		const options: ObjectToPointerupOptionsAsString = {
+			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,
 			},
-			cpu:{
+			cpu: {
 				traverseChildren,
 				pointsThreshold,
 				lineThreshold,
 				intersectionRef: `this.${intersectionRef}`,
 			},
-			pointerup:{
+			pointerup: {
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
-			}
+			},
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);
@@ -85,30 +85,6 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
 
-	// override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
-	// 	const object3D = inputObject3D(this, linesController);
-	// 	const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
-	// 	const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
-	// 	const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
-	// 	const outIntersection = this._addIntersectionRef(linesController);
-
-	// 	const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-	// 	const bodyLine = func.asString(
-	// 		object3D,
-	// 		traverseChildren,
-	// 		lineThreshold,
-	// 		pointsThreshold,
-	// 		`this.${outIntersection}`
-	// 	);
-
-	// 	//
-	// 	const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
-
-	// 	linesController.addTriggeringLines(this, bodyLines, {
-	// 		gatherable: true,
-	// 		triggeringMethodName: JsType.ON_POINTERUP,
-	// 	});
-	// }
 	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		linesController.addDefinitions(this, [

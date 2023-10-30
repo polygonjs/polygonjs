@@ -224,14 +224,14 @@ import {testenginenodesjsOnObjectAttributeUpdate} from './engine/nodes/js/OnObje
 import {testenginenodesjsOnObjectBeforeDelete} from './engine/nodes/js/OnObjectBeforeDelete';
 import {testenginenodesjsOnObjectClick} from './engine/nodes/js/OnObjectClick';
 import {testenginenodesjsOnObjectContextMenu} from './engine/nodes/js/OnObjectContextMenu';
+import {testenginenodesjsOnObjectContextMenuGPU} from './engine/nodes/js/OnObjectContextMenuGPU';
 import {testenginenodesjsOnObjectLongPress} from './engine/nodes/js/OnObjectLongPress';
+import {testenginenodesjsOnObjectLongPressGPU} from './engine/nodes/js/OnObjectLongPressGPU';
 import {testenginenodesjsOnObjectDispatchEvent} from './engine/nodes/js/OnObjectDispatchEvent';
 import {testenginenodesjsOnObjectHover} from './engine/nodes/js/OnObjectHover';
 import {testenginenodesjsOnObjectPointerdown} from './engine/nodes/js/OnObjectPointerdown';
 import {testenginenodesjsOnObjectPointerup} from './engine/nodes/js/OnObjectPointerup';
-import {testenginenodesjsOnObjectSwipedown} from './engine/nodes/js/OnObjectSwipedown';
-import {testenginenodesjsOnObjectSwipeleft} from './engine/nodes/js/OnObjectSwipeleft';
-import {testenginenodesjsOnObjectSwipeup} from './engine/nodes/js/OnObjectSwipeup';
+import {testenginenodesjsOnObjectSwipe} from './engine/nodes/js/OnObjectSwipe';
 import {testenginenodesjsOnPerformanceChange} from './engine/nodes/js/OnPerformanceChange';
 import {testenginenodesjsOnScenePlayState} from './engine/nodes/js/OnScenePlayState';
 import {testenginenodesjsOnSceneReset} from './engine/nodes/js/OnSceneReset';
@@ -820,14 +820,14 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsOnObjectBeforeDelete,
 		testenginenodesjsOnObjectClick,
 		testenginenodesjsOnObjectContextMenu,
+		testenginenodesjsOnObjectContextMenuGPU,
 		testenginenodesjsOnObjectLongPress,
+		testenginenodesjsOnObjectLongPressGPU,
 		testenginenodesjsOnObjectDispatchEvent,
 		testenginenodesjsOnObjectHover,
 		testenginenodesjsOnObjectPointerdown,
 		testenginenodesjsOnObjectPointerup,
-		testenginenodesjsOnObjectSwipedown,
-		testenginenodesjsOnObjectSwipeleft,
-		testenginenodesjsOnObjectSwipeup,
+		testenginenodesjsOnObjectSwipe,
 		testenginenodesjsOnPerformanceChange,
 		testenginenodesjsOnScenePlayState,
 		testenginenodesjsOnSceneReset,

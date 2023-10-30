@@ -13,7 +13,9 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
-import {RefJsDefinition} from './utils/JsDefinition';
+import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
+import {ObjectToContextmenuOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -47,40 +49,45 @@ export class OnObjectContextMenuJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
-			this._addIntersectionRef(shadersCollectionController);
+			this._addIntersectionRef(linesController);
 		}
 	}
 
-	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
-		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
-		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-		const outIntersection = this._addIntersectionRef(shadersCollectionController);
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
+		const object3D = inputObject3D(this, linesController);
+		const blockObjectsBehind = this.variableForInputParam(linesController, this.p.blockObjectsBehind);
+		const skipIfObjectsInFront = this.variableForInputParam(linesController, this.p.skipIfObjectsInFront);
+		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
+		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
+		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
+		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction(
-			'getObjectHoveredState',
-			this,
-			shadersCollectionController
-		);
-		const bodyLine = func.asString(
-			object3D,
-			traverseChildren,
-			lineThreshold,
-			pointsThreshold,
-			`this.${outIntersection}`
-		);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToContextmenuCheck', this, linesController);
+		const options: ObjectToContextmenuOptionsAsString = {
+			priority: {
+				blockObjectsBehind,
+				skipIfObjectsInFront,
+			},
+			cpu: {
+				traverseChildren,
+				pointsThreshold,
+				lineThreshold,
+				intersectionRef: `this.${intersectionRef}`,
+			},
+			contextmenu: {
+				callback: `this.${nodeMethodName(this)}.bind(this)`,
+			},
+		};
+		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
+		const bodyLine = func.asString(object3D, `this`, jsonOptions);
+		linesController.addDefinitions(this, [
+			new InitFunctionJsDefinition(this, linesController, JsConnectionPointType.OBJECT_3D, this.path(), bodyLine),
+		]);
 
-		//
-		const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
-
-		shadersCollectionController.addTriggeringLines(this, bodyLines, {
-			gatherable: true,
-			triggeringMethodName: 'onContextMenu',
-		});
+		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
 
 	private _addIntersectionRef(shadersCollectionController: JsLinesCollectionController) {

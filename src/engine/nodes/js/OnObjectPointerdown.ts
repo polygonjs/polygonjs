@@ -14,7 +14,7 @@ import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {AddObjectToPointerdownOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
+import {ObjectToPointerdownOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -62,7 +62,7 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 		const intersectionRef = this._addIntersectionRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerdownCheck', this, linesController);
-		const options: AddObjectToPointerdownOptionsAsString = {
+		const options: ObjectToPointerdownOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,
@@ -85,31 +85,6 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 
 		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
-
-	// override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
-	// 	const object3D = inputObject3D(this, linesController);
-	// 	const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
-	// 	const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
-	// 	const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
-	// 	const outIntersection = this._addIntersectionRef(linesController);
-
-	// 	const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
-	// 	const bodyLine = func.asString(
-	// 		object3D,
-	// 		traverseChildren,
-	// 		lineThreshold,
-	// 		pointsThreshold,
-	// 		`this.${outIntersection}`
-	// 	);
-
-	// 	//
-	// 	const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
-
-	// 	linesController.addTriggeringLines(this, bodyLines, {
-	// 		gatherable: true,
-	// 		triggeringMethodName: JsType.ON_POINTERDOWN,
-	// 	});
-	// }
 
 	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);

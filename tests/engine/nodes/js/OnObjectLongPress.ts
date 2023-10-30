@@ -80,13 +80,13 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 
 			triggerPointerdownInMiddle(canvas);
 			await CoreSleep.sleep(100);
-			triggerPointerupInMiddle(canvas);
+			triggerPointerupInMiddle(document);
 			assert.deepEqual(object.position.toArray(), [0, 0, 0.5], 'no pos set');
 			assert.in_delta(geo2.p.scale.value, 1, 0.001, 'no change');
 
 			triggerPointerdownInMiddle(canvas);
 			await CoreSleep.sleep(700);
-			triggerPointerupInMiddle(canvas);
+			triggerPointerupInMiddle(document);
 			assert.deepEqual(object.position.toArray(), [0, 0, -0.5], 'pos set 1');
 			assert.in_delta(geo2.p.scale.value, 4, 0.001, 'change');
 
@@ -97,7 +97,7 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 
 			triggerPointerdownInMiddle(canvas);
 			await CoreSleep.sleep(700);
-			triggerPointerupInMiddle(canvas);
+			triggerPointerupInMiddle(document);
 			assert.deepEqual(object.position.toArray(), [0, 0, 0.5], 'pos set 2');
 			assert.in_delta(geo2.p.scale.value, 5, 0.001, 'scale');
 
@@ -114,7 +114,7 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 			await CoreSleep.sleep(100);
 			triggerPointerdown(canvas, {x: 0.01, y: 0.01});
 			await CoreSleep.sleep(700);
-			triggerPointerup(canvas, {x: 0.01, y: 0.01});
+			triggerPointerup(document, {x: 0.01, y: 0.01});
 			await CoreSleep.sleep(200);
 			assert.deepEqual(object.position.toArray(), [0, 0, -0.5], 'pos array check');
 			const tmpV3 = geo2.p.s.value.toArray();
@@ -141,7 +141,7 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 			await CoreSleep.sleep(100);
 			triggerPointerdown(canvas, {x: 0.01, y: 0.01});
 			await CoreSleep.sleep(700);
-			triggerPointerup(canvas, {x: 0.01, y: 0.01});
+			triggerPointerup(document, {x: 0.01, y: 0.01});
 			await CoreSleep.sleep(200);
 			assert.deepEqual(object.position.toArray(), [0, 0, 0]);
 			const tmpV2 = sphere1.p.resolution.value.toArray();

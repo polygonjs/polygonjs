@@ -31,6 +31,7 @@ import {getObjectUserDataJsPresetRegister} from './js/GetObjectUserData';
 import {onChildAttributeUpdateJsPresetRegister} from './js/OnChildAttributeUpdate';
 import {onKeyJsPresetRegister} from './js/OnKey';
 import {onObjectAttributeUpdateJsPresetRegister} from './js/OnObjectAttributeUpdate';
+import {onObjectSwipeJsPresetRegister, onObjectSwipeGPUJsPresetRegister} from './js/OnObjectSwipe';
 import {rayFromCameraJsPresetRegister} from './js/RayFromCamera';
 
 // // mat
@@ -115,6 +116,8 @@ class PresetLibraryClass {
 		this._registerPreset(onChildAttributeUpdateJsPresetRegister);
 		this._registerPreset(onKeyJsPresetRegister);
 		this._registerPreset(onObjectAttributeUpdateJsPresetRegister);
+		this._registerPreset(onObjectSwipeJsPresetRegister);
+		this._registerPreset(onObjectSwipeGPUJsPresetRegister);
 		this._registerPreset(rayFromCameraJsPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);

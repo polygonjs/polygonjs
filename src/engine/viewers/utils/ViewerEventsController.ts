@@ -20,7 +20,7 @@ export class ViewerEventsController {
 
 	updateEvents(eventsController: BaseSceneEventsControllerType) {
 		if (DEBUG) {
-			console.log('------------ updateEvents START:');
+			console.log('------------ updateEvents START:', eventsController);
 		}
 		const canvas = this.canvas();
 		if (!canvas) {

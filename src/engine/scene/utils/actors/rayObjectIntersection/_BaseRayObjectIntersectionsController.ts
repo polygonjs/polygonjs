@@ -1,46 +1,31 @@
-import type {Ref} from '@vue/reactivity';
+import {ref} from '@vue/reactivity';
 import {PolyScene} from '../../../PolyScene';
 import {ActorsManager} from '../../ActorsManager';
-import {
-	Object3D,
-	Intersection,
-	Material,
-	Vector2,
-	Vector3,
-	Vector4,
-	PerspectiveCamera,
-	OrthographicCamera,
-} from 'three';
+import {Object3D, Intersection, Vector2, Vector3, Vector4, PerspectiveCamera, OrthographicCamera} from 'three';
 import type {RaycasterUpdateOptions} from '../../events/PointerEventsController';
 import {ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT} from '../../../../../core/actor/ActorCompilationController';
 import {RenderPixelController, coreCursorToUv} from '../../../../../core/render/renderPixel/RenderPixelController';
 import {coreGetDefaultCamera} from '../../../../../core/render/renderPixel/CoreGetDefautCamera';
-
-export interface PriorityOptions {
-	blockObjectsBehind: boolean;
-	skipIfObjectsInFront: boolean;
-}
-export interface CPUOptions {
-	traverseChildren: boolean;
-	pointsThreshold: number;
-	lineThreshold: number;
-	intersectionRef: Ref<Intersection | null>;
-}
-export interface GPUOptions {
-	// if a worldPosMaterial is given, we use it and only need a single render call.
-	// if not, we render need 2 renders, 1 to write to the depth buffer and another to read it (in addition to readRenderTargetPixels)
-	worldPosMaterial: Material | null;
-	distanceRef: Ref<number>;
-}
-export interface AddObjectOptions {
-	priority: PriorityOptions;
-	cpu?: CPUOptions;
-	gpu?: GPUOptions;
-}
+import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
+import {
+	CPUOptions,
+	ObjectOptions,
+	hasCPUOptions,
+	hasGPUOptions,
+	CPUOptionsEqual,
+	CPUOptionsMax,
+	GPUOptionsDepthBufferRequired,
+} from './Common';
 
 const RAYCAST_UPDATE_OPTIONS: RaycasterUpdateOptions = {
 	pointsThreshold: 0.1,
 	lineThreshold: 0.1,
+};
+const TMP_CPU_OPTIONS: CPUOptions = {
+	traverseChildren: false,
+	pointsThreshold: 0.1,
+	lineThreshold: 0.1,
+	intersectionRef: ref(null),
 };
 
 function intersectsSort(a: CPUOrGPUIntersection, b: CPUOrGPUIntersection) {
@@ -61,18 +46,20 @@ type CPUOrGPUIntersection = Intersection | GPUIntersection;
 export class BaseRayObjectIntersectionsController {
 	protected _scene: PolyScene;
 	protected _objects: Object3D[] = [];
-	protected _propertiesByObject: WeakMap<Object3D, AddObjectOptions> = new WeakMap();
-	protected _intersectsByObject: WeakMap<Object3D, Intersection[]> = new WeakMap();
-	protected _closestIntersects: Map<Object3D, CPUOrGPUIntersection | undefined> = new Map();
-	protected _objectByClosestIntersect: Map<CPUOrGPUIntersection, Object3D> = new Map();
-	protected _closestIntersectsSorted: CPUOrGPUIntersection[] = [];
-	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
+	protected _propertiesListByObject: Map<Object3D, ObjectOptions[]> = new Map();
+	private _intersectsByObject: WeakMap<Object3D, Intersection[]> = new WeakMap();
+	private _closestIntersects: Map<Object3D, CPUOrGPUIntersection | undefined> = new Map();
+	private _objectByClosestIntersect: Map<CPUOrGPUIntersection, Object3D> = new Map();
+	private _closestIntersectsSorted: CPUOrGPUIntersection[] = [];
 	private _renderPixelController: RenderPixelController = new RenderPixelController();
 	constructor(protected actorsManager: ActorsManager) {
 		this._scene = actorsManager.scene;
 	}
-	protected _preProcess() {
+	protected _setIntersectedState(objects: Object3D[], intersectedStateByObject: WeakMap<Object3D, boolean>) {
 		// prepare
+		if (objects.length == 0) {
+			return;
+		}
 		this._closestIntersects.clear();
 		this._objectByClosestIntersect.clear();
 
@@ -81,7 +68,6 @@ export class BaseRayObjectIntersectionsController {
 		const raycaster = pointerEventsController.raycaster().value;
 
 		pointerEventsController.updateRaycast(RAYCAST_UPDATE_OPTIONS);
-		const objects = this._objects;
 
 		// prepare gpu options
 		const gpuObjectsPresent = this._gpuObjectsPresent();
@@ -102,13 +88,15 @@ export class BaseRayObjectIntersectionsController {
 
 		// get intersects
 		for (const object of objects) {
-			const properties = this._propertiesByObject.get(object);
+			intersectedStateByObject.set(object, false /*we reset to false here*/);
+			const propertiesList = this._propertiesListByObject.get(object);
 			const intersects = this._intersectsByObject.get(object);
-			if (properties && intersects) {
+			if (propertiesList && intersects) {
 				intersects.length = 0;
-				this._intersectedStateByObject.set(object, false /*we reset to false here*/);
-				const cpuOptions = properties.cpu;
-				if (cpuOptions) {
+				if (hasCPUOptions(propertiesList)) {
+					const cpuOptions = CPUOptionsEqual(propertiesList)
+						? propertiesList[0].cpu!
+						: CPUOptionsMax(propertiesList, TMP_CPU_OPTIONS);
 					RAYCAST_UPDATE_OPTIONS.pointsThreshold = cpuOptions.pointsThreshold;
 					RAYCAST_UPDATE_OPTIONS.lineThreshold = cpuOptions.lineThreshold;
 					raycaster.intersectObject(object, cpuOptions.traverseChildren, intersects);
@@ -118,8 +106,9 @@ export class BaseRayObjectIntersectionsController {
 						this._objectByClosestIntersect.set(closestIntersect, object);
 						// console.log({object: object.name, distance: closestIntersect.distance});
 					}
-				} else {
-					const gpuOptions = properties.gpu;
+				}
+				if (hasGPUOptions(propertiesList)) {
+					const gpuOptions = propertiesList[0].gpu;
 					if (gpuOptions && camera) {
 						const worldPosMaterial = gpuOptions.worldPosMaterial;
 						if (worldPosMaterial != null) {
@@ -172,15 +161,17 @@ export class BaseRayObjectIntersectionsController {
 			if (closestIntersect) {
 				this._closestIntersectsSorted.push(closestIntersect);
 			}
-			const properties = this._propertiesByObject.get(object);
-			if (properties) {
-				const cpuOptions = properties.cpu;
-				if (cpuOptions) {
-					cpuOptions.intersectionRef.value = (closestIntersect as Intersection) || null;
-				} else {
-					const gpuOptions = properties.gpu;
-					if (gpuOptions) {
-						gpuOptions.distanceRef.value = closestIntersect ? closestIntersect.distance : -1;
+			const propertiesList = this._propertiesListByObject.get(object);
+			if (propertiesList) {
+				for (const properties of propertiesList) {
+					const cpuOptions = properties.cpu;
+					if (cpuOptions) {
+						cpuOptions.intersectionRef.value = (closestIntersect as Intersection) || null;
+					} else {
+						const gpuOptions = properties.gpu;
+						if (gpuOptions) {
+							gpuOptions.distanceRef.value = closestIntersect ? closestIntersect.distance : -1;
+						}
 					}
 				}
 			}
@@ -192,27 +183,34 @@ export class BaseRayObjectIntersectionsController {
 		for (const intersect of this._closestIntersectsSorted) {
 			const object = this._objectByClosestIntersect.get(intersect);
 			if (object) {
-				const properties = this._propertiesByObject.get(object);
-				if (properties) {
-					if (blockingObjectProcessed == false || properties.priority.skipIfObjectsInFront == true) {
-						this._intersectedStateByObject.set(object, true);
-					}
+				const propertiesList = this._propertiesListByObject.get(object);
+				if (propertiesList) {
+					let blockObjectsBehind = false;
+					for (const properties of propertiesList) {
+						if (blockingObjectProcessed == false || properties.priority.skipIfObjectsInFront == true) {
+							intersectedStateByObject.set(object, true);
+						}
 
-					if (properties.priority.blockObjectsBehind == true) {
-						blockingObjectProcessed = true;
+						if (properties.priority.blockObjectsBehind == true) {
+							blockObjectsBehind = true;
+						}
 					}
+					blockingObjectProcessed = blockObjectsBehind;
 				}
 			}
 		}
-	}
-	protected _postProcess() {
+
+		// reset
 		this._objectByClosestIntersect.clear();
 	}
+	// protected _postProcess() {
+	// 	this._objectByClosestIntersect.clear();
+	// }
 	private _gpuObjectsPresent(): boolean {
 		const objects = this._objects;
 		for (const object of objects) {
-			const properties = this._propertiesByObject.get(object);
-			if (properties && properties.gpu) {
+			const propertiesList = this._propertiesListByObject.get(object);
+			if (propertiesList && hasGPUOptions(propertiesList)) {
 				return true;
 			}
 		}
@@ -221,29 +219,44 @@ export class BaseRayObjectIntersectionsController {
 	private _gpuDepthBufferReadRequired(): boolean {
 		const objects = this._objects;
 		for (const object of objects) {
-			const properties = this._propertiesByObject.get(object);
-			if (properties && properties.gpu && properties.gpu.worldPosMaterial == null) {
+			const propertiesList = this._propertiesListByObject.get(object);
+			if (propertiesList && GPUOptionsDepthBufferRequired(propertiesList)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	addObject(object: Object3D, properties: AddObjectOptions) {
+	addPropertiesForObject(object: Object3D, properties: ObjectOptions) {
 		if (object == ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT) {
 			return;
 		}
-		this._objects.push(object);
-		this._propertiesByObject.set(object, properties);
-		this._intersectsByObject.set(object, []);
-	}
-	removeObject(object: Object3D) {
+		pushOnArrayAtEntry(this._propertiesListByObject, object, properties);
+
 		const index = this._objects.indexOf(object);
-		if (index >= 0) {
-			this._objects.splice(index, 1);
+		if (index < 0) {
+			this._objects.push(object);
+			this._intersectsByObject.set(object, []);
 		}
-		this._propertiesByObject.delete(object);
-		this._intersectsByObject.delete(object);
-		this._intersectedStateByObject.delete(object);
+	}
+	removePropertiesForObject(object: Object3D, properties: ObjectOptions) {
+		if (object == ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT) {
+			return;
+		}
+
+		const propertiesForObject = this._propertiesListByObject.get(object);
+		if (propertiesForObject) {
+			const propertyIndex = propertiesForObject.indexOf(properties);
+			propertiesForObject.splice(propertyIndex, 1);
+
+			if (propertiesForObject.length == 0) {
+				const objectIndex = this._objects.indexOf(object);
+				if (objectIndex >= 0) {
+					this._objects.splice(objectIndex, 1);
+					this._intersectsByObject.delete(object);
+					this._propertiesListByObject.delete(object);
+				}
+			}
+		}
 	}
 }

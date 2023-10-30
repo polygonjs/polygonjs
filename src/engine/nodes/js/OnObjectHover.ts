@@ -15,7 +15,7 @@ import {inputObject3D} from './_BaseObject3D';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {AddObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
+import {ObjectToHoverOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -80,7 +80,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToHoveredCheck', this, linesController);
-		const options: AddObjectToHoverOptionsAsString = {
+		const options: ObjectToHoverOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,

@@ -10,9 +10,13 @@ import type { MathArrayVectorElement } from "../../../functions/_MathGeneric";
 
 import { addAudioStopEventListener } from "../../../functions/addAudioStopEventListener";
 import { addNumber } from "../../../functions/addNumber";
+import { addObjectToClickCheck } from "../../../functions/addObjectToClickCheck";
+import { addObjectToContextmenuCheck } from "../../../functions/addObjectToContextmenuCheck";
 import { addObjectToHoveredCheck } from "../../../functions/addObjectToHoveredCheck";
+import { addObjectToLongPressCheck } from "../../../functions/addObjectToLongPressCheck";
 import { addObjectToPointerdownCheck } from "../../../functions/addObjectToPointerdownCheck";
 import { addObjectToPointerupCheck } from "../../../functions/addObjectToPointerupCheck";
+import { addObjectToSwipeCheck } from "../../../functions/addObjectToSwipeCheck";
 import { addVector } from "../../../functions/addVector";
 import { addVectorNumber } from "../../../functions/addVectorNumber";
 import { addVideoEventListener } from "../../../functions/addVideoEventListener";
@@ -160,8 +164,6 @@ import { getObjectAttributeAutoDefault } from "../../../functions/getObjectAttri
 import { getObjectAttributePrevious } from "../../../functions/getObjectAttributePrevious";
 import { getObjectAttributeRef } from "../../../functions/getObjectAttributeRef";
 import { getObjectChild } from "../../../functions/getObjectChild";
-import { getObjectHoveredIntersection } from "../../../functions/getObjectHoveredIntersection";
-import { getObjectHoveredState } from "../../../functions/getObjectHoveredState";
 import { getObjectLastDispatchedEventName } from "../../../functions/getObjectLastDispatchedEventName";
 import { getObjectProperty } from "../../../functions/getObjectProperty";
 import { getObjectUserData } from "../../../functions/getObjectUserData";
@@ -521,9 +523,13 @@ import { WFCBuild } from "../../../functions/WFCBuild";
 export interface NamedFunctionMap {
 	addAudioStopEventListener: addAudioStopEventListener;
 	addNumber: addNumber;
+	addObjectToClickCheck: addObjectToClickCheck;
+	addObjectToContextmenuCheck: addObjectToContextmenuCheck;
 	addObjectToHoveredCheck: addObjectToHoveredCheck;
+	addObjectToLongPressCheck: addObjectToLongPressCheck;
 	addObjectToPointerdownCheck: addObjectToPointerdownCheck;
 	addObjectToPointerupCheck: addObjectToPointerupCheck;
+	addObjectToSwipeCheck: addObjectToSwipeCheck;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
 	addVideoEventListener: addVideoEventListener;
@@ -671,8 +677,6 @@ export interface NamedFunctionMap {
 	getObjectAttributePrevious: getObjectAttributePrevious;
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectChild: getObjectChild;
-	getObjectHoveredIntersection: getObjectHoveredIntersection;
-	getObjectHoveredState: getObjectHoveredState;
 	getObjectLastDispatchedEventName: getObjectLastDispatchedEventName;
 	getObjectProperty: getObjectProperty;
 	getObjectUserData: getObjectUserData;
@@ -1035,9 +1039,13 @@ export class AllNamedFunctionRegister {
 		[
 			addAudioStopEventListener,
 			addNumber,
+			addObjectToClickCheck,
+			addObjectToContextmenuCheck,
 			addObjectToHoveredCheck,
+			addObjectToLongPressCheck,
 			addObjectToPointerdownCheck,
 			addObjectToPointerupCheck,
+			addObjectToSwipeCheck,
 			addVector,
 			addVectorNumber,
 			addVideoEventListener,
@@ -1185,8 +1193,6 @@ export class AllNamedFunctionRegister {
 			getObjectAttributePrevious,
 			getObjectAttributeRef,
 			getObjectChild,
-			getObjectHoveredIntersection,
-			getObjectHoveredState,
 			getObjectLastDispatchedEventName,
 			getObjectProperty,
 			getObjectUserData,

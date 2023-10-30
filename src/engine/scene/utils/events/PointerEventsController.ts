@@ -2,39 +2,39 @@ import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 // import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
-import {ActorPointerEventsController} from '../actors/ActorsPointerEventsController';
+// import {ActorPointerEventsController} from '../actors/ActorsPointerEventsController';
 import {ACCEPTED_POINTER_EVENT_TYPES, PointerEventType} from '../../../../core/event/PointerEventType';
 import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
-import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
-import {JsType} from '../../../poly/registers/nodes/types/Js';
+// import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
+// import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 export interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
 }
 
-const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
-	// [PointerEventType.click]: 'onClick',
-	[PointerEventType.contextmenu]: 'onContextMenu',
-	[PointerEventType.pointerdown]: JsType.ON_POINTERDOWN,
-	[PointerEventType.pointermove]: 'onPointermove',
-	[PointerEventType.pointerup]: JsType.ON_POINTERUP,
-	[PointerEventType.touchstart]: JsType.ON_POINTERDOWN,
-	[PointerEventType.touchmove]: 'onPointermove',
-	[PointerEventType.touchend]: JsType.ON_POINTERUP,
-};
+// const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
+// 	// [PointerEventType.click]: 'onClick',
+// 	[PointerEventType.contextmenu]: 'onContextMenu',
+// 	[PointerEventType.pointerdown]: JsType.ON_POINTERDOWN,
+// 	[PointerEventType.pointermove]: 'onPointermove',
+// 	[PointerEventType.pointerup]: JsType.ON_POINTERUP,
+// 	[PointerEventType.touchstart]: JsType.ON_POINTERDOWN,
+// 	[PointerEventType.touchmove]: 'onPointermove',
+// 	[PointerEventType.touchend]: JsType.ON_POINTERUP,
+// };
 
 export class PointerEventsController extends BaseSceneEventsController<
 	MouseEvent | TouchEvent,
 	PointerEventNode
 	// PointerEventActorNode
 > {
-	private pointerEventsController: ActorPointerEventsController;
+	// private pointerEventsController: ActorPointerEventsController;
 	constructor(dispatcher: SceneEventsDispatcher) {
 		super(dispatcher);
-		this.pointerEventsController = this.dispatcher.scene.actorsManager.pointerEventsController;
+		// this.pointerEventsController = this.dispatcher.scene.actorsManager.pointerEventsController;
 	}
 	protected override _requireCanvasEventListeners: boolean = true;
 	private _cursorHelper: CursorHelper = new CursorHelper();
@@ -55,7 +55,7 @@ export class PointerEventsController extends BaseSceneEventsController<
 		this._raycaster0.value = raycaster;
 	}
 
-	override processEvent(eventContext: EventContext<MouseEvent | TouchEvent>) {
+	override processEvent(eventContext: EventContext<PointerEvent | MouseEvent | TouchEvent>) {
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
 		super.processEvent(eventContext);
 
@@ -100,9 +100,30 @@ export class PointerEventsController extends BaseSceneEventsController<
 			// console.log('no generators for emitter', eventEmitter);
 			return;
 		}
-		const methodName = methodNameByEventType[eventType];
+		// const methodName = methodNameByEventType[eventType];
+
+		if (eventContext.event) {
+			const actorsManager = this.dispatcher.scene.actorsManager;
+			switch (eventType) {
+				case PointerEventType.pointerdown: {
+					actorsManager.rayObjectIntersectionClick.onPointerdown(eventContext.event);
+					actorsManager.rayObjectIntersectionLongPress.onPointerdown(eventContext.event);
+					actorsManager.rayObjectIntersectionPointerdown.onPointerdown(eventContext.event);
+					actorsManager.rayObjectIntersectionSwipe.onPointerdown(eventContext.event);
+					return;
+				}
+				case PointerEventType.pointerup: {
+					actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
+					return;
+				}
+				case PointerEventType.contextmenu: {
+					actorsManager.rayObjectIntersectionContextmenu.onContextmenu(eventContext.event);
+					return;
+				}
+			}
+		}
 		// for (let methodName of methodNames) {
-		this.pointerEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		// this.pointerEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
 		// }
 		// console.log('evaluatorGenerators', evaluatorGenerators);
 		//

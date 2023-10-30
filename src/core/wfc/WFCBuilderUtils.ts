@@ -3,7 +3,7 @@ import {tileCubeLatticeDeform} from './WFCTileDeform';
 import {TileCorners} from './WFCCommon';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {NeighbourIndex} from '../geometry/modules/quad/graph/QuadGraphCommon';
-import {ThreejsCoreObject} from '../../engine/index_all';
+import {ThreejsCoreObject} from '../geometry/modules/three/ThreejsCoreObject';
 import {QuadPrimitivePointIndices, quadPrimitivePointIndexIndices} from '../geometry/modules/quad/utils/QuadUtils';
 import {Attribute} from '../geometry/Attribute';
 
@@ -49,7 +49,7 @@ export function quadNodeCorners(quadObject: QuadObject, primitiveIndex: number, 
 		return target;
 	}
 
-	quadPrimitivePointIndexIndices( primitiveIndex, _indices);
+	quadPrimitivePointIndexIndices(primitiveIndex, _indices);
 	const positionArray = positionAttribute.array;
 	// const i0 = primitiveIndex * stride + 0;
 	// const i1 = primitiveIndex * stride + 1;
