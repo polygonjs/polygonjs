@@ -9,7 +9,8 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {
-	BaseOnObjectPointerGPUEventJsNode,
+	ExtendableOnObjectPointerEventJsNode,
+	GPUOnObjectPointerEventJsParamsConfig,
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
 } from './_BaseOnObjectPointerEvent';
@@ -19,11 +20,25 @@ import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {ObjectToClickOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {
+	ObjectToClickOptionsAsString,
+	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectClickGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
+export class OnObjectClickGPUJsParamsConfig extends GPUOnObjectPointerEventJsParamsConfig {
+	/** @param max cursor move distance */
+	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+}
+const ParamsConfig = new OnObjectClickGPUJsParamsConfig();
+
+export class OnObjectClickGPUJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectClickGPUJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.ON_OBJECT_CLICK_GPU;
 	}
@@ -83,6 +98,7 @@ export class OnObjectClickGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 			linesController,
 			OnObjectPointerEventGPUJsNodeInputName.worldPosMaterial
 		);
+		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
 		const distanceRef = this._addDistanceRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToClickCheck', this, linesController);
@@ -96,6 +112,7 @@ export class OnObjectClickGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 				distanceRef: `this.${distanceRef}`,
 			},
 			click: {
+				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
 		};

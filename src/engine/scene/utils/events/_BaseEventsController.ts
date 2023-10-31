@@ -5,6 +5,7 @@ import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
 // import type {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
 import {EventData, EventType} from '../../../../core/event/EventData';
+import {PointerEventType} from '../../../../core/event/PointerEventType';
 // import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
 import {MapUtils} from '../../../../core/MapUtils';
@@ -184,6 +185,13 @@ export abstract class BaseSceneEventsController<
 		};
 
 		_reset();
+
+		// we always need the pointermove
+		_storeEventData({
+			type: PointerEventType.pointermove,
+			emitter: CoreEventEmitter.DOCUMENT,
+		});
+
 		_updateActorNodesEventData();
 		_updateEventNodesEventData();
 	}

@@ -7,6 +7,7 @@ import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
 interface SwipeOptions {
 	angle: number;
 	angleMargin: number;
+	minDistance: number;
 	callback: () => void;
 }
 export interface ObjectToSwipeOptions extends ObjectOptions {
@@ -32,11 +33,12 @@ export const ANGLE_DEGREES = {
 	UP: degAngle(_tmp.set(0, 1).angle()),
 	DOWN: degAngle(_tmp.set(0, -1).angle()),
 };
+export const DEFAULT_MIN_CURSOR_MOVE_DISTANCE = 0.05;
 
 function optionsContainsAngle(options: SwipeOptions, angle: number) {
 	return angle >= options.angle - options.angleMargin && angle <= options.angle + options.angleMargin;
 }
-
+const _cursorDelta = new Vector2();
 export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToSwipeOptions[]> = new Map();
 	protected _intersectedStateOnPointerdownByObject: Map<Object3D, boolean> = new Map();
@@ -44,11 +46,9 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
 	private _cursorOnPointerdown = new Vector2();
 	private _cursorOnPointerup = new Vector2();
-	private _cursorDelta = new Vector2();
 
 	private _bound = {
 		pointerup: this._onPointerup.bind(this),
-		// pointerdown: this.onPointerdown.bind(this),
 	};
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
 		if (this._objects.length == 0) {
@@ -84,9 +84,10 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 
 		// check swipe angle
 		this._getCursor(this._cursorOnPointerup);
-		this._cursorDelta.copy(this._cursorOnPointerup).sub(this._cursorOnPointerdown);
-		let radians = this._cursorDelta.angle();
+		_cursorDelta.copy(this._cursorOnPointerup).sub(this._cursorOnPointerdown);
+		let radians = _cursorDelta.angle();
 		const degrees = degAngle(radians);
+		const distance = _cursorDelta.manhattanLength();
 
 		//
 		this._setIntersectedState(objects, this._intersectedStateOnPointerupByObject);
@@ -97,7 +98,10 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 				const isIntersectingOnPointerup = this._intersectedStateOnPointerupByObject.get(object);
 				if (isIntersectingOnPointerup == true) {
 					for (const properties of propertiesList) {
-						if (optionsContainsAngle(properties.swipe, degrees)) {
+						if (
+							optionsContainsAngle(properties.swipe, degrees) &&
+							distance > properties.swipe.minDistance
+						) {
 							properties.swipe.callback();
 						}
 					}

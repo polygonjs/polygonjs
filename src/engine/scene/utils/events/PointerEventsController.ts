@@ -26,15 +26,9 @@ export interface RaycasterUpdateOptions {
 // 	[PointerEventType.touchend]: JsType.ON_POINTERUP,
 // };
 
-export class PointerEventsController extends BaseSceneEventsController<
-	MouseEvent | TouchEvent,
-	PointerEventNode
-	// PointerEventActorNode
-> {
-	// private pointerEventsController: ActorPointerEventsController;
+export class PointerEventsController extends BaseSceneEventsController<MouseEvent | TouchEvent, PointerEventNode> {
 	constructor(dispatcher: SceneEventsDispatcher) {
 		super(dispatcher);
-		// this.pointerEventsController = this.dispatcher.scene.actorsManager.pointerEventsController;
 	}
 	protected override _requireCanvasEventListeners: boolean = true;
 	private _cursorHelper: CursorHelper = new CursorHelper();

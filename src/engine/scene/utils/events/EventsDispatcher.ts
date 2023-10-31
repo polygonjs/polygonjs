@@ -20,14 +20,14 @@ import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/A
 import {JsType} from '../../../poly/registers/nodes/types/Js';
 
 export class SceneEventsDispatcher {
+	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	public readonly sceneEventsController = new SceneEventsController();
 	private _keyboardEventsController?: KeyboardEventsController;
 	private _mouseEventsController?: MouseEventsController;
 	private _dragEventsController?: DragEventsController;
-	private _pointerEventsController?: PointerEventsController;
 	private _windowEventsController?: WindowEventsController;
 	private _touchEventsController?: TouchEventsController;
-	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
+	public readonly pointerEventsController: PointerEventsController = this._createController(PointerEventsController);
 	constructor(public scene: PolyScene) {}
 
 	registerEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
@@ -167,10 +167,10 @@ export class SceneEventsDispatcher {
 		return (this._dragEventsController =
 			this._dragEventsController || this._createController(DragEventsController));
 	}
-	get pointerEventsController(): PointerEventsController {
-		return (this._pointerEventsController =
-			this._pointerEventsController || this._createController(PointerEventsController));
-	}
+	// get pointerEventsController(): PointerEventsController {
+	// 	return (this._pointerEventsController =
+	// 		this._pointerEventsController || this._createController(PointerEventsController));
+	// }
 	get windowEventsController() {
 		return (this._windowEventsController =
 			this._windowEventsController || this._createController(WindowEventsController));

@@ -14,7 +14,7 @@ type ListenerByEventType = Map<EventType, EventListenerWithData>;
 const DEBUG = false;
 
 export class ViewerEventsController {
-	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
+	protected _boundListenerMapByEventControllerType: Map<string, ListenerByEventType> = new Map();
 
 	constructor(protected viewer: BaseViewerType) {}
 
@@ -28,10 +28,10 @@ export class ViewerEventsController {
 			return;
 		}
 		const controllerType = eventsController.type();
-		let map = this._bound_listener_map_by_event_controller_type.get(controllerType);
+		let map = this._boundListenerMapByEventControllerType.get(controllerType);
 		if (!map) {
 			map = new Map();
-			this._bound_listener_map_by_event_controller_type.set(controllerType, map);
+			this._boundListenerMapByEventControllerType.set(controllerType, map);
 		}
 		map.forEach((listenerWithData, eventType) => {
 			for (let emitter of EVENT_EMITTERS) {
@@ -103,7 +103,7 @@ export class ViewerEventsController {
 
 	registeredEventTypes(): string[] {
 		const list: string[] = [];
-		this._bound_listener_map_by_event_controller_type.forEach((map) => {
+		this._boundListenerMapByEventControllerType.forEach((map) => {
 			map.forEach((listener, eventType) => {
 				list.push(eventType);
 			});
@@ -113,7 +113,7 @@ export class ViewerEventsController {
 
 	dispose() {
 		const canvas = this.canvas();
-		this._bound_listener_map_by_event_controller_type.forEach((map) => {
+		this._boundListenerMapByEventControllerType.forEach((map) => {
 			if (canvas) {
 				map.forEach((listenerWithData, eventType) => {
 					const eventOwner = getEventEmitter(listenerWithData.data, canvas);

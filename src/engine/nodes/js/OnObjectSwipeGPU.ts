@@ -20,20 +20,28 @@ import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {ObjectToSwipeOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
+import {
+	ObjectToSwipeOptionsAsString,
+	DEFAULT_MIN_CURSOR_MOVE_DISTANCE,
+} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
 import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 export class OnObjectSwipeGPUJsParamsConfig extends GPUOnObjectPointerEventJsParamsConfig {
 	/** @param angle */
-	angle = ParamConfig.INTEGER(0, {
+	angle = ParamConfig.FLOAT(0, {
 		range: [-180, 180],
 		rangeLocked: [true, false],
 	});
 	/** @param angle margin */
-	angleMargin = ParamConfig.INTEGER(45, {
+	angleMargin = ParamConfig.FLOAT(45, {
 		range: [0, 180],
+		rangeLocked: [true, false],
+	});
+	/** @param min distance */
+	minDistance = ParamConfig.FLOAT(DEFAULT_MIN_CURSOR_MOVE_DISTANCE, {
+		range: [0, 1],
 		rangeLocked: [true, false],
 	});
 }
@@ -104,6 +112,7 @@ export class OnObjectSwipeGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 		const distanceRef = this._addDistanceRef(linesController);
 		const angle = this.variableForInputParam(linesController, this.p.angle);
 		const angleMargin = this.variableForInputParam(linesController, this.p.angleMargin);
+		const minDistance = this.variableForInputParam(linesController, this.p.minDistance);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToSwipeCheck', this, linesController);
 		const options: ObjectToSwipeOptionsAsString = {
@@ -118,6 +127,7 @@ export class OnObjectSwipeGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 			swipe: {
 				angle,
 				angleMargin,
+				minDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
 		};

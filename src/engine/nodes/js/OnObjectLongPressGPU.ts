@@ -23,6 +23,7 @@ import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {
 	ObjectToLongPressOptionsAsString,
 	DEFAULT_LONG_PRESS_DURATION,
+	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
 import {ParamConfig} from '../utils/params/ParamsConfig';
 
@@ -32,6 +33,11 @@ export class OnObjectLongPressGPUJsParamsConfig extends GPUOnObjectPointerEventJ
 	/** @param press duration (in milliseconds) */
 	duration = ParamConfig.INTEGER(DEFAULT_LONG_PRESS_DURATION, {
 		range: [0, 1000],
+		rangeLocked: [true, false],
+	});
+	/** @param max cursor move distance */
+	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
+		range: [0, 1],
 		rangeLocked: [true, false],
 	});
 }
@@ -98,6 +104,7 @@ export class OnObjectLongPressGPUJsNode extends ExtendableOnObjectPointerEventJs
 		);
 		const distanceRef = this._addDistanceRef(linesController);
 		const duration = this.variableForInputParam(linesController, this.p.duration);
+		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToLongPressCheck', this, linesController);
 		const options: ObjectToLongPressOptionsAsString = {
@@ -111,6 +118,7 @@ export class OnObjectLongPressGPUJsNode extends ExtendableOnObjectPointerEventJs
 			},
 			longPress: {
 				duration,
+				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
 		};

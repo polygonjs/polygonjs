@@ -8,18 +8,32 @@ import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
-import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
+import {ExtendableOnObjectPointerEventJsNode, CPUOnObjectPointerEventJsParamsConfig} from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {ObjectToClickOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {
+	ObjectToClickOptionsAsString,
+	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
+export class OnObjectClickJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
+	/** @param max cursor move distance */
+	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+}
+const ParamsConfig = new OnObjectClickJsParamsConfig();
+
+export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectClickJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.ON_OBJECT_CLICK;
 	}
@@ -35,7 +49,7 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 			{
 				type: PointerEventType.pointerdown,
 				emitter: this.eventEmitter(),
-				jsType: JsType.ON_OBJECT_POINTERDOWN,
+				jsType: JsType.ON_POINTERDOWN,
 			},
 			{
 				type: PointerEventType.pointerup,
@@ -73,6 +87,7 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
+		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToClickCheck', this, linesController);
@@ -88,6 +103,7 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 				intersectionRef: `this.${intersectionRef}`,
 			},
 			click: {
+				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
 		};
