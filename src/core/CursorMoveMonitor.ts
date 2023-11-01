@@ -18,9 +18,11 @@ export class CursorMoveMonitor {
 		this._movedCursorDistance = 0;
 		this._lastCursorPosSet = false;
 		document.addEventListener('pointermove', this._bound.pointermove);
+		document.addEventListener('touchmove', this._bound.pointermove);
 	}
 	removeEventListener() {
 		document.removeEventListener('pointermove', this._bound.pointermove);
+		document.removeEventListener('touchmove', this._bound.pointermove);
 	}
 	movedCursorDistance() {
 		return this._movedCursorDistance;

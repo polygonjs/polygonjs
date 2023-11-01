@@ -29,6 +29,7 @@ export function testenginenodeseventMouse(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
 				'pointermove',
+				'touchmove',
 				'mousedown',
 				'mousemove',
 				'mouseup',
@@ -38,7 +39,7 @@ export function testenginenodeseventMouse(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
@@ -46,6 +47,7 @@ export function testenginenodeseventMouse(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
 				'pointermove',
+				'touchmove',
 				'mousedown',
 				'mousemove',
 				'mouseup',
@@ -53,29 +55,42 @@ export function testenginenodeseventMouse(qUnit: QUnit) {
 
 			mouse1.p.mousedown.set(0);
 			await mouse1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'mousemove', 'mouseup']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'mousemove',
+				'mouseup',
+			]);
 
 			mouse1.p.mouseup.set(0);
 			await mouse1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'mousemove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'mousemove',
+			]);
 
 			mouse1.p.mousemove.set(0);
 			await mouse1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			mouse1.p.mousemove.set(1);
 			await mouse1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'mousemove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'mousemove',
+			]);
 
 			events.removeNode(mouse1);
 			await mouse1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			mouse1.p.active.set(1);
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -97,7 +112,11 @@ export function testenginenodeseventMouse(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove', 'mousemove']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'mousemove',
+				]);
 			});
 		});
 	});

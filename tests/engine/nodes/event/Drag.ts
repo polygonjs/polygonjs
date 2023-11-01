@@ -12,33 +12,41 @@ export function testenginenodeseventDrag(qUnit: QUnit) {
 			const events = scene.root().createNode('eventsNetwork');
 			const drag1 = events.createNode('drag');
 			await drag1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'dragover']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'dragover',
+			]);
 
 			drag1.p.active.set(0);
 			await drag1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			drag1.p.active.set(1);
 			await drag1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'dragover']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'dragover',
+			]);
 
 			drag1.p.dragover.set(0);
 			await drag1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			events.removeNode(drag1);
 			await drag1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			drag1.p.active.set(1);
 			await drag1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -53,7 +61,11 @@ export function testenginenodeseventDrag(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['dragover']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'dragover',
+				]);
 			});
 		});
 	});

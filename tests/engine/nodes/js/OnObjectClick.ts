@@ -140,6 +140,7 @@ export function testenginenodesjsOnObjectClick(qUnit: QUnit) {
 			assert.in_delta(tmpV2[1], 0.4533692341845001, 0.001, 'uv');
 			object.position.set(0, 0, 0);
 
+			cursorMoveMonitor.removeEventListener();
 			if (cursorMoveMonitor.movedCursorDistance() > 0.05) {
 				console.error('DO NOT MOVE CURSOR WHILE TEST IS RUNNING');
 			}
@@ -227,10 +228,10 @@ export function testenginenodesjsOnObjectClick(qUnit: QUnit) {
 				await CoreSleep.sleep(100);
 				assert.deepEqual(object.position.toArray(), [0, 0, 1], 'left');
 
+				cursorMoveMonitor.removeEventListener();
 				if (cursorMoveMonitor.movedCursorDistance() > 0.05) {
 					console.error('DO NOT MOVE CURSOR WHILE TEST IS RUNNING');
 				}
-				cursorMoveMonitor.removeEventListener();
 			});
 		}
 	);

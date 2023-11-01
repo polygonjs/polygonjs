@@ -26,37 +26,41 @@ export function testenginenodeseventKeyboard(qUnit: QUnit) {
 			keyboard1.setElement(CoreEventEmitter.DOCUMENT);
 
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.active.set(0);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				[],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			keyboard1.p.active.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.keydown.set(0);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.keypress.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keypress']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'keypress',
+			]);
 
 			events.removeNode(keyboard1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.keypress.set(1);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -67,7 +71,7 @@ export function testenginenodeseventKeyboard(qUnit: QUnit) {
 			await keyboard2.compute();
 			keyboard2.p.keydown.set(1);
 			await keyboard2.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			const message = events.createNode('message');
 			message.setInput(0, keyboard2, 'keydown');
@@ -85,7 +89,11 @@ export function testenginenodeseventKeyboard(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['keydown']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'keydown',
+				]);
 			});
 		});
 	});
@@ -113,37 +121,41 @@ export function testenginenodeseventKeyboard(qUnit: QUnit) {
 			keyboard1.setElement(CoreEventEmitter.CANVAS);
 
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.active.set(0);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			keyboard1.p.active.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.keydown.set(0);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.keypress.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keypress']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'keypress',
+			]);
 
 			events.removeNode(keyboard1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.keypress.set(1);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -171,7 +183,11 @@ export function testenginenodeseventKeyboard(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'keydown',
+				]);
 			});
 		});
 	});

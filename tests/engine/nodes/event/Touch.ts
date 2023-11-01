@@ -12,33 +12,41 @@ export function testenginenodeseventTouch(qUnit: QUnit) {
 			const events = scene.root().createNode('eventsNetwork');
 			const touch1 = events.createNode('touch');
 			await touch1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchstart']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'touchstart',
+			]);
 
 			touch1.p.active.set(0);
 			await touch1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			touch1.p.active.set(1);
 			await touch1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchstart']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'touchstart',
+			]);
 
 			touch1.p.touchstart.set(0);
 			await touch1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			events.removeNode(touch1);
 			await touch1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			touch1.p.active.set(1);
 			await touch1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 

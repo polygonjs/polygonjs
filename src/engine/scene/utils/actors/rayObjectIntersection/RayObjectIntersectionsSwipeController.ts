@@ -104,15 +104,19 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 		}
 
 		document.addEventListener('pointerup', this._bound.pointerup);
+		// we also need touchend, as pointerup appears to not be triggered once the cursor has moved
+		document.addEventListener('touchend', this._bound.pointerup);
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 		this._getCursor(this._cursorOnPointerdown);
 	}
-	private _onPointerup() {
+	private _onPointerup(_event: Event) {
 		document.removeEventListener('pointerup', this._bound.pointerup);
+		document.removeEventListener('touchend', this._bound.pointerup);
 		const event = this._pointerdownEvent;
 		if (!event) {
 			return;
 		}
+		this._pointerdownEvent = undefined;
 
 		const objects = this._objects;
 		this._objectsIntersectedOnPointerdown.length = 0;

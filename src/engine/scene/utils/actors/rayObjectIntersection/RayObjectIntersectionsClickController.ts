@@ -87,6 +87,8 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 			return;
 		}
 		document.addEventListener('pointerup', this._bound.pointerup);
+		// we also need touchend, as pointerup appears to not be triggered if the cursor has moved a little bit
+		document.addEventListener('touchend', this._bound.pointerup);
 		this._cursorMoveMonitor.addPointermoveEventListener(
 			this._scene.eventsDispatcher.pointerEventsController.cursor()
 		);
@@ -95,11 +97,14 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 
 	private _onPointerup() {
 		document.removeEventListener('pointerup', this._bound.pointerup);
+		document.removeEventListener('touchend', this._bound.pointerup);
 		this._cursorMoveMonitor.removeEventListener();
 		const event = this._pointerdownEvent;
 		if (!event) {
 			return;
 		}
+		this._pointerdownEvent = undefined;
+
 		const movedCursorDistance = this._cursorMoveMonitor.movedCursorDistance();
 
 		const objects = this._objectsMatchingEventConfig;

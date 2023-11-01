@@ -186,9 +186,14 @@ export abstract class BaseSceneEventsController<
 
 		_reset();
 
-		// we always need the pointermove
+		// we always need the pointermove and touchmove
+		// in order to always update the cursor
 		_storeEventData({
 			type: PointerEventType.pointermove,
+			emitter: CoreEventEmitter.DOCUMENT,
+		});
+		_storeEventData({
+			type: PointerEventType.touchmove,
 			emitter: CoreEventEmitter.DOCUMENT,
 		});
 

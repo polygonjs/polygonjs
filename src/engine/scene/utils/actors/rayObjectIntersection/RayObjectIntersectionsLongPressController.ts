@@ -90,6 +90,8 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 		}
 
 		document.addEventListener('pointerup', this._bound.pointerup);
+		// we also need touchend, as pointerup appears to not be triggered if the cursor has moved a little bit
+		document.addEventListener('touchend', this._bound.pointerup);
 		this._cursorMoveMonitor.addPointermoveEventListener(
 			this._scene.eventsDispatcher.pointerEventsController.cursor()
 		);
@@ -145,8 +147,9 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 		});
 	}
 
-	private _onPointerup(event: PointerEvent) {
+	private _onPointerup() {
 		document.removeEventListener('pointerup', this._bound.pointerup);
+		document.removeEventListener('touchend', this._bound.pointerup);
 		this._cursorMoveMonitor.removeEventListener();
 		this._timerByDuration.forEach((timer, duration) => {
 			clearTimeout(timer);

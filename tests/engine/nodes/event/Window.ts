@@ -23,33 +23,33 @@ export function testenginenodeseventWindow(qUnit: QUnit) {
 			const events = scene.root().createNode('eventsNetwork');
 			const window1 = events.createNode('window');
 			await window1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'resize']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'resize']);
 
 			window1.p.active.set(0);
 			await window1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			window1.p.active.set(1);
 			await window1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'resize']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'resize']);
 
 			window1.p.resize.set(0);
 			await window1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			events.removeNode(window1);
 			await window1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			window1.p.active.set(1);
 			await window1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -73,7 +73,11 @@ export function testenginenodeseventWindow(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove', 'resize']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'resize',
+				]);
 			});
 		});
 	});

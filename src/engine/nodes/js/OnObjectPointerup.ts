@@ -21,6 +21,8 @@ import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {ObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
+import {TouchEventType} from '../../../core/event/TouchEventType';
+import {isTouchDevice} from '../../../core/UserAgent';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -36,11 +38,22 @@ export class OnObjectPointerupJsNode extends ExtendableOnObjectPointerEventJsNod
 	}
 
 	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.pointerup,
-			emitter: this.eventEmitter(),
-			jsType: JsType.ON_OBJECT_POINTERUP,
-		};
+		// we also need touchend, since pointerup is not triggered on touch devices
+		// after the cursor has moved.
+		// But we can only have one or the other, as the event would be triggered twice if we had both.
+		if (isTouchDevice()) {
+			return {
+				type: TouchEventType.touchend,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERUP,
+			};
+		} else {
+			return {
+				type: PointerEventType.pointerup,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERUP,
+			};
+		}
 	}
 
 	override initializeNode() {

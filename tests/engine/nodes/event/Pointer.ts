@@ -29,7 +29,7 @@ export function testenginenodeseventPointer(qUnit: QUnit) {
 			await pointer1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove', 'pointerdown'],
+				['pointermove', 'touchmove', 'pointerdown'],
 				'down+move'
 			);
 
@@ -37,28 +37,32 @@ export function testenginenodeseventPointer(qUnit: QUnit) {
 			await pointer1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'only pointermove if node is set to inactive'
 			);
 
 			pointer1.p.active.set(1);
 			await pointer1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'pointerdown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), [
+				'pointermove',
+				'touchmove',
+				'pointerdown',
+			]);
 
 			pointer1.p.pointerdown.set(0);
 			await pointer1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			pointer1.p.pointermove.set(1);
 			await pointer1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			message.setInput(0, pointer1, 'pointermove');
 			assert.equal(await logPrintsCount('pointermove'), 1, '1 event received');
 
 			events.removeNode(pointer1);
 			await pointer1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			assert.equal(await logPrintsCount('pointermove'), 0, 'no events received');
 
@@ -66,7 +70,7 @@ export function testenginenodeseventPointer(qUnit: QUnit) {
 			await pointer1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -89,7 +93,7 @@ export function testenginenodeseventPointer(qUnit: QUnit) {
 			document.body.appendChild(element2);
 
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 			});
 		});
 	});
