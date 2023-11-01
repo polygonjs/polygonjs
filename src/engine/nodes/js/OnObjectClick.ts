@@ -88,6 +88,7 @@ export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<On
 		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
+		const maxDuration = this.variableForInputParam(linesController, this.p.maxDuration);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('addObjectToClickCheck', this, linesController);
@@ -104,6 +105,7 @@ export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<On
 			},
 			click: {
 				maxCursorMoveDistance,
+				maxDuration,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
 			config: pointerEventConfig(this, linesController),

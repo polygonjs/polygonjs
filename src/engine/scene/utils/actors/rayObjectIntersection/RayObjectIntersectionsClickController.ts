@@ -21,6 +21,7 @@ import {CursorMoveMonitor} from '../../../../../core/CursorMoveMonitor';
 
 interface ClickOptions {
 	maxCursorMoveDistance: number;
+	maxDuration: number;
 	callback: () => void;
 }
 
@@ -57,6 +58,11 @@ export function ClickParamConfig<TBase extends Constructor>(Base: TBase) {
 			range: [0, 1],
 			rangeLocked: [true, false],
 		});
+		/** @param max duration */
+		maxDuration = ParamConfig.INTEGER(200, {
+			range: [0, 1000],
+			rangeLocked: [true, false],
+		});
 	};
 }
 
@@ -68,12 +74,14 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
 	private _cursorMoveMonitor = new CursorMoveMonitor();
 	private _pointerdownEvent: Readonly<PointerEvent | MouseEvent | TouchEvent> | undefined;
+	private _pointerdownReceivedAt: number = 0;
 
 	private _bound = {
 		pointerup: this._onPointerup.bind(this),
 	};
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
 		this._pointerdownEvent = event;
+		this._pointerdownReceivedAt = performance.now();
 		if (this._objects.length == 0) {
 			return;
 		}
@@ -104,6 +112,7 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 			return;
 		}
 		this._pointerdownEvent = undefined;
+		const duration = performance.now() - this._pointerdownReceivedAt;
 
 		const movedCursorDistance = this._cursorMoveMonitor.movedCursorDistance();
 
@@ -138,6 +147,7 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 					for (const properties of propertiesList) {
 						if (
 							movedCursorDistance < properties.click.maxCursorMoveDistance &&
+							duration < properties.click.maxDuration &&
 							propertyMatchesEventConfig(properties.config, _eventConfig)
 						) {
 							properties.click.callback();

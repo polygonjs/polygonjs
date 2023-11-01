@@ -49,6 +49,8 @@ export function testenginenodesjsOnObjectClick(qUnit: QUnit) {
 		const getIntersectionProperty1 = actor1.createNode('getIntersectionProperty');
 		const setParam1 = actor1.createNode('setParam');
 
+		onObjectClick1.p.maxDuration.set(500);
+
 		setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectClick1);
 		// setObjectPosition1.p.position.set([0, 0, 1]);
 		setObjectPosition1.setInput('position', negate1);
@@ -184,6 +186,9 @@ export function testenginenodesjsOnObjectClick(qUnit: QUnit) {
 
 			setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectClick1);
 			setObjectPosition2.setInput(JsConnectionPointType.TRIGGER, onObjectClick2);
+
+			onObjectClick1.p.maxDuration.set(500);
+			onObjectClick2.p.maxDuration.set(500);
 
 			onObjectClick1.p.buttonLeft.set(true);
 			onObjectClick1.p.buttonMiddle.set(false);
