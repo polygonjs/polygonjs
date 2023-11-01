@@ -12,6 +12,7 @@ import {
 	triggerPointerdown,
 } from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {CursorMoveMonitor} from '../../../../src/core/CursorMoveMonitor';
 export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 	qUnit.test('js/onObjectLongPress', async (assert) => {
 		const scene = window.scene;
@@ -66,6 +67,9 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 
 		const container = await actor1.compute();
 		const object = container.coreContent()!.threejsObjects()[0];
+
+		const cursorMoveMonitor = new CursorMoveMonitor();
+		cursorMoveMonitor.addPointermoveEventListener(scene.eventsDispatcher.pointerEventsController.cursor());
 
 		// wait to make sure objects are mounted to the scene
 		await CoreSleep.sleep(150);
@@ -148,6 +152,11 @@ export function testenginenodesjsOnObjectLongPress(qUnit: QUnit) {
 			assert.in_delta(tmpV2[0], 0.5466307658154999, 0.001, 'uv');
 			assert.in_delta(tmpV2[1], 0.4533692341845001, 0.001, 'uv');
 			object.position.set(0, 0, 0);
+
+			if (cursorMoveMonitor.movedCursorDistance() > 0.05) {
+				console.error('DO NOT MOVE CURSOR WHILE TEST IS RUNNING');
+			}
+			cursorMoveMonitor.removeEventListener();
 		});
 	});
 }

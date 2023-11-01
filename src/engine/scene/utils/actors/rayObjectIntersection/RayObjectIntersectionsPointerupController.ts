@@ -1,7 +1,19 @@
 import {Object3D} from 'three';
 import {ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
-import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions, ButtonAndModifierOptions, ButtonAndModifierOptionsAsString, filterObjectsWithMatchEventConfig} from './Common';
+import {
+	ObjectOptions,
+	GPUOptions,
+	CPUOptions,
+	PriorityOptions,
+	ButtonAndModifierOptions,
+	ButtonAndModifierOptionsAsString,
+	filterObjectsWithMatchEventConfig,
+	EventConfig,
+	eventConfigFromEvent,
+	propertyMatchesEventConfig,
+} from './Common';
+import {MouseButton} from '../../../../../core/MouseButton';
 
 interface PointerupOptions {
 	callback: () => void;
@@ -17,6 +29,8 @@ export interface ObjectToPointerupOptionsAsString {
 	pointerup: ConvertToStrings<PointerupOptions>;
 	config: ButtonAndModifierOptionsAsString;
 }
+
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 export class RayObjectIntersectionsPointerupController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerupOptions[]> = new Map();
@@ -35,6 +49,7 @@ export class RayObjectIntersectionsPointerupController extends BaseRayObjectInte
 			return;
 		}
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateByObject);
+		eventConfigFromEvent(event, _eventConfig);
 
 		const objects = this._objects;
 
@@ -44,7 +59,9 @@ export class RayObjectIntersectionsPointerupController extends BaseRayObjectInte
 				const isIntersecting = this._intersectedStateByObject.get(object);
 				if (isIntersecting == true) {
 					for (const properties of propertiesList) {
-						properties.pointerup.callback();
+						if (propertyMatchesEventConfig(properties.config, _eventConfig)) {
+							properties.pointerup.callback();
+						}
 					}
 				}
 			}

@@ -9,7 +9,11 @@ import {
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
 	filterObjectsWithMatchEventConfig,
+	EventConfig,
+	eventConfigFromEvent,
+	propertyMatchesEventConfig,
 } from './Common';
+import {MouseButton} from '../../../../../core/MouseButton';
 
 interface PointerdownOptions {
 	callback: () => void;
@@ -25,6 +29,8 @@ export interface ObjectToPointerdownOptionsAsString {
 	pointerdown: ConvertToStrings<PointerdownOptions>;
 	config: ButtonAndModifierOptionsAsString;
 }
+
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerdownOptions[]> = new Map();
@@ -43,6 +49,7 @@ export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIn
 		}
 
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateByObject);
+		eventConfigFromEvent(event, _eventConfig);
 
 		const objects = this._objects;
 
@@ -52,7 +59,9 @@ export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIn
 				const isIntersecting = this._intersectedStateByObject.get(object);
 				if (isIntersecting == true) {
 					for (const properties of propertiesList) {
-						properties.pointerdown.callback();
+						if (propertyMatchesEventConfig(properties.config, _eventConfig)) {
+							properties.pointerdown.callback();
+						}
 					}
 				}
 			}

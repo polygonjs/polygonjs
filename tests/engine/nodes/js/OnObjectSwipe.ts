@@ -109,8 +109,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.LEFT,
-			offset1: new Vector2(2, 0),
-			offset2: new Vector2(-2, 0),
+			offset1: new Vector2(3, 0),
+			offset2: new Vector2(-3, 0),
 			gpu: false,
 		});
 	});
@@ -119,8 +119,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.LEFT,
-			offset1: new Vector2(2, 0),
-			offset2: new Vector2(-2, 0),
+			offset1: new Vector2(3, 0),
+			offset2: new Vector2(-3, 0),
 			gpu: true,
 		});
 	});
@@ -129,8 +129,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.RIGHT,
-			offset1: new Vector2(-2, 0),
-			offset2: new Vector2(2, 0),
+			offset1: new Vector2(-3, 0),
+			offset2: new Vector2(3, 0),
 			gpu: false,
 		});
 	});
@@ -139,8 +139,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.RIGHT,
-			offset1: new Vector2(-2, 0),
-			offset2: new Vector2(2, 0),
+			offset1: new Vector2(-3, 0),
+			offset2: new Vector2(3, 0),
 			gpu: true,
 		});
 	});
@@ -149,8 +149,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.DOWN,
-			offset1: new Vector2(0, -2),
-			offset2: new Vector2(0, 2),
+			offset1: new Vector2(0, -3),
+			offset2: new Vector2(0, 3),
 			gpu: false,
 		});
 	});
@@ -159,8 +159,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.DOWN,
-			offset1: new Vector2(0, -2),
-			offset2: new Vector2(0, 2),
+			offset1: new Vector2(0, -3),
+			offset2: new Vector2(0, 3),
 			gpu: true,
 		});
 	});
@@ -169,8 +169,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.UP,
-			offset1: new Vector2(0, 2),
-			offset2: new Vector2(0, -2),
+			offset1: new Vector2(0, 3),
+			offset2: new Vector2(0, -3),
 			gpu: false,
 		});
 	});
@@ -179,8 +179,8 @@ export function testenginenodesjsOnObjectSwipe(qUnit: QUnit) {
 		await _runTest({
 			assert,
 			angle: ANGLE_DEGREES.UP,
-			offset1: new Vector2(0, 2),
-			offset2: new Vector2(0, -2),
+			offset1: new Vector2(0, 3),
+			offset2: new Vector2(0, -3),
 			gpu: true,
 		});
 	});

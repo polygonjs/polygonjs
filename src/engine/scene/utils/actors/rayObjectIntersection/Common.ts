@@ -172,7 +172,7 @@ function modifierMatch(modifierProperty: PointerEventModifierOption, eventModifi
 	}
 	TypeAssert.unreachable(modifierProperty);
 }
-function configMatch(propertyConfig: ButtonAndModifierOptions, eventConfig: EventConfig) {
+export function propertyMatchesEventConfig(propertyConfig: ButtonAndModifierOptions, eventConfig: EventConfig) {
 	switch (eventConfig.button) {
 		case MouseButton.LEFT: {
 			if (propertyConfig.button.left == false) {
@@ -199,25 +199,22 @@ function configMatch(propertyConfig: ButtonAndModifierOptions, eventConfig: Even
 		modifierMatch(propertyConfig.modifier.alt, eventConfig.alt)
 	);
 }
-export function objectHasPropertyMatchingConfig(
-	propertiesList: PropertyWithConfig[],
-	eventConfig: EventConfig
-): boolean {
+function propertiesMatchesEventConfig(propertiesList: PropertyWithConfig[], eventConfig: EventConfig): boolean {
 	for (const properties of propertiesList) {
-		if (configMatch(properties.config, eventConfig)) {
+		if (propertyMatchesEventConfig(properties.config, eventConfig)) {
 			return true;
 		}
 	}
 	return false;
 }
 
-function eventConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: EventConfig) {
+export function eventConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: EventConfig) {
 	target.button = (event as PointerEvent).button || MouseButton.LEFT;
 	target.ctrl = event.ctrlKey;
 	target.shift = event.shiftKey;
 	target.alt = event.altKey;
 }
-let _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 export function filterObjectsWithMatchEventConfig(
 	event: Readonly<PointerEvent | MouseEvent | TouchEvent>,
 	objects: Object3D[],
@@ -229,7 +226,7 @@ export function filterObjectsWithMatchEventConfig(
 	for (const object of objects) {
 		const propertiesList = propertiesListByObject.get(object);
 		if (propertiesList) {
-			if (objectHasPropertyMatchingConfig(propertiesList, _eventConfig)) {
+			if (propertiesMatchesEventConfig(propertiesList, _eventConfig)) {
 				target.push(object);
 			}
 		}

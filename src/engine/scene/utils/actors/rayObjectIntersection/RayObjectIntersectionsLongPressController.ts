@@ -1,4 +1,4 @@
-import {Object3D, Vector2} from 'three';
+import {Object3D} from 'three';
 import {Constructor, ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
 import {
@@ -9,9 +9,14 @@ import {
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
 	filterObjectsWithMatchEventConfig,
+	EventConfig,
+	eventConfigFromEvent,
+	propertyMatchesEventConfig,
 } from './Common';
 import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
+import {MouseButton} from '../../../../../core/MouseButton';
+import {CursorMoveMonitor} from '../../../../../core/CursorMoveMonitor';
 
 interface LongPressOptions {
 	duration: number;
@@ -29,9 +34,7 @@ export interface ObjectToLongPressOptionsAsString {
 	longPress: ConvertToStrings<LongPressOptions>;
 	config: ButtonAndModifierOptionsAsString;
 }
-const _cursorDelta = new Vector2();
-const _lastCursorPos = new Vector2();
-const _currentCursorPos = new Vector2();
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 export const DEFAULT_LONG_PRESS_DURATION = 500;
 
 function hasPropertiesWithCursorMoveLessThan(options: ObjectToLongPressOptions[], distance: number) {
@@ -66,12 +69,11 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 	private _objectsMatchingEventConfig: Object3D[] = [];
 	protected _objectsByLongPressDuration: Map<number, Object3D[]> = new Map();
 	private _timerByDuration: Map<number, number> = new Map();
-	private _lastCursorPosSet = false;
-	private _movedCursorDistance = 0;
+	private _cursorMoveMonitor = new CursorMoveMonitor();
 
 	private _bound = {
 		pointerup: this._onPointerup.bind(this),
-		pointermove: this._onPointermove.bind(this),
+		// pointermove: this._onPointermove.bind(this),
 	};
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
 		if (this._objects.length == 0) {
@@ -87,10 +89,10 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 			return;
 		}
 
-		this._movedCursorDistance = 0;
-		this._lastCursorPosSet = false;
 		document.addEventListener('pointerup', this._bound.pointerup);
-		document.addEventListener('pointermove', this._bound.pointermove);
+		this._cursorMoveMonitor.addPointermoveEventListener(
+			this._scene.eventsDispatcher.pointerEventsController.cursor()
+		);
 
 		this._objectsByLongPressDuration.clear();
 		this._timerByDuration.clear();
@@ -112,21 +114,24 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 			}
 		};
 		_groupIntersectedObjectsByDuration();
+		eventConfigFromEvent(event, _eventConfig);
 
 		this._objectsByLongPressDuration.forEach((objects, duration) => {
 			const wrappedTriggeredMethod = () => {
+				const movedCursorDistance = this._cursorMoveMonitor.movedCursorDistance();
 				this._timerByDuration.delete(duration);
 				this._setIntersectedState(this._objects, this._intersectedStateOnTimeoutByObject);
+
 				for (const object of objects) {
 					const propertiesList = this._propertiesListByObject.get(object);
-					if (
-						propertiesList &&
-						hasPropertiesWithCursorMoveLessThan(propertiesList, this._movedCursorDistance)
-					) {
+					if (propertiesList && hasPropertiesWithCursorMoveLessThan(propertiesList, movedCursorDistance)) {
 						const isIntersecting = this._intersectedStateOnTimeoutByObject.get(object);
 						if (isIntersecting) {
 							for (const properties of propertiesList) {
-								if (this._movedCursorDistance < properties.longPress.maxCursorMoveDistance) {
+								if (
+									movedCursorDistance < properties.longPress.maxCursorMoveDistance &&
+									propertyMatchesEventConfig(properties.config, _eventConfig)
+								) {
 									properties.longPress.callback();
 								}
 							}
@@ -139,24 +144,10 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 			this._timerByDuration.set(duration, timer);
 		});
 	}
-	private _onPointermove(event: PointerEvent) {
-		const pointerEventsController = this._scene.eventsDispatcher.pointerEventsController;
-		const cursor = pointerEventsController.cursor().value;
-		if (this._lastCursorPosSet == false) {
-			_lastCursorPos.copy(cursor);
-			this._lastCursorPosSet = true;
-		}
-		_currentCursorPos.copy(cursor);
-		_cursorDelta.copy(_currentCursorPos).sub(_lastCursorPos);
-		// we divide by 2 because the cursor is in the [-1,1] range
-		// and covering the whole screen would give a length of 2.
-		// But it's easier to think in term of [0,1] range
-		this._movedCursorDistance += _cursorDelta.manhattanLength() / 2;
-		_lastCursorPos.copy(_currentCursorPos);
-	}
+
 	private _onPointerup(event: PointerEvent) {
 		document.removeEventListener('pointerup', this._bound.pointerup);
-		document.removeEventListener('pointermove', this._bound.pointermove);
+		this._cursorMoveMonitor.removeEventListener();
 		this._timerByDuration.forEach((timer, duration) => {
 			clearTimeout(timer);
 		});

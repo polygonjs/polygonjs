@@ -10,8 +10,12 @@ import {
 	filterObjectsWithMatchEventConfig,
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
+	EventConfig,
+	eventConfigFromEvent,
+	propertyMatchesEventConfig,
 } from './Common';
 import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
+import {MouseButton} from '../../../../../core/MouseButton';
 
 interface SwipeOptions {
 	angle: number;
@@ -32,6 +36,7 @@ export interface ObjectToSwipeOptionsAsString {
 }
 
 const _tmp = new Vector2();
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 function degAngle(radians: number) {
 	if (radians > Math.PI) {
 		radians -= Math.PI * 2;
@@ -78,11 +83,13 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
 	private _cursorOnPointerdown = new Vector2();
 	private _cursorOnPointerup = new Vector2();
+	private _pointerdownEvent: Readonly<PointerEvent | MouseEvent | TouchEvent> | undefined;
 
 	private _bound = {
 		pointerup: this._onPointerup.bind(this),
 	};
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
+		this._pointerdownEvent = event;
 		if (this._objects.length == 0) {
 			return;
 		}
@@ -100,8 +107,12 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 		this._getCursor(this._cursorOnPointerdown);
 	}
-	private _onPointerup(event: PointerEvent) {
+	private _onPointerup() {
 		document.removeEventListener('pointerup', this._bound.pointerup);
+		const event = this._pointerdownEvent;
+		if (!event) {
+			return;
+		}
 
 		const objects = this._objects;
 		this._objectsIntersectedOnPointerdown.length = 0;
@@ -133,6 +144,7 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 
 		//
 		this._setIntersectedState(objects, this._intersectedStateOnPointerupByObject);
+		eventConfigFromEvent(event, _eventConfig);
 		const objectsIntersectedOnPointerdown = this._objectsIntersectedOnPointerdown;
 		for (const object of objectsIntersectedOnPointerdown) {
 			const propertiesList = this._propertiesListByObject.get(object);
@@ -141,8 +153,9 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 				if (isIntersectingOnPointerup == true) {
 					for (const properties of propertiesList) {
 						if (
+							distance > properties.swipe.minDistance &&
 							optionsContainsAngle(properties.swipe, degrees) &&
-							distance > properties.swipe.minDistance
+							propertyMatchesEventConfig(properties.config, _eventConfig)
 						) {
 							properties.swipe.callback();
 						}

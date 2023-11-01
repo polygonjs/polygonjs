@@ -1,5 +1,6 @@
 import {Vector2} from 'three';
 import {CoreSleep} from '../../src/core/Sleep';
+import {MouseButton} from '../../src/core/MouseButton';
 
 interface EventPos {
 	x: number;
@@ -20,25 +21,39 @@ function triggerPointerEvent(eventName: PointerEventName, emitter: HTMLElement |
 	const y = rect.top + rect.height * (0.5 + offsetY);
 	emitter.dispatchEvent(new PointerEvent(eventName, {clientX: x, clientY: y}));
 }
+interface EventOptions {
+	offset?: Vector2;
+	emitter?: HTMLElement | Document;
+	button?: MouseButton;
+}
 function triggerPointerEventInMiddle(
 	eventName: PointerEventName,
 	element: HTMLElement | Document,
-	offset?: Vector2,
-	emitterOverride?: HTMLElement | Document
+	options?: EventOptions
 ) {
 	const elementRect = rectElement(element);
 	const event = new PointerEvent(eventName, {
-		clientX: elementRect.left + elementRect.width * 0.5 + (offset ? offset.x : 0),
-		clientY: elementRect.top + elementRect.height * 0.5 + (offset ? offset.y : 0),
+		clientX: elementRect.left + elementRect.width * 0.5 + (options?.offset ? options.offset.x : 0),
+		clientY: elementRect.top + elementRect.height * 0.5 + (options?.offset ? options.offset.y : 0),
+		button: options?.button != null ? options.button : MouseButton.LEFT,
 	});
-	const emitter = emitterOverride || element;
+	const emitter = options?.emitter || element;
 	// const emitterRect = rectElement(emitter);
 	// console.log({emitter, elementRect, emitterRect, clientX: event.clientX, clientY: event.clientY});
 
 	emitter.dispatchEvent(event);
 }
-function triggerPointerEventAside(eventName: PointerEventName, element: HTMLElement | Document) {
-	element.dispatchEvent(new PointerEvent(eventName, {clientX: 0, clientY: 0}));
+function triggerPointerEventAside(
+	eventName: PointerEventName,
+	element: HTMLElement | Document,
+	options?: EventOptions
+) {
+	const event = new PointerEvent(eventName, {
+		clientX: 0,
+		clientY: 0,
+		button: options?.button != null ? options.button : MouseButton.LEFT,
+	});
+	element.dispatchEvent(event);
 }
 
 // pointermove
@@ -56,7 +71,7 @@ export function triggerPointerdown(canvas: HTMLCanvasElement, options?: EventPos
 	triggerPointerEvent('pointerdown', canvas, options);
 }
 export function triggerPointerdownInMiddle(canvas: HTMLCanvasElement, offset?: Vector2) {
-	triggerPointerEventInMiddle('pointerdown', canvas, offset);
+	triggerPointerEventInMiddle('pointerdown', canvas, {offset});
 }
 export function triggerPointerdownAside(canvas: HTMLCanvasElement) {
 	triggerPointerEventAside('pointerdown', canvas);
@@ -70,7 +85,7 @@ export function triggerPointerupInMiddle(
 	offset?: Vector2,
 	emitter?: HTMLElement | Document
 ) {
-	triggerPointerEventInMiddle('pointerup', element, offset, emitter);
+	triggerPointerEventInMiddle('pointerup', element, {offset, emitter});
 }
 export function triggerPointerupAside(canvas: HTMLElement | Document) {
 	triggerPointerEventAside('pointerup', canvas);
@@ -81,16 +96,16 @@ export async function triggerPointerdownAndPointerup(canvas: HTMLCanvasElement, 
 	await CoreSleep.sleep(100);
 	triggerPointerEvent('pointerup', document, options);
 }
-export async function triggerPointerdownAndPointerupInMiddle(canvas: HTMLCanvasElement) {
+export async function triggerPointerdownAndPointerupInMiddle(canvas: HTMLCanvasElement, button?: MouseButton) {
 	// triggerPointerEventInMiddle('click', canvas);
-	triggerPointerEventInMiddle('pointerdown', canvas);
+	triggerPointerEventInMiddle('pointerdown', canvas, {button});
 	await CoreSleep.sleep(100);
-	triggerPointerEventInMiddle('pointerup', document);
+	triggerPointerEventInMiddle('pointerup', document, {button});
 }
-export async function triggerPointerdownAndPointerupAside(canvas: HTMLCanvasElement) {
-	triggerPointerEventAside('pointerdown', canvas);
+export async function triggerPointerdownAndPointerupAside(canvas: HTMLCanvasElement, button?: MouseButton) {
+	triggerPointerEventAside('pointerdown', canvas, {button});
 	await CoreSleep.sleep(100);
-	triggerPointerEventAside('pointerup', canvas);
+	triggerPointerEventAside('pointerup', canvas, {button});
 }
 // contextmenu
 export function triggerContextMenu(canvas: HTMLCanvasElement, options?: EventPos) {

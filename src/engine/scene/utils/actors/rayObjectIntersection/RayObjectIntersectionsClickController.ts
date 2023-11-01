@@ -1,4 +1,4 @@
-import {Object3D, Vector2} from 'three';
+import {Object3D} from 'three';
 import {Constructor, ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
 import {
@@ -10,9 +10,14 @@ import {
 	// ButtonAndModifierIndexOptions,
 	ButtonAndModifierOptionsAsString,
 	filterObjectsWithMatchEventConfig,
+	propertyMatchesEventConfig,
+	EventConfig,
+	eventConfigFromEvent,
 	// modifierIndexToModifierOptions,
 } from './Common';
 import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
+import {MouseButton} from '../../../../../core/MouseButton';
+import {CursorMoveMonitor} from '../../../../../core/CursorMoveMonitor';
 
 interface ClickOptions {
 	maxCursorMoveDistance: number;
@@ -34,9 +39,7 @@ export interface ObjectToClickOptionsAsString {
 	click: ConvertToStrings<ClickOptions>;
 	config: ButtonAndModifierOptionsAsString;
 }
-const _cursorDelta = new Vector2();
-const _lastCursorPos = new Vector2();
-const _currentCursorPos = new Vector2();
+const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 function hasPropertiesWithCursorMoveLessThan(options: ObjectToClickOptions[], distance: number) {
 	for (const option of options) {
@@ -63,14 +66,14 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 	protected _intersectedStateOnPointerupByObject: Map<Object3D, boolean> = new Map();
 	private _objectsMatchingEventConfig: Object3D[] = [];
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
-	private _lastCursorPosSet = false;
-	private _movedCursorDistance = 0;
+	private _cursorMoveMonitor = new CursorMoveMonitor();
+	private _pointerdownEvent: Readonly<PointerEvent | MouseEvent | TouchEvent> | undefined;
 
 	private _bound = {
 		pointerup: this._onPointerup.bind(this),
-		pointermove: this._onPointermove.bind(this),
 	};
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
+		this._pointerdownEvent = event;
 		if (this._objects.length == 0) {
 			return;
 		}
@@ -83,38 +86,27 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 		if (this._objectsMatchingEventConfig.length == 0) {
 			return;
 		}
-
-		this._movedCursorDistance = 0;
-		this._lastCursorPosSet = false;
 		document.addEventListener('pointerup', this._bound.pointerup);
-		document.addEventListener('pointermove', this._bound.pointermove);
+		this._cursorMoveMonitor.addPointermoveEventListener(
+			this._scene.eventsDispatcher.pointerEventsController.cursor()
+		);
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 	}
-	private _onPointermove(event: PointerEvent) {
-		const pointerEventsController = this._scene.eventsDispatcher.pointerEventsController;
-		const cursor = pointerEventsController.cursor().value;
-		if (this._lastCursorPosSet == false) {
-			_lastCursorPos.copy(cursor);
-			this._lastCursorPosSet = true;
-		}
-		_currentCursorPos.copy(cursor);
-		_cursorDelta.copy(_currentCursorPos).sub(_lastCursorPos);
-		// we divide by 2 because the cursor is in the [-1,1] range
-		// and covering the whole screen would give a length of 2.
-		// But it's easier to think in term of [0,1] range
-		this._movedCursorDistance += _cursorDelta.manhattanLength() / 2;
-		_lastCursorPos.copy(_currentCursorPos);
-	}
-	private _onPointerup(event: PointerEvent) {
+
+	private _onPointerup() {
 		document.removeEventListener('pointerup', this._bound.pointerup);
-		document.removeEventListener('pointermove', this._bound.pointermove);
+		this._cursorMoveMonitor.removeEventListener();
+		const event = this._pointerdownEvent;
+		if (!event) {
+			return;
+		}
+		const movedCursorDistance = this._cursorMoveMonitor.movedCursorDistance();
 
 		const objects = this._objectsMatchingEventConfig;
 		this._objectsIntersectedOnPointerdown.length = 0;
-
 		for (const object of objects) {
 			const propertiesList = this._propertiesListByObject.get(object);
-			if (propertiesList && hasPropertiesWithCursorMoveLessThan(propertiesList, this._movedCursorDistance)) {
+			if (propertiesList && hasPropertiesWithCursorMoveLessThan(propertiesList, movedCursorDistance)) {
 				const isIntersectingOnPointerdown = this._intersectedStateOnPointerdownByObject.get(object);
 				if (isIntersectingOnPointerdown) {
 					this._objectsIntersectedOnPointerdown.push(object);
@@ -130,6 +122,7 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 			return;
 		}
 		this._setIntersectedState(objects, this._intersectedStateOnPointerupByObject);
+		eventConfigFromEvent(event, _eventConfig);
 
 		const objectsIntersectedOnPointerdown = this._objectsIntersectedOnPointerdown;
 		for (const object of objectsIntersectedOnPointerdown) {
@@ -138,7 +131,10 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 				const isIntersectingOnPointerup = this._intersectedStateOnPointerupByObject.get(object);
 				if (isIntersectingOnPointerup == true) {
 					for (const properties of propertiesList) {
-						if (this._movedCursorDistance < properties.click.maxCursorMoveDistance) {
+						if (
+							movedCursorDistance < properties.click.maxCursorMoveDistance &&
+							propertyMatchesEventConfig(properties.config, _eventConfig)
+						) {
 							properties.click.callback();
 						}
 					}
