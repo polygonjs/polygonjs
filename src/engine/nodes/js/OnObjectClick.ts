@@ -8,7 +8,12 @@ import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
-import {ExtendableOnObjectPointerEventJsNode, CPUOnObjectPointerEventJsParamsConfig} from './_BaseOnObjectPointerEvent';
+import {
+	ExtendableOnObjectPointerEventJsNode,
+	CPUOnObjectPointerEventJsParamsConfig,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
+} from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
@@ -17,19 +22,14 @@ import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {
 	ObjectToClickOptionsAsString,
-	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+	ClickParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectClickJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
-	/** @param max cursor move distance */
-	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectClickJsParamsConfig extends PointerEventConfigParamConfig(
+	ClickParamConfig(CPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectClickJsParamsConfig();
 
 export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectClickJsParamsConfig> {
@@ -106,6 +106,7 @@ export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<On
 				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

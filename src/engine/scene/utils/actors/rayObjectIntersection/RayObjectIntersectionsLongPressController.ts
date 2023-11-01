@@ -1,8 +1,17 @@
 import {Object3D, Vector2} from 'three';
-import {ConvertToStrings} from '../../../../../types/GlobalTypes';
+import {Constructor, ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
-import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
+import {
+	ObjectOptions,
+	GPUOptions,
+	CPUOptions,
+	PriorityOptions,
+	ButtonAndModifierOptions,
+	ButtonAndModifierOptionsAsString,
+	filterObjectsWithMatchEventConfig,
+} from './Common';
 import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
+import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
 
 interface LongPressOptions {
 	duration: number;
@@ -11,12 +20,14 @@ interface LongPressOptions {
 }
 export interface ObjectToLongPressOptions extends ObjectOptions {
 	longPress: LongPressOptions;
+	config: ButtonAndModifierOptions;
 }
 export interface ObjectToLongPressOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
 	longPress: ConvertToStrings<LongPressOptions>;
+	config: ButtonAndModifierOptionsAsString;
 }
 const _cursorDelta = new Vector2();
 const _lastCursorPos = new Vector2();
@@ -33,10 +44,26 @@ function hasPropertiesWithCursorMoveLessThan(options: ObjectToLongPressOptions[]
 }
 export const DEFAULT_MAX_CURSOR_MOVE_DISTANCE = 0.05;
 
+export function LongPressParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param press duration (in milliseconds) */
+		duration = ParamConfig.INTEGER(DEFAULT_LONG_PRESS_DURATION, {
+			range: [0, 1000],
+			rangeLocked: [true, false],
+		});
+		/** @param max cursor move distance */
+		maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+	};
+}
+
 export class RayObjectIntersectionsLongPressController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToLongPressOptions[]> = new Map();
 	protected _intersectedStateOnPointerdownByObject: Map<Object3D, boolean> = new Map();
 	protected _intersectedStateOnTimeoutByObject: Map<Object3D, boolean> = new Map();
+	private _objectsMatchingEventConfig: Object3D[] = [];
 	protected _objectsByLongPressDuration: Map<number, Object3D[]> = new Map();
 	private _timerByDuration: Map<number, number> = new Map();
 	private _lastCursorPosSet = false;
@@ -50,6 +77,16 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 		if (this._objects.length == 0) {
 			return;
 		}
+		filterObjectsWithMatchEventConfig(
+			event,
+			this._objects,
+			this._propertiesListByObject,
+			this._objectsMatchingEventConfig
+		);
+		if (this._objectsMatchingEventConfig.length == 0) {
+			return;
+		}
+
 		this._movedCursorDistance = 0;
 		this._lastCursorPosSet = false;
 		document.addEventListener('pointerup', this._bound.pointerup);
@@ -57,7 +94,7 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 
 		this._objectsByLongPressDuration.clear();
 		this._timerByDuration.clear();
-		this._setIntersectedState(this._objects, this._intersectedStateOnPointerdownByObject);
+		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 
 		const _groupIntersectedObjectsByDuration = () => {
 			const objects = this._objects;

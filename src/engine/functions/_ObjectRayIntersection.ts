@@ -2,16 +2,17 @@ import {Object3D} from 'three';
 import {ObjectNamedFunction2} from './_Base';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import type {ObjectToContextmenuOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
+import type {ObjectToClickOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
 import type {ObjectToHoverOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
 import type {ObjectToPointerdownOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import type {ObjectToPointerupOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import type {ObjectToSwipeOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
 
-export class addObjectToClickCheck extends ObjectNamedFunction2<[ActorEvaluator, ObjectToHoverOptions]> {
+export class addObjectToClickCheck extends ObjectNamedFunction2<[ActorEvaluator, ObjectToClickOptions]> {
 	static override type() {
 		return 'addObjectToClickCheck';
 	}
-	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToHoverOptions) {
+	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToClickOptions) {
 		const controller = this.scene.actorsManager.rayObjectIntersectionClick;
 		controller.addPropertiesForObject(object3D, options);
 

@@ -11,8 +11,10 @@ import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
-	GPUOnObjectPointerEventJsParamsConfig,
+	CPUOnObjectPointerEventJsParamsConfig,
 	ExtendableOnObjectPointerEventJsNode,
+	PointerEventConfigParamConfig,
+pointerEventConfig
 } from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -22,29 +24,14 @@ import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {
 	ObjectToSwipeOptionsAsString,
-	DEFAULT_MIN_CURSOR_MOVE_DISTANCE,
+	SwipeParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectSwipeGPUJsParamsConfig extends GPUOnObjectPointerEventJsParamsConfig {
-	/** @param angle */
-	angle = ParamConfig.FLOAT(0, {
-		range: [-180, 180],
-		rangeLocked: [true, false],
-	});
-	/** @param angle margin */
-	angleMargin = ParamConfig.FLOAT(45, {
-		range: [0, 180],
-		rangeLocked: [true, false],
-	});
-	/** @param min distance */
-	minDistance = ParamConfig.FLOAT(DEFAULT_MIN_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectSwipeGPUJsParamsConfig extends PointerEventConfigParamConfig(
+	SwipeParamConfig(CPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectSwipeGPUJsParamsConfig();
 
 export class OnObjectSwipeGPUJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectSwipeGPUJsParamsConfig> {
@@ -130,6 +117,7 @@ export class OnObjectSwipeGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 				minDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

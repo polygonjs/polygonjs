@@ -9,37 +9,27 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {CPUOnObjectPointerEventJsParamsConfig, ExtendableOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
+import {
+	CPUOnObjectPointerEventJsParamsConfig,
+	ExtendableOnObjectPointerEventJsNode,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
+} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {
 	ObjectToSwipeOptionsAsString,
-	DEFAULT_MIN_CURSOR_MOVE_DISTANCE,
+	SwipeParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectSwipeJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
-	/** @param angle */
-	angle = ParamConfig.FLOAT(0, {
-		range: [-180, 180],
-		rangeLocked: [true, false],
-	});
-	/** @param angle margin */
-	angleMargin = ParamConfig.FLOAT(45, {
-		range: [0, 180],
-		rangeLocked: [true, false],
-	});
-	/** @param min distance */
-	minDistance = ParamConfig.FLOAT(DEFAULT_MIN_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectSwipeJsParamsConfig extends PointerEventConfigParamConfig(
+	SwipeParamConfig(CPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectSwipeJsParamsConfig();
 
 export class OnObjectSwipeJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectSwipeJsParamsConfig> {
@@ -116,6 +106,7 @@ export class OnObjectSwipeJsNode extends ExtendableOnObjectPointerEventJsNode<On
 				minDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

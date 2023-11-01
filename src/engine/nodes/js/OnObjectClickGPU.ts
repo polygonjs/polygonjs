@@ -13,6 +13,8 @@ import {
 	GPUOnObjectPointerEventJsParamsConfig,
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
 } from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -22,19 +24,14 @@ import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {
 	ObjectToClickOptionsAsString,
-	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+	ClickParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectClickGPUJsParamsConfig extends GPUOnObjectPointerEventJsParamsConfig {
-	/** @param max cursor move distance */
-	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectClickGPUJsParamsConfig extends PointerEventConfigParamConfig(
+	ClickParamConfig(GPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectClickGPUJsParamsConfig();
 
 export class OnObjectClickGPUJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectClickGPUJsParamsConfig> {
@@ -115,6 +112,7 @@ export class OnObjectClickGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

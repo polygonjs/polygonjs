@@ -13,6 +13,8 @@ import {
 	OnObjectPointerEventGPUJsNodeOutputName,
 	GPUOnObjectPointerEventJsParamsConfig,
 	ExtendableOnObjectPointerEventJsNode,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
 } from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -22,25 +24,14 @@ import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {
 	ObjectToLongPressOptionsAsString,
-	DEFAULT_LONG_PRESS_DURATION,
-	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+	LongPressParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectLongPressGPUJsParamsConfig extends GPUOnObjectPointerEventJsParamsConfig {
-	/** @param press duration (in milliseconds) */
-	duration = ParamConfig.INTEGER(DEFAULT_LONG_PRESS_DURATION, {
-		range: [0, 1000],
-		rangeLocked: [true, false],
-	});
-	/** @param max cursor move distance */
-	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectLongPressGPUJsParamsConfig extends PointerEventConfigParamConfig(
+	LongPressParamConfig(GPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectLongPressGPUJsParamsConfig();
 
 export class OnObjectLongPressGPUJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectLongPressGPUJsParamsConfig> {
@@ -121,6 +112,7 @@ export class OnObjectLongPressGPUJsNode extends ExtendableOnObjectPointerEventJs
 				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

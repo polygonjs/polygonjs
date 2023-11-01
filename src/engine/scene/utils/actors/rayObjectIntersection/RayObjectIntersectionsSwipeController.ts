@@ -1,8 +1,17 @@
 import {Object3D, Vector2} from 'three';
-import {ConvertToStrings} from '../../../../../types/GlobalTypes';
+import {Constructor, ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {radToDeg} from '../../../../../core/math/_Module';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
-import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
+import {
+	ObjectOptions,
+	GPUOptions,
+	CPUOptions,
+	PriorityOptions,
+	filterObjectsWithMatchEventConfig,
+	ButtonAndModifierOptions,
+	ButtonAndModifierOptionsAsString,
+} from './Common';
+import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
 
 interface SwipeOptions {
 	angle: number;
@@ -12,12 +21,14 @@ interface SwipeOptions {
 }
 export interface ObjectToSwipeOptions extends ObjectOptions {
 	swipe: SwipeOptions;
+	config: ButtonAndModifierOptions;
 }
 export interface ObjectToSwipeOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
 	swipe: ConvertToStrings<SwipeOptions>;
+	config: ButtonAndModifierOptionsAsString;
 }
 
 const _tmp = new Vector2();
@@ -33,7 +44,27 @@ export const ANGLE_DEGREES = {
 	UP: degAngle(_tmp.set(0, 1).angle()),
 	DOWN: degAngle(_tmp.set(0, -1).angle()),
 };
-export const DEFAULT_MIN_CURSOR_MOVE_DISTANCE = 0.05;
+const DEFAULT_MIN_CURSOR_MOVE_DISTANCE = 0.05;
+
+export function SwipeParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param angle */
+		angle = ParamConfig.FLOAT(0, {
+			range: [-180, 180],
+			rangeLocked: [true, false],
+		});
+		/** @param angle margin */
+		angleMargin = ParamConfig.FLOAT(45, {
+			range: [0, 180],
+			rangeLocked: [true, false],
+		});
+		/** @param min distance */
+		minDistance = ParamConfig.FLOAT(DEFAULT_MIN_CURSOR_MOVE_DISTANCE, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+	};
+}
 
 function optionsContainsAngle(options: SwipeOptions, angle: number) {
 	return angle >= options.angle - options.angleMargin && angle <= options.angle + options.angleMargin;
@@ -43,6 +74,7 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 	protected override _propertiesListByObject: Map<Object3D, ObjectToSwipeOptions[]> = new Map();
 	protected _intersectedStateOnPointerdownByObject: Map<Object3D, boolean> = new Map();
 	protected _intersectedStateOnPointerupByObject: Map<Object3D, boolean> = new Map();
+	private _objectsMatchingEventConfig: Object3D[] = [];
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
 	private _cursorOnPointerdown = new Vector2();
 	private _cursorOnPointerup = new Vector2();
@@ -54,8 +86,18 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 		if (this._objects.length == 0) {
 			return;
 		}
+		filterObjectsWithMatchEventConfig(
+			event,
+			this._objects,
+			this._propertiesListByObject,
+			this._objectsMatchingEventConfig
+		);
+		if (this._objectsMatchingEventConfig.length == 0) {
+			return;
+		}
+
 		document.addEventListener('pointerup', this._bound.pointerup);
-		this._setIntersectedState(this._objects, this._intersectedStateOnPointerdownByObject);
+		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 		this._getCursor(this._cursorOnPointerdown);
 	}
 	private _onPointerup(event: PointerEvent) {

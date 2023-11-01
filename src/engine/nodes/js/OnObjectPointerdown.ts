@@ -9,7 +9,12 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
-import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
+import {
+	ExtendableOnObjectPointerEventJsNode,
+	PointerEventConfigParamConfig,
+	CPUOnObjectPointerEventJsParamsConfig,
+	pointerEventConfig,
+} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
@@ -19,7 +24,13 @@ import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
+export class OnObjectPointerdownJsParamsConfig extends PointerEventConfigParamConfig(
+	CPUOnObjectPointerEventJsParamsConfig
+) {}
+const ParamsConfig = new OnObjectPointerdownJsParamsConfig();
+
+export class OnObjectPointerdownJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectPointerdownJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.ON_OBJECT_POINTERDOWN;
 	}
@@ -76,6 +87,7 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 			pointerdown: {
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

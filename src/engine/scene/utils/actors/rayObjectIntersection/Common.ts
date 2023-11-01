@@ -1,5 +1,8 @@
 import type {Ref} from '@vue/reactivity';
-import {Intersection, Material} from 'three';
+import {Intersection, Material, Object3D} from 'three';
+import {ConvertToStrings} from '../../../../../types/GlobalTypes';
+import {MouseButton} from '../../../../../core/MouseButton';
+import {TypeAssert} from '../../../../poly/Assert';
 
 export interface PriorityOptions {
 	blockObjectsBehind: boolean;
@@ -89,4 +92,146 @@ export function CPUOptionsMax(optionsList: ObjectOptions[], target: CPUOptions):
 		}
 	}
 	return target;
+}
+
+export enum PointerEventModifierOption {
+	REQUIRED = 0, //'required',
+	OPTIONAL = 1, //'optional',
+	FORBIDDEN = 2, //'forbidden',
+}
+export const POINTER_EVENT_MODIFIER_OPTIONS: PointerEventModifierOption[] = [
+	PointerEventModifierOption.REQUIRED,
+	PointerEventModifierOption.OPTIONAL,
+	PointerEventModifierOption.FORBIDDEN,
+];
+export const POINTER_EVENT_MODIFIER_OPTION_LABEL: string[] = ['required', 'optional', 'forbidden'];
+export const DEFAULT_MODIFIER_OPTION = POINTER_EVENT_MODIFIER_OPTIONS.indexOf(PointerEventModifierOption.OPTIONAL);
+export const POINTER_EVENT_MODIFIER_MENU_OPTIONS = {
+	menu: {
+		entries: POINTER_EVENT_MODIFIER_OPTIONS.map((value) => ({
+			value,
+			name: POINTER_EVENT_MODIFIER_OPTION_LABEL[value],
+		})),
+	},
+};
+export interface ButtonOptions {
+	left: boolean;
+	middle: boolean;
+	right: boolean;
+}
+export interface ModifierOptions {
+	ctrl: PointerEventModifierOption;
+	shift: PointerEventModifierOption;
+	alt: PointerEventModifierOption;
+}
+// export interface ModifierIndexOptions {
+// 	ctrl: number;
+// 	shift: number;
+// 	alt: number;
+// }
+// export function modifierIndexToModifierOptions(options: ModifierIndexOptions): ModifierOptions {
+// 	return {
+// 		ctrl: POINTER_EVENT_MODIFIER_OPTIONS[options.ctrl],
+// 		shift: POINTER_EVENT_MODIFIER_OPTIONS[options.shift],
+// 		alt: POINTER_EVENT_MODIFIER_OPTIONS[options.alt],
+// 	};
+// }
+export interface ButtonAndModifierOptions {
+	button: ButtonOptions;
+	modifier: ModifierOptions;
+}
+// export interface ButtonAndModifierIndexOptions {
+// 	button: ButtonOptions;
+// 	modifier: ModifierIndexOptions;
+// }
+export interface ButtonAndModifierOptionsAsString {
+	button: ConvertToStrings<ButtonOptions>;
+	modifier: ConvertToStrings<ModifierOptions>;
+}
+
+interface PropertyWithConfig {
+	config: ButtonAndModifierOptions;
+}
+export interface EventConfig {
+	button: MouseButton;
+	ctrl: boolean;
+	shift: boolean;
+	alt: boolean;
+}
+function modifierMatch(modifierProperty: PointerEventModifierOption, eventModifier: boolean): boolean {
+	switch (modifierProperty) {
+		case PointerEventModifierOption.REQUIRED: {
+			return eventModifier == true;
+		}
+		case PointerEventModifierOption.OPTIONAL: {
+			return true;
+		}
+		case PointerEventModifierOption.FORBIDDEN: {
+			return eventModifier == false;
+		}
+	}
+	TypeAssert.unreachable(modifierProperty);
+}
+function configMatch(propertyConfig: ButtonAndModifierOptions, eventConfig: EventConfig) {
+	switch (eventConfig.button) {
+		case MouseButton.LEFT: {
+			if (propertyConfig.button.left == false) {
+				return false;
+			}
+			break;
+		}
+		case MouseButton.MIDDLE: {
+			if (propertyConfig.button.middle == false) {
+				return false;
+			}
+			break;
+		}
+		case MouseButton.RIGHT: {
+			if (propertyConfig.button.right == false) {
+				return false;
+			}
+			break;
+		}
+	}
+	return (
+		modifierMatch(propertyConfig.modifier.ctrl, eventConfig.ctrl) &&
+		modifierMatch(propertyConfig.modifier.shift, eventConfig.shift) &&
+		modifierMatch(propertyConfig.modifier.alt, eventConfig.alt)
+	);
+}
+export function objectHasPropertyMatchingConfig(
+	propertiesList: PropertyWithConfig[],
+	eventConfig: EventConfig
+): boolean {
+	for (const properties of propertiesList) {
+		if (configMatch(properties.config, eventConfig)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function eventConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: EventConfig) {
+	target.button = (event as PointerEvent).button || MouseButton.LEFT;
+	target.ctrl = event.ctrlKey;
+	target.shift = event.shiftKey;
+	target.alt = event.altKey;
+}
+let _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+export function filterObjectsWithMatchEventConfig(
+	event: Readonly<PointerEvent | MouseEvent | TouchEvent>,
+	objects: Object3D[],
+	propertiesListByObject: Map<Object3D, PropertyWithConfig[]>,
+	target: Object3D[]
+) {
+	target.length = 0;
+	eventConfigFromEvent(event, _eventConfig);
+	for (const object of objects) {
+		const propertiesList = propertiesListByObject.get(object);
+		if (propertiesList) {
+			if (objectHasPropertyMatchingConfig(propertiesList, _eventConfig)) {
+				target.push(object);
+			}
+		}
+	}
 }

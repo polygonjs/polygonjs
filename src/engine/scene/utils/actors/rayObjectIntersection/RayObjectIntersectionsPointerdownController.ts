@@ -1,28 +1,48 @@
 import {Object3D} from 'three';
 import {ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
-import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
+import {
+	ObjectOptions,
+	GPUOptions,
+	CPUOptions,
+	PriorityOptions,
+	ButtonAndModifierOptions,
+	ButtonAndModifierOptionsAsString,
+	filterObjectsWithMatchEventConfig,
+} from './Common';
 
 interface PointerdownOptions {
 	callback: () => void;
 }
 export interface ObjectToPointerdownOptions extends ObjectOptions {
 	pointerdown: PointerdownOptions;
+	config: ButtonAndModifierOptions;
 }
 export interface ObjectToPointerdownOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
 	pointerdown: ConvertToStrings<PointerdownOptions>;
+	config: ButtonAndModifierOptionsAsString;
 }
 
 export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerdownOptions[]> = new Map();
 	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
+	private _objectsMatchingEventConfig: Object3D[] = [];
 
-	// private _processBound = this._process.bind(this);
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
-		this._setIntersectedState(this._objects, this._intersectedStateByObject);
+		filterObjectsWithMatchEventConfig(
+			event,
+			this._objects,
+			this._propertiesListByObject,
+			this._objectsMatchingEventConfig
+		);
+		if (this._objectsMatchingEventConfig.length == 0) {
+			return;
+		}
+
+		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateByObject);
 
 		const objects = this._objects;
 

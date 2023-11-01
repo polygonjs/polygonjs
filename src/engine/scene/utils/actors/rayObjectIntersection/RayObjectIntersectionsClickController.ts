@@ -1,20 +1,38 @@
 import {Object3D, Vector2} from 'three';
-import {ConvertToStrings} from '../../../../../types/GlobalTypes';
+import {Constructor, ConvertToStrings} from '../../../../../types/GlobalTypes';
 import {BaseRayObjectIntersectionsController} from './_BaseRayObjectIntersectionsController';
-import {ObjectOptions, GPUOptions, CPUOptions, PriorityOptions} from './Common';
+import {
+	ObjectOptions,
+	GPUOptions,
+	CPUOptions,
+	PriorityOptions,
+	ButtonAndModifierOptions,
+	// ButtonAndModifierIndexOptions,
+	ButtonAndModifierOptionsAsString,
+	filterObjectsWithMatchEventConfig,
+	// modifierIndexToModifierOptions,
+} from './Common';
+import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
 
 interface ClickOptions {
 	maxCursorMoveDistance: number;
 	callback: () => void;
 }
+
 export interface ObjectToClickOptions extends ObjectOptions {
 	click: ClickOptions;
+	config: ButtonAndModifierOptions;
 }
+// export interface ObjectToClickIndexOptions extends ObjectOptions {
+// 	click: ClickOptions;
+// 	config: ButtonAndModifierIndexOptions;
+// }
 export interface ObjectToClickOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
 	click: ConvertToStrings<ClickOptions>;
+	config: ButtonAndModifierOptionsAsString;
 }
 const _cursorDelta = new Vector2();
 const _lastCursorPos = new Vector2();
@@ -28,12 +46,22 @@ function hasPropertiesWithCursorMoveLessThan(options: ObjectToClickOptions[], di
 	}
 	return false;
 }
-export const DEFAULT_MAX_CURSOR_MOVE_DISTANCE = 0.05;
+
+export function ClickParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param max cursor move distance */
+		maxCursorMoveDistance = ParamConfig.FLOAT(0.05, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+	};
+}
 
 export class RayObjectIntersectionsClickController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToClickOptions[]> = new Map();
 	protected _intersectedStateOnPointerdownByObject: Map<Object3D, boolean> = new Map();
 	protected _intersectedStateOnPointerupByObject: Map<Object3D, boolean> = new Map();
+	private _objectsMatchingEventConfig: Object3D[] = [];
 	private _objectsIntersectedOnPointerdown: Object3D[] = [];
 	private _lastCursorPosSet = false;
 	private _movedCursorDistance = 0;
@@ -46,11 +74,21 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 		if (this._objects.length == 0) {
 			return;
 		}
+		filterObjectsWithMatchEventConfig(
+			event,
+			this._objects,
+			this._propertiesListByObject,
+			this._objectsMatchingEventConfig
+		);
+		if (this._objectsMatchingEventConfig.length == 0) {
+			return;
+		}
+
 		this._movedCursorDistance = 0;
 		this._lastCursorPosSet = false;
 		document.addEventListener('pointerup', this._bound.pointerup);
 		document.addEventListener('pointermove', this._bound.pointermove);
-		this._setIntersectedState(this._objects, this._intersectedStateOnPointerdownByObject);
+		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateOnPointerdownByObject);
 	}
 	private _onPointermove(event: PointerEvent) {
 		const pointerEventsController = this._scene.eventsDispatcher.pointerEventsController;
@@ -71,7 +109,7 @@ export class RayObjectIntersectionsClickController extends BaseRayObjectIntersec
 		document.removeEventListener('pointerup', this._bound.pointerup);
 		document.removeEventListener('pointermove', this._bound.pointermove);
 
-		const objects = this._objects;
+		const objects = this._objectsMatchingEventConfig;
 		this._objectsIntersectedOnPointerdown.length = 0;
 
 		for (const object of objects) {

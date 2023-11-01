@@ -9,9 +9,12 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {
-	BaseOnObjectPointerGPUEventJsNode,
+	ExtendableOnObjectPointerEventJsNode,
+	GPUOnObjectPointerEventJsParamsConfig,
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
 } from './_BaseOnObjectPointerEvent';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
@@ -23,7 +26,13 @@ import {PointerEventType} from '../../../core/event/PointerEventType';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectPointerupGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
+export class OnObjectPointerupGPUJsParamsConfig extends PointerEventConfigParamConfig(
+	GPUOnObjectPointerEventJsParamsConfig
+) {}
+const ParamsConfig = new OnObjectPointerupGPUJsParamsConfig();
+
+export class OnObjectPointerupGPUJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectPointerupGPUJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.ON_OBJECT_POINTERUP_GPU;
 	}
@@ -84,6 +93,7 @@ export class OnObjectPointerupGPUJsNode extends BaseOnObjectPointerGPUEventJsNod
 			pointerup: {
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

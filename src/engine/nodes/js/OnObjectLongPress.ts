@@ -9,33 +9,27 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
-import {ExtendableOnObjectPointerEventJsNode, CPUOnObjectPointerEventJsParamsConfig} from './_BaseOnObjectPointerEvent';
+import {
+	ExtendableOnObjectPointerEventJsNode,
+	CPUOnObjectPointerEventJsParamsConfig,
+	PointerEventConfigParamConfig,
+	pointerEventConfig,
+} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ObjectToLongPressOptionsAsString,
-	DEFAULT_LONG_PRESS_DURATION,
-	DEFAULT_MAX_CURSOR_MOVE_DISTANCE,
+	LongPressParamConfig,
 } from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectLongPressJsParamsConfig extends CPUOnObjectPointerEventJsParamsConfig {
-	/** @param press duration (in milliseconds) */
-	duration = ParamConfig.INTEGER(DEFAULT_LONG_PRESS_DURATION, {
-		range: [0, 1000],
-		rangeLocked: [true, false],
-	});
-	/** @param max cursor move distance */
-	maxCursorMoveDistance = ParamConfig.FLOAT(DEFAULT_MAX_CURSOR_MOVE_DISTANCE, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-}
+export class OnObjectLongPressJsParamsConfig extends PointerEventConfigParamConfig(
+	LongPressParamConfig(CPUOnObjectPointerEventJsParamsConfig)
+) {}
 const ParamsConfig = new OnObjectLongPressJsParamsConfig();
 
 export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectLongPressJsParamsConfig> {
@@ -111,6 +105,7 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 				maxCursorMoveDistance,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
+			config: pointerEventConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);
