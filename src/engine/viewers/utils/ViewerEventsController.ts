@@ -67,7 +67,7 @@ export class ViewerEventsController {
 			if (DEBUG) {
 				console.log('- add event:', eventType, eventEmitter);
 			}
-			eventEmitter.addEventListener(eventType, listener);
+			eventEmitter.addEventListener(eventType, listener, {passive: true});
 
 			// if the event being added is a keyboard type,
 			// we need to add tabindex to the canvas to allow it to have focus
