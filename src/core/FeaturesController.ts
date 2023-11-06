@@ -8,5 +8,12 @@ export class CoreFeaturesController {
 	static debugLoadProgress(): boolean {
 		return this.urlParam('debugLoadProgress') == '1';
 	}
+	static testBatchId(): number {
+		const testBatchIdStr = this.urlParam('testBatchId');
+		if (testBatchIdStr) {
+			return parseInt(testBatchIdStr);
+		}
+		return -1;
+	}
 	protected static _urlParams = new URLSearchParams(window.location.search);
 }

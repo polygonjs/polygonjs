@@ -23,7 +23,7 @@
 	"main": "./dist/src/engine/index_all.js",
 	"sideEffects": false,
 	"scripts": {
-		"start": "webpack-dev-server --env NODE_ENV=development --env production=false --config config/webpack/dev.js",
+		"start": "vite",
 		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist && yarn copy_occt_wasm_to_dist && yarn copy_xatlas_wasm_to_dist",
 		"build_fast": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack_fast && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
 		"build_with_webpack": "webpack --env NODE_ENV=production --env production --progress --config config/webpack/prod.js && yarn renameMJS",
@@ -84,8 +84,8 @@
 		"three-subdivide": "1.1.2",
 		"tone": "14.7.77",
 		"web-ifc-three": "0.0.125",
-		"xatlas-web": "0.1.0",
 		"xatlas-three": "0.2.0",
+		"xatlas-web": "0.1.0",
 		"yuka": "^0.7.8"
 	},
 	"devDependencies": {
@@ -118,6 +118,8 @@
 		"ts-shader-loader": "2.0.2",
 		"tslib": "2.6.2",
 		"typescript": "5.2.2",
+		"vite": "4.4.5",
+		"vite-plugin-string": "1.2.2",
 		"webpack": "5.76.0",
 		"webpack-bundle-analyzer": "4.5.0",
 		"webpack-cli": "4.9.2",
