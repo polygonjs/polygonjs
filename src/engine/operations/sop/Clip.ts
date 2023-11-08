@@ -22,11 +22,11 @@ import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/builders/Mesh';
-import {objectCloneDeep} from '../../../core/ObjectUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {copyObject3DProperties} from '../../../core/geometry/modules/three/ThreejsObjectUtils';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;
@@ -73,7 +73,7 @@ export class ClipSopOperation extends BaseSopOperation {
 
 		const inputObjects = coreGroup.threejsObjects();
 		objectsToRemove.clear();
-		for (let object of inputObjects) {
+		for (const object of inputObjects) {
 			object.traverse((child) => {
 				_processObjectClipped(child, params, newObjects);
 			});
@@ -94,16 +94,10 @@ function _processObjectClipped(object: Object3D, params: ClipSopParams, newObjec
 
 	function _addObject(newObject: Object3D) {
 		newObjects.push(newObject);
-		copyObjectProperties(object, newObject);
+		copyObject3DProperties(object, newObject);
 		objectsToRemove.add(object);
 	}
 
-	if (isBooleanTrue(params.intersectionEdges)) {
-		const intersectionEdges = _createClipGeo(mesh);
-		if (intersectionEdges) {
-			_addObject(intersectionEdges);
-		}
-	}
 	if (isBooleanTrue(params.keepBelowPlane) || isBooleanTrue(params.keepAbovePlane)) {
 		if (isBooleanTrue(params.keepBelowPlane)) {
 			const box = _createBox(params, true);
@@ -114,6 +108,14 @@ function _processObjectClipped(object: Object3D, params: ClipSopParams, newObjec
 			const box = _createBox(params, false);
 			const abovePlane = _createClipped(mesh, box);
 			_addObject(abovePlane);
+		}
+	}
+	if (isBooleanTrue(params.intersectionEdges)) {
+		const intersectionEdges = _createClipGeo(mesh);
+		if (intersectionEdges) {
+			const oldMaterial = intersectionEdges.material;
+			_addObject(intersectionEdges);
+			intersectionEdges.material = oldMaterial;
 		}
 	}
 }
@@ -252,12 +254,4 @@ function _createClipGeo(mesh: Mesh) {
 	performIntersection(posAttr);
 
 	return outlineLines;
-}
-
-export function copyObjectProperties(src: Object3D, target: Object3D) {
-	target.visible = src.visible;
-	target.name = src.name;
-	target.castShadow = src.castShadow;
-	target.receiveShadow = src.receiveShadow;
-	target.userData = objectCloneDeep(src.userData);
 }

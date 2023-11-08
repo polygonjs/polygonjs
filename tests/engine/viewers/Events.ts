@@ -18,7 +18,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove', 'mousedown', 'mousemove', 'mouseup'],
+				['pointermove', 'touchmove', 'mousedown', 'mousemove', 'mouseup'],
 				'3 mouse events registered'
 			);
 
@@ -26,7 +26,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
@@ -34,7 +34,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove', 'mousedown', 'mousemove', 'mouseup'],
+				['pointermove', 'touchmove', 'mousedown', 'mousemove', 'mouseup'],
 				'3 mouse events registered again'
 			);
 
@@ -47,7 +47,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events are registered anymore'
 			);
 
@@ -55,14 +55,14 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove', 'mousedown'],
+				['pointermove', 'touchmove', 'mousedown'],
 				'1 event is registered'
 			);
 
 			events.removeNode(mouse1);
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'events are removed if node is removed'
 			);
 
@@ -70,7 +70,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await mouse1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -91,6 +91,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
 				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
 					'pointermove',
+					'touchmove',
 					'click',
 					'mousedown',
 				]);
@@ -122,7 +123,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove', 'click'],
+				['pointermove', 'touchmove', 'click'],
 				'only click registered'
 			);
 
@@ -139,7 +140,7 @@ export function testengineviewersEvents(qUnit: QUnit) {
 				const viewer2 = args2.viewer;
 				assert.deepEqual(
 					viewer2.eventsController().registeredEventTypes(),
-					['pointermove', 'click'],
+					['pointermove', 'touchmove', 'click'],
 					'only click registered on scene reload'
 				);
 
@@ -147,14 +148,14 @@ export function testengineviewersEvents(qUnit: QUnit) {
 				await mouse2.compute();
 				assert.deepEqual(
 					viewer2.eventsController().registeredEventTypes(),
-					['pointermove'],
+					['pointermove', 'touchmove'],
 					'no events registered on scene reload'
 				);
 				mouse2.p.click.set(1);
 				await mouse2.compute();
 				assert.deepEqual(
 					viewer2.eventsController().registeredEventTypes(),
-					['pointermove', 'click'],
+					['pointermove', 'touchmove', 'click'],
 					'only click registered on scene reload again'
 				);
 			});
@@ -172,37 +173,37 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			const events = scene.root().createNode('eventsNetwork');
 			const keyboard1 = events.createNode('keyboard');
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.active.set(0);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'no events if node is set to inactive'
 			);
 
 			keyboard1.p.active.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keydown']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keydown']);
 
 			keyboard1.p.keydown.set(0);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.keyup.set(1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'keyup']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove', 'keyup']);
 
 			events.removeNode(keyboard1);
 			await keyboard1.compute();
-			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
+			assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove', 'touchmove']);
 
 			keyboard1.p.active.set(1);
 			await keyboard1.compute();
 			assert.deepEqual(
 				viewer.eventsController().registeredEventTypes(),
-				['pointermove'],
+				['pointermove', 'touchmove'],
 				'setting a deleted node to active does not update the register'
 			);
 
@@ -216,7 +217,11 @@ export function testengineviewersEvents(qUnit: QUnit) {
 			const element2 = document.createElement('div');
 			document.body.appendChild(element2);
 			await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['pointermove', 'keypress']);
+				assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), [
+					'pointermove',
+					'touchmove',
+					'keypress',
+				]);
 			});
 		});
 	});
