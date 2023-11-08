@@ -9,7 +9,6 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			external: (id) => {
-				console.log(id);
 				return id.startsWith('dist/');
 			},
 		},

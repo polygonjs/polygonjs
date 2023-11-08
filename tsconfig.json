@@ -24,9 +24,7 @@
 		// "declarationDir": "./dist/types", // declarationDir cannot be set if declaration is false
 
 		"importHelpers": true,
-		"lib": ["dom", "es2019.array"],
-		// "typeRoots": []
-		"types": ["vite-plugin-glsl/ext"]
+		"lib": ["dom", "es2019.array"]
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],
 	"exclude": ["node_modules", "modules", "dist", "public", "webpack", "src/core/geometry/cad/build"]
