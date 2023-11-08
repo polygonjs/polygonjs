@@ -6,10 +6,10 @@ import {BooleanOperation, BOOLEAN_OPERATIONS} from '../../../../src/engine/opera
 import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 import {DeleteSopNode} from '../../../../src/engine/nodes/sop/Delete';
 import {BooleanSopNode} from '../../../../src/engine/nodes/sop/Boolean';
-import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export function testenginenodessopBoolean(qUnit: QUnit) {
 	qUnit.test('sop/boolean simple', async (assert) => {
@@ -31,17 +31,17 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 		let coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 108);
+		assert.equal(coreGroup.points(_points).length, 120);
 
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 60);
+		assert.equal(coreGroup.points(_points).length, 66);
 
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 162);
+		assert.equal(coreGroup.points(_points).length, 174);
 
 		// now with a sphere
 		const sphere = geo1.createNode('sphere');
@@ -50,17 +50,17 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 267);
+		assert.equal(coreGroup.points(_points).length, 261);
 
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 276);
+		assert.equal(coreGroup.points(_points).length, 267);
 
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 5523);
+		assert.equal(coreGroup.points(_points).length, 5541);
 	});
 
 	qUnit.test('sop/boolean with shared materials', async (assert) => {
@@ -94,7 +94,7 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 		boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 		let coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 108);
+		assert.equal(coreGroup.points(_points).length, 120);
 		let mesh = coreGroup.threejsObjectsWithGeo()[0] as Mesh;
 		let geometry = mesh.geometry;
 		const uniqMaterials: Material[] = [];
@@ -102,21 +102,20 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 			ArrayUtils.uniq(mesh.material as Material[], uniqMaterials).map((mat) => mat.uuid),
 			await Promise.all([meshBasic1, meshBasic2].map(async (matNode) => (await matNode.material()).uuid))
 		);
-		assert.equal(geometry.groups.length, 9, '9 groups');
-		assert.equal(geometry.groups[0].count, 24, 'group 0 count');
-		assert.equal(geometry.groups[1].count, 6, 'group 1 count');
-		assert.equal(geometry.groups[2].count, 24, 'group 2 count');
-		assert.equal(coreGroup.points(_points).length, 108);
+		assert.equal(geometry.groups.length, 2, '2 groups');
+		assert.equal(geometry.groups[0].count, 84, 'group 0 count');
+		assert.equal(geometry.groups[1].count, 36, 'group 1 count');
+		assert.equal(coreGroup.points(_points).length, 120);
 
 		boolean.p.keepMaterials.set(false);
 		coreGroup = (await boolean.compute()).coreContent()!;
 		assert.ok(coreGroup);
-		assert.equal(coreGroup.points(_points).length, 108);
+		assert.equal(coreGroup.points(_points).length, 120);
 		mesh = coreGroup.threejsObjectsWithGeo()[0] as Mesh;
 		assert.deepEqual((mesh.material as Material).uuid, (await meshBasic1.material()).uuid);
 		geometry = mesh.geometry;
 		assert.equal(geometry.groups.length, 1);
-		assert.equal(geometry.groups[0].count, 108, 'group 0 count');
+		assert.equal(geometry.groups[0].count, 120, 'group 0 count');
 		// assert.equal(geometry.groups[1].count, 30, 'group 1 count');
 		// assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 	});
@@ -181,8 +180,8 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 			return container.coreContent()!.pointsCount();
 		}
 
-		assert.equal(await pointsCount(boolean1), 8028);
-		assert.equal(await pointsCount(delete1), 4047);
+		assert.equal(await pointsCount(boolean1), 8025);
+		assert.equal(await pointsCount(delete1), 4044);
 	});
 	qUnit.test('sop/boolean with intersection edges', async (assert) => {
 		const geo1 = window.geo1;
@@ -204,6 +203,6 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 		boolean1.p.intersectionEdgesOnly.set(true);
 		assert.equal(await pointsCount(boolean1), 468);
 		boolean1.p.intersectionEdgesOnly.set(false);
-		assert.equal(await pointsCount(boolean1), 8028);
+		assert.equal(await pointsCount(boolean1), 8025);
 	});
 }

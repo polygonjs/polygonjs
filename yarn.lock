@@ -4341,10 +4341,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three-bvh-csg@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.5.tgz#db8254a0b9472edecc10a836c98adc6286ff1dca"
-  integrity sha512-gxqmaV3HlGHUGB857AV8oLoNxx5Q0T7io1DUs5nrCwmmFqjWZT3a8ue7WapE394wY8awFVAMr+YvdSrzqswpFA==
+three-bvh-csg@0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.13.tgz#66737315aad137898a5699384a367a1d9d3f3e23"
+  integrity sha512-Snp1aW+nqc4/6WYkPz1vSC8vF+s96xz8GHXzdheXP6kYvwXZJH0AumWwtqSz04nTlKyFfvS5v0GBzW+5NiPfOw==
 
 three-gpu-pathtracer@0.0.16:
   version "0.0.16"
@@ -4358,20 +4358,20 @@ three-mesh-bvh@0.5.21:
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.21.tgz#e08f5f3052d624cce36d0975692949c02359832f"
   integrity sha512-TGXPk7YwtlU5rgQJYA25OT6yAdBMeekfC4BTkGNtTWA5glb2rmEpjxvhZncRQSl73QZir2LFOQT0FjfzgG55xw==
 
-three-mesh-bvh@0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.6.3.tgz#c387d6ae7faf1c5a1caf0643c19535dab27d707b"
-  integrity sha512-xjuGLSI9nBATIsWcT/DnnNma5xXYyvBiXfUbhGLAFqItOlOKYF5JWsUOX+cuSAnSWovEoHzd5Emx23qKiByrlw==
+three-mesh-bvh@0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.6.8.tgz#f27d18ca75bdc59316dff0f561af8fb316621a54"
+  integrity sha512-EGebF9DZx1S8+7OZYNNTT80GXJZVf+UYXD/HyTg/e2kR/ApofIFfUS4ZzIHNnUVIadpnLSzM4n96wX+l7GMbnQ==
 
 three-mesh-bvh@^0.5.19:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.19.tgz#72d489856561d01ef7d4add81f0c82d3fb644d09"
   integrity sha512-Q8huT0NautyR4afW0oMlOz8a4qm3b1jQ1ccMLF/TZ0rA4i58HljsnBjCLEDLQtIINZyLtZPdw60mrD81V/TZDA==
 
-three-subdivide@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.2.tgz#e29f770dcfc748096086e9a20a66d0b16905d171"
-  integrity sha512-qcMX3vIyKiZecJQuDZFoIkImOFwMBT/SzdGwMwoL+48Pq/6r3+jVGIKOP03sMjK9bOQDy3wc1ZH+xiUaYk2aCw==
+three-subdivide@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.5.tgz#de688d328247380112bb1033aee88dcae435cd5b"
+  integrity sha512-eEWMevrsHIMnC1xbsZSQZIB8QBr8XeXZhTSAdYrLm3ZC/yTdR4ocOZ2Qi+gEyPJFOt3iirQ+SQR0jCamk7e6FQ==
 
 three@0.152.2:
   version "0.152.2"
