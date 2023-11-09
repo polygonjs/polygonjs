@@ -13,6 +13,7 @@ import {Poly} from '../../Poly';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
 import {NodeContext} from '../../poly/NodeContext';
+import {getObjectAttributeAllCategoryNames} from '../../../core/geometry/ifc/IFCUtils';
 const DEFAULT = FileIFCSopOperation.DEFAULT_PARAMS;
 class FileIFCParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
@@ -24,11 +25,18 @@ class FileIFCParamsConfig extends NodeParamsConfig {
 	matrixAutoUpdate = ParamConfig.BOOLEAN(0);
 	/** @param centers the geometry to the origin */
 	coordinateToOrigin = ParamConfig.BOOLEAN(0);
+	/** @param excluded categories */
+	includedCategories = ParamConfig.STRING(DEFAULT.includedCategories);
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			FileIFCSopNode.PARAM_CALLBACK_reload(node as FileIFCSopNode);
 		},
+	});
+	/** @param found categories */
+	foundCategories = ParamConfig.STRING('', {
+		cook: false,
+		editable: false,
 	});
 }
 const ParamsConfig = new FileIFCParamsConfig();
@@ -49,6 +57,23 @@ export class FileIFCSopNode extends TypedSopNode<FileIFCParamsConfig> {
 	}
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = await this.operation().cook(inputCoreGroups, this.pv);
+
+		const object = coreGroup.threejsObjects()[0];
+
+		if (object) {
+			object.traverse((child) => {
+				child.matrixAutoUpdate = this.pv.matrixAutoUpdate;
+				child.updateMatrix();
+			});
+
+			//
+			const foundCategories = getObjectAttributeAllCategoryNames(object);
+			if (foundCategories) {
+				this.p.foundCategories.set(foundCategories);
+			}
+		}
+
+		// console.log('done', object);
 		this.setCoreGroup(coreGroup);
 	}
 

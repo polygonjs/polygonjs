@@ -2,6 +2,7 @@ import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileDRCSopNode} from '../../../src/engine/nodes/sop/FileDRC';
 import {FileFBXSopNode} from '../../../src/engine/nodes/sop/FileFBX';
 import {FileGLTFSopNode} from '../../../src/engine/nodes/sop/FileGLTF';
+import {FileIFCSopNode} from '../../../src/engine/nodes/sop/FileIFC';
 import {FileJSONSopNode} from '../../../src/engine/nodes/sop/FileJSON';
 import {FileMPDSopNode} from '../../../src/engine/nodes/sop/FileMPD';
 import {FileOBJSopNode} from '../../../src/engine/nodes/sop/FileOBJ';
@@ -267,6 +268,18 @@ const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTF
 
 	return collection;
 };
+const fileIFCSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileIFCSopNode> = (node: FileIFCSopNode) => {
+	function ifcPreset(fileName: string) {
+		return new BasePreset().addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/ifc/${fileName}.ifc`);
+	}
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		small: ifcPreset('small'),
+		rac_advanced_sample_project: ifcPreset('rac_advanced_sample_project'),
+	});
+
+	return collection;
+};
 
 const fileJSONSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileJSONSopNode> = (node: FileJSONSopNode) => {
 	const collection = new NodePresetsCollection();
@@ -327,6 +340,10 @@ export const fileFBXSopPresetRegister: PresetRegister<typeof FileFBXSopNode, Fil
 export const fileGLTFSopPresetRegister: PresetRegister<typeof FileGLTFSopNode, FileGLTFSopNode> = {
 	nodeClass: FileGLTFSopNode,
 	setupFunc: fileGLTFSopNodePresetsCollectionFactory,
+};
+export const fileIFCSopPresetRegister: PresetRegister<typeof FileIFCSopNode, FileIFCSopNode> = {
+	nodeClass: FileIFCSopNode,
+	setupFunc: fileIFCSopNodePresetsCollectionFactory,
 };
 export const fileJSONSopPresetRegister: PresetRegister<typeof FileJSONSopNode, FileJSONSopNode> = {
 	nodeClass: FileJSONSopNode,

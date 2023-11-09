@@ -1,8 +1,3 @@
-// for dynamic imports, use
-// https://wanago.io/2018/08/20/webpack-4-course-part-eight-dynamic-imports-with-prefetch-and-preload/
-// with webpackExclude to not bundle files like _Base.ts or what is under utils/
-// with webpackChunkName and [request] to ensure meaningful name
-// more on https://webpack.js.org/api/module-methods/
 import {CATEGORY_SOP} from './Category';
 
 import {ActorSopNode} from '../../../nodes/sop/Actor';
@@ -182,9 +177,9 @@ import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
 import {HemisphereLightSopNode} from '../../../nodes/sop/HemisphereLight';
 import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
-import {IFCFilterCategoriesSopNode} from '../../../nodes/sop/IFCFilterCategories';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceBuilderSopNode} from '../../../nodes/sop/InstanceBuilder';
+import {InstancedMeshToMeshSopNode} from '../../../nodes/sop/InstancedMeshToMesh';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
@@ -511,9 +506,9 @@ export interface GeoNodeChildrenMap {
 	hierarchy: HierarchySopNode;
 	hemisphereLight: HemisphereLightSopNode;
 	icosahedron: IcosahedronSopNode;
-	IFCFilterCategories: IFCFilterCategoriesSopNode;
 	instance: InstanceSopNode;
 	instanceBuilder: InstanceBuilderSopNode;
+	instancedMeshToMesh: InstancedMeshToMeshSopNode;
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
@@ -731,6 +726,7 @@ import {HexagonsSopOperation} from '../../../operations/sop/Hexagons';
 import {HierarchySopOperation} from '../../../operations/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../operations/sop/Instance';
+import {InstancedMeshToMeshSopOperation} from '../../../operations/sop/InstancedMeshToMesh';
 import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate';
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
 import {LatticeSopOperation} from '../../../operations/sop/Lattice';
@@ -854,6 +850,7 @@ export class SopRegister {
 		poly.registerOperation(HierarchySopOperation);
 		poly.registerOperation(IcosahedronSopOperation);
 		poly.registerOperation(InstanceSopOperation);
+		poly.registerOperation(InstancedMeshToMeshSopOperation);
 		poly.registerOperation(InstanceUpdateSopOperation);
 		poly.registerOperation(JitterSopOperation);
 		poly.registerOperation(LatticeSopOperation);
@@ -1085,9 +1082,9 @@ export class SopRegister {
 		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(IFCFilterCategoriesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstanceBuilderSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(InstancedMeshToMeshSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);

@@ -1,97 +1,74 @@
-import {Object3D} from 'three';
-import {IFCLoader} from 'web-ifc-three/IFCLoader';
-import {IFCSPACE} from 'web-ifc';
-import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
-import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
+import {Object3D, FileLoader} from 'three';
+import {BaseLoaderLoadOptions} from '../_Base';
 import {BaseObject3DLoaderHandler} from './_BaseLoaderHandler';
-import {ThreejsCoreObject} from '../../geometry/modules/three/ThreejsCoreObject';
-import {IFCAttribute} from '../../geometry/ifc/IFCUtils';
-import {Poly} from '../../../engine/Poly';
-import {sanitizeUrl} from '../../UrlHelper';
-import {LIBRARY_INSTALL_HINT} from '../common';
+import {
+	createFragmentIfcLoader,
+	getCategoryNames,
+	setObjectAttributeAllCategoryNames,
+	ifcFragmentsGroupToGroup,
+} from '../../geometry/ifc/IFCUtils';
+import {CoreLoaderGeometry} from '../Geometry';
+import {WEBIFC} from '../../geometry/ifc/IFCCommon';
+import {isNumber} from '../../Type';
+import {stringMatchMask} from '../../String';
 
 interface IFCLoaderLoadOptions extends BaseLoaderLoadOptions {
 	coordinateToOrigin: boolean;
+	includedCategories: string;
 }
 
-export class IFCLoaderHandler extends BaseObject3DLoaderHandler<IFCModel> {
-	//
-	private static _ifcLoader: IFCLoader | undefined;
-	override reset() {
-		super.reset();
-		// this._ifcLoader?.dispose();
-		// this._ifcLoader = undefined;
-	}
-	override async load(options: IFCLoaderLoadOptions): Promise<Object3D[] | undefined> {
-		const loader = IFCLoaderHandler.loader();
-		const node = options.node;
-		const root = Poly.libs.root();
-		const webIFCPath = Poly.libs.webIFCPath();
-		if (root || webIFCPath) {
-			const filesRoot = sanitizeUrl(`${root || ''}${webIFCPath || ''}/`);
-			const workerFileName = 'IFCWorker.js';
+export class IFCLoaderHandler extends BaseObject3DLoaderHandler<Object3D> {
+	override async load(options: IFCLoaderLoadOptions): Promise<any> {
+		const url = await this._urlToLoad();
 
-			const timestamp = Date.now();
-			const files = ['web-ifc.wasm', workerFileName, `${workerFileName}.map`];
-			await CoreBaseLoader._loadMultipleBlobGlobal({
-				files: files.map((file) => {
-					return {
-						fullUrl: `${filesRoot}${file}?t=${timestamp}`,
-					};
-				}),
-				node,
-				error: `failed to load IFC libraries. Make sure to install them to load .ifc files (${LIBRARY_INSTALL_HINT})`,
-			});
+		CoreLoaderGeometry.incrementInProgressLoadsCount();
+		await CoreLoaderGeometry.waitForMaxConcurrentLoadsQueueFreed();
 
-			// const workerFilePath =
-			// sanitizeUrl([filesRoot, workerFileName].join('/')) + `?v=${Poly.version().replace(/\./g, '-')}`;
-			// it seems that the wasm path needs to be set before the worker
-			await (loader.ifcManager.state.api as any).SetWasmPath(filesRoot, true);
-			// worker
-			// do not use worker for now, as setting it up seems inconsistent depending if
-			// it is called from the web editor or the local one.
-			// await loader.ifcManager.useWebWorkers(true, workerFilePath);
-			// set the wasm again, which seems necessary when using the local app
-			// (as the path appears to be modified internally when setting the worker)
-			// await (loader.ifcManager.state.api as any).SetWasmPath(filesRoot, true);
+		const fetched = await fetch(url);
+		const buffer = await fetched.arrayBuffer();
+		const byteArray = new Uint8Array(buffer);
+
+		const fragmentIfcLoader = createFragmentIfcLoader();
+
+		// get categories
+		const categoryNames = await getCategoryNames(fragmentIfcLoader, byteArray);
+		//
+
+		// set included categories
+		const includedCategories = options.includedCategories;
+		const excludedCategoryIds: number[] = [];
+		for (const categoryName of categoryNames) {
+			const id = (WEBIFC as any)[categoryName];
+			if (isNumber(id)) {
+				if (!stringMatchMask(categoryName, includedCategories)) {
+					excludedCategoryIds.push(id);
+				}
+			}
+		}
+		for (const categoryId of excludedCategoryIds) {
+			fragmentIfcLoader.settings.excludedCategories.add(categoryId);
 		}
 
-		await loader.ifcManager.parser.setupOptionalCategories({
-			[IFCSPACE]: false,
-		});
+		fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = options.coordinateToOrigin;
+		(fragmentIfcLoader.settings.webIfc as any).OPTIMIZE_PROFILES = true;
 
-		await loader.ifcManager.applyWebIfcConfig({
-			COORDINATE_TO_ORIGIN: options.coordinateToOrigin,
-			USE_FAST_BOOLS: false,
-		});
+		// load
+		const model = await fragmentIfcLoader.load(byteArray, '');
 
-		return super.load(options);
+		CoreLoaderGeometry.decrementInProgressLoadsCount(url, model);
+
+		// We need to parent the model to a group,
+		// otherwise the sop/FileIFC node does not seem to update when changed.
+		// It may be because the model is re-used?
+		const group = ifcFragmentsGroupToGroup(model);
+		// const group = new Group();
+		// group.add(model);
+		setObjectAttributeAllCategoryNames(group, categoryNames);
+
+		return [group];
 	}
 
-	protected _getLoader(): Promise<IFCLoader> {
-		return new Promise((resolve) => {
-			const loader = IFCLoaderHandler.loader();
-			resolve(loader);
-		});
-	}
-	static loader(): IFCLoader {
-		return (this._ifcLoader = this._ifcLoader || new IFCLoader(this.loadingManager));
-	}
-	static ifcManager() {
-		return this.loader().ifcManager;
-	}
-
-	protected override _onLoadSuccess(ifcModel: IFCModel): Object3D[] | Promise<Object3D[]> {
-		return new Promise(async (resolve) => {
-			const ifcManager = ifcModel.ifcManager;
-			if (!ifcManager) {
-				console.warn('no ifcManager found');
-				return resolve([]);
-			}
-
-			ThreejsCoreObject.addAttribute(ifcModel, IFCAttribute.MODEL_ID, ifcModel.modelID);
-
-			return resolve([ifcModel]);
-		});
+	protected _getLoader(): Promise<any> {
+		return new FileLoader(this.loadingManager) as any;
 	}
 }

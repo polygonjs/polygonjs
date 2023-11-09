@@ -489,7 +489,6 @@ import {testenginenodessopHemisphereLight} from './engine/nodes/sop/HemisphereLi
 import {testenginenodessopHexagons} from './engine/nodes/sop/Hexagons';
 import {testenginenodessopHierarchy} from './engine/nodes/sop/Hierarchy';
 import {testenginenodessopIcosahedron} from './engine/nodes/sop/Icosahedron';
-import {testenginenodessopIFCFilterCategories} from './engine/nodes/sop/IFCFilterCategories';
 import {testenginenodessopInstance} from './engine/nodes/sop/Instance';
 import {testenginenodessopInstanceBuilder} from './engine/nodes/sop/InstanceBuilder';
 import {testenginenodessopInstancesCount} from './engine/nodes/sop/InstancesCount';
@@ -1085,7 +1084,6 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopHexagons,
 		testenginenodessopHierarchy,
 		testenginenodessopIcosahedron,
-		testenginenodessopIFCFilterCategories,
 		testenginenodessopInstance,
 		testenginenodessopInstanceBuilder,
 		testenginenodessopInstancesCount,

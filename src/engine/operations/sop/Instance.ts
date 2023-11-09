@@ -1,18 +1,17 @@
+import {Material,Mesh,BufferGeometry} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
-import {BufferGeometry} from 'three';
 import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {applyCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
-import {Mesh} from 'three';
-import {Material} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { SopType } from '../../poly/registers/nodes/types/Sop';
 
 interface InstanceSopParams extends DefaultOperationParams {
 	attributesToCopy: string;
@@ -27,8 +26,8 @@ export class InstanceSopOperation extends BaseSopOperation {
 		material: new TypedNodePathParamValue(''),
 	};
 	static override readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
-	static override type(): Readonly<'instance'> {
-		return 'instance';
+	static override type(): Readonly<SopType.INSTANCE> {
+		return SopType.INSTANCE;
 	}
 
 	private _globalsHandler: GlobalsGeometryHandler | undefined;

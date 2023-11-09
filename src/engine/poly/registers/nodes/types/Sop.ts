@@ -121,6 +121,7 @@ export enum SopType {
 	//
 	INSTANCE = 'instance',
 	INSTANCE_BUILDER = 'instanceBuilder',
+	INSTANCED_MESH_TO_MESH = 'instancedMeshToMesh',
 	INSTANCE_UPDATE = 'instanceUpdate',
 	JITTER = 'jitter',
 	LATTICE = 'lattice',

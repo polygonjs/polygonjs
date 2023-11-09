@@ -5,19 +5,21 @@ import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
 import {BaseFileSopOperation, BaseFileSopParams} from './utils/File/_BaseFileOperation';
 import {sanitizeUrl} from '../../../core/UrlHelper';
 import {Object3D} from 'three';
-// import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
+
 type IFCModel = Object3D;
 interface FileIFCSopParams extends DefaultOperationParams {
 	url: string;
 	matrixAutoUpdate: boolean;
 	coordinateToOrigin: boolean;
+	includedCategories: string;
 }
 
 export class FileIFCSopOperation extends BaseFileSopOperation<IFCModel> {
 	static override readonly DEFAULT_PARAMS: FileIFCSopParams = {
-		url: sanitizeUrl(`${ASSETS_ROOT}/models/ifc/rac_advanced_sample_project.ifc`),
+		url: sanitizeUrl(`${ASSETS_ROOT}/models/ifc/small.ifc`),
 		matrixAutoUpdate: false,
 		coordinateToOrigin: true,
+		includedCategories: '*',
 	};
 	static override type(): Readonly<SopTypeFile.FILE_IFC> {
 		return SopTypeFile.FILE_IFC;
@@ -30,7 +32,8 @@ export class FileIFCSopOperation extends BaseFileSopOperation<IFCModel> {
 		if (this._node) {
 			return await loader.load({
 				node: this._node,
-				...params,
+				coordinateToOrigin: params.coordinateToOrigin,
+				includedCategories: params.includedCategories,
 			});
 		}
 	}
