@@ -38,7 +38,7 @@ import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
 import {SceneWebXRController} from './utils/WebXREventsController';
 import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
-import {CoreParamSerializer} from '../params/utils/CoreParamSerializer';
+import {CoreParamSerializer, BaseParamSerializer} from '../params/utils/CoreParamSerializer';
 import type {ParamType} from '../poly/ParamType';
 
 interface PolySceneCreateOptions {
@@ -373,7 +373,7 @@ export class PolyScene {
 		return this._disposed;
 	}
 
-	private _paramSerializerClass: typeof CoreParamSerializer<ParamType> | undefined;
+	private _paramSerializerClass?: BaseParamSerializer;
 	paramSerializerClass() {
 		return this._paramSerializerClass;
 	}

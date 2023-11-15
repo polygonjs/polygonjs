@@ -10,10 +10,17 @@ import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
 import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {QuadVertex} from './QuadVertex';
 import {QuadGeometry} from './QuadGeometry';
+import {quadGraphFromQuadObject} from './graph/QuadGraphUtils';
+import {QuadPrimitive} from './QuadPrimitive';
+import {QuadNode} from './graph/QuadNode';
+import {pushOnArrayAtEntry} from '../../../MapUtils';
 const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
+const _quadNodesByPointIndex: Map<number, QuadNode[]> = new Map();
+const _n = new Vector3();
+const _tmp = new Vector3();
 
 export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.QUAD];
@@ -107,7 +114,42 @@ export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 		return target.fromArray(array, this._index * 3);
 	}
 	static override computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
-		console.warn('QuadPoint.computeNormals not implemented');
+		if (!object.geometry) {
+			return;
+		}
+		const graph = quadGraphFromQuadObject(object as any as QuadObject);
+		const pointsCount = this.entitiesCount(object);
+		const primitivesCount = QuadPrimitive.entitiesCount(object);
+		_quadNodesByPointIndex.clear();
+		for (let i = 0; i < primitivesCount; i++) {
+			const quadNode = graph.quadNode(i);
+			if (!quadNode) {
+				continue;
+			}
+			const indices = quadNode.indices;
+			for (const index of indices) {
+				pushOnArrayAtEntry(_quadNodesByPointIndex, index, quadNode);
+			}
+		}
+		const normals: number[] = new Array(pointsCount * 3);
+		for (let i = 0; i < pointsCount; i++) {
+			const quadNodes = _quadNodesByPointIndex.get(i);
+			if (!quadNodes) {
+				continue;
+			}
+			_n.set(0, 0, 0);
+			for (const quadNode of quadNodes) {
+				QuadPrimitive.normal(object, quadNode.id, _tmp);
+				_n.add(_tmp);
+			}
+			_n.divideScalar(quadNodes.length);
+			_n.toArray(normals, i * 3);
+		}
+
+		// set attribute
+		const geometry = (object as any as QuadObject).geometry;
+		const position = new BufferAttribute(new Float32Array(normals), 3);
+		geometry.setAttribute(Attribute.NORMAL, position);
 	}
 
 	//

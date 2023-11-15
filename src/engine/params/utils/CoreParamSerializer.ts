@@ -72,3 +72,5 @@ export class CoreParamSerializer<T extends ParamType> {
 		return this.param.options.editable();
 	}
 }
+
+export type BaseParamSerializer = typeof CoreParamSerializer<ParamType>;

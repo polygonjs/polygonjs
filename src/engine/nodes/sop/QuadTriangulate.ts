@@ -11,6 +11,7 @@ import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {SOPQUADTesselationParamConfig} from '../../../core/geometry/modules/quad/utils/TesselationParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class QuadTriangulateSopParamsConfig extends SOPQUADTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new QuadTriangulateSopParamsConfig();
 
@@ -22,6 +23,7 @@ export class QuadTriangulateSopNode extends QuadSopNode<QuadTriangulateSopParams
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
