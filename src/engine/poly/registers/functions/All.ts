@@ -14,6 +14,7 @@ import { addObjectToClickCheck } from "../../../functions/addObjectToClickCheck"
 import { addObjectToContextmenuCheck } from "../../../functions/addObjectToContextmenuCheck";
 import { addObjectToHoveredCheck } from "../../../functions/addObjectToHoveredCheck";
 import { addObjectToLongPressCheck } from "../../../functions/addObjectToLongPressCheck";
+import { addObjectToMouseClickCheck } from "../../../functions/addObjectToMouseClickCheck";
 import { addObjectToPointerdownCheck } from "../../../functions/addObjectToPointerdownCheck";
 import { addObjectToPointerupCheck } from "../../../functions/addObjectToPointerupCheck";
 import { addObjectToSwipeCheck } from "../../../functions/addObjectToSwipeCheck";
@@ -527,6 +528,7 @@ export interface NamedFunctionMap {
 	addObjectToContextmenuCheck: addObjectToContextmenuCheck;
 	addObjectToHoveredCheck: addObjectToHoveredCheck;
 	addObjectToLongPressCheck: addObjectToLongPressCheck;
+	addObjectToMouseClickCheck: addObjectToMouseClickCheck;
 	addObjectToPointerdownCheck: addObjectToPointerdownCheck;
 	addObjectToPointerupCheck: addObjectToPointerupCheck;
 	addObjectToSwipeCheck: addObjectToSwipeCheck;
@@ -1043,6 +1045,7 @@ export class AllNamedFunctionRegister {
 			addObjectToContextmenuCheck,
 			addObjectToHoveredCheck,
 			addObjectToLongPressCheck,
+			addObjectToMouseClickCheck,
 			addObjectToPointerdownCheck,
 			addObjectToPointerupCheck,
 			addObjectToSwipeCheck,

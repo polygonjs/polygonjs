@@ -3,6 +3,7 @@ import {ObjectNamedFunction2} from './_Base';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import type {ObjectToContextmenuOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
 import type {ObjectToClickOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import type {ObjectToMouseClickOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsMouseClickController';
 import type {ObjectToHoverOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
 import type {ObjectToPointerdownOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import type {ObjectToPointerupOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
@@ -14,6 +15,19 @@ export class addObjectToClickCheck extends ObjectNamedFunction2<[ActorEvaluator,
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToClickOptions) {
 		const controller = this.scene.actorsManager.rayObjectIntersectionClick;
+		controller.addPropertiesForObject(object3D, options);
+
+		evaluator.onDispose(() => {
+			controller.removePropertiesForObject(object3D, options);
+		});
+	}
+}
+export class addObjectToMouseClickCheck extends ObjectNamedFunction2<[ActorEvaluator, ObjectToMouseClickOptions]> {
+	static override type() {
+		return 'addObjectToMouseClickCheck';
+	}
+	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToMouseClickOptions) {
+		const controller = this.scene.actorsManager.rayObjectIntersectionMouseClick;
 		controller.addPropertiesForObject(object3D, options);
 
 		evaluator.onDispose(() => {

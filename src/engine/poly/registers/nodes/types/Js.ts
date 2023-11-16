@@ -43,6 +43,7 @@ export enum JsType {
 	ON_OBJECT_HOVER_GPU = 'onObjectHoverGPU',
 	ON_OBJECT_LONG_PRESS = 'onObjectLongPress',
 	ON_OBJECT_LONG_PRESS_GPU = 'onObjectLongPressGPU',
+	ON_OBJECT_MOUSE_CLICK = 'onObjectMouseClick',
 	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',
 	ON_OBJECT_POINTERDOWN_GPU = 'onObjectPointerdownGPU',
 	ON_OBJECT_POINTERUP = 'onObjectPointerup',

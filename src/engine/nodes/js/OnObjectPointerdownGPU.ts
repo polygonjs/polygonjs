@@ -13,8 +13,8 @@ import {
 	GPUOnObjectPointerEventJsParamsConfig,
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
-PointerEventConfigParamConfig,
-pointerEventConfig,
+	PointerEventConfigParamConfig,
+	pointerButtonConfig,
 } from './_BaseOnObjectPointerEvent';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
@@ -27,7 +27,7 @@ import {PointerEventType} from '../../../core/event/PointerEventType';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 export class OnObjectPointerdownGPUJsParamsConfig extends PointerEventConfigParamConfig(
-	(GPUOnObjectPointerEventJsParamsConfig)
+	GPUOnObjectPointerEventJsParamsConfig
 ) {}
 const ParamsConfig = new OnObjectPointerdownGPUJsParamsConfig();
 
@@ -96,7 +96,7 @@ export class OnObjectPointerdownGPUJsNode extends ExtendableOnObjectPointerEvent
 			pointerdown: {
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
-			config: pointerEventConfig(this, linesController),
+			config: pointerButtonConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

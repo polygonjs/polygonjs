@@ -13,7 +13,7 @@ import {
 	ExtendableOnObjectPointerEventJsNode,
 	PointerEventConfigParamConfig,
 	CPUOnObjectPointerEventJsParamsConfig,
-	pointerEventConfig,
+	pointerButtonConfig,
 } from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
@@ -87,7 +87,7 @@ export class OnObjectPointerdownJsNode extends ExtendableOnObjectPointerEventJsN
 			pointerdown: {
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
-			config: pointerEventConfig(this, linesController),
+			config: pointerButtonConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

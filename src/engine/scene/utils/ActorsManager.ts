@@ -16,6 +16,7 @@ import {RayObjectIntersectionsHoverController} from './actors/rayObjectIntersect
 import {RayObjectIntersectionsPointerdownController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import {RayObjectIntersectionsPointerupController} from './actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import {RayObjectIntersectionsClickController} from './actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import {RayObjectIntersectionsMouseClickController} from './actors/rayObjectIntersection/RayObjectIntersectionsMouseClickController';
 import {RayObjectIntersectionsContextmenuController} from './actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
 import {RayObjectIntersectionsLongPressController} from './actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
 import {RayObjectIntersectionsSwipeController} from './actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
@@ -107,6 +108,7 @@ export class ActorsManager {
 			this._manualTriggerController || new ActorManualTriggersController(this));
 	}
 	public readonly rayObjectIntersectionClick = new RayObjectIntersectionsClickController(this);
+	public readonly rayObjectIntersectionMouseClick = new RayObjectIntersectionsMouseClickController(this);
 	public readonly rayObjectIntersectionContextmenu = new RayObjectIntersectionsContextmenuController(this);
 	public readonly rayObjectIntersectionHover = new RayObjectIntersectionsHoverController(this);
 	public readonly rayObjectIntersectionLongPress = new RayObjectIntersectionsLongPressController(this);

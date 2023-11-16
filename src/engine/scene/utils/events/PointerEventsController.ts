@@ -1,15 +1,12 @@
 import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
-// import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
-// import {ActorPointerEventsController} from '../actors/ActorsPointerEventsController';
+import {MouseEventType} from '../../../../core/event/MouseEventType';
 import {ACCEPTED_POINTER_EVENT_TYPES, PointerEventType} from '../../../../core/event/PointerEventType';
 import {TouchEventType} from '../../../../core/event/TouchEventType';
 import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
-// import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
-// import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {isTouchDevice} from '../../../../core/UserAgent';
 export interface RaycasterUpdateOptions {
@@ -71,7 +68,7 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 		// this._raycaster = viewer.raycastersController.raycaster0();
 		// }
 
-		const eventType = event.type as PointerEventType | TouchEventType;
+		const eventType = event.type as PointerEventType | TouchEventType | MouseEventType;
 		if (eventType == PointerEventType.pointermove) {
 			// pointermove is not processed here,
 			// since callbacks such as onObjectHover
@@ -101,6 +98,10 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 		if (eventContext.event) {
 			const actorsManager = this.dispatcher.scene.actorsManager;
 			switch (eventType) {
+				case MouseEventType.mousedown: {
+					actorsManager.rayObjectIntersectionMouseClick.onMousedown(eventContext.event);
+					return;
+				}
 				case PointerEventType.pointerdown: {
 					actorsManager.rayObjectIntersectionClick.onPointerdown(eventContext.event);
 					actorsManager.rayObjectIntersectionLongPress.onPointerdown(eventContext.event);

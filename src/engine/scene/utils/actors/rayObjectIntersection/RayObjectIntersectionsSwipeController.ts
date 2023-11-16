@@ -7,12 +7,12 @@ import {
 	GPUOptions,
 	CPUOptions,
 	PriorityOptions,
-	filterObjectsWithMatchEventConfig,
+	filterObjectsWithMatchButtonConfig,
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
-	EventConfig,
-	eventConfigFromEvent,
-	propertyMatchesEventConfig,
+	ButtonConfig,
+	buttonConfigFromEvent,
+	propertyMatchesButtonConfig,
 } from './Common';
 import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
 import {MouseButton} from '../../../../../core/MouseButton';
@@ -36,7 +36,7 @@ export interface ObjectToSwipeOptionsAsString {
 }
 
 const _tmp = new Vector2();
-const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 function degAngle(radians: number) {
 	if (radians > Math.PI) {
 		radians -= Math.PI * 2;
@@ -93,7 +93,7 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 		if (this._objects.length == 0) {
 			return;
 		}
-		filterObjectsWithMatchEventConfig(
+		filterObjectsWithMatchButtonConfig(
 			event,
 			this._objects,
 			this._propertiesListByObject,
@@ -148,7 +148,7 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 
 		//
 		this._setIntersectedState(objects, this._intersectedStateOnPointerupByObject);
-		eventConfigFromEvent(event, _eventConfig);
+		buttonConfigFromEvent(event, _buttonConfig);
 		const objectsIntersectedOnPointerdown = this._objectsIntersectedOnPointerdown;
 		for (const object of objectsIntersectedOnPointerdown) {
 			const propertiesList = this._propertiesListByObject.get(object);
@@ -159,7 +159,7 @@ export class RayObjectIntersectionsSwipeController extends BaseRayObjectIntersec
 						if (
 							distance > properties.swipe.minDistance &&
 							optionsContainsAngle(properties.swipe, degrees) &&
-							propertyMatchesEventConfig(properties.config, _eventConfig)
+							propertyMatchesButtonConfig(properties.config, _buttonConfig)
 						) {
 							properties.swipe.callback();
 						}

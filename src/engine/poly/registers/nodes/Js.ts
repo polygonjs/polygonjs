@@ -173,6 +173,7 @@ import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
 import {OnObjectHoverGPUJsNode} from '../../../nodes/js/OnObjectHoverGPU';
 import {OnObjectLongPressJsNode} from '../../../nodes/js/OnObjectLongPress';
 import {OnObjectLongPressGPUJsNode} from '../../../nodes/js/OnObjectLongPressGPU';
+import {OnObjectMouseClickJsNode} from '../../../nodes/js/OnObjectMouseClick';
 import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
 import {OnObjectPointerdownGPUJsNode} from '../../../nodes/js/OnObjectPointerdownGPU';
 import {OnObjectPointerupJsNode} from '../../../nodes/js/OnObjectPointerup';
@@ -545,6 +546,7 @@ export interface JsNodeChildrenMap {
 	onObjectHoverGPU: OnObjectHoverGPUJsNode;
 	onObjectLongPress: OnObjectLongPressJsNode;
 	onObjectLongPressGPU: OnObjectLongPressGPUJsNode;
+	onObjectMouseClick: OnObjectMouseClickJsNode;
 	onObjectPointerdown: OnObjectPointerdownJsNode;
 	onObjectPointerdownGPU: OnObjectPointerdownGPUJsNode;
 	onObjectPointerup: OnObjectPointerupJsNode;
@@ -994,6 +996,7 @@ export class JsRegister {
 		poly.registerNode(OnObjectHoverGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectLongPressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectLongPressGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectMouseClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

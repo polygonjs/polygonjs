@@ -8,10 +8,10 @@ import {
 	PriorityOptions,
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
-	filterObjectsWithMatchEventConfig,
-	EventConfig,
-	eventConfigFromEvent,
-	propertyMatchesEventConfig,
+	filterObjectsWithMatchButtonConfig,
+	ButtonConfig,
+	buttonConfigFromEvent,
+	propertyMatchesButtonConfig,
 } from './Common';
 import {MouseButton} from '../../../../../core/MouseButton';
 
@@ -30,7 +30,7 @@ export interface ObjectToPointerdownOptionsAsString {
 	config: ButtonAndModifierOptionsAsString;
 }
 
-const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIntersectionsController {
 	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerdownOptions[]> = new Map();
@@ -38,7 +38,7 @@ export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIn
 	private _objectsMatchingEventConfig: Object3D[] = [];
 
 	onPointerdown(event: Readonly<PointerEvent | MouseEvent | TouchEvent>) {
-		filterObjectsWithMatchEventConfig(
+		filterObjectsWithMatchButtonConfig(
 			event,
 			this._objects,
 			this._propertiesListByObject,
@@ -49,7 +49,7 @@ export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIn
 		}
 
 		this._setIntersectedState(this._objectsMatchingEventConfig, this._intersectedStateByObject);
-		eventConfigFromEvent(event, _eventConfig);
+		buttonConfigFromEvent(event, _buttonConfig);
 
 		const objects = this._objects;
 
@@ -59,7 +59,7 @@ export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIn
 				const isIntersecting = this._intersectedStateByObject.get(object);
 				if (isIntersecting == true) {
 					for (const properties of propertiesList) {
-						if (propertyMatchesEventConfig(properties.config, _eventConfig)) {
+						if (propertyMatchesButtonConfig(properties.config, _buttonConfig)) {
 							properties.pointerdown.callback();
 						}
 					}

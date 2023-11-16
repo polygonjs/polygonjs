@@ -14,7 +14,7 @@ import {
 	OnObjectPointerEventGPUJsNodeInputName,
 	OnObjectPointerEventGPUJsNodeOutputName,
 	PointerEventConfigParamConfig,
-	pointerEventConfig,
+	pointerButtonConfig,
 } from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -114,7 +114,7 @@ export class OnObjectClickGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 				maxDuration,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
-			config: pointerEventConfig(this, linesController),
+			config: pointerButtonConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);

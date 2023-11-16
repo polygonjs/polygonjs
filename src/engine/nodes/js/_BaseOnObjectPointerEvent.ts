@@ -11,26 +11,40 @@ import {JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoin
 import {Constructor} from '../../../types/GlobalTypes';
 import {
 	ButtonAndModifierOptionsAsString,
-	DEFAULT_MODIFIER_OPTION,
-	POINTER_EVENT_MODIFIER_MENU_OPTIONS,
+	ButtonsAndModifierOptionsAsString,
+	DEFAULT_STATUS_OPTION,
+	STATUS_MENU_OPTIONS,
 } from '../../scene/utils/actors/rayObjectIntersection/Common';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 const INPUT_LESS_PARAM_NAMES = ['element'];
 
+export function MouseEventConfigParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		buttonLeft = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, {...STATUS_MENU_OPTIONS, separatorBefore: true});
+		buttonMiddle = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		buttonRight = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		ctrl = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		shift = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		alt = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+	};
+}
+
 export function PointerEventConfigParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		buttonLeft = ParamConfig.BOOLEAN(1, {separatorBefore: true});
 		buttonMiddle = ParamConfig.BOOLEAN(1);
 		buttonRight = ParamConfig.BOOLEAN(1);
-		ctrl = ParamConfig.INTEGER(DEFAULT_MODIFIER_OPTION, POINTER_EVENT_MODIFIER_MENU_OPTIONS);
-		shift = ParamConfig.INTEGER(DEFAULT_MODIFIER_OPTION, POINTER_EVENT_MODIFIER_MENU_OPTIONS);
-		alt = ParamConfig.INTEGER(DEFAULT_MODIFIER_OPTION, POINTER_EVENT_MODIFIER_MENU_OPTIONS);
+		ctrl = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		shift = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		alt = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
 	};
 }
-export class BaseConfigParamsConfig extends PointerEventConfigParamConfig(NodeParamsConfig) {}
-const baseConfigParamsConfig = new BaseConfigParamsConfig();
+export class BaseMouseConfigParamsConfig extends MouseEventConfigParamConfig(NodeParamsConfig) {}
+const baseMouseConfigParamsConfig = new BaseMouseConfigParamsConfig();
+export class BasePointerConfigParamsConfig extends PointerEventConfigParamConfig(NodeParamsConfig) {}
+const basePointerConfigParamsConfig = new BasePointerConfigParamsConfig();
 
 export class BaseOnObjectPointerEventBaseJsParamsConfig extends NodeParamsConfig {
 	/** @param blockObjectsBehind */
@@ -81,13 +95,39 @@ export abstract class BaseOnObjectPointerGPUEventJsNode extends ExtendableOnObje
 	override readonly paramsConfig = GPUParamsConfig;
 }
 
-export abstract class BaseConfigJsNode extends BaseUserInputJsNode<BaseConfigParamsConfig> {
-	override readonly paramsConfig = baseConfigParamsConfig;
+export abstract class BaseMouseConfigJsNode extends BaseUserInputJsNode<BaseMouseConfigParamsConfig> {
+	override readonly paramsConfig = baseMouseConfigParamsConfig;
 }
-export function pointerEventConfig(
-	node: BaseConfigJsNode,
+export abstract class BasePointerConfigJsNode extends BaseUserInputJsNode<BasePointerConfigParamsConfig> {
+	override readonly paramsConfig = basePointerConfigParamsConfig;
+}
+export function pointerButtonConfig(
+	node: BasePointerConfigJsNode,
 	linesController: JsLinesCollectionController
 ): ButtonAndModifierOptionsAsString {
+	const left = node.variableForInputParam(linesController, node.p.buttonLeft);
+	const middle = node.variableForInputParam(linesController, node.p.buttonMiddle);
+	const right = node.variableForInputParam(linesController, node.p.buttonRight);
+	const ctrl = node.variableForInputParam(linesController, node.p.ctrl);
+	const shift = node.variableForInputParam(linesController, node.p.shift);
+	const alt = node.variableForInputParam(linesController, node.p.alt);
+	return {
+		button: {
+			left,
+			middle,
+			right,
+		},
+		modifier: {
+			ctrl,
+			shift,
+			alt,
+		},
+	};
+}
+export function mouseButtonsConfig(
+	node: BaseMouseConfigJsNode,
+	linesController: JsLinesCollectionController
+): ButtonsAndModifierOptionsAsString {
 	const left = node.variableForInputParam(linesController, node.p.buttonLeft);
 	const middle = node.variableForInputParam(linesController, node.p.buttonMiddle);
 	const right = node.variableForInputParam(linesController, node.p.buttonRight);

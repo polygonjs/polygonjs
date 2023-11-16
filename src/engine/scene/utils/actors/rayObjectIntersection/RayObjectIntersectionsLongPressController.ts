@@ -8,10 +8,10 @@ import {
 	PriorityOptions,
 	ButtonAndModifierOptions,
 	ButtonAndModifierOptionsAsString,
-	filterObjectsWithMatchEventConfig,
-	EventConfig,
-	eventConfigFromEvent,
-	propertyMatchesEventConfig,
+	filterObjectsWithMatchButtonConfig,
+	ButtonConfig,
+	buttonConfigFromEvent,
+	propertyMatchesButtonConfig,
 } from './Common';
 import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {ParamConfig} from '../../../../nodes/utils/params/ParamsConfig';
@@ -34,7 +34,7 @@ export interface ObjectToLongPressOptionsAsString {
 	longPress: ConvertToStrings<LongPressOptions>;
 	config: ButtonAndModifierOptionsAsString;
 }
-const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 export const DEFAULT_LONG_PRESS_DURATION = 500;
 
 function hasPropertiesWithCursorMoveLessThan(options: ObjectToLongPressOptions[], distance: number) {
@@ -79,7 +79,7 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 		if (this._objects.length == 0) {
 			return;
 		}
-		filterObjectsWithMatchEventConfig(
+		filterObjectsWithMatchButtonConfig(
 			event,
 			this._objects,
 			this._propertiesListByObject,
@@ -116,7 +116,7 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 			}
 		};
 		_groupIntersectedObjectsByDuration();
-		eventConfigFromEvent(event, _eventConfig);
+		buttonConfigFromEvent(event, _buttonConfig);
 
 		this._objectsByLongPressDuration.forEach((objects, duration) => {
 			const wrappedTriggeredMethod = () => {
@@ -132,7 +132,7 @@ export class RayObjectIntersectionsLongPressController extends BaseRayObjectInte
 							for (const properties of propertiesList) {
 								if (
 									movedCursorDistance < properties.longPress.maxCursorMoveDistance &&
-									propertyMatchesEventConfig(properties.config, _eventConfig)
+									propertyMatchesButtonConfig(properties.config, _buttonConfig)
 								) {
 									properties.longPress.callback();
 								}

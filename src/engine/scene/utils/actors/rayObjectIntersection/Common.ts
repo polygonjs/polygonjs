@@ -1,7 +1,7 @@
 import type {Ref} from '@vue/reactivity';
 import {Intersection, Material, Object3D} from 'three';
 import {ConvertToStrings} from '../../../../../types/GlobalTypes';
-import {MouseButton} from '../../../../../core/MouseButton';
+import {MouseButton, MouseButtons} from '../../../../../core/MouseButton';
 import {TypeAssert} from '../../../../poly/Assert';
 
 export interface PriorityOptions {
@@ -94,23 +94,19 @@ export function CPUOptionsMax(optionsList: ObjectOptions[], target: CPUOptions):
 	return target;
 }
 
-export enum PointerEventModifierOption {
+export enum Status {
 	REQUIRED = 0, //'required',
 	OPTIONAL = 1, //'optional',
 	FORBIDDEN = 2, //'forbidden',
 }
-export const POINTER_EVENT_MODIFIER_OPTIONS: PointerEventModifierOption[] = [
-	PointerEventModifierOption.REQUIRED,
-	PointerEventModifierOption.OPTIONAL,
-	PointerEventModifierOption.FORBIDDEN,
-];
-export const POINTER_EVENT_MODIFIER_OPTION_LABEL: string[] = ['required', 'optional', 'forbidden'];
-export const DEFAULT_MODIFIER_OPTION = POINTER_EVENT_MODIFIER_OPTIONS.indexOf(PointerEventModifierOption.OPTIONAL);
-export const POINTER_EVENT_MODIFIER_MENU_OPTIONS = {
+export const STATUS_OPTIONS: Status[] = [Status.REQUIRED, Status.OPTIONAL, Status.FORBIDDEN];
+export const STATUS_OPTION_LABEL: string[] = ['required', 'optional', 'forbidden'];
+export const DEFAULT_STATUS_OPTION = STATUS_OPTIONS.indexOf(Status.OPTIONAL);
+export const STATUS_MENU_OPTIONS = {
 	menu: {
-		entries: POINTER_EVENT_MODIFIER_OPTIONS.map((value) => ({
+		entries: STATUS_OPTIONS.map((value) => ({
 			value,
-			name: POINTER_EVENT_MODIFIER_OPTION_LABEL[value],
+			name: STATUS_OPTION_LABEL[value],
 		})),
 	},
 };
@@ -119,10 +115,15 @@ export interface ButtonOptions {
 	middle: boolean;
 	right: boolean;
 }
+export interface ButtonsOptions {
+	left: Status;
+	middle: Status;
+	right: Status;
+}
 export interface ModifierOptions {
-	ctrl: PointerEventModifierOption;
-	shift: PointerEventModifierOption;
-	alt: PointerEventModifierOption;
+	ctrl: Status;
+	shift: Status;
+	alt: Status;
 }
 // export interface ModifierIndexOptions {
 // 	ctrl: number;
@@ -140,6 +141,10 @@ export interface ButtonAndModifierOptions {
 	button: ButtonOptions;
 	modifier: ModifierOptions;
 }
+export interface ButtonsAndModifierOptions {
+	button: ButtonsOptions;
+	modifier: ModifierOptions;
+}
 // export interface ButtonAndModifierIndexOptions {
 // 	button: ButtonOptions;
 // 	modifier: ModifierIndexOptions;
@@ -148,32 +153,45 @@ export interface ButtonAndModifierOptionsAsString {
 	button: ConvertToStrings<ButtonOptions>;
 	modifier: ConvertToStrings<ModifierOptions>;
 }
+export interface ButtonsAndModifierOptionsAsString {
+	button: ConvertToStrings<ButtonsOptions>;
+	modifier: ConvertToStrings<ModifierOptions>;
+}
 
-interface PropertyWithConfig {
+interface PropertyWithButtonConfig {
 	config: ButtonAndModifierOptions;
 }
-export interface EventConfig {
+interface PropertyWithButtonsConfig {
+	config: ButtonsAndModifierOptions;
+}
+export interface ButtonConfig {
 	button: MouseButton;
 	ctrl: boolean;
 	shift: boolean;
 	alt: boolean;
 }
-function modifierMatch(modifierProperty: PointerEventModifierOption, eventModifier: boolean): boolean {
+export interface ButtonsConfig {
+	buttons: MouseButtons;
+	ctrl: boolean;
+	shift: boolean;
+	alt: boolean;
+}
+function statusMatch(modifierProperty: Status, value: boolean): boolean {
 	switch (modifierProperty) {
-		case PointerEventModifierOption.REQUIRED: {
-			return eventModifier == true;
+		case Status.REQUIRED: {
+			return value == true;
 		}
-		case PointerEventModifierOption.OPTIONAL: {
+		case Status.OPTIONAL: {
 			return true;
 		}
-		case PointerEventModifierOption.FORBIDDEN: {
-			return eventModifier == false;
+		case Status.FORBIDDEN: {
+			return value == false;
 		}
 	}
 	TypeAssert.unreachable(modifierProperty);
 }
-export function propertyMatchesEventConfig(propertyConfig: ButtonAndModifierOptions, eventConfig: EventConfig) {
-	switch (eventConfig.button) {
+export function propertyMatchesButtonConfig(propertyConfig: ButtonAndModifierOptions, buttonConfig: ButtonConfig) {
+	switch (buttonConfig.button) {
 		case MouseButton.LEFT: {
 			if (propertyConfig.button.left == false) {
 				return false;
@@ -194,39 +212,156 @@ export function propertyMatchesEventConfig(propertyConfig: ButtonAndModifierOpti
 		}
 	}
 	return (
-		modifierMatch(propertyConfig.modifier.ctrl, eventConfig.ctrl) &&
-		modifierMatch(propertyConfig.modifier.shift, eventConfig.shift) &&
-		modifierMatch(propertyConfig.modifier.alt, eventConfig.alt)
+		statusMatch(propertyConfig.modifier.ctrl, buttonConfig.ctrl) &&
+		statusMatch(propertyConfig.modifier.shift, buttonConfig.shift) &&
+		statusMatch(propertyConfig.modifier.alt, buttonConfig.alt)
 	);
 }
-function propertiesMatchesEventConfig(propertiesList: PropertyWithConfig[], eventConfig: EventConfig): boolean {
+export function propertyMatchesButtonsConfig(propertyConfig: ButtonsAndModifierOptions, buttonsConfig: ButtonsConfig) {
+	switch (buttonsConfig.buttons) {
+		case MouseButtons.LEFT: {
+			if (
+				propertyConfig.button.left == Status.FORBIDDEN ||
+				propertyConfig.button.middle == Status.REQUIRED ||
+				propertyConfig.button.right == Status.REQUIRED
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.MIDDLE: {
+			if (
+				propertyConfig.button.left == Status.REQUIRED ||
+				propertyConfig.button.middle == Status.FORBIDDEN ||
+				propertyConfig.button.right == Status.REQUIRED
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.RIGHT: {
+			if (
+				propertyConfig.button.left == Status.REQUIRED ||
+				propertyConfig.button.middle == Status.REQUIRED ||
+				propertyConfig.button.right == Status.FORBIDDEN
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.LEFT_RIGHT: {
+			if (
+				propertyConfig.button.left == Status.FORBIDDEN ||
+				propertyConfig.button.middle == Status.REQUIRED ||
+				propertyConfig.button.right == Status.FORBIDDEN
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.LEFT_MIDDLE: {
+			if (
+				propertyConfig.button.left == Status.FORBIDDEN ||
+				propertyConfig.button.middle == Status.FORBIDDEN ||
+				propertyConfig.button.right == Status.REQUIRED
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.MIDDLE_RIGHT: {
+			if (
+				propertyConfig.button.left == Status.REQUIRED ||
+				propertyConfig.button.middle == Status.FORBIDDEN ||
+				propertyConfig.button.right == Status.FORBIDDEN
+			) {
+				return false;
+			}
+			break;
+		}
+		case MouseButtons.LEFT_MIDDLE_RIGHT: {
+			if (
+				propertyConfig.button.left == Status.FORBIDDEN ||
+				propertyConfig.button.middle == Status.FORBIDDEN ||
+				propertyConfig.button.right == Status.FORBIDDEN
+			) {
+				return false;
+			}
+			break;
+		}
+	}
+	return (
+		statusMatch(propertyConfig.modifier.ctrl, buttonsConfig.ctrl) &&
+		statusMatch(propertyConfig.modifier.shift, buttonsConfig.shift) &&
+		statusMatch(propertyConfig.modifier.alt, buttonsConfig.alt)
+	);
+}
+function propertiesMatchesButtonConfig(
+	propertiesList: PropertyWithButtonConfig[],
+	buttonConfig: ButtonConfig
+): boolean {
 	for (const properties of propertiesList) {
-		if (propertyMatchesEventConfig(properties.config, eventConfig)) {
+		if (propertyMatchesButtonConfig(properties.config, buttonConfig)) {
+			return true;
+		}
+	}
+	return false;
+}
+function propertiesMatchesButtonsConfig(
+	propertiesList: PropertyWithButtonsConfig[],
+	buttonConfig: ButtonsConfig
+): boolean {
+	for (const properties of propertiesList) {
+		if (propertyMatchesButtonsConfig(properties.config, buttonConfig)) {
 			return true;
 		}
 	}
 	return false;
 }
 
-export function eventConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: EventConfig) {
+export function buttonConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: ButtonConfig) {
 	target.button = (event as PointerEvent).button || MouseButton.LEFT;
 	target.ctrl = event.ctrlKey;
 	target.shift = event.shiftKey;
 	target.alt = event.altKey;
 }
-const _eventConfig: EventConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
-export function filterObjectsWithMatchEventConfig(
+export function buttonsConfigFromEvent(event: Readonly<PointerEvent | MouseEvent | TouchEvent>, target: ButtonsConfig) {
+	target.buttons = (event as MouseEvent).buttons || MouseButtons.LEFT;
+	target.ctrl = event.ctrlKey;
+	target.shift = event.shiftKey;
+	target.alt = event.altKey;
+}
+const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
+const _buttonsConfig: ButtonsConfig = {buttons: MouseButtons.LEFT, ctrl: false, shift: false, alt: false};
+export function filterObjectsWithMatchButtonConfig(
 	event: Readonly<PointerEvent | MouseEvent | TouchEvent>,
 	objects: Object3D[],
-	propertiesListByObject: Map<Object3D, PropertyWithConfig[]>,
+	propertiesListByObject: Map<Object3D, PropertyWithButtonConfig[]>,
 	target: Object3D[]
 ) {
 	target.length = 0;
-	eventConfigFromEvent(event, _eventConfig);
+	buttonConfigFromEvent(event, _buttonConfig);
 	for (const object of objects) {
 		const propertiesList = propertiesListByObject.get(object);
 		if (propertiesList) {
-			if (propertiesMatchesEventConfig(propertiesList, _eventConfig)) {
+			if (propertiesMatchesButtonConfig(propertiesList, _buttonConfig)) {
+				target.push(object);
+			}
+		}
+	}
+}
+export function filterObjectsWithMatchButtonsConfig(
+	event: Readonly<PointerEvent | MouseEvent | TouchEvent>,
+	objects: Object3D[],
+	propertiesListByObject: Map<Object3D, PropertyWithButtonsConfig[]>,
+	target: Object3D[]
+) {
+	target.length = 0;
+	buttonsConfigFromEvent(event, _buttonsConfig);
+	for (const object of objects) {
+		const propertiesList = propertiesListByObject.get(object);
+		if (propertiesList) {
+			if (propertiesMatchesButtonsConfig(propertiesList, _buttonsConfig)) {
 				target.push(object);
 			}
 		}

@@ -1,6 +1,8 @@
 /**
  * sends a trigger when an object is clicked
  *
+ * This is similar to js/onObjectClick, except that it support multiple mouse buttons at the same time.
+ *
  *
  */
 
@@ -11,11 +13,11 @@ import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {
 	ExtendableOnObjectPointerEventJsNode,
 	CPUOnObjectPointerEventJsParamsConfig,
-	PointerEventConfigParamConfig,
-	pointerButtonConfig,
+	MouseEventConfigParamConfig,
+	mouseButtonsConfig,
 } from './_BaseOnObjectPointerEvent';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {PointerEventType} from '../../../core/event/PointerEventType';
+import {MouseEventType} from '../../../core/event/MouseEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
@@ -27,34 +29,34 @@ import {
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectClickJsParamsConfig extends PointerEventConfigParamConfig(
+export class OnObjectMouseClickJsParamsConfig extends MouseEventConfigParamConfig(
 	ClickParamConfig(CPUOnObjectPointerEventJsParamsConfig)
 ) {}
-const ParamsConfig = new OnObjectClickJsParamsConfig();
+const ParamsConfig = new OnObjectMouseClickJsParamsConfig();
 
-export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectClickJsParamsConfig> {
+export class OnObjectMouseClickJsNode extends ExtendableOnObjectPointerEventJsNode<OnObjectMouseClickJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return JsType.ON_OBJECT_CLICK;
+		return JsType.ON_OBJECT_MOUSE_CLICK;
 	}
 	override isTriggering() {
 		return true;
 	}
 
 	override eventData(): EvaluatorEventData[] | undefined {
-		// we need both pointerdown and pointerup events,
+		// we need both mousedown and mouseup events,
 		// to ensure that the raycaster gets its cursor updated
 		// on each event
 		return [
 			{
-				type: PointerEventType.pointerdown,
+				type: MouseEventType.mousedown,
 				emitter: this.eventEmitter(),
-				jsType: JsType.ON_POINTERDOWN,
+				jsType: JsType.ON_OBJECT_MOUSE_CLICK,
 			},
 			{
-				type: PointerEventType.pointerup,
+				type: MouseEventType.mouseup,
 				emitter: this.eventEmitter(),
-				jsType: JsType.ON_OBJECT_POINTERUP,
+				jsType: JsType.ON_OBJECT_MOUSE_CLICK,
 			},
 		];
 	}
@@ -91,7 +93,7 @@ export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<On
 		const maxDuration = this.variableForInputParam(linesController, this.p.maxDuration);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToClickCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToMouseClickCheck', this, linesController);
 		const options: ObjectToClickOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
@@ -108,7 +110,7 @@ export class OnObjectClickJsNode extends ExtendableOnObjectPointerEventJsNode<On
 				maxDuration,
 				callback: `this.${nodeMethodName(this)}.bind(this)`,
 			},
-			config: pointerButtonConfig(this, linesController),
+			config: mouseButtonsConfig(this, linesController),
 		};
 		const jsonOptions = JSON.stringify(options).replace(/"/g, '');
 		const bodyLine = func.asString(object3D, `this`, jsonOptions);
