@@ -16,14 +16,14 @@ const STATE = {
 	// TOUCH_DOLLY_ROTATE: 6,
 };
 interface MouseButtons {
-	LEFT: MOUSE;
-	MIDDLE: MOUSE;
-	RIGHT: MOUSE;
+	LEFT: MOUSE | null;
+	MIDDLE: MOUSE | null;
+	RIGHT: MOUSE | null;
 }
 
 interface Touches {
-	ONE: TOUCH;
-	TWO: TOUCH;
+	ONE: TOUCH | null;
+	TWO: TOUCH | null;
 }
 const EPS = 0.000001;
 export class PanZoomControls extends EventDispatcher {

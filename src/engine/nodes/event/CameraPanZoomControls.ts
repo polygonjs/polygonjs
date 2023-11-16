@@ -3,43 +3,43 @@
  *
  *
  */
-// import {Number3} from '../../../types/GlobalTypes';
 import {Camera, MOUSE, TOUCH} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-// import {BaseNodeType} from '../_Base';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-
 import {PanZoomControls} from '../../../modules/core/controls/PanZoomControls';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
-// const _targetArray: Number3 = [0, 0, 0];
 
 export enum MouseControl {
 	PAN = 'pan',
 	DOLLY = 'dolly',
+	NO_ACTION = 'no action',
 }
-export const MOUSE_CONTROLS: MouseControl[] = [MouseControl.DOLLY, MouseControl.PAN];
+export const MOUSE_CONTROLS: MouseControl[] = [MouseControl.DOLLY, MouseControl.PAN, MouseControl.NO_ACTION];
 enum TouchControl {
 	PAN = 'pan',
 	DOLLY_PAN = 'dolly + pan',
+	NO_ACTION = 'no action',
 }
-const TOUCH_CONTROLS: TouchControl[] = [TouchControl.PAN, TouchControl.DOLLY_PAN];
+const TOUCH_CONTROLS: TouchControl[] = [TouchControl.PAN, TouchControl.DOLLY_PAN, TouchControl.NO_ACTION];
 
 type ThreeMouseControl = 0 | 1 | 2;
 type ThreeTouchControl = 0 | 1 | 2 | 3;
 
-const THREE_MOUSE_BY_MOUSE_CONTROL: Record<MouseControl, ThreeMouseControl> = {
+const THREE_MOUSE_BY_MOUSE_CONTROL: Record<MouseControl, ThreeMouseControl | null> = {
 	[MouseControl.DOLLY]: MOUSE.DOLLY,
 	[MouseControl.PAN]: MOUSE.PAN,
+	[MouseControl.NO_ACTION]: null,
 };
-const THREE_TOUCH_BY_TOUCH_CONTROL: Record<TouchControl, ThreeTouchControl> = {
+const THREE_TOUCH_BY_TOUCH_CONTROL: Record<TouchControl, ThreeTouchControl | null> = {
 	[TouchControl.PAN]: TOUCH.PAN,
 	[TouchControl.DOLLY_PAN]: TOUCH.DOLLY_PAN,
+	[TouchControl.NO_ACTION]: null,
 };
 
 class CameraPanZoomEventParamsConfig extends NodeParamsConfig {
