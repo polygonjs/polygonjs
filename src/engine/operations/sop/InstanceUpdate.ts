@@ -56,22 +56,31 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		const instanceCoreGroup = inputCoreGroups[0];
 		const updatingCoreGroup = inputCoreGroups[1];
 		const instanceObject = instanceCoreGroup.threejsObjects()[0] as Mesh;
-		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
+		const instanceGeometry = instanceObject.geometry as InstancedBufferGeometry;
 		const updatingMesh = updatingCoreGroup.threejsObjectsWithGeo()[0] as Mesh;
+		const updatingGeometry = updatingMesh.geometry;
 		const attribNames = instanceCoreGroup.pointAttribNamesMatchingMask(params.geoAttributes);
 		for (const attribName of attribNames) {
-			const instanceAttrib = instanceBufferGeo.getAttribute(attribName) as BufferAttribute;
-			const updatingAttribArray = (updatingMesh.geometry.getAttribute(attribName) as BufferAttribute)
-				.array as number[];
-			(instanceAttrib.array as number[]) = updatingAttribArray.slice(0, updatingAttribArray.length - 1);
+			const updatingAttrib = updatingGeometry.getAttribute(attribName) as BufferAttribute;
+			instanceGeometry.setAttribute(attribName, updatingAttrib);
+			const instanceAttrib = instanceGeometry.getAttribute(attribName) as BufferAttribute;
+			// const updatingAttribArray = updatingAttrib.array as number[];
+			// (instanceAttrib.array as number[]) = updatingAttribArray.slice(0, updatingAttribArray.length - 1);
+			// instanceAttrib.count = updatingAttrib.count;
 			instanceAttrib.needsUpdate = true;
 		}
 		// index
-		instanceBufferGeo.setIndex(updatingMesh.geometry.index);
-		const index = instanceBufferGeo.getIndex();
-		if (index) {
-			index.needsUpdate = true;
+		if (updatingGeometry.index) {
+			instanceGeometry.setIndex(updatingGeometry.index);
+			const index = instanceGeometry.getIndex();
+			if (index) {
+				index.needsUpdate = true;
+			}
+		} else {
+			instanceGeometry.setIndex(null);
 		}
+		// groups
+		instanceGeometry.groups = updatingGeometry.groups;
 	}
 	private _updatePoints(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		const instanceCoreGroup = inputCoreGroups[0];
