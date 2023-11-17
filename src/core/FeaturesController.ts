@@ -1,6 +1,11 @@
 export class CoreFeaturesController {
+	static urlParams() {
+		// do not cache the url params, in case the url is changed via
+		// window.history.replaceState('', '', window.location.pathname);
+		return new URLSearchParams(window.location.search);
+	}
 	static urlParam(paramName: string) {
-		return this._urlParams.get(paramName);
+		return this.urlParams().get(paramName);
 	}
 	static noAssemblers(): boolean {
 		return this.urlParam('noassemblers') == '1';
@@ -15,5 +20,4 @@ export class CoreFeaturesController {
 		}
 		return -1;
 	}
-	protected static _urlParams = new URLSearchParams(window.location.search);
 }
