@@ -6,10 +6,10 @@ import {BufferAttribute, InstancedBufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
-import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
-const _instancePts:CorePoint<CoreObjectType>[]=[]
+const _instancePts: CorePoint<CoreObjectType>[] = [];
 
 export enum InstanceUpdateMode {
 	GEO = 'geo',
@@ -22,7 +22,6 @@ interface InstanceUpdateSopParams extends DefaultOperationParams {
 	geoAttributes: string;
 	pointAttributes: string;
 }
-
 
 export class InstanceUpdateSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: InstanceUpdateSopParams = {
@@ -45,40 +44,47 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		const mode = INSTANCE_UPDATE_MODES[params.mode];
 		switch (mode) {
 			case InstanceUpdateMode.GEO: {
-				return this._cookForUpdateGeo(inputCoreGroups, params);
+				return this._updateGeo(inputCoreGroups, params);
 			}
 			case InstanceUpdateMode.POINTS: {
-				return this._cookForUpdatePoints(inputCoreGroups, params);
+				return this._updatePoints(inputCoreGroups, params);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
-	private _cookForUpdateGeo(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
+	private _updateGeo(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		const instanceCoreGroup = inputCoreGroups[0];
+		const updatingCoreGroup = inputCoreGroups[1];
 		const instanceObject = instanceCoreGroup.threejsObjects()[0] as Mesh;
 		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
-		const updatingMesh = inputCoreGroups[1].threejsObjectsWithGeo()[0] as Mesh;
+		const updatingMesh = updatingCoreGroup.threejsObjectsWithGeo()[0] as Mesh;
 		const attribNames = instanceCoreGroup.pointAttribNamesMatchingMask(params.geoAttributes);
-		for (let attribName of attribNames) {
+		for (const attribName of attribNames) {
 			const instanceAttrib = instanceBufferGeo.getAttribute(attribName) as BufferAttribute;
 			const updatingAttribArray = (updatingMesh.geometry.getAttribute(attribName) as BufferAttribute)
 				.array as number[];
 			(instanceAttrib.array as number[]) = updatingAttribArray.slice(0, updatingAttribArray.length - 1);
 			instanceAttrib.needsUpdate = true;
 		}
+		// index
+		instanceBufferGeo.setIndex(updatingMesh.geometry.index);
+		const index = instanceBufferGeo.getIndex();
+		if (index) {
+			index.needsUpdate = true;
+		}
 	}
-	private _cookForUpdatePoints(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
+	private _updatePoints(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		const instanceCoreGroup = inputCoreGroups[0];
+		const updatingCoreGroup = inputCoreGroups[1];
 		const instanceObject = instanceCoreGroup.threejsObjects()[0] as Mesh;
 		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
-		const updatingCoreGroup = inputCoreGroups[1];
 
 		const attribNames = instanceCoreGroup
 			.pointAttribNamesMatchingMask(params.pointAttributes)
 			.map((attribName) => CoreInstancer.remapName(attribName));
 
 		let updateTransforms = false;
-		for (let attribName of attribNames) {
+		for (const attribName of attribNames) {
 			if (CoreInstancer.transformAttributeNames.includes(attribName)) {
 				updateTransforms = true;
 			}
@@ -86,7 +92,7 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		updatingCoreGroup.points(_instancePts);
 		if (updateTransforms) {
 			CoreInstancer.updateTransformInstanceAttributes(_instancePts, updatingCoreGroup, instanceBufferGeo);
-			for (let attribName of CoreInstancer.transformAttributeNames) {
+			for (const attribName of CoreInstancer.transformAttributeNames) {
 				const attrib = instanceBufferGeo.getAttribute(attribName);
 				if (attrib) {
 					attrib.needsUpdate = true;

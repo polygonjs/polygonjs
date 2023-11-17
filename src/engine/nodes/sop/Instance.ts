@@ -38,7 +38,6 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 
 	override initializeNode() {
 		super.initializeNode();
-
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState(InstanceSopOperation.INPUT_CLONED_STATE);
 	}

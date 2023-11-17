@@ -1082,11 +1082,11 @@ export class SopRegister {
 		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(InstanceSopNode, CATEGORY_SOP.INSTANCE);
 		poly.registerNode(InstanceBuilderSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(InstancedMeshToMeshSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(InstancedMeshToMeshSopNode, CATEGORY_SOP.INSTANCE);
+		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.INSTANCE);
+		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.INSTANCE);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LatticeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);

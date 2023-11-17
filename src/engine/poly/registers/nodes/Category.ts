@@ -161,6 +161,7 @@ export const CATEGORY_SOP = {
 	FLOW: 'flow',
 	HELPERS: 'helpers',
 	INPUT: 'inputs',
+	INSTANCE: 'instance',
 	LIGHTS: 'lights',
 	MAPS: 'maps',
 	MISC: 'misc',

@@ -202,13 +202,13 @@ export class CoreInstancer {
 
 		const instancesCount = _instancePts.length;
 
-		const has_uv = templateCoreGroup.hasPointAttrib(Attribute.UV);
-		if (has_uv) {
+		const hasUV = templateCoreGroup.hasPointAttrib(Attribute.UV);
+		if (hasUV) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
 			for (const instancePt of _instancePts) {
 				const index2 = i * 2;
-				const uv = has_uv ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
+				const uv = hasUV ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
 				i++;
 			}

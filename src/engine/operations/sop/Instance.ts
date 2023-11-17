@@ -25,7 +25,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		applyMaterial: true,
 		material: new TypedNodePathParamValue(''),
 	};
-	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.NEVER, InputCloneMode.NEVER];
 	static override type(): Readonly<SopType.INSTANCE> {
 		return SopType.INSTANCE;
 	}
@@ -88,13 +88,13 @@ export class InstanceSopOperation extends BaseSopOperation {
 	}
 
 	private _createInstance(
-		geometry_to_instance: BufferGeometry,
-		template_core_group: CoreGroup,
+		geometryToInstance: BufferGeometry,
+		templateCoreGroup: CoreGroup,
 		params: InstanceSopParams
 	) {
 		this._geometry = CoreInstancer.createInstanceBufferGeometry(
-			geometry_to_instance,
-			template_core_group,
+			geometryToInstance,
+			templateCoreGroup,
 			params.attributesToCopy
 		);
 	}
