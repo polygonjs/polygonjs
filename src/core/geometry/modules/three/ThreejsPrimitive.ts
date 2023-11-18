@@ -8,6 +8,7 @@ import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {ThreejsVertex} from './ThreejsVertex';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
+import {TraversedRelatedEntities} from '../../entities/utils/TraversedRelatedEntities';
 
 export interface BufferGeometryWithPrimitiveAttributes extends BufferGeometry {
 	userData: UserDataWithPrimitiveAttributes;
@@ -85,24 +86,28 @@ export abstract class ThreejsPrimitive extends CorePrimitive<CoreObjectType.THRE
 	protected stride() {
 		return 3;
 	}
-	override relatedVertices(): CoreVertex<CoreObjectType>[] {
+	override relatedVertices(
+		target: CoreVertex<CoreObjectType>[],
+		traversedRelatedEntities?: TraversedRelatedEntities
+	): void {
 		if (!this._object) {
-			return [];
+			target.length = 0;
+			return;
 		}
 		const geometry = (this._object as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
-			return [];
+			target.length = 0;
+			return;
 		}
 		// const index = geometry.index;
 		// if (!index) {
 		// 	return [];
 		// }
 		const stride = this.stride();
-		const vertices: CoreVertex<CoreObjectType>[] = [];
+		target.length = stride;
 		for (let i = 0; i < stride; i++) {
 			const vertex = new ThreejsVertex(this._object as Mesh, this._index * stride + i);
-			vertices.push(vertex);
+			target[i] = vertex;
 		}
-		return vertices;
 	}
 }

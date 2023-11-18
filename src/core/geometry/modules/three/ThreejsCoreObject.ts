@@ -30,6 +30,7 @@ import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {primitiveClassFactoryNonAbstract} from './ThreeModule';
 import {ThreejsVertex} from './ThreejsVertex';
 import {ThreejsPoint} from './ThreejsPoint';
+import {TraversedRelatedEntities} from '../../entities/utils/TraversedRelatedEntities';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -261,17 +262,20 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
+	override relatedPrimitives(
+		target: CorePrimitive<CoreObjectType>[],
+		traversedRelatedEntities?: TraversedRelatedEntities
+	): void {
 		const _primitiveClassFactory = primitiveClassFactoryNonAbstract(this._object);
 		if (!_primitiveClassFactory) {
-			return [];
+			target.length = 0;
+			return;
 		}
 		const primitivesCount = _primitiveClassFactory?.entitiesCount(this._object);
-		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		target.length = primitivesCount;
 		for (let i = 0; i < primitivesCount; i++) {
 			const primitive = new _primitiveClassFactory(this._object as any, i) as CorePrimitive<CoreObjectType>;
-			primitives.push(primitive);
+			target[i] = primitive;
 		}
-		return primitives;
 	}
 }

@@ -120,31 +120,33 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
+	override relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
+		target.length = 0;
 		if (!this._object) {
-			return [];
+			return;
 		}
 		const index = Math.floor(this._index / primitiveVerticesCountFactory(this._object));
 		const primitive = primitiveInstanceFactory(this._object, index) as CorePrimitive<T> | undefined;
 		if (!primitive) {
-			return [];
+			return;
 		}
-		return [primitive];
+		target.push(primitive);
 	}
-	override relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
+	override relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]): void {
+		target.length = 0;
 		if (!this._object) {
-			return [];
+			return;
 		}
 		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
-			return [];
+			return;
 		}
 		const index = geometry.getIndex();
 		if (!index) {
-			return [];
+			return;
 		}
 		const indexValue = index.array[this._index];
 		const point = new ThreejsPoint(this._object as any as Mesh, indexValue) as any as CorePoint<T>;
-		return [point];
+		target.push(point);
 	}
 }

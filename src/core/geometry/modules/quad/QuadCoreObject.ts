@@ -76,13 +76,12 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
+	override relatedPrimitives(target: CorePrimitive<CoreObjectType>[]): void {
 		const primitivesCount = QuadPrimitive.entitiesCount(this._object);
-		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		target.length = primitivesCount;
 		for (let i = 0; i < primitivesCount; i++) {
 			const primitive = new QuadPrimitive(this._object as any, i) as CorePrimitive<CoreObjectType>;
-			primitives.push(primitive);
+			target[i]=(primitive);
 		}
-		return primitives;
 	}
 }

@@ -5,10 +5,11 @@ import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
 import {CoreType} from '../Type';
-import {arraySum, arrayCompact, arrayCopy, arrayPushItems} from '../ArrayUtils';
+import {arraySum, arrayCompact, arrayPushItems} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectClassFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
+import {BaseCoreObject} from './entities/object/BaseCoreObject';
 import {
 	coreObjectAttributeTypesByName,
 	coreObjectsAttribNames,
@@ -57,6 +58,8 @@ import {TypeAssert} from '../../engine/poly/Assert';
 // THREEJS
 import {ThreejsCoreObject} from './modules/three/ThreejsCoreObject';
 import {uniqRelatedEntities} from './entities/utils/Common';
+import {CoreVertex} from './entities/vertex/CoreVertex';
+import {CorePrimitive} from './entities/primitive/CorePrimitive';
 
 type AttributeDictionary = PolyDictionary<AttribValue>;
 
@@ -66,6 +69,10 @@ const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
 const _indices: number[] = [];
 const _points: CorePoint<CoreObjectType>[] = [];
+const _relatedPoints: CorePoint<CoreObjectType>[] = [];
+const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
+const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
+const _relatedObjects: BaseCoreObject<CoreObjectType>[] = [];
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -513,31 +520,65 @@ export class CoreGroup extends CoreEntity {
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects() {
-		return this.allCoreObjects();
+	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
+		const objects = this.allCoreObjects();
+		target.length = objects.length;
+		let i = 0;
+		for (const object of objects) {
+			target[i] = object;
+			i++;
+		}
 	}
-	relatedPrimitives() {
-		return uniqRelatedEntities(this.relatedObjects(), (object) => object.relatedPrimitives());
+	relatedPrimitives(target: CorePrimitive<CoreObjectType>[]): void {
+		this.relatedObjects(_relatedObjects);
+		uniqRelatedEntities(
+			_relatedObjects,
+			(object) => {
+				object.relatedPrimitives(_relatedPrimitives);
+				return _relatedPrimitives;
+			},
+			target
+		);
 	}
-	relatedVertices() {
-		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedVertices());
+	relatedVertices(target: CoreVertex<CoreObjectType>[]) {
+		this.relatedPrimitives(_relatedPrimitives);
+		uniqRelatedEntities(
+			_relatedPrimitives,
+			(primitive) => {
+				primitive.relatedVertices(_relatedVertices);
+				return _relatedVertices;
+			},
+			target
+		);
 	}
-	relatedPoints() {
-		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
+	relatedPoints(target: CorePoint<CoreObjectType>[]) {
+		this.relatedVertices(_relatedVertices);
+		return uniqRelatedEntities(
+			_relatedVertices,
+			(vertex) => {
+				vertex.relatedPoints(_relatedPoints);
+				return _relatedPoints;
+			},
+			target
+		);
 	}
 	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return arrayCopy(this.relatedPoints(), target);
+				this.relatedPoints(target as CorePoint<CoreObjectType>[]);
+				return;
 			}
 			case AttribClass.VERTEX: {
-				return arrayCopy(this.relatedVertices(), target);
+				this.relatedVertices(target as CoreVertex<CoreObjectType>[]);
+				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				return arrayCopy(this.relatedPrimitives(), target);
+				this.relatedPrimitives(target as CorePrimitive<CoreObjectType>[]);
+				return;
 			}
 			case AttribClass.OBJECT: {
-				return arrayCopy(this.relatedObjects(), target);
+				this.relatedObjects(target as BaseCoreObject<CoreObjectType>[]);
+				return;
 			}
 			case AttribClass.CORE_GROUP: {
 				target.length = 1;

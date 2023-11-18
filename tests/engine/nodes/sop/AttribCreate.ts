@@ -722,7 +722,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 			const coreGroup = container.coreContent()!;
 			const object = coreGroup.quadObjects()![0];
 			const coreObject = coreObjectInstanceFactory(object);
-			const primitives = coreObject.relatedPrimitives();
+			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			coreObject.relatedPrimitives(primitives);
 			return primitives.map((p) => p.attribValue('t'));
 		}
 		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 0, 0]);
@@ -757,7 +758,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 			const coreGroup = container.coreContent()!;
 			const object = coreGroup.quadObjects()![0];
 			const coreObject = coreObjectInstanceFactory(object);
-			const primitives = coreObject.relatedPrimitives();
+			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			coreObject.relatedPrimitives(primitives);
 			return primitives.map((p) => p.attribValue('t'));
 		}
 		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 1]);

@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {ATTRIBUTE_CLASSES, AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPromote';
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {BufferAttribute} from 'three';
+import {BufferAttribute, Mesh} from 'three';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../src/core/geometry/entities/object/BaseCoreObject';
 import {
@@ -166,6 +166,40 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		}
 
 		assert.equal(await getPrimitiveValue(), 12);
+	});
+
+	qUnit.test('sop/attribPromote prim to point', async (assert) => {
+		const geo1 = window.geo1;
+
+		const box1 = geo1.createNode('box');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@primnum+1');
+		attribCreate1.setInput(0, box1);
+
+		const attribPromote1 = geo1.createNode('attribPromote');
+		attribPromote1.setInput(0, attribCreate1);
+		attribPromote1.setAttribClassFrom(AttribClass.PRIMITIVE);
+		attribPromote1.setAttribClassTo(AttribClass.POINT);
+		attribPromote1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromote1.p.name.set('test');
+
+		async function getPointValue() {
+			const container = await attribPromote1.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.allObjects()[0];
+			// const corePointClass = corePointClassFactory(object);
+			const attribute = (object as Mesh).geometry.getAttribute('test');
+			const attributeValues = [...(attribute.array as number[])];
+			return attributeValues; //corePointClass.attribValue(object, 0, 'test');
+		}
+
+		assert.deepEqual(
+			await getPointValue(),
+			[1, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 7, 8, 8, 8, 9, 10, 10, 10, 11, 12, 12, 12]
+		);
 	});
 
 	qUnit.test('sop/attribPromote object to vertex', async (assert) => {

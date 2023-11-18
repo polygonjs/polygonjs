@@ -151,6 +151,7 @@ export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 		const position = new BufferAttribute(new Float32Array(normals), 3);
 		geometry.setAttribute(Attribute.NORMAL, position);
 	}
+	static override markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {}
 
 	//
 	//
@@ -184,24 +185,23 @@ export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
+	override relatedVertices<T extends CoreObjectType>(target: CoreVertex<T>[]): void {
+		target.length = 0;
 		if (!this._object) {
-			return [];
+			return;
 		}
 		const geometry = (this._object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
-			return [];
+			return;
 		}
 		const indexArray = geometry.index;
-		const vertices: CoreVertex<T>[] = [];
 		let i = 0;
 		for (const indexValue of indexArray) {
 			if (indexValue == this._index) {
 				const vertex = new QuadVertex(this._object as any as QuadObject, i) as CoreVertex<T>;
-				vertices.push(vertex);
+				target.push(vertex);
 			}
 			i++;
 		}
-		return vertices;
 	}
 }

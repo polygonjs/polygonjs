@@ -17,10 +17,12 @@ import {CoreAttributeData} from '../../AttributeData';
 import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {uniqRelatedEntities} from '../utils/Common';
-import {arrayCopy} from '../../../ArrayUtils';
 import type {CoreVertex} from '../vertex/CoreVertex';
 import type {CoreGroup} from '../../Group';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
+
+const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
+const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePoint.${functionName} needs to be overloaded`);
@@ -502,11 +504,19 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntity {
 	// RELATED ENTITIES
 	//
 	//
-	relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
-		return [];
+	relatedVertices<T extends CoreObjectType>(target: CoreVertex<T>[]): void {
+		target.length = 0;
 	}
-	relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
-		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPrimitives());
+	relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
+		this.relatedVertices(_relatedVertices);
+		return uniqRelatedEntities(
+			_relatedVertices,
+			(vertex) => {
+				vertex.relatedPrimitives(_relatedPrimitives);
+				return _relatedPrimitives;
+			},
+			target
+		);
 	}
 
 	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
@@ -517,10 +527,10 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntity {
 				return;
 			}
 			case AttribClass.VERTEX: {
-				return arrayCopy(this.relatedVertices(), target);
+				return this.relatedVertices(target as CoreVertex<T>[]);
 			}
 			case AttribClass.PRIMITIVE: {
-				return arrayCopy(this.relatedPrimitives(), target);
+				return this.relatedPrimitives(target as CorePrimitive<T>[]);
 			}
 			case AttribClass.OBJECT: {
 				if (this._object) {

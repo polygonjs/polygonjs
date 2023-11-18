@@ -1,16 +1,25 @@
 import {CoreEntity} from '../../CoreEntity';
-import {AttribValue, NumericAttribValue, Vector2Like,Vector3Like,Vector4Like,ColorLike} from '../../../../types/GlobalTypes';
+import {
+	AttribValue,
+	NumericAttribValue,
+	Vector2Like,
+	Vector3Like,
+	Vector4Like,
+	ColorLike,
+} from '../../../../types/GlobalTypes';
 import {Color, Vector2, Vector3, Vector4} from 'three';
-import { CoreObjectType, ObjectContent } from '../../ObjectContent';
-import { AttribSize } from '../../Constant';
-import {isNumber,isArray} from '../../../Type'
+import {CoreObjectType, ObjectContent} from '../../ObjectContent';
+import {AttribSize} from '../../Constant';
+import {isNumber, isArray} from '../../../Type';
 
 type GetRelatedCallback<T extends CoreEntity, E extends CoreEntity> = (entity: T) => E[];
 
 export function uniqRelatedEntities<T extends CoreEntity, E extends CoreEntity>(
 	entities: T[],
-	callback: GetRelatedCallback<T, E>
-): E[] {
+	callback: GetRelatedCallback<T, E>,
+	target: E[]
+): void {
+	target.length = 0;
 	const entityByIndex: Map<number, E> = new Map();
 	for (const entity of entities) {
 		const relatedEntities = callback(entity);
@@ -22,8 +31,9 @@ export function uniqRelatedEntities<T extends CoreEntity, E extends CoreEntity>(
 			}
 		}
 	}
-	const uniqPrimitives = Array.from(entityByIndex.values());
-	return uniqPrimitives;
+	entityByIndex.forEach((entity) => {
+		target.push(entity);
+	});
 }
 
 export function attribValueNonPrimitive(src: AttribValue) {
@@ -66,7 +76,7 @@ export interface AttributeNumericValuesOptions {
 type EntitiesCountFunction<T extends CoreObjectType> = (object: ObjectContent<T>) => number;
 export function attributeNumericValues<T extends CoreObjectType>(
 	object: ObjectContent<T>,
-	entitiesCountFunction:EntitiesCountFunction<T>,
+	entitiesCountFunction: EntitiesCountFunction<T>,
 	attribSize: AttribSize = 1,
 	defaultValue: NumericAttribValue = 0,
 	target: AttributeNumericValuesOptions

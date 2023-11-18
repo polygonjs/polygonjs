@@ -20,12 +20,15 @@ import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
 import {uniqRelatedEntities} from '../utils/Common';
 import type {CoreVertex} from '../vertex/CoreVertex';
 import type {CoreGroup} from '../../Group';
-import {arrayCopy} from '../../../ArrayUtils';
 import type {PrimitiveGraph} from './PrimitiveGraph';
+import {CorePoint} from '../point/CorePoint';
+import {TraversedRelatedEntities} from '../utils/TraversedRelatedEntities';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePrimitive.${functionName} needs to be overloaded`);
 }
+const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
+const _relatedPoints: CorePoint<CoreObjectType>[] = [];
 export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
@@ -147,70 +150,70 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		if (attribName === Attribute.PRIMITIVE_INDEX) {
 			return index;
 		}
-			let componentName = null;
-			let componentIndex = null;
-			if (attribName[attribName.length - 2] === DOT) {
-				componentName = attribName[attribName.length - 1] as ComponentName;
-				componentIndex = COMPONENT_INDICES[componentName];
-				attribName = attribName.substring(0, attribName.length - 2);
-			}
-			const remapedName = CoreAttribute.remapName(attribName);
+		let componentName = null;
+		let componentIndex = null;
+		if (attribName[attribName.length - 2] === DOT) {
+			componentName = attribName[attribName.length - 1] as ComponentName;
+			componentIndex = COMPONENT_INDICES[componentName];
+			attribName = attribName.substring(0, attribName.length - 2);
+		}
+		const remapedName = CoreAttribute.remapName(attribName);
 
-			if(remapedName==Attribute.POSITION){
-				return this.position(object as any, index, target as Vector3);
-			}
-			if(remapedName==Attribute.NORMAL){
-				return this.normal(object as any, index, target as Vector3);
-			}
+		if (remapedName == Attribute.POSITION) {
+			return this.position(object as any, index, target as Vector3);
+		}
+		if (remapedName == Attribute.NORMAL) {
+			return this.normal(object as any, index, target as Vector3);
+		}
 
-			const attrib = this.attribute(object, remapedName);
+		const attrib = this.attribute(object, remapedName);
 
-			if (attrib) {
-				const {array} = attrib;
+		if (attrib) {
+			const {array} = attrib;
 
-				const itemSize = attrib.itemSize;
-				const startIndex = index * itemSize;
+			const itemSize = attrib.itemSize;
+			const startIndex = index * itemSize;
 
-				if (componentIndex == null) {
-					switch (itemSize) {
-						case 1:
-							return array[startIndex];
-							break;
-						case 2:
-							target = target || new Vector2();
-							target.fromArray(array as number[], startIndex);
-							return target;
-							break;
-						case 3:
-							target = target || new Vector3();
-							target.fromArray(array as number[], startIndex);
-							return target;
-							break;
-						case 4:
-							target = target || new Vector4();
-							target.fromArray(array as number[], startIndex);
-							return target;
-							break;
-						default:
-							throw `size not valid (${itemSize})`;
-					}
-				} else {
-					switch (itemSize) {
-						case 1:
-							return array[startIndex];
-							break;
-						default:
-							return array[startIndex + componentIndex];
-					}
+			if (componentIndex == null) {
+				switch (itemSize) {
+					case 1:
+						return array[startIndex];
+						break;
+					case 2:
+						target = target || new Vector2();
+						target.fromArray(array as number[], startIndex);
+						return target;
+						break;
+					case 3:
+						target = target || new Vector3();
+						target.fromArray(array as number[], startIndex);
+						return target;
+						break;
+					case 4:
+						target = target || new Vector4();
+						target.fromArray(array as number[], startIndex);
+						return target;
+						break;
+					default:
+						throw `size not valid (${itemSize})`;
 				}
-				// }
 			} else {
-				const attributesDict = this.attributes(object) || {};
-				const attribNames: string[] = Object.keys(attributesDict);
-				const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
-				console.warn(message);
-				throw message;
+				switch (itemSize) {
+					case 1:
+						return array[startIndex];
+						break;
+					default:
+						return array[startIndex + componentIndex];
+				}
 			}
+			// }
+		} else {
+			const attributesDict = this.attributes(object) || {};
+			const attribNames: string[] = Object.keys(attributesDict);
+			const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
+			console.warn(message);
+			throw message;
+		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		if (!this._object) {
@@ -384,22 +387,44 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects(): BaseCoreObject<CoreObjectType>[] {
-		return this._object ? [coreObjectInstanceFactory(this._object)] : [];
+	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
+		target.length = 0;
+		if (!this._object) {
+			return;
+		}
+		target.push(coreObjectInstanceFactory(this._object));
 	}
-	relatedVertices(): CoreVertex<CoreObjectType>[] {
-		return [];
+	relatedVertices(target: CoreVertex<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
+		target.length = 0;
 	}
-	relatedPoints() {
-		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
+	relatedPoints(target: CorePoint<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
+		const relatedVertices = traversedRelatedEntities
+			? traversedRelatedEntities[AttribClass.VERTEX]
+			: _relatedVertices;
+		this.relatedVertices(relatedVertices, traversedRelatedEntities);
+		uniqRelatedEntities(
+			relatedVertices,
+			(vertex) => {
+				vertex.relatedPoints(_relatedPoints);
+				return _relatedPoints;
+			},
+			target
+		);
 	}
-	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
+	relatedEntities(
+		attribClass: AttribClass,
+		coreGroup: CoreGroup,
+		target: CoreEntity[],
+		traversedRelatedEntities?: TraversedRelatedEntities
+	): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return arrayCopy(this.relatedPoints(), target);
+				this.relatedPoints(target as CorePoint<CoreObjectType>[], traversedRelatedEntities);
+				return;
 			}
 			case AttribClass.VERTEX: {
-				return arrayCopy(this.relatedVertices(), target);
+				this.relatedVertices(target as CoreVertex<CoreObjectType>[], traversedRelatedEntities);
+				return;
 			}
 			case AttribClass.PRIMITIVE: {
 				target.length = 1;
@@ -407,7 +432,8 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 				return;
 			}
 			case AttribClass.OBJECT: {
-				return arrayCopy(this.relatedObjects(), target);
+				this.relatedObjects(target as BaseCoreObject<CoreObjectType>[]);
+				return;
 			}
 			case AttribClass.CORE_GROUP: {
 				target.length = 1;

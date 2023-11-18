@@ -19,7 +19,10 @@ import type {CorePrimitive} from '../primitive/CorePrimitive';
 import {uniqRelatedEntities} from '../utils/Common';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {CoreGroup} from '../../Group';
-import {arrayCopy} from '../../../ArrayUtils';
+import {BaseCoreObject} from '../object/BaseCoreObject';
+
+const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
+const _relatedObjects: BaseCoreObject<CoreObjectType>[] = [];
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CoreVertex.${functionName} needs to be overloaded`);
@@ -375,19 +378,28 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects() {
-		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedObjects());
+	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
+		this.relatedPrimitives(_relatedPrimitives);
+		return uniqRelatedEntities(
+			_relatedPrimitives,
+			(primitive) => {
+				primitive.relatedObjects(_relatedObjects);
+				return _relatedObjects;
+			},
+			target
+		);
 	}
-	relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
-		return [];
+	relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
+		target.length = 0;
 	}
-	relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
-		return [];
+	relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]): void {
+		target.length = 0;
 	}
 	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return arrayCopy(this.relatedPoints(), target);
+				this.relatedPoints(target as CorePoint<T>[]);
+				return;
 			}
 			case AttribClass.VERTEX: {
 				target.length = 1;
@@ -395,10 +407,12 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				return arrayCopy(this.relatedPrimitives(), target);
+				this.relatedPrimitives(target as CorePrimitive<T>[]);
+				return;
 			}
 			case AttribClass.OBJECT: {
-				return arrayCopy(this.relatedObjects(), target);
+				this.relatedObjects(target as BaseCoreObject<T>[]);
+				return;
 			}
 			case AttribClass.CORE_GROUP: {
 				target.length = 1;

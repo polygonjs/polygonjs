@@ -98,28 +98,31 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
+	override relatedPrimitives<T extends CoreObjectType>(target:CorePrimitive<T>[]): void {
+		target.length=0
 		if (!this._object) {
-			return [];
+			return 
 		}
 		const index = Math.floor(this._index / 4);
 		const primitive = new QuadPrimitive(this._object as any as QuadObject, index) as CorePrimitive<T> | undefined;
 		if (!primitive) {
-			return [];
+			return 
 		}
-		return [primitive];
+		target[0]=primitive
 	}
-	override relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
+	override relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]):void {
+		target.length=0
 		if (!this._object) {
-			return [];
+			return 
 		}
 		const geometry = (this._object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
-			return [];
+			return 
 		}
 		const indexArray = geometry.index;
 		const indexValue = indexArray[this._index];
 		const point = new QuadPoint(this._object as any as QuadObject, indexValue) as any as CorePoint<T>;
-		return [point];
+		target[0]=point
+		return 
 	}
 }

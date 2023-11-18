@@ -226,28 +226,27 @@ export class ThreejsPoint extends CorePoint<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
+	override relatedVertices<T extends CoreObjectType>(target:CoreVertex<T>[]): void {
+		target.length=0
 		if (!this._object) {
-			return [];
+			return 
 		}
 		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
-			return [];
+			return ;
 		}
 		const index = geometry.getIndex();
 		if (!index) {
-			return [];
+			return ;
 		}
-		const vertices: CoreVertex<T>[] = [];
 		const indexArray = index.array as number[];
 		let i = 0;
 		for (const indexValue of indexArray) {
 			if (indexValue == this._index) {
 				const vertex = new ThreejsVertex(this._object as any as Mesh, i) as CoreVertex<T>;
-				vertices.push(vertex);
+				target.push(vertex);
 			}
 			i++;
 		}
-		return vertices;
 	}
 }

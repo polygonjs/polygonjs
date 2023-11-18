@@ -5,14 +5,15 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
-import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
-import {arrayMin, arrayMax, ArrayToItemFunction} from '../../../core/ArrayUtils';
+import {arrayMin, arrayMax, ArrayToItemFunction, arrayCopy} from '../../../core/ArrayUtils';
 import {AttribValue} from '../../../types/GlobalTypes';
 import {isNumber, isString, isBoolean} from '../../../core/Type';
 import {Vector2, Vector3, Vector4, Color} from 'three';
+import {TraversedRelatedEntities} from '../../../core/geometry/entities/utils/TraversedRelatedEntities';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 const _v2 = new Vector2();
 const _v3 = new Vector3();
 const _v4 = new Vector4();
@@ -87,9 +88,39 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 			// promote attribute
 			const destEntities: CoreEntity[] = [];
 			const srcEntities: CoreEntity[] = [];
-			coreObjectInstanceFactory(object).relatedEntities(classTo, coreGroup, destEntities);
+			const traversedRelatedEntities: TraversedRelatedEntities = {
+				[AttribClass.CORE_GROUP]: [],
+				[AttribClass.OBJECT]: [],
+				[AttribClass.POINT]: [],
+				[AttribClass.PRIMITIVE]: [],
+				[AttribClass.VERTEX]: [],
+			};
+			coreObjectInstanceFactory(object).relatedEntities(
+				classTo,
+				coreGroup,
+				destEntities,
+				traversedRelatedEntities
+			);
+			const traversedClassFromEntities = traversedRelatedEntities[classFrom];
+			const classFromEntitiesByClassToEntitytIndex: Map<number, CoreEntity[]> = new Map();
+			if (traversedClassFromEntities) {
+				for (const classFromEntity of traversedClassFromEntities) {
+					const classToEntities: CoreEntity[] = [];
+					classFromEntity.relatedEntities(classTo, coreGroup, classToEntities);
+					for (const classToEntity of classToEntities) {
+						const index = classToEntity.index();
+						pushOnArrayAtEntry(classFromEntitiesByClassToEntitytIndex, index, classFromEntity);
+					}
+				}
+			}
+
 			for (const destEntity of destEntities) {
-				destEntity.relatedEntities(classFrom, coreGroup, srcEntities);
+				const cachedEntities = classFromEntitiesByClassToEntitytIndex.get(destEntity.index());
+				if (cachedEntities) {
+					arrayCopy(cachedEntities, srcEntities);
+				} else {
+					destEntity.relatedEntities(classFrom, coreGroup, srcEntities);
+				}
 				for (const attribName of attribNames) {
 					this._promoteAttribute(attribName, srcEntities, destEntity, mode);
 				}
@@ -99,7 +130,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 
-	private _promoteAttribute<T extends CoreObjectType>(
+	private _promoteAttribute(
 		attribName: string,
 		srcEntities: CoreEntity[],
 		destEntity: CoreEntity,

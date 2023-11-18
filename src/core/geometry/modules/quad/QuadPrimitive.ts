@@ -149,7 +149,9 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 			return target;
 		}
 
-		const positionAttribute = (quadObject as any as QuadObject).geometry.attributes[Attribute.POSITION] as BufferAttribute | undefined;
+		const positionAttribute = (quadObject as any as QuadObject).geometry.attributes[Attribute.POSITION] as
+			| BufferAttribute
+			| undefined;
 		if (!positionAttribute) {
 			return target;
 		}
@@ -158,7 +160,7 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		const i1 = primitiveIndex * stride + 1;
 		const i2 = primitiveIndex * stride + 2;
 		const i3 = primitiveIndex * stride + 3;
-		const index =  (quadObject as any as QuadObject).geometry.index;
+		const index = (quadObject as any as QuadObject).geometry.index;
 		_triangle.a.fromArray(positionArray, index[i0] * 3);
 		_triangle.b.fromArray(positionArray, index[i1] * 3);
 		_triangle.c.fromArray(positionArray, index[i2] * 3);
@@ -181,20 +183,21 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices(): CoreVertex<CoreObjectType>[] {
+	override relatedVertices(target: CoreVertex<CoreObjectType>[]): void {
 		if (!this._object) {
-			return [];
+			target.length = 0;
+			return;
 		}
 		const geometry = (this._object as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
-			return [];
+			target.length = 0;
+			return;
 		}
-		const vertices: CoreVertex<CoreObjectType>[] = [];
+		target.length = stride;
 		for (let i = 0; i < stride; i++) {
 			const vertex = new QuadVertex(this._object as QuadObject, this._index * stride + i);
-			vertices.push(vertex);
+			target[i] = vertex;
 		}
-		return vertices;
 	}
 	static override graph(object: ObjectContent<CoreObjectType>) {
 		return quadGraphFromQuadObject(object as QuadObject);
