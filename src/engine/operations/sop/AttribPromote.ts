@@ -8,7 +8,7 @@ import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactor
 import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
-import {arrayMin, arrayMax, ArrayToItemFunction, arrayCopy} from '../../../core/ArrayUtils';
+import {arrayMin, arrayMax, ArrayToItemFunction} from '../../../core/ArrayUtils';
 import {AttribValue} from '../../../types/GlobalTypes';
 import {isNumber, isString, isBoolean} from '../../../core/Type';
 import {Vector2, Vector3, Vector4, Color} from 'three';
@@ -117,12 +117,14 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 			for (const destEntity of destEntities) {
 				const cachedEntities = classFromEntitiesByClassToEntitytIndex.get(destEntity.index());
 				if (cachedEntities) {
-					arrayCopy(cachedEntities, srcEntities);
+					for (const attribName of attribNames) {
+						this._promoteAttribute(attribName, cachedEntities, destEntity, mode);
+					}
 				} else {
 					destEntity.relatedEntities(classFrom, coreGroup, srcEntities);
-				}
-				for (const attribName of attribNames) {
-					this._promoteAttribute(attribName, srcEntities, destEntity, mode);
+					for (const attribName of attribNames) {
+						this._promoteAttribute(attribName, srcEntities, destEntity, mode);
+					}
 				}
 			}
 		}
