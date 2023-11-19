@@ -6,6 +6,10 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 	return class Mixin extends Base {
 		/** @param triangles */
 		triangles = ParamConfig.BOOLEAN(true);
+		/** @param split quads */
+		splitQuads = ParamConfig.BOOLEAN(false, {
+			visibleIf: [{triangles: true}],
+		});
 		/** @param wireframe */
 		wireframe = ParamConfig.BOOLEAN(true);
 		/** @param wireframe color */
@@ -22,6 +26,14 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		outerRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
 		});
+		/** @param pointAttributes */
+		pointAttributes = ParamConfig.STRING('*', {
+			visibleIf: [{triangles: true}],
+		});
+		/** @param primitiveAttributes */
+		primitiveAttributes = ParamConfig.STRING('*', {
+			visibleIf: [{triangles: true}],
+		});
 	};
 }
 
@@ -29,6 +41,10 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 	return class Mixin extends Base {
 		/** @param wireframe */
 		QUADTriangles = ParamConfig.BOOLEAN(true);
+		/** @param split quads */
+		QUADSplitQuads = ParamConfig.BOOLEAN(false, {
+			visibleIf: [{triangles: true}],
+		});
 		/** @param wireframe */
 		QUADWireframe = ParamConfig.BOOLEAN(true);
 		/** @param wireframe color */
@@ -44,6 +60,14 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		/** @param QUADOuterRadius */
 		QUADOuterRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
+		});
+		/** @param pointAttributes */
+		QUADPointAttributes = ParamConfig.STRING('*', {
+			visibleIf: [{triangles: true}],
+		});
+		/** @param primitiveAttributes */
+		QUADPrimitiveAttributes = ParamConfig.STRING('*', {
+			visibleIf: [{triangles: true}],
 		});
 	};
 }

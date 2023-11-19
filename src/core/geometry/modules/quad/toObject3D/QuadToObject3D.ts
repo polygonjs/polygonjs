@@ -18,7 +18,9 @@ import {DEFAULT_MATERIALS} from '../../../Constant';
 import {ObjectType} from '../../../Constant';
 import {QuadPrimitive} from '../QuadPrimitive';
 import {quadInnerRadius, quadOuterRadius} from '../utils/QuadUtils';
+import {stringMatchMask} from '../../../../String';
 
+// const _v3 = new Vector3();
 const _v4 = new Vector4();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
@@ -49,31 +51,66 @@ function _createOrFindLineMaterial(color: Color) {
 	return material;
 }
 
-function quadToMesh(quadObject: QuadObject) {
+function quadToMesh(quadObject: QuadObject, options: QUADTesselationParams) {
 	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
 	const geometry = new BufferGeometry();
 	const mesh = new Mesh(geometry, DEFAULT_MATERIALS[ObjectType.MESH]);
 
-	// indices
+	// indices and positions
+	const srcPositions = quadGeometry.attributes[Attribute.POSITION].array;
 	const indices = quadGeometry.index;
 	const newIndices = new Array(quadsCount * 6);
-	for (let i = 0; i < quadsCount; i++) {
-		_v4.fromArray(indices, i * 4);
-		newIndices[i * 6 + 0] = _v4.x;
-		newIndices[i * 6 + 1] = _v4.y;
-		newIndices[i * 6 + 2] = _v4.z;
-		newIndices[i * 6 + 3] = _v4.x;
-		newIndices[i * 6 + 4] = _v4.z;
-		newIndices[i * 6 + 5] = _v4.w;
+	if (options.splitQuads) {
+		const newPositions: number[] = [];
+		for (let i = 0; i < quadsCount; i++) {
+			_v4.fromArray(indices, i * 4);
+
+			// new positions
+			_p0.fromArray(srcPositions, _v4.x * 3);
+			_p1.fromArray(srcPositions, _v4.y * 3);
+			_p2.fromArray(srcPositions, _v4.z * 3);
+			_p3.fromArray(srcPositions, _v4.w * 3);
+			newPositions.push(_p0.x, _p0.y, _p0.z);
+			newPositions.push(_p1.x, _p1.y, _p1.z);
+			newPositions.push(_p2.x, _p2.y, _p2.z);
+			newPositions.push(_p3.x, _p3.y, _p3.z);
+
+			// index
+			const i6 = i * 6;
+			const i4 = i * 4;
+			newIndices[i6 + 0] = i4 + 0;
+			newIndices[i6 + 1] = i4 + 1;
+			newIndices[i6 + 2] = i4 + 2;
+			newIndices[i6 + 3] = i4 + 0;
+			newIndices[i6 + 4] = i4 + 2;
+			newIndices[i6 + 5] = i4 + 3;
+		}
+		geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(newPositions), 3));
+	} else {
+		for (let i = 0; i < quadsCount; i++) {
+			_v4.fromArray(indices, i * 4);
+			const i6 = i * 6;
+			newIndices[i6 + 0] = _v4.x;
+			newIndices[i6 + 1] = _v4.y;
+			newIndices[i6 + 2] = _v4.z;
+			newIndices[i6 + 3] = _v4.x;
+			newIndices[i6 + 4] = _v4.z;
+			newIndices[i6 + 5] = _v4.w;
+		}
+		geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(srcPositions), 3));
 	}
 	geometry.setIndex(newIndices);
 
-	// point attributes
-	const pointAttributeNames = Object.keys(quadGeometry.attributes);
+	// point attributes (except position)
+	const pointAttributeNames = Object.keys(quadGeometry.attributes).filter(
+		(attributeName) =>
+			stringMatchMask(attributeName, options.pointAttributes) && attributeName != Attribute.POSITION
+	);
 	for (const attribName of pointAttributeNames) {
-		const values = quadGeometry.attributes[attribName].array;
-		geometry.setAttribute(attribName, new BufferAttribute(new Float32Array(values), 3));
+		const attribute = quadGeometry.attributes[attribName];
+		const values = attribute.array;
+		geometry.setAttribute(attribName, new BufferAttribute(new Float32Array(values), attribute.itemSize));
 	}
 
 	// update normals if not provided
@@ -85,7 +122,9 @@ function quadToMesh(quadObject: QuadObject) {
 	// primitive attributes
 	const primitiveAttributes = QuadPrimitive.attributesFromGeometry(quadGeometry);
 	if (primitiveAttributes) {
-		const primitiveAttributeNames = Object.keys(primitiveAttributes);
+		const primitiveAttributeNames = Object.keys(primitiveAttributes).filter((attributeName) =>
+			stringMatchMask(attributeName, options.primitiveAttributes)
+		);
 		for (const primitiveAttributeName of primitiveAttributeNames) {
 			const srcAttribute = primitiveAttributes[primitiveAttributeName];
 			const destPrimitivesCount = quadsCount * 2;
@@ -175,7 +214,9 @@ function quadToCenter(quadObject: QuadObject, options: QUADTesselationParams) {
 	// copy quad primitive attributes to new point attributes
 	const primitiveAttributes = QuadPrimitive.attributesFromGeometry(quadGeometry);
 	if (primitiveAttributes) {
-		const primitiveAttributeNames = Object.keys(primitiveAttributes);
+		const primitiveAttributeNames = Object.keys(primitiveAttributes).filter((attributeName) =>
+			stringMatchMask(attributeName, options.primitiveAttributes)
+		);
 		for (const primitiveAttributeName of primitiveAttributeNames) {
 			const srcAttribute = primitiveAttributes[primitiveAttributeName];
 			if (srcAttribute.isString == false) {
@@ -214,7 +255,7 @@ function quadToCenter(quadObject: QuadObject, options: QUADTesselationParams) {
 export function quadToObject3D(quadObject: QuadObject, options: QUADTesselationParams): Object3D[] | undefined {
 	const objects: Object3D[] = [];
 	if (options.triangles) {
-		objects.push(quadToMesh(quadObject));
+		objects.push(quadToMesh(quadObject, options));
 	}
 	if (options.wireframe) {
 		objects.push(quadToLine(quadObject, options));

@@ -27,19 +27,25 @@ import {ObjectType, registerObjectType} from '../../Constant';
 
 const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
+	splitQuads: false,
 	wireframe: true,
 	wireframeColor: new Color(0, 0, 0),
 	center: false,
 	innerRadius: false,
 	outerRadius: false,
+	pointAttributes: '*',
+	primitiveAttributes: '*',
 };
 function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.triangles = params.QUADTriangles;
+	QUAD_TESSELATION_PARAMS.splitQuads = params.QUADSplitQuads;
 	QUAD_TESSELATION_PARAMS.wireframe = params.QUADWireframe;
 	QUAD_TESSELATION_PARAMS.wireframeColor.copy(params.QUADWireframeColor);
 	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
 	QUAD_TESSELATION_PARAMS.innerRadius = params.QUADInnerRadius;
 	QUAD_TESSELATION_PARAMS.outerRadius = params.QUADOuterRadius;
+	QUAD_TESSELATION_PARAMS.pointAttributes = params.QUADPointAttributes;
+	QUAD_TESSELATION_PARAMS.primitiveAttributes = params.QUADPrimitiveAttributes;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,
