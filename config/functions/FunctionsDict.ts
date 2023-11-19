@@ -108,6 +108,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	],
 	GetIntersectionProperty: [
 		'getIntersectionPropertyDistance',
+		'getIntersectionPropertyFaceIndex',
 		'getIntersectionPropertyNormal',
 		'getIntersectionPropertyObject',
 		'getIntersectionPropertyPoint',
@@ -146,6 +147,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getPointPosition',
 		'setPointIndex',
 	],
+	GetPrimitiveAttribute: ['getPrimitiveAttribute'],
 	GetSceneObject: ['getMaterial', 'getTexture'],
 	GetSibbling: ['getSibbling'],
 	Globals: ['globalsTime', 'globalsTimeDelta', 'globalsRaycaster', 'globalsRayFromCursor', 'globalsCursor'],

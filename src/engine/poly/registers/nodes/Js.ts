@@ -105,6 +105,7 @@ import {GetPhysicsRBDPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDProper
 import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
 import {GetPointAttributeJsNode} from '../../../nodes/js/GetPointAttribute';
 import {GetPointPropertyJsNode} from '../../../nodes/js/GetPointProperty';
+import {GetPrimitiveAttributeJsNode} from '../../../nodes/js/GetPrimitiveAttribute';
 import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
 import {GetSibblingJsNode} from '../../../nodes/js/GetSibbling';
 import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
@@ -478,6 +479,7 @@ export interface JsNodeChildrenMap {
 	getPhysicsRBDProperty: GetPhysicsRBDPropertyJsNode;
 	getPointAttribute: GetPointAttributeJsNode;
 	getPointProperty: GetPointPropertyJsNode;
+	getPrimitiveAttribute: GetPrimitiveAttributeJsNode;
 	getRayProperty: GetRayPropertyJsNode;
 	getSibbling: GetSibblingJsNode;
 	getSphereProperty: GetSpherePropertyJsNode;
@@ -929,6 +931,7 @@ export class JsRegister {
 		poly.registerNode(GetRayPropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetPointAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR_POINT);
 		poly.registerNode(GetPointPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR_POINT);
+		poly.registerNode(GetPrimitiveAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetSibblingJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);

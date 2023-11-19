@@ -19,6 +19,7 @@ export enum GetIntersectionPropertyJsNodeOutputName {
 	point = 'point',
 	normal = 'normal',
 	uv = 'uv',
+	faceIndex = 'faceIndex',
 	// uv2 = 'uv2',
 }
 
@@ -42,6 +43,7 @@ export class GetIntersectionPropertyJsNode extends ParamlessTypedJsNode {
 			new JsConnectionPoint(GetIntersectionPropertyJsNodeOutputName.point, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(GetIntersectionPropertyJsNodeOutputName.normal, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(GetIntersectionPropertyJsNodeOutputName.uv, JsConnectionPointType.VECTOR2),
+			new JsConnectionPoint(GetIntersectionPropertyJsNodeOutputName.faceIndex, JsConnectionPointType.INT),
 		]);
 	}
 
@@ -50,6 +52,24 @@ export class GetIntersectionPropertyJsNode extends ParamlessTypedJsNode {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const intersection = this.variableForInput(shadersCollectionController, JsConnectionPointType.INTERSECTION);
 
+		const _i = (
+			propertyName: GetIntersectionPropertyJsNodeOutputName,
+			functionName: 'getIntersectionPropertyFaceIndex',
+			type: JsConnectionPointType
+		) => {
+			if (!usedOutputNames.includes(propertyName)) {
+				return;
+			}
+			const varName = this.jsVarName(propertyName);
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			shadersCollectionController.addBodyOrComputed(this, [
+				{
+					dataType: type,
+					varName,
+					value: func.asString(intersection),
+				},
+			]);
+		};
 		const _f = (
 			propertyName: GetIntersectionPropertyJsNodeOutputName,
 			functionName: 'getIntersectionPropertyDistance',
@@ -125,6 +145,11 @@ export class GetIntersectionPropertyJsNode extends ParamlessTypedJsNode {
 			]);
 		};
 
+		_i(
+			GetIntersectionPropertyJsNodeOutputName.faceIndex,
+			'getIntersectionPropertyFaceIndex',
+			JsConnectionPointType.INT
+		);
 		_f(
 			GetIntersectionPropertyJsNodeOutputName.distance,
 			'getIntersectionPropertyDistance',

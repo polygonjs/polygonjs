@@ -189,6 +189,7 @@ import {testenginenodesjsGetObjectChild} from './engine/nodes/js/GetObjectChild'
 import {testenginenodesjsGetObjectUserData} from './engine/nodes/js/GetObjectUserData';
 import {testenginenodesjsGetParam} from './engine/nodes/js/GetParam';
 import {testenginenodesjsGetParent} from './engine/nodes/js/GetParent';
+import {testenginenodesjsGetPrimitiveAttribute} from './engine/nodes/js/GetPrimitiveAttribute';
 import {testenginenodesjsGetSibbling} from './engine/nodes/js/GetSibbling';
 import {testenginenodesjsGetVideoProperty} from './engine/nodes/js/GetVideoProperty';
 import {testenginenodesjsHsvToRgb} from './engine/nodes/js/HsvToRgb';
@@ -785,6 +786,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsGetObjectUserData,
 		testenginenodesjsGetParam,
 		testenginenodesjsGetParent,
+		testenginenodesjsGetPrimitiveAttribute,
 		testenginenodesjsGetSibbling,
 		testenginenodesjsGetVideoProperty,
 		testenginenodesjsHsvToRgb,

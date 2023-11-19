@@ -11,6 +11,7 @@ export const FUNCTION_TEMPLATE_BY_FUNCTION_NAME: Record<string, string> = {
 	divideVectorNumber: 'Vector2 | Vector3 | Vector4',
 	getObjectAttribute: 'ParamConvertibleJsType',
 	getObjectAttributeAutoDefault: 'ParamConvertibleJsType',
+	getPrimitiveAttribute: 'ParamConvertibleJsType',
 	elementsToArrayPrimitive: 'PrimitiveArrayElement',
 	elementsToArrayVector: 'VectorArrayElement',
 	lengthVector: 'Vector2 | Vector3 | Vector4',

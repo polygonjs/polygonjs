@@ -15,6 +15,7 @@ export enum JsType {
 	GET_PARAM = 'getParam',
 	GET_POINT_ATTRIBUTE = 'getPointAttribute',
 	GET_POINT_PROPERTY = 'getPointProperty',
+	GET_PRIMITIVE_ATTRIBUTE = 'getPrimitiveAttribute',
 	GLOBALS = 'globals',
 	GLOBALS_AMBIENT_LIGHT = 'globalsAmbientLight',
 	GLOBALS_AREA_LIGHT = 'globalsAreaLight',

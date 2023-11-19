@@ -11,13 +11,17 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 			visibleIf: [{triangles: true}],
 		});
 		/** @param wireframe */
-		wireframe = ParamConfig.BOOLEAN(true);
+		wireframe = ParamConfig.BOOLEAN(true, {
+			separatorBefore: true,
+		});
 		/** @param wireframe color */
 		wireframeColor = ParamConfig.COLOR([0, 0, 0], {
 			visibleIf: {wireframe: true},
 		});
 		/** @param center */
-		center = ParamConfig.BOOLEAN(false);
+		center = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+		});
 		/** @param innerRadius */
 		innerRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
@@ -28,11 +32,12 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		});
 		/** @param pointAttributes */
 		pointAttributes = ParamConfig.STRING('*', {
+			separatorBefore: true,
 			visibleIf: [{triangles: true}],
 		});
 		/** @param primitiveAttributes */
 		primitiveAttributes = ParamConfig.STRING('*', {
-			visibleIf: [{triangles: true}],
+			visibleIf: [{triangles: true}, {center: true}],
 		});
 	};
 }
@@ -43,31 +48,36 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		QUADTriangles = ParamConfig.BOOLEAN(true);
 		/** @param split quads */
 		QUADSplitQuads = ParamConfig.BOOLEAN(false, {
-			visibleIf: [{triangles: true}],
+			visibleIf: [{QUADTriangles: true}],
 		});
 		/** @param wireframe */
-		QUADWireframe = ParamConfig.BOOLEAN(true);
+		QUADWireframe = ParamConfig.BOOLEAN(true, {
+			separatorBefore: true,
+		});
 		/** @param wireframe color */
 		QUADWireframeColor = ParamConfig.COLOR([0, 0, 0], {
 			visibleIf: {QUADWireframe: true},
 		});
 		/** @param center */
-		QUADCenter = ParamConfig.BOOLEAN(false);
+		QUADCenter = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+		});
 		/** @param QUADInnerRadius */
 		QUADInnerRadius = ParamConfig.BOOLEAN(false, {
-			visibleIf: {center: true},
+			visibleIf: {QUADCenter: true},
 		});
 		/** @param QUADOuterRadius */
 		QUADOuterRadius = ParamConfig.BOOLEAN(false, {
-			visibleIf: {center: true},
+			visibleIf: {QUADCenter: true},
 		});
 		/** @param pointAttributes */
 		QUADPointAttributes = ParamConfig.STRING('*', {
-			visibleIf: [{triangles: true}],
+			separatorBefore: true,
+			visibleIf: [{QUADTriangles: true}],
 		});
 		/** @param primitiveAttributes */
 		QUADPrimitiveAttributes = ParamConfig.STRING('*', {
-			visibleIf: [{triangles: true}],
+			visibleIf: [{QUADTriangles: true}, {QUADCenter: true}],
 		});
 	};
 }

@@ -9,6 +9,14 @@ export class getIntersectionPropertyDistance extends NamedFunction1<[Intersectio
 		return intersection?.distance || 0;
 	}
 }
+export class getIntersectionPropertyFaceIndex extends NamedFunction1<[Intersection | undefined]> {
+	static override type() {
+		return 'getIntersectionPropertyFaceIndex';
+	}
+	func(intersection: Intersection | undefined): number {
+		return intersection?.faceIndex || -1;
+	}
+}
 export class getIntersectionPropertyObject extends ObjectNamedFunction1<[Intersection | undefined]> {
 	static override type() {
 		return 'getIntersectionPropertyObject';

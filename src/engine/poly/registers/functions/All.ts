@@ -153,6 +153,7 @@ import { getIntersectionAttributeVector3Nearest } from "../../../functions/getIn
 import { getIntersectionAttributeVector4Interpolated } from "../../../functions/getIntersectionAttributeVector4Interpolated";
 import { getIntersectionAttributeVector4Nearest } from "../../../functions/getIntersectionAttributeVector4Nearest";
 import { getIntersectionPropertyDistance } from "../../../functions/getIntersectionPropertyDistance";
+import { getIntersectionPropertyFaceIndex } from "../../../functions/getIntersectionPropertyFaceIndex";
 import { getIntersectionPropertyNormal } from "../../../functions/getIntersectionPropertyNormal";
 import { getIntersectionPropertyObject } from "../../../functions/getIntersectionPropertyObject";
 import { getIntersectionPropertyPoint } from "../../../functions/getIntersectionPropertyPoint";
@@ -205,6 +206,7 @@ import { getPointInstancePosition } from "../../../functions/getPointInstancePos
 import { getPointInstanceQuaternion } from "../../../functions/getPointInstanceQuaternion";
 import { getPointInstanceScale } from "../../../functions/getPointInstanceScale";
 import { getPointPosition } from "../../../functions/getPointPosition";
+import { getPrimitiveAttribute } from "../../../functions/getPrimitiveAttribute";
 import { getRayDirection } from "../../../functions/getRayDirection";
 import { getRayOrigin } from "../../../functions/getRayOrigin";
 import { getSibbling } from "../../../functions/getSibbling";
@@ -667,6 +669,7 @@ export interface NamedFunctionMap {
 	getIntersectionAttributeVector4Interpolated: getIntersectionAttributeVector4Interpolated;
 	getIntersectionAttributeVector4Nearest: getIntersectionAttributeVector4Nearest;
 	getIntersectionPropertyDistance: getIntersectionPropertyDistance;
+	getIntersectionPropertyFaceIndex: getIntersectionPropertyFaceIndex;
 	getIntersectionPropertyNormal: getIntersectionPropertyNormal;
 	getIntersectionPropertyObject: getIntersectionPropertyObject;
 	getIntersectionPropertyPoint: getIntersectionPropertyPoint;
@@ -719,6 +722,7 @@ export interface NamedFunctionMap {
 	getPointInstanceQuaternion: getPointInstanceQuaternion;
 	getPointInstanceScale: getPointInstanceScale;
 	getPointPosition: getPointPosition;
+	getPrimitiveAttribute: getPrimitiveAttribute<ParamConvertibleJsType>;
 	getRayDirection: getRayDirection;
 	getRayOrigin: getRayOrigin;
 	getSibbling: getSibbling;
@@ -1184,6 +1188,7 @@ export class AllNamedFunctionRegister {
 			getIntersectionAttributeVector4Interpolated,
 			getIntersectionAttributeVector4Nearest,
 			getIntersectionPropertyDistance,
+			getIntersectionPropertyFaceIndex,
 			getIntersectionPropertyNormal,
 			getIntersectionPropertyObject,
 			getIntersectionPropertyPoint,
@@ -1236,6 +1241,7 @@ export class AllNamedFunctionRegister {
 			getPointInstanceQuaternion,
 			getPointInstanceScale,
 			getPointPosition,
+			getPrimitiveAttribute,
 			getRayDirection,
 			getRayOrigin,
 			getSibbling,
