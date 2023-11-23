@@ -20,6 +20,7 @@ import {
 	quadPrimitivePointIndices,
 	quadPointInset,
 } from '../../../core/geometry/modules/quad/utils/QuadUtils';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const _normal = new Vector3();
 const _tmp = new Vector3();
@@ -74,6 +75,7 @@ export class QuadExtrudeSopNode extends QuadSopNode<QuadExtrudeSopParamsConfig> 
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {

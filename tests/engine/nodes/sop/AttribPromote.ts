@@ -263,9 +263,9 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 
 		const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
 		assert.equal(array_id.length, container.coreContent()!.pointsCount(), 'array length ok');
-		assert.in_delta(array_id[0], 0.1, 0.001);
+		assert.in_delta(array_id[0], 0.1, 0.001, 'first value in delta');
 		const array_role = (geometry.getAttribute('role') as BufferAttribute).array;
-		assert.equal(array_role.length, container.coreContent()!.pointsCount());
+		assert.equal(array_role.length, container.coreContent()!.pointsCount(), 'same array length');
 		assert.in_delta(array_role[0], 0.2, 0.001);
 	});
 
@@ -400,7 +400,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 							entityClass.hasAttribute(object, 't'),
 							`has attrib  (${srcAttribClass}->${desAttribClass}, ${inputNode.type()})`
 						);
-						assert.ok(isNumber(entityInstance.attribValue('t')));
+						assert.ok(isNumber(entityInstance.attribValue('t')), 't is number');
 					} else {
 						assert.ok(
 							coreGroup.hasAttribute('t'),

@@ -7,13 +7,14 @@ import {Attribute} from '../../Attribute';
 import {attributeNumericValues, AttributeNumericValuesOptions} from '../../entities/utils/Common';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
-import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {QuadVertex} from './QuadVertex';
 import {QuadGeometry} from './QuadGeometry';
 import {quadGraphFromQuadObject} from './graph/QuadGraphUtils';
 import {QuadPrimitive} from './QuadPrimitive';
 import {QuadNode} from './graph/QuadNode';
 import {pushOnArrayAtEntry} from '../../../MapUtils';
+import {TraversedRelatedEntityData} from '../../entities/utils/TraversedRelatedEntities';
+import {CoreEntityWithObject} from '../../CoreEntity';
 const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
@@ -185,23 +186,26 @@ export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices<T extends CoreObjectType>(target: CoreVertex<T>[]): void {
-		target.length = 0;
-		if (!this._object) {
-			return;
-		}
-		const geometry = (this._object as any as QuadObject).geometry as QuadGeometry | undefined;
+	static override relatedVertexIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		pointIndex: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		const geometry = (object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
 			return;
 		}
 		const indexArray = geometry.index;
 		let i = 0;
 		for (const indexValue of indexArray) {
-			if (indexValue == this._index) {
-				const vertex = new QuadVertex(this._object as any as QuadObject, i) as CoreVertex<T>;
-				target.push(vertex);
+			if (indexValue == pointIndex) {
+				target.push(i);
 			}
 			i++;
 		}
+	}
+	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadVertex as any as typeof CoreEntityWithObject<T>;
 	}
 }

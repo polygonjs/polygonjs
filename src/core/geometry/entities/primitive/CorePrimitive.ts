@@ -8,36 +8,25 @@ import {
 } from '../../../../types/GlobalTypes';
 import {Vector4, Vector3, Vector2} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {CoreEntity} from '../../CoreEntity';
+import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
 import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
-import {BaseCoreObject} from '../object/BaseCoreObject';
 import {TypeAssert} from '../../../../engine/poly/Assert';
-import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
-import {uniqRelatedEntities} from '../utils/Common';
+import {uniqRelatedEntityIds} from '../utils/Common';
 import type {CoreVertex} from '../vertex/CoreVertex';
 import type {CoreGroup} from '../../Group';
 import type {PrimitiveGraph} from './PrimitiveGraph';
 import {CorePoint} from '../point/CorePoint';
-import {TraversedRelatedEntities} from '../utils/TraversedRelatedEntities';
+import {TraversedRelatedEntityData} from '../utils/TraversedRelatedEntities';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePrimitive.${functionName} needs to be overloaded`);
 }
-const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
-const _relatedPoints: CorePoint<CoreObjectType>[] = [];
-export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
-	protected _object?: ObjectContent<T>;
-	constructor(object?: ObjectContent<T>, index?: number) {
-		super(object, index);
-		this._object = object;
-	}
-	object() {
-		return this._object;
-	}
+const _ids: number[] = [];
+export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntityWithObject<T> {
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
 	}
@@ -387,43 +376,41 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
-		target.length = 0;
-		if (!this._object) {
-			return;
-		}
-		target.push(coreObjectInstanceFactory(this._object));
-	}
-	relatedVertices(target: CoreVertex<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
-		target.length = 0;
-	}
-	relatedPoints(target: CorePoint<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
-		const relatedVertices = traversedRelatedEntities
-			? traversedRelatedEntities[AttribClass.VERTEX]
-			: _relatedVertices;
-		this.relatedVertices(relatedVertices, traversedRelatedEntities);
-		uniqRelatedEntities(
-			relatedVertices,
-			(vertex) => {
-				vertex.relatedPoints(_relatedPoints);
-				return _relatedPoints;
+	static override relatedPointIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		pointIndex: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		const ids = traversedRelatedEntityData ? traversedRelatedEntityData[AttribClass.VERTEX].ids : _ids;
+
+		this.relatedVertexIds(object, pointIndex, ids);
+		uniqRelatedEntityIds(
+			ids,
+			(vertexId, relatedEntityIds) => {
+				this.relatedVertexClass(object).relatedPointIds(object, vertexId, relatedEntityIds);
 			},
 			target
 		);
 	}
+
+	static override relatedPointClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return this.relatedVertexClass(object).relatedPointClass(object);
+	}
+
 	relatedEntities(
 		attribClass: AttribClass,
 		coreGroup: CoreGroup,
 		target: CoreEntity[],
-		traversedRelatedEntities?: TraversedRelatedEntities
+		traversedRelatedEntityData?: TraversedRelatedEntityData
 	): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				this.relatedPoints(target as CorePoint<CoreObjectType>[], traversedRelatedEntities);
+				this.relatedPoints(target as CorePoint<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.VERTEX: {
-				this.relatedVertices(target as CoreVertex<CoreObjectType>[], traversedRelatedEntities);
+				this.relatedVertices(target as CoreVertex<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.PRIMITIVE: {
@@ -432,7 +419,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 				return;
 			}
 			case AttribClass.OBJECT: {
-				this.relatedObjects(target as BaseCoreObject<CoreObjectType>[]);
+				this.relatedObjects(target as CoreEntityWithObject<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.CORE_GROUP: {

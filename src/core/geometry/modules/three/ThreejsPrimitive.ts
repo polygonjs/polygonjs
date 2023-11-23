@@ -4,11 +4,11 @@ import {PrimitiveAttributesDict, UserDataWithPrimitiveAttributes} from '../../en
 import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {BasePrimitiveAttribute, PrimitiveNumberAttribute} from '../../entities/primitive/PrimitiveAttribute';
 import {primitivesCountFromObject} from '../../entities/primitive/CorePrimitiveUtils';
-import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {ThreejsVertex} from './ThreejsVertex';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
-import {TraversedRelatedEntities} from '../../entities/utils/TraversedRelatedEntities';
+import {CoreEntityWithObject} from '../../CoreEntity';
+import {ThreejsCoreObject} from './ThreejsCoreObject';
 
 export interface BufferGeometryWithPrimitiveAttributes extends BufferGeometry {
 	userData: UserDataWithPrimitiveAttributes;
@@ -17,7 +17,6 @@ const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
-
 export abstract class ThreejsPrimitive extends CorePrimitive<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
 	constructor(object: Object3D, index: number) {
@@ -83,31 +82,30 @@ export abstract class ThreejsPrimitive extends CorePrimitive<CoreObjectType.THRE
 	// RELATED ENTITIES
 	//
 	//
-	protected stride() {
+	protected static stride() {
 		return 3;
 	}
-	override relatedVertices(
-		target: CoreVertex<CoreObjectType>[],
-		traversedRelatedEntities?: TraversedRelatedEntities
+	static override relatedVertexIds(
+		object: ObjectContent<CoreObjectType>,
+		primitiveIndex: number,
+		target: number[]
 	): void {
-		if (!this._object) {
-			target.length = 0;
-			return;
-		}
-		const geometry = (this._object as Mesh).geometry as BufferGeometry | undefined;
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			target.length = 0;
 			return;
 		}
-		// const index = geometry.index;
-		// if (!index) {
-		// 	return [];
-		// }
 		const stride = this.stride();
 		target.length = stride;
 		for (let i = 0; i < stride; i++) {
-			const vertex = new ThreejsVertex(this._object as Mesh, this._index * stride + i);
-			target[i] = vertex;
+			target[i] = primitiveIndex * stride + i;
 		}
+	}
+
+	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return ThreejsVertex as any as typeof CoreEntityWithObject<T>;
+	}
+	static override relatedObjectClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return ThreejsCoreObject as any as typeof CoreEntityWithObject<T>;
 	}
 }

@@ -13,6 +13,7 @@ import {AttribSize} from '../../Constant';
 import {isNumber, isArray} from '../../../Type';
 
 type GetRelatedCallback<T extends CoreEntity, E extends CoreEntity> = (entity: T) => E[];
+type GetRelatedIdCallback<E extends CoreEntity> = (id: number, target: number[]) => void;
 
 export function uniqRelatedEntities<T extends CoreEntity, E extends CoreEntity>(
 	entities: T[],
@@ -33,6 +34,25 @@ export function uniqRelatedEntities<T extends CoreEntity, E extends CoreEntity>(
 	}
 	entityByIndex.forEach((entity) => {
 		target.push(entity);
+	});
+}
+const _relatedEntityIds: number[] = [];
+const _entityIndices: Set<number> = new Set();
+export function uniqRelatedEntityIds<E extends CoreEntity>(
+	entityIds: number[],
+	callback: GetRelatedIdCallback<E>,
+	target: number[]
+): void {
+	target.length = 0;
+	_entityIndices.clear();
+	for (const entityId of entityIds) {
+		callback(entityId, _relatedEntityIds);
+		for (const _relatedEntityId of _relatedEntityIds) {
+			_entityIndices.add(_relatedEntityId);
+		}
+	}
+	_entityIndices.forEach((entityId) => {
+		target.push(entityId);
 	});
 }
 

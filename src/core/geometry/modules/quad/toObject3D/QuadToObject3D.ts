@@ -114,7 +114,7 @@ function quadToMesh(quadObject: QuadObject, options: QUADTesselationParams) {
 	}
 
 	// update normals if not provided
-	const normalAttribute = quadGeometry.attributes[Attribute.NORMAL];
+	const normalAttribute = geometry.attributes[Attribute.NORMAL];
 	if (!normalAttribute) {
 		geometry.computeVertexNormals();
 	}

@@ -55,7 +55,7 @@ export class ThreejsPrimitivePoint extends ThreejsPrimitive {
 		return (this.constructor as typeof ThreejsPrimitivePoint).normal(this._object, this._index, target);
 	}
 	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {}
-	protected override stride() {
+	protected static override stride() {
 		return 1;
 	}
 }

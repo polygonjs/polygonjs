@@ -2,7 +2,7 @@ import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../..
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {AttribType, AttribSize, ObjectData, GroupString, AttribClass} from '../../Constant';
-import {CoreEntity} from '../../CoreEntity';
+import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {
 	ObjectContent,
@@ -16,7 +16,7 @@ import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace
 import {EntityGroupCollection} from '../../EntityGroupCollection';
 import {_updateObjectAttribRef} from '../../../reactivity/ObjectAttributeReactivityUpdateRef';
 import {AttributeDictionary} from '../object/BaseCoreObjectUtils';
-import {attribValueNonPrimitive, copyAttribValue, cloneAttribValue} from '../utils/Common';
+import {attribValueNonPrimitive, copyAttribValue, cloneAttribValue, uniqRelatedEntityIds} from '../utils/Common';
 import {getOrCreateObjectAttributeRef} from '../../../reactivity/ObjectAttributeReactivityCreateRef';
 import {
 	JsIConnectionPointTypeToDataTypeMap,
@@ -25,21 +25,21 @@ import {
 import {watch} from '../../../reactivity/CoreReactivity';
 import {objectData} from './BaseCoreObjectUtils';
 import {TypeAssert} from '../../../../engine/poly/Assert';
-import {uniqRelatedEntities} from '../utils/Common';
+// import {uniqRelatedEntityIds} from '../utils/Common';
 import type {CoreGroup} from '../../Group';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
 import {CoreVertex} from '../vertex/CoreVertex';
 import {CorePoint} from '../point/CorePoint';
-import {TraversedRelatedEntities} from '../utils/TraversedRelatedEntities';
+import {TraversedRelatedEntityData} from '../utils/TraversedRelatedEntities';
 
 enum PropertyName {
 	NAME = 'name',
 	POSITION = 'position',
 }
 const ATTRIBUTES = 'attributes';
-const _relatedPoints: CorePoint<CoreObjectType>[] = [];
-const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
-const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
+// const _relatedPoints: CorePoint<CoreObjectType>[] = [];
+// const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
+// const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
 // const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
 
 const ORIGIN = new Vector3(0, 0, 0);
@@ -63,21 +63,16 @@ type OnAttribChange<T extends ParamConvertibleJsType> = (
 	oldValue: JsIConnectionPointTypeToDataTypeMap[T]
 ) => void;
 
-export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntity {
-	protected _object: ObjectContent<T>;
-	constructor(object: ObjectContent<T>, index: number) {
-		super(object, index);
-		this._object = object;
-	}
+const _relatedPrimitiveIds: number[] = [];
+const _relatedVertexIds: number[] = [];
+
+export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntityWithObject<T> {
 	dispose() {}
 
 	// set_index(i: number) {
 	// 	this._index = i;
 	// }
 
-	object() {
-		return this._object;
-	}
 	geometry(): ObjectGeometryMap[T] | null {
 		return this._object?.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
 	}
@@ -599,39 +594,36 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	// RELATED ENTITIES
 	//
 	//
-	// relatedCoreGroups(): CoreGroup[] {
-	// 	return [];
-	// }
-	relatedPrimitives(
-		target: CorePrimitive<CoreObjectType>[],
-		traversedRelatedEntities?: TraversedRelatedEntities
+	static override relatedVertexIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		objectIndex: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
 	): void {
-		target.length = 0;
-	}
-	relatedVertices(target: CoreVertex<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
-		const relatedPrimitives = traversedRelatedEntities
-			? traversedRelatedEntities[AttribClass.PRIMITIVE]
-			: _relatedPrimitives;
-		this.relatedPrimitives(relatedPrimitives, traversedRelatedEntities);
-		uniqRelatedEntities(
-			relatedPrimitives,
-			(primitive) => {
-				primitive.relatedVertices(_relatedVertices);
-				return _relatedVertices;
+		const ids = traversedRelatedEntityData
+			? traversedRelatedEntityData[AttribClass.PRIMITIVE].ids
+			: _relatedPrimitiveIds;
+		this.relatedPrimitiveIds(object, objectIndex, ids, traversedRelatedEntityData);
+		uniqRelatedEntityIds(
+			ids,
+			(primitiveId, relatedEntityIds) => {
+				this.relatedPrimitiveClass(object).relatedVertexIds(object, primitiveId, relatedEntityIds);
 			},
 			target
 		);
 	}
-	relatedPoints(target: CorePoint<CoreObjectType>[], traversedRelatedEntities?: TraversedRelatedEntities): void {
-		const relatedVertices = traversedRelatedEntities
-			? traversedRelatedEntities[AttribClass.VERTEX]
-			: _relatedVertices;
-		this.relatedVertices(relatedVertices, traversedRelatedEntities);
-		return uniqRelatedEntities(
-			relatedVertices,
-			(vertex) => {
-				vertex.relatedPoints(_relatedPoints);
-				return _relatedPoints;
+	static override relatedPointIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		objectIndex: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		const ids = traversedRelatedEntityData ? traversedRelatedEntityData[AttribClass.VERTEX].ids : _relatedVertexIds;
+		this.relatedVertexIds(object, objectIndex, ids, traversedRelatedEntityData);
+		uniqRelatedEntityIds(
+			ids,
+			(vertexId, relatedEntityIds) => {
+				this.relatedVertexClass(object).relatedPointIds(object, vertexId, relatedEntityIds);
 			},
 			target
 		);
@@ -640,19 +632,19 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		attribClass: AttribClass,
 		coreGroup: CoreGroup,
 		target: CoreEntity[],
-		traversedRelatedEntities?: TraversedRelatedEntities
+		traversedRelatedEntityData?: TraversedRelatedEntityData
 	): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				this.relatedPoints(target as CorePoint<CoreObjectType>[], traversedRelatedEntities);
+				this.relatedPoints(target as CorePoint<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.VERTEX: {
-				this.relatedVertices(target as CoreVertex<CoreObjectType>[], traversedRelatedEntities);
+				this.relatedVertices(target as CoreVertex<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				this.relatedPrimitives(target as CorePrimitive<CoreObjectType>[], traversedRelatedEntities);
+				this.relatedPrimitives(target as CorePrimitive<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.OBJECT: {
@@ -667,5 +659,12 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			}
 		}
 		TypeAssert.unreachable(attribClass);
+	}
+
+	static override relatedPointClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return this.relatedVertexClass(object).relatedPointClass(object);
+	}
+	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return this.relatedPrimitiveClass(object).relatedVertexClass(object);
 	}
 }

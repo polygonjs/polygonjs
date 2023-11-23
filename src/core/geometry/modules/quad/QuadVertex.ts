@@ -8,10 +8,9 @@ import {QuadObject} from './QuadObject';
 import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/VertexAttribute';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
-import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
-import type {CorePoint} from '../../entities/point/CorePoint';
 import {QuadPoint} from './QuadPoint';
 import {QuadPrimitive} from './QuadPrimitive';
+import {CoreEntityWithObject} from '../../CoreEntity';
 
 export interface QuadGeometryWithVertexAttributes extends QuadGeometry {
 	userData: UserDataWithVertexAttributes;
@@ -98,31 +97,35 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives<T extends CoreObjectType>(target:CorePrimitive<T>[]): void {
-		target.length=0
-		if (!this._object) {
-			return 
-		}
-		const index = Math.floor(this._index / 4);
-		const primitive = new QuadPrimitive(this._object as any as QuadObject, index) as CorePrimitive<T> | undefined;
-		if (!primitive) {
-			return 
-		}
-		target[0]=primitive
+	static override relatedPrimitiveIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		vertexIndex: number,
+		target: number[]
+	): void {
+		target.length = 1;
+		const index = Math.floor(vertexIndex / 4);
+		target[0] = index;
 	}
-	override relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]):void {
-		target.length=0
-		if (!this._object) {
-			return 
-		}
-		const geometry = (this._object as any as QuadObject).geometry as QuadGeometry | undefined;
+
+	static override relatedPointIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		vertexIndex: number,
+		target: number[]
+	): void {
+		target.length = 0;
+
+		const geometry = (object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
-			return 
+			return;
 		}
 		const indexArray = geometry.index;
-		const indexValue = indexArray[this._index];
-		const point = new QuadPoint(this._object as any as QuadObject, indexValue) as any as CorePoint<T>;
-		target[0]=point
-		return 
+		const indexValue = indexArray[vertexIndex];
+		target[0] = indexValue;
+	}
+	static override relatedPointClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadPoint as any as typeof CoreEntityWithObject<T>;
+	}
+	static override relatedPrimitiveClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadPrimitive as any as typeof CoreEntityWithObject<T>;
 	}
 }

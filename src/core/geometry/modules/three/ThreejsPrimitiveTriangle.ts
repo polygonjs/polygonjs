@@ -95,7 +95,7 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 	override builder<T extends CoreObjectType>() {
 		return threeMeshFromPrimitives as any as ObjectBuilder<T>;
 	}
-	protected override stride() {
+	protected static override stride() {
 		return 3;
 	}
 }

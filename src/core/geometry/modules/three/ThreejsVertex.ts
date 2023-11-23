@@ -4,12 +4,11 @@ import {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {VertexAttributesDict, UserDataWithVertexAttributes} from '../../entities/vertex/Common';
 import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/VertexAttribute';
 import {verticesCountFromObject} from '../../entities/vertex/CoreVertexUtils';
-import {primitiveInstanceFactory, primitiveVerticesCountFactory} from './ThreeModule';
-import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
-import type {CorePoint} from '../../entities/point/CorePoint';
+import {primitiveClassFactoryNonAbstract, primitiveVerticesCountFactory} from './ThreeModule';
 import {ThreejsPoint} from './ThreejsPoint';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
+import {CoreEntityWithObject} from '../../CoreEntity';
 
 export interface BufferGeometryWithVertexAttributes extends BufferGeometry {
 	userData: UserDataWithVertexAttributes;
@@ -120,24 +119,46 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
-		target.length = 0;
-		if (!this._object) {
-			return;
-		}
-		const index = Math.floor(this._index / primitiveVerticesCountFactory(this._object));
-		const primitive = primitiveInstanceFactory(this._object, index) as CorePrimitive<T> | undefined;
-		if (!primitive) {
-			return;
-		}
-		target.push(primitive);
+	static override relatedPrimitiveIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		pointIndex: number,
+		target: number[]
+	): void {
+		target.length = 1;
+		const index = Math.floor(pointIndex / primitiveVerticesCountFactory(object as any as Mesh));
+		target[0] = index;
 	}
-	override relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]): void {
+	// static override  relatedPrimitives<T extends CoreObjectType>(object:BaseCoreObject<T>,vertexIndex:number,target: CorePrimitive<T>[]): void {
+	// 	this.relatedPrimitiveIds(object,vertexIndex,_ids)
+	// 	target.length = _ids.length;
+	// 	let i=0
+	// 	for(const id of _ids){
+	// 		target[i]=(primitiveInstanceFactory(object as any as Mesh,id)) as CorePrimitive<T>
+	// 		i++
+	// 	}
+	// }
+
+	// override relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
+	// 	target.length = 0;
+	// 	if (!this._object) {
+	// 		return;
+	// 	}
+	// 	const index = Math.floor(this._index / primitiveVerticesCountFactory(this._object));
+	// 	const primitive = primitiveInstanceFactory(this._object, index) as CorePrimitive<T> | undefined;
+	// 	if (!primitive) {
+	// 		return;
+	// 	}
+	// 	target.push(primitive);
+	// }
+
+	static override relatedPointIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		pointIndex: number,
+		target: number[]
+	): void {
 		target.length = 0;
-		if (!this._object) {
-			return;
-		}
-		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
+
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			return;
 		}
@@ -145,8 +166,15 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		if (!index) {
 			return;
 		}
-		const indexValue = index.array[this._index];
-		const point = new ThreejsPoint(this._object as any as Mesh, indexValue) as any as CorePoint<T>;
-		target.push(point);
+		const indexArray = index.array;
+		const indexValue = indexArray[pointIndex];
+		target[0] = indexValue;
+	}
+
+	static override relatedPointClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return ThreejsPoint as any as typeof CoreEntityWithObject<T>;
+	}
+	static override relatedPrimitiveClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return primitiveClassFactoryNonAbstract(object as any as Mesh) as any as typeof CoreEntityWithObject<T>;
 	}
 }

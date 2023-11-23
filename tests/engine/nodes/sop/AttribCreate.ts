@@ -20,6 +20,7 @@ import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
 import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {pointsFromObject} from '../../../../src/core/geometry/entities/point/CorePointUtils';
+import {QuadPrimitive} from '../../../../src/core/geometry/modules/quad/QuadPrimitive';
 
 const _points: CorePoint<CoreObjectType>[] = [];
 
@@ -722,7 +723,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 			const coreGroup = container.coreContent()!;
 			const object = coreGroup.quadObjects()![0];
 			const coreObject = coreObjectInstanceFactory(object);
-			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			const primitives: QuadPrimitive[] = [];
 			coreObject.relatedPrimitives(primitives);
 			return primitives.map((p) => p.attribValue('t'));
 		}
@@ -758,7 +759,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 			const coreGroup = container.coreContent()!;
 			const object = coreGroup.quadObjects()![0];
 			const coreObject = coreObjectInstanceFactory(object);
-			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			const primitives: QuadPrimitive[] = [];
 			coreObject.relatedPrimitives(primitives);
 			return primitives.map((p) => p.attribValue('t'));
 		}

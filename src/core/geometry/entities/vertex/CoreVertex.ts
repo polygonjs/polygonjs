@@ -8,7 +8,7 @@ import {
 } from '../../../../types/GlobalTypes';
 import {Vector4, Vector3, Vector2, BufferAttribute} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {CoreEntity} from '../../CoreEntity';
+import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
@@ -16,26 +16,14 @@ import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 import type {CorePoint} from '../point/CorePoint';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
-import {uniqRelatedEntities} from '../utils/Common';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {CoreGroup} from '../../Group';
-import {BaseCoreObject} from '../object/BaseCoreObject';
-
-const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
-const _relatedObjects: BaseCoreObject<CoreObjectType>[] = [];
+import {TraversedRelatedEntityData} from '../utils/TraversedRelatedEntities';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CoreVertex.${functionName} needs to be overloaded`);
 }
-export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
-	protected _object?: ObjectContent<T>;
-	constructor(object?: ObjectContent<T>, index?: number) {
-		super(object, index);
-		this._object = object;
-	}
-	object() {
-		return this._object;
-	}
+export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntityWithObject<T> {
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
 	}
@@ -65,9 +53,6 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		return;
 	}
 	attributes(): VertexAttributesDict | undefined {
-		if (!this._object) {
-			return;
-		}
 		return (this.constructor as typeof CoreVertex<T>).attributes(this._object);
 	}
 	static attribute<T extends CoreObjectType>(
@@ -81,9 +66,6 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		return attributes[attribName];
 	}
 	attribute(attribName: string): BaseVertexAttribute | undefined {
-		if (!this._object) {
-			return;
-		}
 		return (this.constructor as typeof CoreVertex<T>).attribute(this._object, attribName);
 	}
 	static indexAttribute<T extends CoreObjectType>(object: ObjectContent<T>): BufferAttribute | undefined | null {
@@ -126,18 +108,12 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 
 	attribSize(attribName: string): number {
-		if (!this._object) {
-			return 0;
-		}
 		return (this.constructor as typeof CoreVertex<T>).attribSize(this._object, attribName);
 	}
 	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		return this.attribute(object, attribName) != null;
 	}
 	hasAttribute(attribName: string): boolean {
-		if (!this._object) {
-			return false;
-		}
 		return (this.constructor as typeof CoreVertex<T>).hasAttribute(this._object, attribName);
 	}
 	static attributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
@@ -218,9 +194,6 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		if (!this._object) {
-			return 0;
-		}
 		return (this.constructor as typeof CoreVertex<T>).attribValue(this._object, this._index, attribName, target);
 	}
 	attribValueNumber(attribName: string) {
@@ -378,27 +351,19 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
-		this.relatedPrimitives(_relatedPrimitives);
-		return uniqRelatedEntities(
-			_relatedPrimitives,
-			(primitive) => {
-				primitive.relatedObjects(_relatedObjects);
-				return _relatedObjects;
-			},
-			target
-		);
+	static override relatedObjectClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return this.relatedPrimitiveClass(object).relatedObjectClass(object);
 	}
-	relatedPrimitives<T extends CoreObjectType>(target: CorePrimitive<T>[]): void {
-		target.length = 0;
-	}
-	relatedPoints<T extends CoreObjectType>(target: CorePoint<T>[]): void {
-		target.length = 0;
-	}
-	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
+
+	relatedEntities(
+		attribClass: AttribClass,
+		coreGroup: CoreGroup,
+		target: CoreEntity[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				this.relatedPoints(target as CorePoint<T>[]);
+				this.relatedPoints(target as CorePoint<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.VERTEX: {
@@ -407,11 +372,11 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				this.relatedPrimitives(target as CorePrimitive<T>[]);
+				this.relatedPrimitives(target as CoreEntityWithObject<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.OBJECT: {
-				this.relatedObjects(target as BaseCoreObject<T>[]);
+				this.relatedObjects(target as CoreEntityWithObject<T>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.CORE_GROUP: {

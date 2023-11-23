@@ -14,23 +14,24 @@ import {
 } from 'three';
 import {cloneBufferGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
-import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
+import {AttribClass, dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
 import {objectCloneDeep} from '../../../ObjectUtils';
 import {ThreeMeshBVHHelper} from '../../bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
-import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent, objectContentCopyProperties} from '../../ObjectContent';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {TransformTargetType} from '../../../Transform';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {primitiveClassFactoryNonAbstract} from './ThreeModule';
 import {ThreejsVertex} from './ThreejsVertex';
 import {ThreejsPoint} from './ThreejsPoint';
-import {TraversedRelatedEntities} from '../../entities/utils/TraversedRelatedEntities';
+import {TraversedRelatedEntityData} from '../../entities/utils/TraversedRelatedEntities';
+import {CoreEntityWithObject} from '../../CoreEntity';
+import {arrayCopy} from '../../../ArrayUtils';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -262,20 +263,28 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives(
-		target: CorePrimitive<CoreObjectType>[],
-		traversedRelatedEntities?: TraversedRelatedEntities
+	static override relatedPrimitiveIds(
+		object: ObjectContent<CoreObjectType>,
+		index: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
 	): void {
-		const _primitiveClassFactory = primitiveClassFactoryNonAbstract(this._object);
+		const _primitiveClassFactory = primitiveClassFactoryNonAbstract(object as any as Object3D);
 		if (!_primitiveClassFactory) {
 			target.length = 0;
 			return;
 		}
-		const primitivesCount = _primitiveClassFactory?.entitiesCount(this._object);
-		target.length = primitivesCount;
-		for (let i = 0; i < primitivesCount; i++) {
-			const primitive = new _primitiveClassFactory(this._object as any, i) as CorePrimitive<CoreObjectType>;
-			target[i] = primitive;
+		const count = _primitiveClassFactory?.entitiesCount(object as any as Object3D);
+		target.length = count;
+		for (let i = 0; i < count; i++) {
+			target[i] = i;
 		}
+		if (traversedRelatedEntityData && traversedRelatedEntityData[AttribClass.PRIMITIVE].ids != target) {
+			arrayCopy(target, traversedRelatedEntityData[AttribClass.PRIMITIVE].ids);
+		}
+	}
+
+	static override relatedPrimitiveClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return primitiveClassFactoryNonAbstract(object as any as Mesh) as any as typeof CoreEntityWithObject<T>;
 	}
 }

@@ -4,13 +4,15 @@ import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {CoreObjectType, MergeCompactOptions, ObjectContent, objectContentCopyProperties} from '../../ObjectContent';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
-import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {QuadPrimitive} from './QuadPrimitive';
 import {quadGeomeryMerge} from './builders/QuadGeometryMerge';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 import {QuadPoint} from './QuadPoint';
 import {QuadVertex} from './QuadVertex';
-import {ObjectData} from '../../Constant';
+import {AttribClass, ObjectData} from '../../Constant';
+import {TraversedRelatedEntityData} from '../../entities/utils/TraversedRelatedEntities';
+import {CoreEntityWithObject} from '../../CoreEntity';
+import {arrayCopy} from '../../../ArrayUtils';
 
 const _box = new Box3();
 export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
@@ -76,12 +78,23 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedPrimitives(target: CorePrimitive<CoreObjectType>[]): void {
-		const primitivesCount = QuadPrimitive.entitiesCount(this._object);
-		target.length = primitivesCount;
-		for (let i = 0; i < primitivesCount; i++) {
-			const primitive = new QuadPrimitive(this._object as any, i) as CorePrimitive<CoreObjectType>;
-			target[i]=(primitive);
+	static override relatedPrimitiveIds(
+		object: ObjectContent<CoreObjectType>,
+		index: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		const count = QuadPrimitive.entitiesCount(object as any as QuadObject);
+		target.length = count;
+		for (let i = 0; i < count; i++) {
+			target[i] = i;
 		}
+		if (traversedRelatedEntityData && traversedRelatedEntityData[AttribClass.PRIMITIVE].ids != target) {
+			arrayCopy(target, traversedRelatedEntityData[AttribClass.PRIMITIVE].ids);
+		}
+	}
+
+	static override relatedPrimitiveClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadPrimitive as any as typeof CoreEntityWithObject<T>;
 	}
 }

@@ -7,12 +7,14 @@ import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {PrimitiveAttributesDict, UserDataWithPrimitiveAttributes} from '../../entities/primitive/Common';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
 import {BasePrimitiveAttribute, PrimitiveNumberAttribute} from '../../entities/primitive/PrimitiveAttribute';
-import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {QuadVertex} from './QuadVertex';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {primitivesCountFromObject} from '../../entities/primitive/CorePrimitiveUtils';
 import {Attribute} from '../../Attribute';
 import {quadGraphFromQuadObject} from './graph/QuadGraphUtils';
+import {CoreEntityWithObject} from '../../CoreEntity';
+import {QuadCoreObject} from './QuadCoreObject';
+
 const _triangle = new Triangle();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
@@ -183,21 +185,27 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices(target: CoreVertex<CoreObjectType>[]): void {
-		if (!this._object) {
-			target.length = 0;
-			return;
-		}
-		const geometry = (this._object as QuadObject).geometry as QuadGeometry | undefined;
+	static override relatedVertexIds(
+		object: ObjectContent<CoreObjectType>,
+		primitiveIndex: number,
+		target: number[]
+	): void {
+		const geometry = (object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
 			target.length = 0;
 			return;
 		}
 		target.length = stride;
 		for (let i = 0; i < stride; i++) {
-			const vertex = new QuadVertex(this._object as QuadObject, this._index * stride + i);
-			target[i] = vertex;
+			target[i] = primitiveIndex * stride + i;
 		}
+	}
+	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadVertex as any as typeof CoreEntityWithObject<T>;
+	}
+
+	static override relatedObjectClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return QuadCoreObject as any as typeof CoreEntityWithObject<T>;
 	}
 	static override graph(object: ObjectContent<CoreObjectType>) {
 		return quadGraphFromQuadObject(object as QuadObject);

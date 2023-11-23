@@ -4,16 +4,18 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory, coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
 import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
 import {arrayMin, arrayMax, ArrayToItemFunction} from '../../../core/ArrayUtils';
-import {AttribValue} from '../../../types/GlobalTypes';
+import {AttribValue, Constructor} from '../../../types/GlobalTypes';
 import {isNumber, isString, isBoolean} from '../../../core/Type';
 import {Vector2, Vector3, Vector4, Color} from 'three';
-import {TraversedRelatedEntities} from '../../../core/geometry/entities/utils/TraversedRelatedEntities';
+import {TraversedRelatedEntityData} from '../../../core/geometry/entities/utils/TraversedRelatedEntities';
 import {pushOnArrayAtEntry} from '../../../core/MapUtils';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 const _v2 = new Vector2();
 const _v3 = new Vector3();
 const _v4 = new Vector4();
@@ -88,24 +90,29 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 			// promote attribute
 			const destEntities: CoreEntity[] = [];
 			const srcEntities: CoreEntity[] = [];
-			const traversedRelatedEntities: TraversedRelatedEntities = {
-				[AttribClass.CORE_GROUP]: [],
-				[AttribClass.OBJECT]: [],
-				[AttribClass.POINT]: [],
-				[AttribClass.PRIMITIVE]: [],
-				[AttribClass.VERTEX]: [],
+			const traversedRelatedEntityData: TraversedRelatedEntityData = {
+				[AttribClass.CORE_GROUP]: {ids: []},
+				[AttribClass.OBJECT]: {ids: []},
+				[AttribClass.POINT]: {ids: []},
+				[AttribClass.PRIMITIVE]: {ids: []},
+				[AttribClass.VERTEX]: {ids: []},
 			};
+			const coreObjectClass = coreObjectClassFactory(object);
 			coreObjectInstanceFactory(object).relatedEntities(
 				classTo,
 				coreGroup,
 				destEntities,
-				traversedRelatedEntities
+				traversedRelatedEntityData
 			);
-			const traversedClassFromEntities = traversedRelatedEntities[classFrom];
+			const traversedClassFromEntityIds = traversedRelatedEntityData[classFrom].ids;
 			const classFromEntitiesByClassToEntitytIndex: Map<number, CoreEntity[]> = new Map();
-			if (traversedClassFromEntities) {
-				for (const classFromEntity of traversedClassFromEntities) {
+			if (traversedClassFromEntityIds.length > 0 && classFrom != AttribClass.CORE_GROUP) {
+				const entityClassFrom = coreObjectClass.relatedEntityClass(object, classFrom) as any as Constructor<
+					CorePoint<CoreObjectType>
+				>;
+				for (const classFromEntityId of traversedClassFromEntityIds) {
 					const classToEntities: CoreEntity[] = [];
+					const classFromEntity = new entityClassFrom(object, classFromEntityId);
 					classFromEntity.relatedEntities(classTo, coreGroup, classToEntities);
 					for (const classToEntity of classToEntities) {
 						const index = classToEntity.index();

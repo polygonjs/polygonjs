@@ -18,8 +18,9 @@ import {markedAsInstance} from '../../GeometryUtils';
 import {pointsCountFromBufferGeometry, positionAttributeNameFromBufferGeometry} from './CoreThreejsPointUtils';
 import {attributeNumericValues, AttributeNumericValuesOptions} from '../../entities/utils/Common';
 import {ThreejsVertex} from './ThreejsVertex';
-import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
+import {TraversedRelatedEntityData} from '../../entities/utils/TraversedRelatedEntities';
+import {CoreEntityWithObject} from '../../CoreEntity';
 
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
 const target: AttributeNumericValuesOptions = {
@@ -226,27 +227,30 @@ export class ThreejsPoint extends CorePoint<CoreObjectType.THREEJS> {
 	// RELATED ENTITIES
 	//
 	//
-	override relatedVertices<T extends CoreObjectType>(target:CoreVertex<T>[]): void {
-		target.length=0
-		if (!this._object) {
-			return 
-		}
-		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
+	static override relatedVertexIds<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		pointIndex: number,
+		target: number[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
-			return ;
+			return;
 		}
 		const index = geometry.getIndex();
 		if (!index) {
-			return ;
+			return;
 		}
 		const indexArray = index.array as number[];
 		let i = 0;
 		for (const indexValue of indexArray) {
-			if (indexValue == this._index) {
-				const vertex = new ThreejsVertex(this._object as any as Mesh, i) as CoreVertex<T>;
-				target.push(vertex);
+			if (indexValue == pointIndex) {
+				target.push(i);
 			}
 			i++;
 		}
+	}
+	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return ThreejsVertex as any as typeof CoreEntityWithObject<T>;
 	}
 }

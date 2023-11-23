@@ -70,7 +70,7 @@ export class ThreejsPrimitiveLineSegment extends ThreejsPrimitive {
 		return (this.constructor as typeof ThreejsPrimitiveLineSegment).normal(this._object, this._index, target);
 	}
 	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {}
-	protected override stride() {
+	protected static override stride() {
 		return 2;
 	}
 }

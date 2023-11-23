@@ -5,7 +5,7 @@ import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
 import {CoreType} from '../Type';
-import {arraySum, arrayCompact, arrayPushItems} from '../ArrayUtils';
+import {arraySum, arrayCompact, arrayPushItems, arrayCopy} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectClassFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
@@ -60,10 +60,9 @@ import {ThreejsCoreObject} from './modules/three/ThreejsCoreObject';
 import {uniqRelatedEntities} from './entities/utils/Common';
 import {CoreVertex} from './entities/vertex/CoreVertex';
 import {CorePrimitive} from './entities/primitive/CorePrimitive';
+import {TraversedRelatedEntityData} from './entities/utils/TraversedRelatedEntities';
 
 type AttributeDictionary = PolyDictionary<AttribValue>;
-
-// import {CoreMask} from './Mask';
 
 const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
@@ -72,7 +71,7 @@ const _points: CorePoint<CoreObjectType>[] = [];
 const _relatedPoints: CorePoint<CoreObjectType>[] = [];
 const _relatedVertices: CoreVertex<CoreObjectType>[] = [];
 const _relatedPrimitives: CorePrimitive<CoreObjectType>[] = [];
-const _relatedObjects: BaseCoreObject<CoreObjectType>[] = [];
+const _relatedPrimitivesForObject: CorePrimitive<CoreObjectType>[] = [];
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -520,27 +519,31 @@ export class CoreGroup extends CoreEntity {
 	// RELATED ENTITIES
 	//
 	//
-	relatedObjects(target: BaseCoreObject<CoreObjectType>[]): void {
-		const objects = this.allCoreObjects();
-		target.length = objects.length;
+
+	relatedObjects(
+		target: BaseCoreObject<CoreObjectType>[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		arrayCopy(this.allCoreObjects(), target);
+	}
+
+	relatedPrimitives(
+		target: CorePrimitive<CoreObjectType>[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
+		target.length = 0;
+		const objects = this.allObjects();
 		let i = 0;
 		for (const object of objects) {
-			target[i] = object;
+			coreObjectClassFactory(object).relatedPrimitives(object, i, _relatedPrimitivesForObject);
+			for (const _relatedPrimitiveForObject of _relatedPrimitivesForObject) {
+				target.push(_relatedPrimitiveForObject);
+			}
+
 			i++;
 		}
 	}
-	relatedPrimitives(target: CorePrimitive<CoreObjectType>[]): void {
-		this.relatedObjects(_relatedObjects);
-		uniqRelatedEntities(
-			_relatedObjects,
-			(object) => {
-				object.relatedPrimitives(_relatedPrimitives);
-				return _relatedPrimitives;
-			},
-			target
-		);
-	}
-	relatedVertices(target: CoreVertex<CoreObjectType>[]) {
+	relatedVertices(target: CoreVertex<CoreObjectType>[], traversedRelatedEntityData?: TraversedRelatedEntityData) {
 		this.relatedPrimitives(_relatedPrimitives);
 		uniqRelatedEntities(
 			_relatedPrimitives,
@@ -551,7 +554,7 @@ export class CoreGroup extends CoreEntity {
 			target
 		);
 	}
-	relatedPoints(target: CorePoint<CoreObjectType>[]) {
+	relatedPoints(target: CorePoint<CoreObjectType>[], traversedRelatedEntityData?: TraversedRelatedEntityData) {
 		this.relatedVertices(_relatedVertices);
 		return uniqRelatedEntities(
 			_relatedVertices,
@@ -562,22 +565,27 @@ export class CoreGroup extends CoreEntity {
 			target
 		);
 	}
-	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
+	relatedEntities(
+		attribClass: AttribClass,
+		coreGroup: CoreGroup,
+		target: CoreEntity[],
+		traversedRelatedEntityData?: TraversedRelatedEntityData
+	): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				this.relatedPoints(target as CorePoint<CoreObjectType>[]);
+				this.relatedPoints(target as CorePoint<CoreObjectType>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.VERTEX: {
-				this.relatedVertices(target as CoreVertex<CoreObjectType>[]);
+				this.relatedVertices(target as CoreVertex<CoreObjectType>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				this.relatedPrimitives(target as CorePrimitive<CoreObjectType>[]);
+				this.relatedPrimitives(target as CorePrimitive<CoreObjectType>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.OBJECT: {
-				this.relatedObjects(target as BaseCoreObject<CoreObjectType>[]);
+				this.relatedObjects(target as BaseCoreObject<CoreObjectType>[], traversedRelatedEntityData);
 				return;
 			}
 			case AttribClass.CORE_GROUP: {
