@@ -56,7 +56,6 @@ import {
 	fileDRCSopPresetRegister,
 	fileFBXSopPresetRegister,
 	fileGLTFSopPresetRegister,
-	fileIFCSopPresetRegister,
 	fileJSONSopPresetRegister,
 	fileMPDSopPresetRegister,
 	fileOBJSopPresetRegister,
@@ -141,7 +140,6 @@ class PresetLibraryClass {
 		this._registerPreset(fileFBXSopPresetRegister);
 		this._registerPreset(fileGEOJSONSopPresetRegister);
 		this._registerPreset(fileGLTFSopPresetRegister);
-		this._registerPreset(fileIFCSopPresetRegister);
 		this._registerPreset(fileJSONSopPresetRegister);
 		this._registerPreset(fileMPDSopPresetRegister);
 		this._registerPreset(fileOBJSopPresetRegister);

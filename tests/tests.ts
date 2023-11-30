@@ -478,7 +478,6 @@ import {testenginenodessopFile} from './engine/nodes/sop/File';
 import {testenginenodessopFile3DS} from './engine/nodes/sop/File3DS';
 import {testenginenodessopFileGEOJSON} from './engine/nodes/sop/FileGEOJSON';
 import {testenginenodessopFileGLTF} from './engine/nodes/sop/FileGLTF';
-import {testenginenodessopFileIFC} from './engine/nodes/sop/FileIFC';
 import {testenginenodessopFileJSON} from './engine/nodes/sop/FileJSON';
 import {testenginenodessopFileMPD} from './engine/nodes/sop/FileMPD';
 import {testenginenodessopFileMultiGLTF} from './engine/nodes/sop/FileMultiGLTF';
@@ -1075,7 +1074,6 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopFile3DS,
 		testenginenodessopFileGEOJSON,
 		testenginenodessopFileGLTF,
-		testenginenodessopFileIFC,
 		testenginenodessopFileJSON,
 		testenginenodessopFileMPD,
 		testenginenodessopFileVOX,
