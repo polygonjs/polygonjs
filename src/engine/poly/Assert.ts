@@ -1,5 +1,5 @@
 export class TypeAssert {
-	static unreachable(x: never): never {
+	static unreachable(_: never): never {
 		throw new Error("Didn't expect to get here");
 	}
 }
