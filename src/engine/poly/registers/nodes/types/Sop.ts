@@ -242,7 +242,6 @@ export enum SopTypeFile {
 	FILE_FBX = 'fileFBX',
 	FILE_GEOJSON = 'fileGEOJSON',
 	FILE_GLTF = 'fileGLTF',
-	FILE_IFC = 'fileIFC',
 	FILE_JSON = 'fileJSON',
 	FILE_MPD = 'fileMPD',
 	FILE_OBJ = 'fileOBJ',

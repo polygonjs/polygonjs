@@ -55,7 +55,6 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[SopExporter.EXPORTER_STL]: [GeometryExtension.STL],
 		[SopTypeFile.FILE_3DS]: [GeometryExtension.TDS],
 		[SopTypeFile.FILE_GLTF]: [GeometryExtension.GLB, GeometryExtension.GLTF],
-		[SopTypeFile.FILE_IFC]: [GeometryExtension.IFC],
 		[SopTypeFile.FILE_DRC]: [GeometryExtension.DRC],
 		[SopTypeFile.FILE_FBX]: [GeometryExtension.FBX],
 		[SopTypeFile.FILE_GEOJSON]: [GeometryExtension.GEOJSON],
