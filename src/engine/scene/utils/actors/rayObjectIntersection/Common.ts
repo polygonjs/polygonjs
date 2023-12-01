@@ -25,6 +25,7 @@ export interface ObjectOptions {
 	cpu?: CPUOptions;
 	gpu?: GPUOptions;
 }
+export interface EmptyOptions {}
 
 export function hasCPUOptions(optionsList: ObjectOptions[]): boolean {
 	for (const options of optionsList) {

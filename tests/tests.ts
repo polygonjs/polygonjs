@@ -235,6 +235,8 @@ import {testenginenodesjsOnObjectPointerdown} from './engine/nodes/js/OnObjectPo
 import {testenginenodesjsOnObjectPointerup} from './engine/nodes/js/OnObjectPointerup';
 import {testenginenodesjsOnObjectSwipe} from './engine/nodes/js/OnObjectSwipe';
 import {testenginenodesjsOnPerformanceChange} from './engine/nodes/js/OnPerformanceChange';
+import {testenginenodesjsOnPointerdown} from './engine/nodes/js/OnPointerdown';
+import {testenginenodesjsOnPointerup} from './engine/nodes/js/OnPointerup';
 import {testenginenodesjsOnScenePlayState} from './engine/nodes/js/OnScenePlayState';
 import {testenginenodesjsOnSceneReset} from './engine/nodes/js/OnSceneReset';
 import {testenginenodesjsOnTick} from './engine/nodes/js/OnTick';
@@ -831,6 +833,8 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsOnObjectPointerup,
 		testenginenodesjsOnObjectSwipe,
 		testenginenodesjsOnPerformanceChange,
+		testenginenodesjsOnPointerdown,
+		testenginenodesjsOnPointerup,
 		testenginenodesjsOnScenePlayState,
 		testenginenodesjsOnSceneReset,
 		testenginenodesjsOnTick,

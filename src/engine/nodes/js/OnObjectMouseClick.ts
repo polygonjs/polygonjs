@@ -93,7 +93,7 @@ export class OnObjectMouseClickJsNode extends ExtendableOnObjectPointerEventJsNo
 		const maxDuration = this.variableForInputParam(linesController, this.p.maxDuration);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToMouseClickCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectMouseClickCheck', this, linesController);
 		const options: ObjectToClickOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

@@ -1,2 +1,2 @@
-import { addObjectToPointerdownCheck } from "./_ObjectRayIntersection";
+import { addObjectToPointerdownCheck } from "./_UserInput";
 export { addObjectToPointerdownCheck };

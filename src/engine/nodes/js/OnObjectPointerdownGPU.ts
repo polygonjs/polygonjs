@@ -19,7 +19,7 @@ import {
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {ObjectToPointerdownOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
+import {ObjectToObjectPointerdownOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -83,8 +83,12 @@ export class OnObjectPointerdownGPUJsNode extends ExtendableOnObjectPointerEvent
 		);
 		const distanceRef = this._addDistanceRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerdownCheck', this, linesController);
-		const options: ObjectToPointerdownOptionsAsString = {
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'addObjectToObjectPointerdownCheck',
+			this,
+			linesController
+		);
+		const options: ObjectToObjectPointerdownOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,

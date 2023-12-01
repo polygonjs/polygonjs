@@ -25,15 +25,22 @@ export class IcosahedronSopOperation extends BaseSopOperation {
 	}
 
 	override cook(input_contents: CoreGroup[], params: IcosahedronSopParams) {
+		const object = this._createIcosahedronObject(params);
+		if (this._node) {
+			object.name = this._node.name();
+		}
+		return this.createCoreGroupFromObjects([object]);
+	}
+	private _createIcosahedronObject(params: IcosahedronSopParams) {
 		const pointsOnly = isBooleanTrue(params.pointsOnly);
 		const geometry = new IcosahedronBufferGeometry(params.radius, params.detail, pointsOnly);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		if (pointsOnly) {
 			const object = this.createObject(geometry, ObjectType.POINTS);
-			return this.createCoreGroupFromObjects([object]);
+			return object;
 		} else {
 			geometry.computeVertexNormals();
-			return this.createCoreGroupFromGeometry(geometry);
+			return this.createObject(geometry, ObjectType.MESH);
 		}
 	}
 }

@@ -19,7 +19,7 @@ export class RayIntersectsPlaneJsNode extends BaseRayPlaneJsNode {
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.BOOLEAN),
 		]);
 	}
 

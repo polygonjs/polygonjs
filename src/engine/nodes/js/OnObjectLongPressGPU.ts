@@ -97,7 +97,7 @@ export class OnObjectLongPressGPUJsNode extends ExtendableOnObjectPointerEventJs
 		const duration = this.variableForInputParam(linesController, this.p.duration);
 		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToLongPressCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectLongPressCheck', this, linesController);
 		const options: ObjectToLongPressOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

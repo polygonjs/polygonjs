@@ -18,11 +18,11 @@ import {MouseButton} from '../../../../../core/MouseButton';
 interface PointerdownOptions {
 	callback: () => void;
 }
-export interface ObjectToPointerdownOptions extends ObjectOptions {
+export interface ObjectToObjectPointerdownOptions extends ObjectOptions {
 	pointerdown: PointerdownOptions;
 	config: ButtonAndModifierOptions;
 }
-export interface ObjectToPointerdownOptionsAsString {
+export interface ObjectToObjectPointerdownOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
@@ -33,7 +33,7 @@ export interface ObjectToPointerdownOptionsAsString {
 const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 export class RayObjectIntersectionsPointerdownController extends BaseRayObjectIntersectionsController {
-	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerdownOptions[]> = new Map();
+	protected override _propertiesListByObject: Map<Object3D, ObjectToObjectPointerdownOptions[]> = new Map();
 	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
 	private _objectsMatchingEventConfig: Object3D[] = [];
 

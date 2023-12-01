@@ -106,12 +106,14 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 					actorsManager.rayObjectIntersectionClick.onPointerdown(eventContext.event);
 					actorsManager.rayObjectIntersectionLongPress.onPointerdown(eventContext.event);
 					actorsManager.rayObjectIntersectionPointerdown.onPointerdown(eventContext.event);
+					actorsManager.pointerdown.onPointerdown(eventContext.event);
 					actorsManager.rayObjectIntersectionSwipe.onPointerdown(eventContext.event);
 					return;
 				}
 				case PointerEventType.pointerup: {
 					if (!isTouchDevice()) {
 						actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
+						actorsManager.pointerup.onPointerup(eventContext.event);
 						return;
 					}
 				}
@@ -124,6 +126,7 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 					// as pointerup appears to not be triggered once the cursor has moved
 					if (isTouchDevice()) {
 						actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
+						actorsManager.pointerup.onPointerup(eventContext.event);
 						return;
 					}
 				}

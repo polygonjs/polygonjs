@@ -99,7 +99,7 @@ export class OnObjectClickGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 		const maxDuration = this.variableForInputParam(linesController, this.p.maxDuration);
 		const distanceRef = this._addDistanceRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToClickCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectClickCheck', this, linesController);
 		const options: ObjectToClickOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

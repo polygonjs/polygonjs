@@ -76,7 +76,6 @@ function triggerPointerEventInMiddle(
 	const emitter = options?.emitter || element;
 	// const emitterRect = rectElement(emitter);
 	// console.log({emitter, elementRect, emitterRect, clientX: event.clientX, clientY: event.clientY});
-
 	emitter.dispatchEvent(event);
 }
 function triggerMouseEventAside(eventName: MouseEventName, element: HTMLElement | Document, options?: EventOptions) {

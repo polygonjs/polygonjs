@@ -88,7 +88,7 @@ export class OnObjectSwipeJsNode extends ExtendableOnObjectPointerEventJsNode<On
 		const minDistance = this.variableForInputParam(linesController, this.p.minDistance);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToSwipeCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectSwipeCheck', this, linesController);
 		const options: ObjectToSwipeOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

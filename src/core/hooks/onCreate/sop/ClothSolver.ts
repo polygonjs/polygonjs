@@ -97,7 +97,9 @@ function _createMat(node: ClothSolverSopNode) {
 
 	function createMeshMaterial(MAT: MaterialsNetworkSopNode) {
 		// ensure we don't link to a CopNetwork for instance
-		const existingMatNodes = MAT.children().filter((node: BaseMatNodeType) => node.material != null);
+		const existingMatNodes = MAT.children().filter(
+			(node: BaseMatNodeType) => node.name() == MESH_PHYSICAL_MAT_NAME
+		);
 		function _createMatBuilder() {
 			const matBuilder = MAT.createNode('meshPhysicalBuilder');
 
@@ -113,6 +115,8 @@ function _createMat(node: ClothSolverSopNode) {
 
 			globals.uiData.setPosition(-400, 0);
 			output1.uiData.setPosition(400, 0);
+			clothSolverPosition1.uiData.setPosition(100, 0);
+			attribute1.uiData.setPosition(-100, 0);
 
 			matBuilder.setName(MESH_PHYSICAL_MAT_NAME);
 			return matBuilder;

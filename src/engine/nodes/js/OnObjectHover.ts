@@ -79,7 +79,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		const intersectionRef = this._addIntersectionRef(linesController);
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToHoveredCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectHoveredCheck', this, linesController);
 		const options: ObjectToHoverOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

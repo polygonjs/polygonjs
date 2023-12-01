@@ -19,7 +19,7 @@ import {
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {ObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import {ObjectToObjectPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -80,8 +80,8 @@ export class OnObjectPointerupGPUJsNode extends ExtendableOnObjectPointerEventJs
 		);
 		const distanceRef = this._addDistanceRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerupCheck', this, linesController);
-		const options: ObjectToPointerupOptionsAsString = {
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectPointerupCheck', this, linesController);
+		const options: ObjectToObjectPointerupOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,

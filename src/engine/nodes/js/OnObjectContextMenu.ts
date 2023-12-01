@@ -65,7 +65,11 @@ export class OnObjectContextMenuJsNode extends BaseOnObjectPointerEventJsNode {
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToContextmenuCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'addObjectToObjectContextmenuCheck',
+			this,
+			linesController
+		);
 		const options: ObjectToContextmenuOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

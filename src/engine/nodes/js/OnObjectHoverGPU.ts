@@ -85,7 +85,7 @@ export class OnObjectHoverGPUJsNode extends BaseOnObjectPointerGPUEventJsNode {
 		const distanceRef = this._addDistanceRef(linesController);
 		const hoveredStateRef = this._addHoveredRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToHoveredCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectHoveredCheck', this, linesController);
 		const options: ObjectToHoverOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

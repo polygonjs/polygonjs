@@ -10,14 +10,16 @@ import type { MathArrayVectorElement } from "../../../functions/_MathGeneric";
 
 import { addAudioStopEventListener } from "../../../functions/addAudioStopEventListener";
 import { addNumber } from "../../../functions/addNumber";
-import { addObjectToClickCheck } from "../../../functions/addObjectToClickCheck";
-import { addObjectToContextmenuCheck } from "../../../functions/addObjectToContextmenuCheck";
-import { addObjectToHoveredCheck } from "../../../functions/addObjectToHoveredCheck";
-import { addObjectToLongPressCheck } from "../../../functions/addObjectToLongPressCheck";
-import { addObjectToMouseClickCheck } from "../../../functions/addObjectToMouseClickCheck";
+import { addObjectToObjectClickCheck } from "../../../functions/addObjectToObjectClickCheck";
+import { addObjectToObjectContextmenuCheck } from "../../../functions/addObjectToObjectContextmenuCheck";
+import { addObjectToObjectHoveredCheck } from "../../../functions/addObjectToObjectHoveredCheck";
+import { addObjectToObjectLongPressCheck } from "../../../functions/addObjectToObjectLongPressCheck";
+import { addObjectToObjectMouseClickCheck } from "../../../functions/addObjectToObjectMouseClickCheck";
+import { addObjectToObjectPointerdownCheck } from "../../../functions/addObjectToObjectPointerdownCheck";
+import { addObjectToObjectPointerupCheck } from "../../../functions/addObjectToObjectPointerupCheck";
+import { addObjectToObjectSwipeCheck } from "../../../functions/addObjectToObjectSwipeCheck";
 import { addObjectToPointerdownCheck } from "../../../functions/addObjectToPointerdownCheck";
 import { addObjectToPointerupCheck } from "../../../functions/addObjectToPointerupCheck";
-import { addObjectToSwipeCheck } from "../../../functions/addObjectToSwipeCheck";
 import { addVector } from "../../../functions/addVector";
 import { addVectorNumber } from "../../../functions/addVectorNumber";
 import { addVideoEventListener } from "../../../functions/addVideoEventListener";
@@ -526,14 +528,16 @@ import { WFCBuild } from "../../../functions/WFCBuild";
 export interface NamedFunctionMap {
 	addAudioStopEventListener: addAudioStopEventListener;
 	addNumber: addNumber;
-	addObjectToClickCheck: addObjectToClickCheck;
-	addObjectToContextmenuCheck: addObjectToContextmenuCheck;
-	addObjectToHoveredCheck: addObjectToHoveredCheck;
-	addObjectToLongPressCheck: addObjectToLongPressCheck;
-	addObjectToMouseClickCheck: addObjectToMouseClickCheck;
+	addObjectToObjectClickCheck: addObjectToObjectClickCheck;
+	addObjectToObjectContextmenuCheck: addObjectToObjectContextmenuCheck;
+	addObjectToObjectHoveredCheck: addObjectToObjectHoveredCheck;
+	addObjectToObjectLongPressCheck: addObjectToObjectLongPressCheck;
+	addObjectToObjectMouseClickCheck: addObjectToObjectMouseClickCheck;
+	addObjectToObjectPointerdownCheck: addObjectToObjectPointerdownCheck;
+	addObjectToObjectPointerupCheck: addObjectToObjectPointerupCheck;
+	addObjectToObjectSwipeCheck: addObjectToObjectSwipeCheck;
 	addObjectToPointerdownCheck: addObjectToPointerdownCheck;
 	addObjectToPointerupCheck: addObjectToPointerupCheck;
-	addObjectToSwipeCheck: addObjectToSwipeCheck;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
 	addVideoEventListener: addVideoEventListener;
@@ -1045,14 +1049,16 @@ export class AllNamedFunctionRegister {
 		[
 			addAudioStopEventListener,
 			addNumber,
-			addObjectToClickCheck,
-			addObjectToContextmenuCheck,
-			addObjectToHoveredCheck,
-			addObjectToLongPressCheck,
-			addObjectToMouseClickCheck,
+			addObjectToObjectClickCheck,
+			addObjectToObjectContextmenuCheck,
+			addObjectToObjectHoveredCheck,
+			addObjectToObjectLongPressCheck,
+			addObjectToObjectMouseClickCheck,
+			addObjectToObjectPointerdownCheck,
+			addObjectToObjectPointerupCheck,
+			addObjectToObjectSwipeCheck,
 			addObjectToPointerdownCheck,
 			addObjectToPointerupCheck,
-			addObjectToSwipeCheck,
 			addVector,
 			addVectorNumber,
 			addVideoEventListener,

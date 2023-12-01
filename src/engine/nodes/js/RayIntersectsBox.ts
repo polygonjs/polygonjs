@@ -20,7 +20,7 @@ export class RayIntersectsBoxJsNode extends BaseRayBox3JsNode {
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
+			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
 		]);
 	}
 	override setLines(shadersCollectionController: JsLinesCollectionController) {

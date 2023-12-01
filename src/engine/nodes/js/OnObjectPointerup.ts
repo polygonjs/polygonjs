@@ -19,7 +19,7 @@ import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, RefJsDefinition} from './utils/JsDefinition';
-import {ObjectToPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import {ObjectToObjectPointerupOptionsAsString} from '../../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {TouchEventType} from '../../../core/event/TouchEventType';
 import {isTouchDevice} from '../../../core/UserAgent';
@@ -84,8 +84,8 @@ export class OnObjectPointerupJsNode extends ExtendableOnObjectPointerEventJsNod
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToPointerupCheck', this, linesController);
-		const options: ObjectToPointerupOptionsAsString = {
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectPointerupCheck', this, linesController);
+		const options: ObjectToObjectPointerupOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
 				skipIfObjectsInFront,

@@ -88,7 +88,7 @@ export class OnObjectLongPressJsNode extends ExtendableOnObjectPointerEventJsNod
 		const maxCursorMoveDistance = this.variableForInputParam(linesController, this.p.maxCursorMoveDistance);
 		const intersectionRef = this._addIntersectionRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToLongPressCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectLongPressCheck', this, linesController);
 		const options: ObjectToLongPressOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

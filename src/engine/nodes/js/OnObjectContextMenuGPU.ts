@@ -74,7 +74,11 @@ export class OnObjectContextMenuGPUJsNode extends BaseOnObjectPointerGPUEventJsN
 		);
 		const distanceRef = this._addDistanceRef(linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToContextmenuCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'addObjectToObjectContextmenuCheck',
+			this,
+			linesController
+		);
 		const options: ObjectToContextmenuOptionsAsString = {
 			priority: {
 				blockObjectsBehind,

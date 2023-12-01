@@ -18,11 +18,11 @@ import {MouseButton} from '../../../../../core/MouseButton';
 interface PointerupOptions {
 	callback: () => void;
 }
-export interface ObjectToPointerupOptions extends ObjectOptions {
+export interface ObjectToObjectPointerupOptions extends ObjectOptions {
 	pointerup: PointerupOptions;
 	config: ButtonAndModifierOptions;
 }
-export interface ObjectToPointerupOptionsAsString {
+export interface ObjectToObjectPointerupOptionsAsString {
 	priority: ConvertToStrings<PriorityOptions>;
 	cpu?: ConvertToStrings<CPUOptions>;
 	gpu?: ConvertToStrings<GPUOptions>;
@@ -33,7 +33,7 @@ export interface ObjectToPointerupOptionsAsString {
 const _buttonConfig: ButtonConfig = {button: MouseButton.LEFT, ctrl: false, shift: false, alt: false};
 
 export class RayObjectIntersectionsPointerupController extends BaseRayObjectIntersectionsController {
-	protected override _propertiesListByObject: Map<Object3D, ObjectToPointerupOptions[]> = new Map();
+	protected override _propertiesListByObject: Map<Object3D, ObjectToObjectPointerupOptions[]> = new Map();
 	protected _intersectedStateByObject: Map<Object3D, boolean> = new Map();
 	private _objectsMatchingEventConfig: Object3D[] = [];
 

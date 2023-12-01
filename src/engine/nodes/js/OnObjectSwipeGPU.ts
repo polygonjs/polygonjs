@@ -101,7 +101,7 @@ export class OnObjectSwipeGPUJsNode extends ExtendableOnObjectPointerEventJsNode
 		const angleMargin = this.variableForInputParam(linesController, this.p.angleMargin);
 		const minDistance = this.variableForInputParam(linesController, this.p.minDistance);
 
-		const func = Poly.namedFunctionsRegister.getFunction('addObjectToSwipeCheck', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('addObjectToObjectSwipeCheck', this, linesController);
 		const options: ObjectToSwipeOptionsAsString = {
 			priority: {
 				blockObjectsBehind,
