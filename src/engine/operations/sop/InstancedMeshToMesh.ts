@@ -1,4 +1,5 @@
-import {InstancedMesh, Mesh, Object3D} from 'three';
+import {Mesh, Object3D} from 'three';
+import type {InstancedMesh} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -28,17 +29,17 @@ export class InstancedMeshToMeshSopOperation extends BaseSopOperation {
 		const childrenToRemove: Object3D[] = [];
 		for (const inputObject of inputObjects) {
 			inputObject.traverse((child) => {
-				if (child instanceof InstancedMesh) {
+				if ((child as InstancedMesh).isInstancedMesh) {
 					childrenToRemove.push(child);
 
-					const count = child.count;
-					const geometry = child.geometry;
-					const material = child.material;
+					const count = (child as InstancedMesh).count;
+					const geometry = (child as InstancedMesh).geometry;
+					const material = (child as InstancedMesh).material;
 					for (let i = 0; i < count; i++) {
 						const newMesh = copyObjectAllProperties(child, new Mesh());
 						(newMesh as Mesh).geometry = params.cloneGeometry ? geometry.clone() : geometry;
 						(newMesh as Mesh).material = isArray(material) ? material[0] : material;
-						child.getMatrixAt(i, newMesh.matrix);
+						(child as InstancedMesh).getMatrixAt(i, newMesh.matrix);
 						newMesh.matrix.decompose(newMesh.position, newMesh.quaternion, newMesh.scale);
 
 						const parent = child.parent;
