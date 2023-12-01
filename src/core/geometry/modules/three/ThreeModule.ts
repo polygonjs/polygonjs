@@ -24,6 +24,7 @@ const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectCon
 		return ThreejsPoint;
 	}
 };
+export const pointClassFactoryEnsured = () => ThreejsPoint;
 const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
 	index = 0
@@ -32,12 +33,16 @@ const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
 		return new ThreejsPoint(object, index);
 	}
 };
+export const pointInstanceFactoryEnsured = (object: ObjectContent<CoreObjectType>, index = 0) => {
+	return new ThreejsPoint(object as Object3D, index);
+};
 // vertex methods
 const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
 		return ThreejsVertex;
 	}
 };
+export const vertexClassFactoryEnsured = () => ThreejsVertex;
 const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
 	index = 0
@@ -45,6 +50,9 @@ const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
 	if (isObject3D(object)) {
 		return new ThreejsVertex(object, index);
 	}
+};
+export const vertexInstanceFactoryEnsured = (object: ObjectContent<CoreObjectType>, index = 0) => {
+	return new ThreejsVertex(object as Object3D, index);
 };
 // primitive methods
 export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjectType>) => {
@@ -61,6 +69,7 @@ export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjec
 		return ThreejsPrimitiveTriangle;
 	}
 };
+export const primitiveClassFactoryEnsured = () => ThreejsPrimitiveTriangle;
 const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = primitiveClassFactoryNonAbstract;
 export const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
@@ -77,6 +86,9 @@ export const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction
 			return new ThreejsPrimitivePoint(object as Points, index);
 		}
 	}
+};
+export const primitiveInstanceFactoryEnsured = (object: ObjectContent<CoreObjectType>, index = 0) => {
+	return new ThreejsPrimitiveTriangle(object as Mesh, index);
 };
 export const primitiveVerticesCountFactory = (object: ObjectContent<CoreObjectType>): number => {
 	if (isObject3D(object)) {

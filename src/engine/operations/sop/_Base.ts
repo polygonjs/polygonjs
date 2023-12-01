@@ -29,7 +29,7 @@ export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	}
 	protected createCoreGroupFromGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = BaseSopOperation.createObject(geometry, type);
-		return this.createCoreGroupFromObjects([object]);
+		return this.createCoreGroupFromObjects(object ? [object] : []);
 	}
 	protected createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,

@@ -23,9 +23,9 @@ import {MapUtils} from '../../../core/MapUtils';
 import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
-import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */
 	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
@@ -48,16 +48,16 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 		this.io.inputs.setCount(1);
 	}
 
-	private _new_objects: Object3D[] = [];
+	private _newObjects: Object3D[] = [];
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		this._new_objects = [];
+		this._newObjects.length = 0;
 		if (this.pv.attribName != '') {
 			this._split_core_group(core_group);
 		}
 
-		this.setObjects(this._new_objects);
+		this.setObjects(this._newObjects);
 	}
 
 	_split_core_group(core_group: CoreGroup) {
@@ -70,14 +70,14 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	private _split_core_object(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		let attribName: string = this.pv.attribName;
-		let points_by_value: Map<string | number, BaseCorePoint[]> = new Map();
+		const pointsByValue: Map<string | number, BaseCorePoint[]> = new Map();
 		// if (core_geometry) {
 		// const object = core_object.object() as Object3DWithGeometry;
-		pointsFromObject(object,_points);
+		pointsFromObject(object, _points);
 		const firstPoint = _points[0];
 		if (firstPoint) {
-			const attrib_size = firstPoint.attribSize(attribName);
-			if (!(attrib_size == AttribSize.FLOAT || firstPoint.isAttribIndexed(attribName))) {
+			const attribSize = firstPoint.attribSize(attribName);
+			if (!(attribSize == AttribSize.FLOAT || firstPoint.isAttribIndexed(attribName))) {
 				this.states.error.set(`attrib '${attribName}' must be a float or a string`);
 				return;
 			}
@@ -85,26 +85,28 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 			if (firstPoint.isAttribIndexed(attribName)) {
 				for (const point of _points) {
 					val = point.indexedAttribValue(attribName);
-					MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
+					MapUtils.pushOnArrayAtEntry(pointsByValue, val, point);
 				}
 			} else {
 				for (const point of _points) {
 					val = point.attribValue(attribName) as number;
-					MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
+					MapUtils.pushOnArrayAtEntry(pointsByValue, val, point);
 				}
 			}
 		}
 
 		const objectType = objectTypeFromConstructor(object.constructor);
 		if (objectType) {
-			points_by_value.forEach((points, value) => {
+			pointsByValue.forEach((points, value) => {
 				const builder = geometryBuilder(objectType);
 				if (builder) {
-					const new_geometry = builder.fromPoints(object, points);
-					if (new_geometry) {
-						const object = this.createObject(new_geometry, objectType);
-						ThreejsCoreObject.addAttribute(object, attribName, value);
-						this._new_objects.push(object);
+					const newGeometry = builder.fromPoints(object, points);
+					if (newGeometry) {
+						const object = this.createObject(newGeometry, objectType);
+						if (object) {
+							ThreejsCoreObject.addAttribute(object, attribName, value);
+							this._newObjects.push(object);
+						}
 					}
 				}
 			});

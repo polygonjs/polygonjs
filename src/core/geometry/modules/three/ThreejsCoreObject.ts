@@ -249,8 +249,10 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
 				const newObject = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
-				objectContentCopyProperties(firstObject, newObject);
-				mergedObjects.push(newObject as Object3DWithGeometry);
+				if (newObject) {
+					objectContentCopyProperties(firstObject, newObject);
+					mergedObjects.push(newObject as Object3DWithGeometry);
+				}
 			} else {
 				onError('merge failed, check that input geometries have the same attributes');
 			}

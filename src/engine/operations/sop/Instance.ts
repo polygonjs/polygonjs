@@ -50,15 +50,16 @@ export class InstanceSopOperation extends BaseSopOperation {
 			const type = objectTypeFromConstructor(objectToInstance.constructor);
 			if (type) {
 				const object = this.createObject(this._geometry, type);
-
-				if (isBooleanTrue(params.applyMaterial)) {
-					const material = await this._getMaterial(params);
-					if (material) {
-						await this._applyMaterial(object as Mesh, material);
+				if (object) {
+					if (isBooleanTrue(params.applyMaterial)) {
+						const material = await this._getMaterial(params);
+						if (material) {
+							await this._applyMaterial(object as Mesh, material);
+						}
 					}
-				}
 
-				return this.createCoreGroupFromObjects([object]);
+					return this.createCoreGroupFromObjects([object]);
+				}
 			}
 		}
 		return this.createCoreGroupFromObjects([]);

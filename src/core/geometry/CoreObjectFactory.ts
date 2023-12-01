@@ -1,5 +1,15 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
-import {object3DFactory, objectClassFactoryEnsured, objectInstanceFactoryEnsured} from './modules/three/ThreeModule';
+import {
+	object3DFactory,
+	pointClassFactoryEnsured,
+	pointInstanceFactoryEnsured,
+	vertexClassFactoryEnsured,
+	vertexInstanceFactoryEnsured,
+	primitiveClassFactoryEnsured,
+	primitiveInstanceFactoryEnsured,
+	objectClassFactoryEnsured,
+	objectInstanceFactoryEnsured,
+} from './modules/three/ThreeModule';
 import type {CorePoint} from './entities/point/CorePoint';
 import type {CoreVertex} from './entities/vertex/CoreVertex';
 import type {BaseCoreObject} from './entities/object/BaseCoreObject';
@@ -81,7 +91,7 @@ export function corePointClassFactory(object: ObjectContent<CoreObjectType>): Ba
 			return result;
 		}
 	}
-	return object3DFactory.pointClass(object) as BaseCorePointClassClass;
+	return (object3DFactory.pointClass(object) || pointClassFactoryEnsured()) as BaseCorePointClassClass;
 }
 
 export function corePointInstanceFactory<T extends CoreObjectType>(object: ObjectContent<T>, index = 0): CorePoint<T> {
@@ -91,7 +101,7 @@ export function corePointInstanceFactory<T extends CoreObjectType>(object: Objec
 			return result as CorePoint<T>;
 		}
 	}
-	return object3DFactory.pointInstance(object, index) as CorePoint<T>;
+	return (object3DFactory.pointInstance(object, index) || pointInstanceFactoryEnsured(object, index)) as CorePoint<T>;
 }
 // vertex creation methods
 export function coreVertexClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreVertexClassClass {
@@ -101,7 +111,7 @@ export function coreVertexClassFactory(object: ObjectContent<CoreObjectType>): B
 			return result;
 		}
 	}
-	return object3DFactory.vertexClass(object) as BaseCoreVertexClassClass;
+	return (object3DFactory.vertexClass(object) || vertexClassFactoryEnsured()) as BaseCoreVertexClassClass;
 }
 
 export function coreVertexInstanceFactory<T extends CoreObjectType>(
@@ -114,7 +124,8 @@ export function coreVertexInstanceFactory<T extends CoreObjectType>(
 			return result as CoreVertex<T>;
 		}
 	}
-	return object3DFactory.vertexInstance(object, index) as CoreVertex<T>;
+	return (object3DFactory.vertexInstance(object, index) ||
+		vertexInstanceFactoryEnsured(object, index)) as CoreVertex<T>;
 }
 // primitive creation methods
 export function corePrimitiveClassFactory(object: ObjectContent<CoreObjectType>): BaseCorePrimitiveClassClass {
@@ -124,7 +135,7 @@ export function corePrimitiveClassFactory(object: ObjectContent<CoreObjectType>)
 			return result;
 		}
 	}
-	return object3DFactory.primitiveClass(object) as BaseCorePrimitiveClassClass;
+	return (object3DFactory.primitiveClass(object) || primitiveClassFactoryEnsured()) as BaseCorePrimitiveClassClass;
 }
 
 export function corePrimitiveInstanceFactory<T extends CoreObjectType>(
@@ -137,7 +148,8 @@ export function corePrimitiveInstanceFactory<T extends CoreObjectType>(
 			return result as CorePrimitive<T>;
 		}
 	}
-	return object3DFactory.primitiveInstance(object, index) as CorePrimitive<T>;
+	return (object3DFactory.primitiveInstance(object, index) ||
+		primitiveInstanceFactoryEnsured(object, index)) as CorePrimitive<T>;
 }
 
 // object creation methods

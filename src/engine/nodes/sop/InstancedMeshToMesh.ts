@@ -4,12 +4,13 @@
  *
  *
  */
-
+import {InstancedMesh} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InstancedMeshToMeshSopOperation} from '../../operations/sop/InstancedMeshToMesh';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {registerObjectType, ObjectType} from '../../../core/geometry/Constant';
 const DEFAULT = InstancedMeshToMeshSopOperation.DEFAULT_PARAMS;
 class InstancedMeshToMeshSopParamsConfig extends NodeParamsConfig {
 	cloneGeometry = ParamConfig.BOOLEAN(DEFAULT.cloneGeometry);
@@ -27,6 +28,7 @@ export class InstancedMeshToMeshSopNode extends TypedSopNode<InstancedMeshToMesh
 
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InstancedMeshToMeshSopOperation.INPUT_CLONED_STATE);
+		registerObjectType({type: ObjectType.INSTANCED_MESH, ctor: InstancedMesh, humanName: 'InstancedMesh'});
 	}
 
 	private _operation: InstancedMeshToMeshSopOperation | undefined;

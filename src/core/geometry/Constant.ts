@@ -2,6 +2,7 @@ import {Number2} from '../../types/GlobalTypes';
 import {
 	Object3D,
 	LineSegments,
+	InstancedMesh,
 	Mesh,
 	Points,
 	Group,
@@ -45,6 +46,7 @@ export enum ObjectType {
 	DIRECTIONAL_LIGHT = 'DirectionalLight',
 	GROUP = 'Group',
 	HEMISPHERE_LIGHT = 'HemisphereLight',
+	INSTANCED_MESH = 'InstancedMesh',
 	LIGHT_PROBE = 'LightProbe',
 	LINE_SEGMENTS = 'LineSegments',
 	LOD = 'LOD',
@@ -57,6 +59,7 @@ export enum ObjectType {
 	SCENE = 'Scene',
 	// SKINNED_MESH = 'SkinnedMesh',
 	SPOT_LIGHT = 'SpotLight',
+	UNKNOWN = 'Unknown',
 }
 export const OBJECT_TYPES: ObjectType[] = [
 	ObjectType.GROUP,
@@ -69,7 +72,7 @@ export const OBJECT_TYPES: ObjectType[] = [
 
 // type Object3DConstructor = any;// Object3D
 interface ObjectContentConstructor<T extends CoreObjectType> {
-	new (args: any): ObjectContent<T>;
+	new (arg0: any, arg1?: any, arg2?: any): ObjectContent<T>;
 	// Model: Model;
 }
 export type DefaultObjectContentConstructor = ObjectContentConstructor<CoreObjectType>;
@@ -83,6 +86,7 @@ export interface ObjectByObjectType {
 	[ObjectType.DIRECTIONAL_LIGHT]: DirectionalLight;
 	[ObjectType.GROUP]: Group;
 	[ObjectType.HEMISPHERE_LIGHT]: HemisphereLight;
+	[ObjectType.INSTANCED_MESH]: InstancedMesh;
 	[ObjectType.LIGHT_PROBE]: LightProbe;
 	[ObjectType.LINE_SEGMENTS]: LineSegments;
 	[ObjectType.LOD]: LOD;
@@ -96,6 +100,7 @@ export interface ObjectByObjectType {
 	[ObjectType.SCENE]: Scene;
 	// [ObjectType.SKINNED_MESH]: typeof SkinnedMesh;
 	[ObjectType.SPOT_LIGHT]: SpotLight;
+	[ObjectType.UNKNOWN]: null;
 	//
 	// [ObjectType.UNKNOWN]: Object3D;
 }
@@ -141,6 +146,7 @@ export interface ObjectData {
 // 	[ObjectType.OBJECT3D]: Object3D,
 // 	[ObjectType.LOD]: LOD,
 // };
+const UNKNOWN_OBJECT_TYPE: ObjectTypeData = {type: ObjectType.UNKNOWN, ctor: null as any, humanName: 'Unknown'};
 
 export interface ObjectTypeData {
 	type: ObjectType;
@@ -166,6 +172,7 @@ function _initializeObjectTypeFromConstructor() {
 	}
 	_register(ObjectType.GROUP, Group);
 	_register(ObjectType.LINE_SEGMENTS, LineSegments);
+	_register(ObjectType.INSTANCED_MESH, InstancedMesh);
 	_register(ObjectType.MESH, Mesh);
 	_register(ObjectType.OBJECT3D, Object3D);
 	_register(ObjectType.POINTS, Points);
@@ -222,7 +229,13 @@ export function dataFromConstructor(constructor: Function, level = 0): ObjectTyp
 	} else {
 		// console.warn('no data found for constructor:');
 		// console.log(constructor);
-		return dataFromConstructor((constructor as any).__proto__, level + 1);
+		const proto = (constructor as any).__proto__;
+		if (proto) {
+			return dataFromConstructor(proto, level + 1);
+		} else {
+			console.error('no data found for constructor:', constructor, level);
+			return UNKNOWN_OBJECT_TYPE;
+		}
 		// console.log(constructor);
 		// console.log((constructor as any).__proto__);
 		// console.log(constructor.prototype.prototype);
