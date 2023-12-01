@@ -29,6 +29,10 @@ export class InstancedMeshToMeshSopOperation extends BaseSopOperation {
 		const childrenToRemove: Object3D[] = [];
 		for (const inputObject of inputObjects) {
 			inputObject.traverse((child) => {
+				// in the editor, when importing a plugin,
+				// we can end up with multiple threejs imported,
+				// in which case instanceof would not work.
+				// it is therefore preferable to check using .isInstancedMesh
 				if ((child as InstancedMesh).isInstancedMesh) {
 					childrenToRemove.push(child);
 
