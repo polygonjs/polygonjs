@@ -3356,10 +3356,10 @@ murmurhash-js@^1.0.0:
   resolved "https://registry.yarnpkg.com/murmurhash-js/-/murmurhash-js-1.0.0.tgz#b06278e21fc6c37fa5313732b0412bcb6ae15f51"
   integrity sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==
 
-n8ao@1.6.8:
-  version "1.6.8"
-  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.6.8.tgz#93195eb7c29de962c24ddbbed7d04b72f7ee0d1c"
-  integrity sha512-3xaBaoMIplgPdBK+9mZefa8stWEoA2673h2734wYMxm/hUkMLENMhzymDe+WZueFQq93ly4xpl5s1NJrQBzFOQ==
+n8ao@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.7.0.tgz#43b42d66f3bb2333522d7fb8d8c6750ea5e8a32b"
+  integrity sha512-0Ne+dnzlKByj4UR+OfPU04CanmbNPPtYcqJqWWcPw00CiMOLhkE23/gwoROLACKMRLuWsqhW2cMf5pYlywrIAQ==
 
 nanoid@^3.3.6:
   version "3.3.7"
@@ -3692,10 +3692,10 @@ postcss@^8.4.13, postcss@^8.4.26:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@6.33.2:
-  version "6.33.2"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.33.2.tgz#f39ad2671bbe0ce553152206b7f8c1e2980f0128"
-  integrity sha512-xGirHyjArISGVfmjCwXyvuhZm9JpLxEkjdE+ZOSq+7SmSetqFfdpaGfkEjbbFxWShwgwXWmgtcPxvrg9BP+r8g==
+postprocessing@6.33.3:
+  version "6.33.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.33.3.tgz#d80103f6e68581263557aa2e5d9e26af3e0d7cfd"
+  integrity sha512-zQAVvcMf7bfeggQNQeVErD/UFd1XHBi2X6+yxwIv9PjhGCLAYKue3UuzVyu95O7ZUvkDwF0TyTzKdxoaVwYi7w==
 
 potpack@2.0.0, potpack@^2.0.0:
   version "2.0.0"

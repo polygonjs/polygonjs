@@ -53,8 +53,8 @@ class ScreenSpaceAmbientOcclusionParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	/** @param halfRef */
-	halfRef = ParamConfig.BOOLEAN(0, {
+	/** @param halfRes */
+	halfRes = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
 	/** @param screenSpaceRadius */
@@ -110,7 +110,7 @@ export class ScreenSpaceAmbientOcclusionPostNode extends TypedPostNode<Pass, Scr
 		pass.configuration.intensity = this.pv.intensity;
 		pass.configuration.color.copy(this.pv.color);
 		//
-		pass.configuration.halfRef = this.pv.halfRef;
+		pass.configuration.halfRes = this.pv.halfRes;
 		pass.configuration.screenSpaceRadius = this.pv.screenSpaceRadius;
 		// denoise
 		pass.configuration.denoiseSamples = this.pv.denoiseSamples;

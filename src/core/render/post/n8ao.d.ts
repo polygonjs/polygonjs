@@ -13,7 +13,7 @@ export class N8AOPostPass extends Pass {
 		denoiseIterations: number;
 		logarithmicDepthBuffer: boolean;
 		screenSpaceRadius: boolean;
-		halfRef: boolean;
+		halfRes: boolean;
 		depthAwareUpsampling: boolean;
 	};
 	constructor(scene: Scene, camera: Camera);
