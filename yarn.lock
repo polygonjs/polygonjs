@@ -3179,10 +3179,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-manifold-3d@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/manifold-3d/-/manifold-3d-2.1.0.tgz#f2b386a635d3782d99d73471db87bb395110791d"
-  integrity sha512-6HZKoE/F1Yy4jpjLvdbebELqxVh9h/RNaWU/vjernKJE9IJ+zZasP8saDCkCqzIj5vCRKg4IFOmsOAU01I6ajg==
+manifold-3d@2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/manifold-3d/-/manifold-3d-2.2.2.tgz#b9fa13d8ab123c63bf8156585720418bf3b6ccd9"
+  integrity sha512-AiJkykbU6TIfLxZXBGJXa1O9mrjL8nB29saNhie/EsdcPC+13J7Zq5dfONXBff9JaWI44K5PWK4lU87cBb+7pA==
 
 mapbox-gl@2.13.0:
   version "2.13.0"
