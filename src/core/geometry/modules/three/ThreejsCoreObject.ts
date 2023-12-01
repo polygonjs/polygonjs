@@ -14,7 +14,7 @@ import {
 } from 'three';
 import {cloneBufferGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
-import {AttribClass, dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
+import {AttribClass, dataFromObject, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
 import {objectCloneDeep} from '../../../ObjectUtils';
@@ -49,7 +49,7 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		this._object = _object;
 	}
 	override humanType(): string {
-		return dataFromConstructor(this._object.constructor).humanName;
+		return dataFromObject(this._object).humanName;
 	}
 	override object() {
 		return this._object;

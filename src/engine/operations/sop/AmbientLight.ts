@@ -20,7 +20,16 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
-		registerObjectType({type: ObjectType.AMBIENT_LIGHT, ctor: AmbientLight, humanName: 'AmbientLight'});
+		registerObjectType({
+			type: ObjectType.AMBIENT_LIGHT,
+			checkFunc: (o) => {
+				if ((o as AmbientLight).isAmbientLight) {
+					return ObjectType.AMBIENT_LIGHT;
+				}
+			},
+			ctor: AmbientLight,
+			humanName: 'AmbientLight',
+		});
 		const light = new AmbientLight();
 		light.matrixAutoUpdate = false;
 		light.name = `AmbientLight_${this._node?.name() || ''}`;

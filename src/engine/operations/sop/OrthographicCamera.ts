@@ -77,6 +77,11 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 	static createCamera(params: CreateOrthographicCameraParams, nodeGenerator?: BaseNodeType) {
 		registerObjectType({
 			type: ObjectType.ORTHOGRAPHIC_CAMERA,
+			checkFunc: (o) => {
+				if ((o as OrthographicCamera).isOrthographicCamera) {
+					return ObjectType.ORTHOGRAPHIC_CAMERA;
+				}
+			},
 			ctor: OrthographicCamera,
 			humanName: 'OrthographicCamera',
 		});

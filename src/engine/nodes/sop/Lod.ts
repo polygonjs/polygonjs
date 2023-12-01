@@ -4,9 +4,8 @@
  * @remarks
  * This nodes takes 1, 2 or 3 inputs. Depending on the distance to this object the camera is, one of those inputs will be displayed. This allows you to have low resolution objects displayed when the camera is far, and high resolution when the camera is close.
  */
+import {Camera, Object3D, LOD} from 'three';
 import {TypedSopNode} from './_Base';
-import {LOD} from 'three';
-import {Object3D} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
@@ -14,7 +13,6 @@ import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Camera} from 'three';
 import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class LODSopParamsConfig extends NodeParamsConfig {
@@ -67,7 +65,16 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 	}
 
 	private _createLOD() {
-		registerObjectType({type: ObjectType.LOD, ctor: LOD, humanName: 'LOD'});
+		registerObjectType({
+			type: ObjectType.LOD,
+			checkFunc: (o) => {
+				if ((o as LOD).isLOD) {
+					return ObjectType.LOD;
+				}
+			},
+			ctor: LOD,
+			humanName: 'LOD',
+		});
 		const lod = new LOD();
 		lod.matrixAutoUpdate = false;
 		return lod;

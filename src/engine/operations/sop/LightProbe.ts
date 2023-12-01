@@ -24,7 +24,16 @@ export class LightProbeSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
-		registerObjectType({type: ObjectType.LIGHT_PROBE, ctor: LightProbe, humanName: 'LightProbe'});
+		registerObjectType({
+			type: ObjectType.LIGHT_PROBE,
+			checkFunc: (o) => {
+				if ((o as LightProbe).isLightProbe) {
+					return ObjectType.LIGHT_PROBE;
+				}
+			},
+			ctor: LightProbe,
+			humanName: 'LightProbe',
+		});
 		const light = new LightProbe();
 		light.name = `LightProbe_${this._node?.name() || ''}`;
 		light.matrixAutoUpdate = false;

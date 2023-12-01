@@ -147,7 +147,16 @@ export class DirectionalLightContainer extends Group {
 	public override matrixAutoUpdate = false;
 	constructor(options: DirectionalLightContainerParams, public readonly nodeName: string) {
 		super();
-		registerObjectType({type: ObjectType.DIRECTIONAL_LIGHT, ctor: DirectionalLight, humanName: 'DirectionalLight'});
+		registerObjectType({
+			type: ObjectType.DIRECTIONAL_LIGHT,
+			checkFunc: (o) => {
+				if ((o as DirectionalLight).isDirectionalLight) {
+					return ObjectType.DIRECTIONAL_LIGHT;
+				}
+			},
+			ctor: DirectionalLight,
+			humanName: 'DirectionalLight',
+		});
 		this.showHelper = options.showHelper;
 		// set light pos to 0,0,1
 		// in order to have it face z axis

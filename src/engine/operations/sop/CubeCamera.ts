@@ -124,6 +124,11 @@ export class CubeCameraSopOperation extends BaseSopOperation {
 		const cubeRenderTarget = new WebGLCubeRenderTarget(params.resolution);
 		registerObjectType({
 			type: ObjectType.CUBE_CAMERA,
+			checkFunc: (o) => {
+				if ((o as CubeCamera).renderTarget) {
+					return ObjectType.CUBE_CAMERA;
+				}
+			},
 			ctor: CubeCameraExtended as any as DefaultObjectContentConstructor,
 			humanName: ObjectType.CUBE_CAMERA,
 		});

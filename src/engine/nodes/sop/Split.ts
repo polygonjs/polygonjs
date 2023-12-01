@@ -12,7 +12,7 @@ import {
 	ATTRIBUTE_TYPES,
 	AttribType,
 	AttribTypeMenuEntries,
-	objectTypeFromConstructor,
+	objectTypeFromObject,
 } from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
@@ -95,7 +95,7 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 			}
 		}
 
-		const objectType = objectTypeFromConstructor(object.constructor);
+		const objectType = objectTypeFromObject(object);
 		if (objectType) {
 			pointsByValue.forEach((points, value) => {
 				const builder = geometryBuilder(objectType);

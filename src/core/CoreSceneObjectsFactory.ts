@@ -52,6 +52,11 @@ type GeneratorMap = {
 const DEFAULT_PERSPECTIVE_CAMERA_CONSTRUCTOR: PerspectiveCameraConstructor = (options: PerspectiveCameraOptions) => {
 	registerObjectType({
 		type: ObjectType.PERSPECTIVE_CAMERA,
+		checkFunc: (obj) => {
+			if ((obj as PerspectiveCamera).isPerspectiveCamera) {
+				return ObjectType.PERSPECTIVE_CAMERA;
+			}
+		},
 		ctor: PerspectiveCamera,
 		humanName: 'PerspectiveCamera',
 	});
@@ -63,13 +68,31 @@ const DEFAULT_PERSPECTIVE_CAMERA_UPDATE: PerspectiveCameraUpdate<PerspectiveCame
 ) => {};
 
 const DEFAULT_AREA_LIGHT_CONSTRUCTOR: AreaLightConstructor = (options: AreaLightOptions) => {
-	registerObjectType({type: ObjectType.AREA_LIGHT, ctor: RectAreaLight, humanName: 'AreaLight'});
+	registerObjectType({
+		type: ObjectType.AREA_LIGHT,
+		checkFunc: (obj) => {
+			if ((obj as RectAreaLight).isRectAreaLight) {
+				return ObjectType.AREA_LIGHT;
+			}
+		},
+		ctor: RectAreaLight,
+		humanName: 'AreaLight',
+	});
 	const {color, intensity, width, height} = options;
 	return new RectAreaLight(color, intensity, width, height);
 };
 
 const DEFAULT_SPOT_LIGHT_CONSTRUCTOR: SpotLightConstructor = () => {
-	registerObjectType({type: ObjectType.SPOT_LIGHT, ctor: SpotLight, humanName: ObjectType.SPOT_LIGHT});
+	registerObjectType({
+		type: ObjectType.SPOT_LIGHT,
+		checkFunc: (obj) => {
+			if ((obj as SpotLight).isSpotLight) {
+				return ObjectType.SPOT_LIGHT;
+			}
+		},
+		ctor: SpotLight,
+		humanName: ObjectType.SPOT_LIGHT,
+	});
 	const spotLight = new SpotLight();
 	monkeyPatchSpotLight(spotLight);
 	return spotLight;

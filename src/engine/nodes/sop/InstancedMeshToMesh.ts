@@ -28,7 +28,16 @@ export class InstancedMeshToMeshSopNode extends TypedSopNode<InstancedMeshToMesh
 
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InstancedMeshToMeshSopOperation.INPUT_CLONED_STATE);
-		registerObjectType({type: ObjectType.INSTANCED_MESH, ctor: InstancedMesh, humanName: 'InstancedMesh'});
+		registerObjectType({
+			type: ObjectType.INSTANCED_MESH,
+			checkFunc: (o) => {
+				if ((o as InstancedMesh).isInstancedMesh) {
+					return ObjectType.INSTANCED_MESH;
+				}
+			},
+			ctor: InstancedMesh,
+			humanName: 'InstancedMesh',
+		});
 	}
 
 	private _operation: InstancedMeshToMeshSopOperation | undefined;

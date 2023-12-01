@@ -9,7 +9,7 @@ import {TypedSopNode} from './_Base';
 import {
 	AttribClass,
 	ObjectType,
-	objectTypeFromConstructor,
+	objectTypeFromObject,
 	AttribType,
 	AttribTypeMenuEntries,
 	ATTRIBUTE_TYPES,
@@ -289,7 +289,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				newObjects.push(object);
 			} else {
 				if (keptEntities.length > 0) {
-					const objectType = objectTypeFromConstructor(object.constructor);
+					const objectType = objectTypeFromObject(object);
 					if (objectType) {
 						const builder = geometryBuilder(objectType);
 						if (builder) {

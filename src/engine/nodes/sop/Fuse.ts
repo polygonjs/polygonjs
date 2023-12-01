@@ -11,7 +11,7 @@ import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Me
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
-import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
+import {ObjectType, objectTypeFromObject} from '../../../core/geometry/Constant';
 import {arrayUniq} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
@@ -74,7 +74,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 	}
 
 	private _filterObject(object: Object3D) {
-		const objectType = objectTypeFromConstructor(object.constructor);
+		const objectType = objectTypeFromObject(object);
 		switch (objectType) {
 			case ObjectType.MESH: {
 				return this._filterMesh(object as Mesh);
@@ -129,8 +129,8 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			return;
 		}
 		const indexArray = index.array as number[];
-		const newIndices:number[] =[]
-		arrayUniq(indexArray,newIndices)
+		const newIndices: number[] = [];
+		arrayUniq(indexArray, newIndices);
 		newIndices.sort((a, b) => a - b);
 		geometry.setIndex(newIndices);
 		if (newIndices.length == 0) {

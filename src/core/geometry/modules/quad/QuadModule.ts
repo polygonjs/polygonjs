@@ -161,5 +161,14 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 	//
 	//
 	const type = 'QuadObject';
-	registerObjectType({type: type as ObjectType, ctor: QuadObject, humanName: 'QuadObject'});
+	registerObjectType({
+		type: type as ObjectType,
+		checkFunc: (o) => {
+			if (QUAD_OBJECT_TYPES_SET.has(o.type as QUADObjectType)) {
+				return ObjectType.QUAD;
+			}
+		},
+		ctor: QuadObject,
+		humanName: 'QuadObject',
+	});
 }

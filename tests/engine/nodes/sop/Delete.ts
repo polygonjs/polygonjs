@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import type {Mesh} from 'three';
 import {
 	ObjectType,
-	objectTypeFromConstructor,
+	objectTypeFromObject,
 	AttribClass,
 	AttribType,
 	ATTRIBUTE_TYPES,
@@ -124,14 +124,8 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		let container = await merge1.compute();
 		let core_object = container.coreContent()!;
 		assert.equal(core_object.threejsCoreObjects().length, 2);
-		assert.equal(
-			objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor),
-			ObjectType.MESH
-		);
-		assert.equal(
-			objectTypeFromConstructor(core_object.threejsCoreObjects()[1].object().constructor),
-			ObjectType.MESH
-		);
+		assert.equal(objectTypeFromObject(core_object.threejsCoreObjects()[0].object()), ObjectType.MESH);
+		assert.equal(objectTypeFromObject(core_object.threejsCoreObjects()[1].object()), ObjectType.MESH);
 
 		// now with keep_points on
 		delete1.p.keepPoints.set(1);
@@ -139,14 +133,8 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		assert.notOk(delete1.states.error.message());
 		core_object = container.coreContent()!;
 		assert.equal(core_object.threejsCoreObjects().length, 2);
-		assert.equal(
-			objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor),
-			ObjectType.MESH
-		);
-		assert.equal(
-			objectTypeFromConstructor(core_object.threejsCoreObjects()[1].object().constructor),
-			ObjectType.POINTS
-		);
+		assert.equal(objectTypeFromObject(core_object.threejsCoreObjects()[0].object()), ObjectType.MESH);
+		assert.equal(objectTypeFromObject(core_object.threejsCoreObjects()[1].object()), ObjectType.POINTS);
 
 		// now with keep_points off
 		delete1.p.keepPoints.set(0);
@@ -154,10 +142,7 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		assert.notOk(delete1.states.error.message());
 		core_object = container.coreContent()!;
 		assert.equal(core_object.threejsCoreObjects().length, 1);
-		assert.equal(
-			objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor),
-			ObjectType.MESH
-		);
+		assert.equal(objectTypeFromObject(core_object.threejsCoreObjects()[0].object()), ObjectType.MESH);
 	});
 
 	qUnit.test('sop/delete: (class=point) string attrib', async (assert) => {

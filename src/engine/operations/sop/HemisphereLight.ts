@@ -19,7 +19,16 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
-		registerObjectType({type: ObjectType.HEMISPHERE_LIGHT, ctor: HemisphereLight, humanName: 'HemisphereLight'});
+		registerObjectType({
+			type: ObjectType.HEMISPHERE_LIGHT,
+			checkFunc: (o) => {
+				if ((o as HemisphereLight).isHemisphereLight) {
+					return ObjectType.HEMISPHERE_LIGHT;
+				}
+			},
+			ctor: HemisphereLight,
+			humanName: 'HemisphereLight',
+		});
 		const light = new HemisphereLight();
 		light.name = `HemisphereLight_${this._node?.name() || ''}`;
 		light.matrixAutoUpdate = false;

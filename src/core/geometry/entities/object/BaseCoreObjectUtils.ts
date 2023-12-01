@@ -1,6 +1,6 @@
 import {AttribValue, PolyDictionary} from '../../../../types/GlobalTypes';
 import {CoreObjectType, ObjectContent, isObject3D} from '../../ObjectContent';
-import {AttribSize, AttribType, ObjectData, ObjectType, objectTypeFromConstructor} from '../../Constant';
+import {AttribSize, AttribType, ObjectData, ObjectType, objectTypeFromObject} from '../../Constant';
 import {EntityGroupCollection} from '../../EntityGroupCollection';
 import type {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {addToSetAtEntry} from '../../../MapUtils';
@@ -10,7 +10,7 @@ export type AttributeDictionary = PolyDictionary<AttribValue>;
 
 export function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 	const childrenCount = isObject3D(object) ? object.children.length : 0;
-	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
+	const objectType = isObject3D(object) ? objectTypeFromObject(object) : (object.type as ObjectType);
 	const groupData = EntityGroupCollection.data(object);
 	return {
 		type: objectType,

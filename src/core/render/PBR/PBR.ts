@@ -48,24 +48,52 @@ export function onPBRModuleRegister(poly: PolyEngine) {
 		// only appear as Object3D in the scene tree
 		registerObjectType({
 			type: ObjectType.PERSPECTIVE_CAMERA,
+			checkFunc: (o) => {
+				if ((o as PerspectiveCamera).isPerspectiveCamera) {
+					return ObjectType.PERSPECTIVE_CAMERA;
+				}
+			},
 			ctor: PerspectiveCamera,
 			humanName: 'PerspectiveCamera',
 		});
 		registerObjectType({
-			type: ObjectType.PERSPECTIVE_CAMERA,
+			type: ObjectType.PHYSICAL_CAMERA,
+			checkFunc: (o) => {
+				if ((o as PhysicalCamera).bokehSize != null) {
+					return ObjectType.PHYSICAL_CAMERA;
+				}
+			},
 			ctor: PhysicalCamera,
-			humanName: 'PerspectiveCamera',
+			humanName: 'PhysicalCamera',
 		});
 		return new PhysicalCamera(fov, aspect, near, far);
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE, PHYSICAL_CAMERA_UPDATE as any);
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.AREA_LIGHT, (options: AreaLightOptions) => {
 		const {color, intensity, width, height} = options;
-		registerObjectType({type: ObjectType.AREA_LIGHT, ctor: ShapedAreaLight, humanName: 'AreaLight'});
+		registerObjectType({
+			type: ObjectType.AREA_LIGHT,
+			checkFunc: (o) => {
+				if ((o as ShapedAreaLight).isCircular) {
+					return ObjectType.SHAPED_AREA_LIGHT;
+				}
+			},
+			ctor: ShapedAreaLight,
+			humanName: 'ShapedAreaLight',
+		});
 		return new ShapedAreaLight(color, intensity, width, height);
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT, () => {
-		registerObjectType({type: ObjectType.SPOT_LIGHT, ctor: PhysicalSpotLight, humanName: ObjectType.SPOT_LIGHT});
+		registerObjectType({
+			type: ObjectType.PHYSICAL_SPOT_LIGHT,
+			checkFunc: (o) => {
+				if ((o as PhysicalSpotLight).iesTexture) {
+					return ObjectType.PHYSICAL_SPOT_LIGHT;
+				}
+			},
+			ctor: PhysicalSpotLight,
+			humanName: ObjectType.PHYSICAL_SPOT_LIGHT,
+		});
 		const physicalSpotLight = new PhysicalSpotLight();
 		monkeyPatchSpotLight(physicalSpotLight);
 		return physicalSpotLight;

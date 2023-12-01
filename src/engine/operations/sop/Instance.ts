@@ -3,7 +3,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
-import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
+import {objectTypeFromObject} from '../../../core/geometry/Constant';
 import {applyCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
@@ -47,7 +47,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		}
 
 		if (this._geometry) {
-			const type = objectTypeFromConstructor(objectToInstance.constructor);
+			const type = objectTypeFromObject(objectToInstance);
 			if (type) {
 				const object = this.createObject(this._geometry, type);
 				if (object) {

@@ -30,6 +30,7 @@ import type {
 } from 'three';
 import {GroupCollectionData} from './EntityGroupCollection';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
+import type {PhysicalCamera, ShapedAreaLight, PhysicalSpotLight} from '../render/PBR/three-gpu-pathtracer';
 
 // import {Poly} from '../../engine/Poly';
 
@@ -38,7 +39,6 @@ interface MaterialsByString {
 }
 
 export enum ObjectType {
-	// UNKNOWN = 'Unknown',
 	AMBIENT_LIGHT = 'AmbientLight',
 	AREA_LIGHT = 'AreaLight',
 	// BONE = 'Bone',
@@ -54,12 +54,16 @@ export enum ObjectType {
 	OBJECT3D = 'Object3D',
 	ORTHOGRAPHIC_CAMERA = 'OrthographicCamera',
 	PERSPECTIVE_CAMERA = 'PerspectiveCamera',
+	PHYSICAL_CAMERA = 'PhysicalCamera',
+	PHYSICAL_SPOT_LIGHT = 'PhysicalSpotLight',
 	POINT_LIGHT = 'PointLight',
 	POINTS = 'Points',
 	SCENE = 'Scene',
+	SHAPED_AREA_LIGHT = 'ShapedAreaLight',
 	// SKINNED_MESH = 'SkinnedMesh',
 	SPOT_LIGHT = 'SpotLight',
 	UNKNOWN = 'Unknown',
+	QUAD = 'Quad',
 }
 export const OBJECT_TYPES: ObjectType[] = [
 	ObjectType.GROUP,
@@ -70,14 +74,11 @@ export const OBJECT_TYPES: ObjectType[] = [
 	ObjectType.SCENE,
 ];
 
-// type Object3DConstructor = any;// Object3D
 interface ObjectContentConstructor<T extends CoreObjectType> {
 	new (arg0: any, arg1?: any, arg2?: any): ObjectContent<T>;
-	// Model: Model;
 }
 export type DefaultObjectContentConstructor = ObjectContentConstructor<CoreObjectType>;
 
-// type ObjectByObjectTypeMapGeneric = {[key in ObjectType]: DefaultObject3DConstructor};
 export interface ObjectByObjectType {
 	[ObjectType.AMBIENT_LIGHT]: AmbientLight;
 	[ObjectType.AREA_LIGHT]: RectAreaLight;
@@ -96,28 +97,16 @@ export interface ObjectByObjectType {
 	[ObjectType.POINTS]: Points;
 	[ObjectType.ORTHOGRAPHIC_CAMERA]: OrthographicCamera;
 	[ObjectType.PERSPECTIVE_CAMERA]: PerspectiveCamera;
+	[ObjectType.PHYSICAL_CAMERA]: PhysicalCamera;
+	[ObjectType.PHYSICAL_SPOT_LIGHT]: PhysicalSpotLight;
 	// [ObjectType.POINTS]: typeof Points;
 	[ObjectType.SCENE]: Scene;
+	[ObjectType.SHAPED_AREA_LIGHT]: ShapedAreaLight;
 	// [ObjectType.SKINNED_MESH]: typeof SkinnedMesh;
 	[ObjectType.SPOT_LIGHT]: SpotLight;
 	[ObjectType.UNKNOWN]: null;
-	//
-	// [ObjectType.UNKNOWN]: Object3D;
+	[ObjectType.QUAD]: null;
 }
-// export const CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME: Record<ObjectType, string> = {
-// 	// [ObjectType.BONE]: 'Bone',
-// 	[ObjectType.GROUP]: 'Group',
-// 	[ObjectType.LINE_SEGMENTS]: 'LineSegments',
-// 	// [ObjectType.LOD]: 'LOD',
-// 	[ObjectType.MESH]: 'Mesh',
-// 	[ObjectType.OBJECT3D]: 'Object3D',
-// 	[ObjectType.POINTS]: 'Points',
-// 	// [ObjectType.ORTHOGRAPHIC_CAMERA]: 'OrthographicCamera',
-// 	// [ObjectType.PERSPECTIVE_CAMERA]: 'PerspectiveCamera',
-// 	// [ObjectType.POINTS]: 'Points',
-// 	// [ObjectType.SCENE]: 'Scene',
-// 	// [ObjectType.SKINNED_MESH]: 'SkinnedMesh',
-// };
 
 export interface ObjectData {
 	type: ObjectType;
@@ -130,134 +119,92 @@ export interface ObjectData {
 	primitiveName: string;
 }
 
-// Zexport interface ObjectConstructorByObjectType {
-// 	[ObjectType.MESH]: typeof Mesh;
-// 	[ObjectType.GROUP]: typeof Group;
-// 	[ObjectType.POINTS]: typeof Points;
-// 	[ObjectType.LINE_SEGMENTS]: typeof LineSegments;
-// 	[ObjectType.OBJECT3D]: typeof Object3D;
-// 	[ObjectType.LOD]: typeof LOD;
-// }
-// export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = {
-// 	[ObjectType.MESH]: Mesh,
-// 	[ObjectType.GROUP]: Group,
-// 	[ObjectType.POINTS]: Points,
-// 	[ObjectType.LINE_SEGMENTS]: LineSegments,
-// 	[ObjectType.OBJECT3D]: Object3D,
-// 	[ObjectType.LOD]: LOD,
-// };
-const UNKNOWN_OBJECT_TYPE: ObjectTypeData = {type: ObjectType.UNKNOWN, ctor: null as any, humanName: 'Unknown'};
+const UNKNOWN_OBJECT_TYPE: ObjectTypeData = {
+	type: ObjectType.UNKNOWN,
+	checkFunc: (o) => ObjectType.UNKNOWN,
+	humanName: 'Unknown',
+	ctor: null as any,
+};
 
+// type DataByConstructor = Map<DefaultObjectContentConstructor, ObjectTypeData>;
+type ObjectTypeCheckFunction = (object: ObjectContent<CoreObjectType>) => ObjectType | undefined;
+type DataByObjectType = Map<ObjectType, ObjectTypeData>;
 export interface ObjectTypeData {
 	type: ObjectType;
+	checkFunc: ObjectTypeCheckFunction;
 	ctor: DefaultObjectContentConstructor;
 	humanName: string;
 }
-type DataByConstructor = Map<DefaultObjectContentConstructor, ObjectTypeData>;
-type DataByObjectType = Map<ObjectType, ObjectTypeData>;
 interface ObjectTypeConstructorRegisters {
-	dataByConstructor: DataByConstructor;
+	objectTypeCheckFunctions: ObjectTypeCheckFunction[];
 	dataByObjectType: DataByObjectType;
 }
+
 function _initializeObjectTypeFromConstructor() {
-	const dataByConstructor: DataByConstructor = new Map();
+	const objectTypeCheckFunctions: ObjectTypeCheckFunction[] = [];
 	const dataByObjectType: DataByObjectType = new Map();
-	const maps: ObjectTypeConstructorRegisters = {dataByConstructor, dataByObjectType};
-	function _register(type: ObjectType, ctor: DefaultObjectContentConstructor, humanName?: string) {
+	const maps: ObjectTypeConstructorRegisters = {objectTypeCheckFunctions, dataByObjectType};
+	function _register(
+		type: ObjectType,
+		checkFunc: ObjectTypeCheckFunction,
+		ctor: DefaultObjectContentConstructor,
+		humanName?: string
+	) {
 		_registerObjectType_(maps, {
 			type,
+			checkFunc,
 			ctor,
 			humanName: humanName || type,
 		});
 	}
-	_register(ObjectType.GROUP, Group);
-	_register(ObjectType.LINE_SEGMENTS, LineSegments);
-	_register(ObjectType.INSTANCED_MESH, InstancedMesh);
-	_register(ObjectType.MESH, Mesh);
-	_register(ObjectType.OBJECT3D, Object3D);
-	_register(ObjectType.POINTS, Points);
-	_register(ObjectType.SCENE, Scene);
+	_register(
+		ObjectType.OBJECT3D,
+		(o) => ((o as Object3D).isObject3D ? ObjectType.OBJECT3D : undefined),
+		Object3D,
+		'Object3D'
+	);
+	_register(ObjectType.MESH, (o) => ((o as Mesh).isMesh ? ObjectType.MESH : undefined), Mesh, 'Mesh');
+	_register(ObjectType.GROUP, (o) => ((o as Group).isGroup ? ObjectType.GROUP : undefined), Group, 'Group');
+	_register(
+		ObjectType.LINE_SEGMENTS,
+		(o) => ((o as LineSegments).isLineSegments ? ObjectType.LINE_SEGMENTS : undefined),
+		LineSegments,
+		'LineSegments'
+	);
+	_register(
+		ObjectType.INSTANCED_MESH,
+		(o) => ((o as InstancedMesh).isInstancedMesh ? ObjectType.INSTANCED_MESH : undefined),
+		InstancedMesh,
+		'InstancedMesh'
+	);
+	_register(ObjectType.POINTS, (o) => ((o as Points).isPoints ? ObjectType.POINTS : undefined), Points, 'Points');
+	_register(ObjectType.SCENE, (o) => ((o as Scene).isScene ? ObjectType.SCENE : undefined), Scene, 'Scene');
 	return maps;
 }
-const {dataByConstructor, dataByObjectType}: ObjectTypeConstructorRegisters = _initializeObjectTypeFromConstructor();
+const {objectTypeCheckFunctions, dataByObjectType}: ObjectTypeConstructorRegisters =
+	_initializeObjectTypeFromConstructor();
 function _registerObjectType_(maps: ObjectTypeConstructorRegisters, data: ObjectTypeData) {
-	maps.dataByConstructor.set(data.ctor, data);
+	maps.objectTypeCheckFunctions.unshift(data.checkFunc);
 	maps.dataByObjectType.set(data.type, data);
 }
 export function registerObjectType(data: ObjectTypeData) {
-	_registerObjectType_({dataByConstructor, dataByObjectType}, data);
+	_registerObjectType_({objectTypeCheckFunctions, dataByObjectType}, data);
 }
 
-export function objectTypeFromConstructor(constructor: Function): ObjectType {
-	return dataFromConstructor(constructor).type;
-	// const foundData = dataByConstructor.get(constructor as DefaultObject3DConstructor);
-	// if (foundData) {
-	// 	return foundData.type;
-	// } else {
-	// 	console.warn('no type found for constructor:');
-	// 	console.log(constructor);
-	// 	return ObjectType.MESH;
-	// }
-
-	// switch (constructor) {
-	// 	case Object3D:
-	// 		return ObjectType.OBJECT3D;
-	// 	case Group:
-	// 		return ObjectType.GROUP;
-	// 	case Mesh:
-	// 		return ObjectType.MESH;
-	// 	case Points:
-	// 		return ObjectType.POINTS;
-	// 	case LineSegments:
-	// 		return ObjectType.LINE_SEGMENTS;
-	// 	case LOD:
-	// 		return ObjectType.LOD;
-	// 	case PerspectiveCamera:
-	// 		return ObjectType.PERSPECTIVE_CAMERA;
-	// 	case OrthographicCamera:
-	// 		return ObjectType.ORTHOGRAPHIC_CAMERA;
-	// 	default:
-	// 		// Poly.warn('object type not supported', constructor);
-	// 		return ObjectType.MESH;
-	// }
+export function objectTypeFromObject(object: ObjectContent<CoreObjectType>): ObjectType {
+	return dataFromObject(object).type;
 }
-export function dataFromConstructor(constructor: Function, level = 0): ObjectTypeData {
-	const foundData = dataByConstructor.get(constructor as DefaultObjectContentConstructor);
-	// console.log(level, 'constructor', foundData, constructor);
-	if (foundData) {
-		return foundData;
-	} else {
-		// console.warn('no data found for constructor:');
-		// console.log(constructor);
-		const proto = (constructor as any).__proto__;
-		if (proto) {
-			return dataFromConstructor(proto, level + 1);
-		} else {
-			console.error('no data found for constructor:', constructor, level);
-			return UNKNOWN_OBJECT_TYPE;
+
+export function dataFromObject(object: ObjectContent<CoreObjectType>): ObjectTypeData {
+	for (const checkFunc of objectTypeCheckFunctions) {
+		const objectType = checkFunc(object);
+		if (objectType) {
+			return dataByObjectType.get(objectType) as ObjectTypeData;
 		}
-		// console.log(constructor);
-		// console.log((constructor as any).__proto__);
-		// console.log(constructor.prototype.prototype);
-		// console.log(constructor.prototype.constructor);
-		// console.log('Object3D:');
-		// console.log('Object3D', Object3D);
-		// console.log('Object3D.prototype:', Object3D.prototype);
-		// console.log('group:');
-		// console.log('Group', Group);
-		// console.log('Group.prototype', Group.prototype);
-		// console.log('(Group.prototype as any).prototype', (Group.prototype as any).prototype);
-		// console.log('proto', (Group as any).__proto__, (Group as any).__proto__.__proto__);
-		// console.log({constructor: Group.constructor});
-		// console.log({'constructor.prototype': Group.constructor.prototype});
-		// console.log('new');
-		// const group = new Group();
-		// console.log({group});
-		// console.log({constructor: group.constructor});
-		// console.log({prototype: group.constructor.prototype});
-		// return dataByObjectType.get(ObjectType.MESH) as ObjectTypeData;
 	}
+	return UNKNOWN_OBJECT_TYPE;
 }
+
 export function objectConstructorByObjectType<O extends ObjectType>(objectType: O): ObjectByObjectType[O] {
 	const data = dataByObjectType.get(objectType);
 	if (data) {
@@ -267,24 +214,6 @@ export function objectConstructorByObjectType<O extends ObjectType>(objectType: 
 		return dataByObjectType.get(ObjectType.MESH) as any as ObjectByObjectType[O];
 	}
 }
-// export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
-// 	objectTypeByConstructor.get(object.constructor)
-// 	// if (object instanceof Mesh) {
-// 	// 	return ObjectType.MESH;
-// 	// } else if (object instanceof Group) {
-// 	// 	return ObjectType.GROUP;
-// 	// } else if (object instanceof LineSegments) {
-// 	// 	return ObjectType.LINE_SEGMENTS;
-// 	// } else if (object instanceof Points) {
-// 	// 	return ObjectType.POINTS;
-// 	// } else if (object instanceof Object3D) {
-// 	// 	return ObjectType.OBJECT3D;
-// 	// }
-// 	// // else if (object instanceof LOD) {
-// 	// // 	return ObjectType.LOD;
-// 	// // }
-// 	// Poly.warn('ObjectTypeByObject received an unknown object type', object);
-// }
 
 export const DEFAULT_MATERIALS: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({

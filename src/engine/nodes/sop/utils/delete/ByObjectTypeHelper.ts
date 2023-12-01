@@ -1,6 +1,6 @@
 import {DeleteSopNode} from '../../Delete';
 import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
-import {ObjectType, objectTypeFromConstructor} from '../../../../../core/geometry/Constant';
+import {ObjectType, objectTypeFromObject} from '../../../../../core/geometry/Constant';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 export const OBJECT_TYPES: ObjectType[] = [
@@ -21,7 +21,7 @@ export class ByObjectTypeHelper {
 		for (const coreObject of coreObjects) {
 			const object = coreObject.object();
 			if (object) {
-				if (objectTypeFromConstructor(object.constructor) == objectType) {
+				if (objectTypeFromObject(object) == objectType) {
 					this.node.entitySelectionHelper.select(coreObject);
 				}
 			}

@@ -1,6 +1,6 @@
 import {Intersection, Vector2, Vector3, Mesh, BufferGeometry, BufferAttribute, Triangle, Points} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {AttribType, objectTypeFromConstructor, ObjectType} from '../Constant';
+import {AttribType, objectTypeFromObject, ObjectType} from '../Constant';
 import {corePointClassFactory} from '../CoreObjectFactory';
 
 const _vA = new Vector3();
@@ -16,7 +16,7 @@ export function resolveIntersectGeometryAttribute(
 	attribName: string,
 	attribType: AttribType
 ) {
-	const objectType = objectTypeFromConstructor(intersection.object.constructor);
+	const objectType = objectTypeFromObject(intersection.object);
 	switch (objectType) {
 		case ObjectType.MESH:
 			return resolveGeometryAttributeForMesh(intersection, attribName, attribType);
