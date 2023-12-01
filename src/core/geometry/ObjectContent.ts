@@ -48,7 +48,7 @@ export interface ObjectContent<T extends CoreObjectType> {
 }
 
 export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is Object3D {
-	return o instanceof Object3D;
+	return o instanceof Object3D || (o as Object3D).isObject3D == true;
 }
 
 export interface ObjectContentCopyPropertiesOptions {

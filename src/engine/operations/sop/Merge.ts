@@ -33,11 +33,11 @@ export class MergeSopOperation extends BaseSopOperation {
 	// to make sure I am not including a geometry twice, if there is a hierarchy
 	override cook(inputCoreGroups: CoreGroup[], params: MergeSopParams) {
 		let allObjects: ObjectContent<CoreObjectType>[] = [];
-		for (let inputCoreGroup of inputCoreGroups) {
+		for (const inputCoreGroup of inputCoreGroups) {
 			if (inputCoreGroup) {
 				const objects = inputCoreGroup.allObjects();
 				if (isBooleanTrue(params.compact)) {
-					for (let object of objects) {
+					for (const object of objects) {
 						object.traverse((child) => {
 							allObjects.push(child as Object3DWithGeometry);
 						});
@@ -45,7 +45,7 @@ export class MergeSopOperation extends BaseSopOperation {
 				} else {
 					// if we are not compact,
 					// we only use the current level, not children
-					for (let object of inputCoreGroup.allObjects()) {
+					for (const object of objects) {
 						allObjects.push(object);
 					}
 				}
@@ -142,7 +142,7 @@ function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
 	}
 	objectsByMaterial.forEach((objectSet, material) => {
 		coreObjectClass.mergeCompact({
-			objects: setToArray(objectSet,[]),
+			objects: setToArray(objectSet, []),
 			material,
 			objectType,
 			mergedObjects,
