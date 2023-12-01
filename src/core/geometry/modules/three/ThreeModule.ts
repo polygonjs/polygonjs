@@ -98,6 +98,7 @@ const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectC
 		return ThreejsCoreObject;
 	}
 };
+export const objectClassFactoryEnsured = () => ThreejsCoreObject;
 const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
 	index = 0

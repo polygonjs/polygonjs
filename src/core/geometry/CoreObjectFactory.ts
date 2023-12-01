@@ -1,5 +1,5 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
-import {object3DFactory} from './modules/three/ThreeModule';
+import {object3DFactory, objectClassFactoryEnsured} from './modules/three/ThreeModule';
 import type {CorePoint} from './entities/point/CorePoint';
 import type {CoreVertex} from './entities/vertex/CoreVertex';
 import type {BaseCoreObject} from './entities/object/BaseCoreObject';
@@ -148,7 +148,10 @@ export function coreObjectClassFactory(object: ObjectContent<CoreObjectType>): B
 			return result;
 		}
 	}
-	return object3DFactory.objectClass(object) as BaseCoreObjectClassClass;
+	// we need objectClassFactoryEnsured()
+	// in case we import multiple threejs,
+	// and this ensures that this function never returns undefined
+	return object3DFactory.objectClass(object) || (objectClassFactoryEnsured() as BaseCoreObjectClassClass);
 }
 
 export function coreObjectInstanceFactory<T extends CoreObjectType>(
