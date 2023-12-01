@@ -107,6 +107,9 @@ const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		return new ThreejsCoreObject(object, index);
 	}
 };
+export const objectInstanceFactoryEnsured = (object: ObjectContent<CoreObjectType>, index = 0) => {
+	return new ThreejsCoreObject(object as Object3D, index);
+};
 
 //
 export const object3DFactory: CoreFactoryFunctions = {

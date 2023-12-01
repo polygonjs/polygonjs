@@ -1,5 +1,5 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
-import {object3DFactory, objectClassFactoryEnsured} from './modules/three/ThreeModule';
+import {object3DFactory, objectClassFactoryEnsured, objectInstanceFactoryEnsured} from './modules/three/ThreeModule';
 import type {CorePoint} from './entities/point/CorePoint';
 import type {CoreVertex} from './entities/vertex/CoreVertex';
 import type {BaseCoreObject} from './entities/object/BaseCoreObject';
@@ -164,8 +164,8 @@ export function coreObjectInstanceFactory<T extends CoreObjectType>(
 			return result as BaseCoreObject<T>;
 		}
 	}
-	return object3DFactory.objectInstance(object, index) as any as BaseCoreObject<T>;
-	// return new CoreObject(object as Object3D, index) as any as BaseCoreObject<T>;
+	return (object3DFactory.objectInstance(object, index) ||
+		objectInstanceFactoryEnsured(object)) as any as BaseCoreObject<T>;
 }
 
 export const ENTITY_CLASS_FACTORY = {
