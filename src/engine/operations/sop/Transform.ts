@@ -74,7 +74,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 
 		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
-		for (let inputObject of selectedObjects) {
+		for (const inputObject of selectedObjects) {
 			this._applyTransform(inputObject, coreGroup, params);
 		}
 		coreGroup.resetBoundingBox();

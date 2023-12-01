@@ -1,4 +1,4 @@
-import type {Mesh, LineSegments, Points} from 'three';
+import type {Mesh, LineSegments, Points, Object3D} from 'three';
 import {
 	CoreFactoryFunctions,
 	CorePointClassFactoryCheckFunction,
@@ -94,7 +94,7 @@ export const primitiveVerticesCountFactory = (object: ObjectContent<CoreObjectTy
 };
 // object methods
 const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
-	if (isObject3D(object)) {
+	if (isObject3D(object) || (object as Object3D).isObject3D) {
 		return ThreejsCoreObject;
 	}
 };
