@@ -54,6 +54,13 @@ uniform float opacity;
 	#endif
 #endif
 
+#ifdef USE_ANISOTROPY
+	uniform vec2 anisotropyVector;
+	#ifdef USE_ANISOTROPYMAP
+		uniform sampler2D anisotropyMap;
+	#endif
+#endif
+
 varying vec3 vViewPosition;
 
 #include <common>
@@ -212,12 +219,12 @@ if(POLY_SSSModel.isActive){
 	vec3 pos = vWorldPosition;
 	vec3 v = normalize( cameraPosition - pos );
 	vec3 n = inverseTransformDirection( normal, viewMatrix );
-	vec4 transmission = getIBLVolumeRefraction(
+	vec4 transmitted = getIBLVolumeRefraction(
 		n, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
 		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness,
 		material.attenuationColor, material.attenuationDistance );
-	material.transmissionAlpha = mix( material.transmissionAlpha, transmission.a, material.transmission );
-	totalDiffuse = mix( totalDiffuse, transmission.rgb, material.transmission );
+	material.transmissionAlpha = mix( material.transmissionAlpha, transmitted.a, material.transmission );
+	totalDiffuse = mix( totalDiffuse, transmitted.rgb, material.transmission );
 #endif
 
 

@@ -76,9 +76,11 @@ export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 		await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
 			scene.play();
 			await CoreSleep.sleep(500);
+			const THREE_VERSION = 153;
+			const id = viewer.id();
 			assert.equal(
 				viewer.domElement()?.innerHTML,
-				`<div class="CoreThreejsViewer" style="height: 100%;"><div id="my-viewer"><canvas id="TypedViewer_0" data-engine="three.js r152" width="400" height="400" style="display: block; outline: none; width: 100%; height: 100%;"></canvas></div>
+				`<div class="CoreThreejsViewer" style="height: 100%;"><div id="my-viewer"><canvas id="TypedViewer_${id}" data-engine="three.js r${THREE_VERSION}" width="400" height="400" style="display: block; outline: none; width: 100%; height: 100%;"></canvas></div>
 <div id="color-bars">
 	<div class="color-bar red"></div>
 	<div class="color-bar green"></div>
