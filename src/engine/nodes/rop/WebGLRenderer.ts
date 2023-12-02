@@ -44,7 +44,6 @@ import {
 	WEBGL_RENDERER_DEFAULT_PARAMS,
 } from '../../../core/render/Common';
 import {BaseNodeType} from '../_Base';
-import {WebGLRendererWithTypes} from '../../../core/camera/CoreCameraRendererController';
 import {COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
 // enum EncodingName {
 // 	Linear = 'Linear',
@@ -171,13 +170,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 			WebGLRendererRopNode.PARAM_CALLBACK_updateOutputColorSpace(node as WebGLRendererRopNode);
 		},
 	});
-	/** @param physically correct lights */
-	physicallyCorrectLights = ParamConfig.BOOLEAN(1, {
-		cook: false,
-		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updatePhysicallyCorrect(node as WebGLRendererRopNode);
-		},
-	});
+
 	/** @param sort objects, which can be necessary when rendering transparent objects */
 	sortObjects = ParamConfig.BOOLEAN(1, {
 		cook: false,
@@ -355,7 +348,6 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	}
 	private _updateRenderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
-		this._updateRendererPhysicallyCorrect(renderer);
 		this._updateRendererOutputColorSpace(renderer);
 		this._updateRendererToneMapping(renderer);
 		this._updateRendererToneMappingExposure(renderer);
@@ -409,11 +401,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 			node._updateRendererSortObjects(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updatePhysicallyCorrect(node: WebGLRendererRopNode) {
-		node._rendererByCanvas.forEach((renderer, canvas) => {
-			node._updateRendererPhysicallyCorrect(renderer);
-		});
-	}
+
 	static PARAM_CALLBACK_updatePixelRatio(node: WebGLRendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererPixelRatio(renderer);
@@ -440,9 +428,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	private _updateRendererSortObjects(renderer: WebGLRenderer): void {
 		renderer.sortObjects = this.pv.sortObjects;
 	}
-	private _updateRendererPhysicallyCorrect(renderer: WebGLRenderer) {
-		(renderer as WebGLRendererWithTypes).useLegacyLights = !this.pv.physicallyCorrectLights;
-	}
+
 	private _updateRendererPixelRatio(renderer: WebGLRenderer) {
 		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();
 		if (Poly.renderersController.printDebug()) {

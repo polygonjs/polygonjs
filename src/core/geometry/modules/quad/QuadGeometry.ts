@@ -2,20 +2,22 @@ import {Box3, Matrix4, Vector3, BufferAttribute} from 'three';
 import {Attribute} from '../../Attribute';
 import {objectCloneDeep} from '../../../ObjectUtils';
 
+// make count non-readonly
+type QuadBufferAttribute = Omit<BufferAttribute, 'count'> & {
+	count: BufferAttribute['count'];
+};
+
 const _v3 = new Vector3();
 
 export class QuadGeometry {
-	public attributes: Record<string, BufferAttribute> = {};
-	// public primAttributes: Record<string, QuadPrimAttribute> = {};
+	public attributes: Record<string, QuadBufferAttribute> = {};
 	public index: number[] = [];
 	public userData: {[key: string]: any} = {};
 
 	setAttribute(attribName: string, attribute: BufferAttribute) {
 		this.attributes[attribName] = attribute;
 	}
-	// addPrimAttribute(attribName: string, attribute: QuadPrimAttribute) {
-	// 	this.primAttributes[attribName] = attribute;
-	// }
+
 	setIndex(indices: number[]) {
 		this.index = indices;
 	}

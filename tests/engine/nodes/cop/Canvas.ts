@@ -120,9 +120,9 @@ export function testenginenodescopCanvas(qUnit: QUnit) {
 			await CoreSleep.sleep(pauseDuration);
 			// I'm not entirely sure why it is not white here (sRGB conversion maybe?)
 			data = await getRenderData();
-			assert.in_delta(data[0], 0.76, 0.1, 'white');
-			assert.in_delta(data[1], 0.76, 0.1, 'white');
-			assert.in_delta(data[2], 0.76, 0.1, 'white');
+			assert.in_delta(data[0], 1, 0.1, 'white');
+			assert.in_delta(data[1], 1, 0.1, 'white');
+			assert.in_delta(data[2], 1, 0.1, 'white');
 			assert.in_delta(data[3], 1, 0.02), 'not transparent';
 
 			setCanvasColor('red');
@@ -137,7 +137,7 @@ export function testenginenodescopCanvas(qUnit: QUnit) {
 			data = await getRenderData();
 			assert.in_delta(data[0], 0.0, 0.1, 'blue');
 			assert.in_delta(data[1], 0, 0.1, 'blue');
-			assert.in_delta(data[2], 0.77, 0.1, 'blue');
+			assert.in_delta(data[2], 1, 0.1, 'blue');
 
 			setCanvasColor('green');
 			await CoreSleep.sleep(pauseDuration);

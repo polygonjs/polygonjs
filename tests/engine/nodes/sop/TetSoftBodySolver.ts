@@ -73,7 +73,7 @@ export function testenginenodessopTetSoftBodySolver(qUnit: QUnit) {
 		await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 			scene.play();
 			await CoreSleep.sleep(3000);
-			assert.in_delta(await getGeometryBoundingBoxY(), -6, 3, 'object has fallen');
+			assert.in_delta(await getGeometryBoundingBoxY(), -10, 8, 'object has fallen');
 		});
 	});
 

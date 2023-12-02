@@ -4,34 +4,37 @@ import {Material} from 'three';
 import {FrontSide, BackSide, DoubleSide} from 'three';
 import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
 export function testenginenodessopMaterialProperties(qUnit: QUnit) {
+	async function getMaterial(node: BaseNodeType) {
+		const container = await node.compute();
+		const object = container.coreContent()!.allObjects()[0] as Mesh;
+		return object.material as Material;
+	}
 
-async function getMaterial(node: BaseNodeType) {
-	const container = await node.compute();
-	const object = container.coreContent()!.allObjects()[0] as Mesh;
-	return object.material as Material;
-}
+	qUnit.test('materialProperties simple', async (assert) => {
+		const geo1 = window.geo1;
+		const plane = geo1.createNode('plane');
 
-qUnit.test('materialProperties simple', async (assert) => {
-	const geo1 = window.geo1;
-	const plane = geo1.createNode('plane');
+		const meshBasic1 = window.MAT.createNode('meshBasic');
+		const materialNode1 = geo1.createNode('material');
+		materialNode1.setInput(0, plane);
+		materialNode1.p.material.setNode(meshBasic1);
 
-	const material1 = await getMaterial(plane);
-	assert.equal(material1.side, FrontSide);
+		const material1 = await getMaterial(materialNode1);
+		assert.equal(material1.side, FrontSide);
 
-	const materialProperties = geo1.createNode('materialProperties');
-	materialProperties.setInput(0, plane);
+		const materialProperties = geo1.createNode('materialProperties');
+		materialProperties.setInput(0, plane);
 
-	const material2 = await getMaterial(materialProperties);
-	assert.equal(material2.side, FrontSide);
+		const material2 = await getMaterial(materialProperties);
+		assert.equal(material2.side, FrontSide, 'FrontSide');
 
-	materialProperties.p.tside.set(1);
-	materialProperties.p.front.set(0);
-	const material3 = await getMaterial(materialProperties);
-	assert.equal(material3.side, BackSide);
+		materialProperties.p.tside.set(1);
+		materialProperties.p.front.set(0);
+		const material3 = await getMaterial(materialProperties);
+		assert.equal(material3.side, BackSide, 'BackSide');
 
-	materialProperties.p.doubleSided.set(1);
-	const material4 = await getMaterial(materialProperties);
-	assert.equal(material4.side, DoubleSide);
-});
-
+		materialProperties.p.doubleSided.set(1);
+		const material4 = await getMaterial(materialProperties);
+		assert.equal(material4.side, DoubleSide, 'DoubleSide');
+	});
 }
