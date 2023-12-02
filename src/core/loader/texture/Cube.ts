@@ -10,7 +10,7 @@ export class CoreCubeTextureLoader extends CoreBaseLoader<string[]> {
 	static PARAM_DEFAULT_SUFFIX = `.jpg`;
 
 	async loadImage(options: TextureLoadOptions): Promise<Texture> {
-		const urls = await this._urlToLoad();
+		const urls = this._urlToLoad();
 		return new Promise(async (resolve, reject) => {
 			const loader = await this._getLoader(options);
 

@@ -27,7 +27,7 @@ export abstract class BaseLoaderHandler<
 			return;
 		}
 
-		const url = await this._urlToLoad();
+		const url = this._urlToLoad();
 
 		return new Promise(async (resolve) => {
 			CoreLoaderGeometry.incrementInProgressLoadsCount();

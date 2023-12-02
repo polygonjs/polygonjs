@@ -24,7 +24,7 @@ export class JsonDataLoader extends CoreBaseLoader<string> {
 		progress_callback: (() => void) | undefined,
 		error_callback: (error: ErrorEvent) => void | undefined
 	) {
-		const url = await this._urlToLoad();
+		const url = this._urlToLoad();
 
 		fetch(url)
 			.then(async (response) => {

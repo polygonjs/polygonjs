@@ -66,7 +66,7 @@ export class CoreSVGLoader extends CoreBaseLoader<string> {
 			// 		}
 			// 	}
 			// }
-			const url = await this._urlToLoad();
+			const url = this._urlToLoad();
 
 			loader.load(
 				url,

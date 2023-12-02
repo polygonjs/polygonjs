@@ -45,7 +45,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 
 			if (options.node) {
 				const files = ['basis_transcoder.js', 'basis_transcoder.wasm'];
-				await CoreBaseLoader._loadMultipleBlobGlobal({
+				await CoreBaseLoader._loadMultipleUrlsGlobal({
 					files: files.map((file) => {
 						return {
 							fullUrl: `${decoderPath}${file}`,

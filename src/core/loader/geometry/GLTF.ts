@@ -87,7 +87,7 @@ export class GLTFLoaderHandler extends BaseObject3DLoaderHandler<GLTF> {
 			const decoderPath = sanitizeUrl(`${root || ''}${DRACOGLTFPath || ''}/`);
 			const timestamp = Date.now();
 			const files = useJS ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-			await CoreBaseLoader._loadMultipleBlobGlobal({
+			await CoreBaseLoader._loadMultipleUrlsGlobal({
 				files: files.map((file) => {
 					return {
 						fullUrl: `${decoderPath}${file}?t=${timestamp}`,

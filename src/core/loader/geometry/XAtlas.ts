@@ -110,7 +110,7 @@ export class XAtlasLoaderHandler extends CoreBaseLoader<string> {
 					fullUrl: `${decoderPath}${fileName}`,
 				};
 			});
-			await this._loadMultipleBlobGlobal({
+			await this._loadMultipleUrlsGlobal({
 				files: fullUrls,
 				node,
 				error: `failed to load xatlas libraries. Make sure to install them use the uvUnwrap (${LIBRARY_INSTALL_HINT})`,
@@ -129,7 +129,6 @@ export class XAtlasLoaderHandler extends CoreBaseLoader<string> {
 				}
 				return url;
 			};
-
 			return {
 				wasm: _addOrigin(modifyUrl(fullUrls[0].fullUrl)),
 				js: _addOrigin(modifyUrl(fullUrls[1].fullUrl)),

@@ -49,7 +49,7 @@ export class CsvLoader extends CoreBaseLoader<string> {
 	}
 
 	private async loadData() {
-		const url = await this._urlToLoad();
+		const url =  this._urlToLoad();
 		const response = await fetch(url);
 		const text = await response.text();
 		this.lines = text.split('\n');

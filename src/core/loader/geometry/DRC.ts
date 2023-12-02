@@ -21,7 +21,7 @@ export class DRCLoaderHandler extends BaseObject3DLoaderHandler<BufferGeometry> 
 			const decoderPath = `${root || ''}${DRACOPath || ''}/`;
 
 			const files = useJS ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-			await CoreBaseLoader._loadMultipleBlobGlobal({
+			await CoreBaseLoader._loadMultipleUrlsGlobal({
 				files: files.map((file) => {
 					return {
 						storedUrl: `${decoderPath}${file}`,

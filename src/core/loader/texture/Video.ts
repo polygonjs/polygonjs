@@ -71,7 +71,7 @@ class VideoTextureLoader extends Loader<VideoTexture> {
 }
 export class CoreVideoTextureLoader extends CoreBaseLoader<string[]> {
 	async loadVideo(): Promise<VideoTexture> {
-		const urls = await this._urlToLoad();
+		const urls = this._urlToLoad();
 		return new Promise(async (resolve, reject) => {
 			const loader = await this._getLoader();
 

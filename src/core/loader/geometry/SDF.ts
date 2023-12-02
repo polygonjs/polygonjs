@@ -15,7 +15,7 @@ export class SDFLoader extends CoreBaseLoader<string> {
 		progressCallback: (() => void) | undefined,
 		errorCallback: (error: ErrorEvent) => void | undefined
 	) {
-		const url = await this._urlToLoad();
+		const url =  this._urlToLoad();
 
 		// const loader = new FileLoader(this.loadingManager);
 

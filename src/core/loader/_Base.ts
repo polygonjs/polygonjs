@@ -1,7 +1,7 @@
 import {LoadingManager, Texture} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
-import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
+import {BlobsControllerFetchNodeOptions} from '../../engine/poly/BlobsController';
 import {isArray} from '../Type';
 import {sanitizeUrl} from '../UrlHelper';
 import type {BaseGeoLoaderOutput} from './geometry/Common';
@@ -16,10 +16,10 @@ export function modifyUrl(url: string) {
 		return remapedUrl;
 	}
 
-	const blobUrl = Poly.blobs.blobUrl(url);
-	if (blobUrl) {
-		return blobUrl;
-	}
+	// const blobUrl = Poly.blobs.blobUrl(url);
+	// if (blobUrl) {
+	// 	return blobUrl;
+	// }
 
 	return url;
 }
@@ -86,35 +86,38 @@ export class CoreBaseLoader<U extends string | Array<string>> {
 		return isArray(this._url) ? CoreBaseLoader.extension(this._url[0]) : CoreBaseLoader.extension(this._url);
 	}
 
-	protected async _urlToLoad(): Promise<U> {
-		const blobOrFullUrl = async (fullUrl: string) => {
+	protected _urlToLoad(): U {
+		const blobOrFullUrl = (fullUrl: string) => {
 			if (this._node) {
 				const assetsRoot = this._node.scene().assets.root();
 				if (!fullUrl.startsWith('http')) {
 					fullUrl = assetsRoot ? sanitizeUrl(`${assetsRoot}/${fullUrl}`) : fullUrl;
 				}
-				await Poly.blobs.fetchBlobForNode({
-					fullUrl,
-					node: this._node,
-					multiAssetsForNode: this.blobOptions.multiAssetsForNode,
-				});
 			}
-			const blobUrl = Poly.blobs.blobUrl(fullUrl);
-			return blobUrl || fullUrl;
+
+			return fullUrl;
 		};
 
 		if (isArray(this._url)) {
-			return (await Promise.all(this._url.map(blobOrFullUrl))) as U;
+			return this._url.map(blobOrFullUrl) as U;
 		} else {
-			return (await blobOrFullUrl(this._url)) as U;
+			return blobOrFullUrl(this._url) as U;
 		}
 	}
 
-	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {
-		const promises: Promise<FetchBlobResponse>[] = [];
+	protected static async _loadMultipleUrlsGlobal(options: MultipleDependenciesLoadOptions) {
+		const promises: Promise<{error?: string}>[] = [];
 		for (const file of options.files) {
 			const fullUrl = file.fullUrl;
-			promises.push(Poly.blobs.fetchBlobGlobal(fullUrl));
+			const _fetch = async () => {
+				const response = await fetch(fullUrl);
+				if (response.ok) {
+					return {};
+				} else {
+					return {error: `failed to fetch '${fullUrl}'`};
+				}
+			};
+			promises.push(_fetch());
 		}
 		const responses = await Promise.all(promises);
 		if (options.node) {

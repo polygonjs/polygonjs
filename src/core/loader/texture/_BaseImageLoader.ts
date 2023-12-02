@@ -23,7 +23,7 @@ export abstract class BaseCoreImageLoader extends BaseTextureLoader {
 	}
 
 	async loadImage(options: TextureLoadOptions): Promise<Texture> {
-		const url = await this._urlToLoad();
+		const url = this._urlToLoad();
 		return new Promise(async (resolve, reject) => {
 			const loader = await this._getLoader(options);
 			CoreLoaderTexture.incrementInProgressLoadsCount();
