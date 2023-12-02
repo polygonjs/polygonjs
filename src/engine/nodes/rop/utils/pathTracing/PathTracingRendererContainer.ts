@@ -10,6 +10,7 @@ import {
 	WebGLMultipleRenderTargets,
 	WebGLRenderer,
 	WebGLRenderTarget,
+	Object3DEventMap,
 } from 'three';
 import {Scene, Camera, MeshBasicMaterial} from 'three';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
@@ -218,8 +219,8 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	getPixelRatio() {
 		return this.webGLRenderer.getPixelRatio();
 	}
-	compile(scene: Scene, camera: Camera) {
-		return this.webGLRenderer.compile(scene, camera);
+	compile(scene: Object3D<Object3DEventMap>, camera: Camera, targetScene: Scene | null | undefined) {
+		return this.webGLRenderer.compile(scene, camera, targetScene);
 	}
 	dispose(): void {
 		// Note:

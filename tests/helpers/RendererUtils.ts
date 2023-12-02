@@ -189,7 +189,7 @@ export class RendererUtils {
 			material = await matNode.material();
 		}
 		this._mesh.material = material;
-		renderer.compile(this._mesh, this._camera);
+		renderer.compile(this._mesh, this._camera, this._scene);
 	}
 	private static _createMatCompileScene(): Scene {
 		this._scene = new Scene();

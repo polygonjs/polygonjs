@@ -19,7 +19,6 @@ type ObjectData = {
 };
 interface Cache {
 	camera: {
-		fov: number;
 		style: string;
 	};
 	objects: WeakMap<CSS3DObject, ObjectData>;
@@ -121,7 +120,7 @@ export class CSS3DRenderer {
 	public domElement: HTMLElement;
 	public cameraElement: HTMLElement;
 	private cache: Cache = {
-		camera: {fov: 0, style: ''},
+		camera: {style: ''},
 		objects: new WeakMap(),
 	};
 	public appendedObjects: Set<CSS3DObject> = new Set();
@@ -151,11 +150,6 @@ export class CSS3DRenderer {
 	render(scene: Scene, camera: Camera) {
 		const fov = camera.projectionMatrix.elements[5] * this._heightHalf;
 
-		if (this.cache.camera.fov !== fov) {
-			this.domElement.style.perspective = (camera as PerspectiveCamera).isPerspectiveCamera ? fov + 'px' : '';
-			this.cache.camera.fov = fov;
-		}
-
 		// if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
 		// if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
 
@@ -179,7 +173,9 @@ export class CSS3DRenderer {
 			  getCameraCSSMatrix(camera.matrixWorldInverse)
 			: 'translateZ(' + fov + 'px)' + getCameraCSSMatrix(camera.matrixWorldInverse);
 
-		const style = cameraCSSMatrix + 'translate(' + this._widthHalf + 'px,' + this._heightHalf + 'px)';
+		const perspective = (camera as PerspectiveCamera).isPerspectiveCamera ? 'perspective(' + fov + 'px) ' : '';
+
+		const style = perspective + cameraCSSMatrix + 'translate(' + this._widthHalf + 'px,' + this._heightHalf + 'px)';
 
 		if (this.cache.camera.style !== style) {
 			this.cameraElement.style.transform = style;
