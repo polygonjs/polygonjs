@@ -178,7 +178,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 	// geometry.normal = transformDirection(_n, VViewMatrix);
 	// geometry.normal = inverseTransformDirection(transformDirection(_n, VViewMatrix), vInverseModelMatrix);
 	vec3 geometryNormal = transformDirection(nWorld, VViewMatrix);
-	// vec3 geometryViewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( cameraPosition - geometryPosition );
+	
 
 	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0 || NUM_POINT_LIGHTS > 0 || NUM_RECT_AREA_LIGHTS > 0
 
@@ -355,6 +355,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			material.specularColor = vec3(1.);
 			material.diffuseColor = vec3(1.);
 
+			vec3 geometryViewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( cameraPosition - geometryPosition );
 			vec3 geometryClearcoatNormal = geometryNormal;
 
 			#pragma unroll_loop_start
