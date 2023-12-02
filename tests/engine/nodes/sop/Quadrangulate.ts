@@ -53,7 +53,7 @@ export function testenginenodessopQuadrangulate(qUnit: QUnit) {
 		async function compute() {
 			const container = await quadrangulate1.compute();
 			const object = container.coreContent()!.quadObjects()![0];
-			const positions = object.geometry.attributes.position.array as number[];
+			const positions = object.geometry.attributes.position.array;
 			return {positions};
 		}
 

@@ -2,6 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import { Object3DWithEvent } from '../../../../src/core/geometry/ObjectContent';
 export function testenginenodesjsOnObjectDispatchEvent(qUnit: QUnit) {
 
 qUnit.test('js/OnObjectDispatchEvent simple', async (assert) => {
@@ -37,16 +38,16 @@ qUnit.test('js/OnObjectDispatchEvent simple', async (assert) => {
 		await CoreSleep.sleep(70);
 		assert.equal(object.position.y, 0);
 		// dispatch with an eventName that is not listened to
-		object.dispatchEvent({type: 'C'});
+		(object as Object3DWithEvent<'C'>).dispatchEvent({type: 'C'});
 		await CoreSleep.sleep(60);
 		assert.equal(object.position.y, 0);
 
 		// dispatch an event that is listented to
-		object.dispatchEvent({type: 'A'});
+		(object as Object3DWithEvent<'A'>).dispatchEvent({type: 'A'});
 		await CoreSleep.sleep(70);
 		assert.equal(object.position.y, 1);
 		// dispatch another event that is listented to
-		object.dispatchEvent({type: 'B'});
+		(object as Object3DWithEvent<'B'>).dispatchEvent({type: 'B'});
 		await CoreSleep.sleep(70);
 		assert.equal(object.position.y, 2);
 	});

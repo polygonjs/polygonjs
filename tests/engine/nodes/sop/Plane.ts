@@ -37,7 +37,7 @@ export function testenginenodessopPlane(qUnit: QUnit) {
 		async function getIndex() {
 			const container = await plane1.compute();
 			const object = container.coreContent()!.threejsObjectsWithGeo()[0];
-			return [...(object.geometry.getIndex()!.array as number[])];
+			return [...object.geometry.getIndex()!.array];
 		}
 
 		let container = await plane1.compute();
