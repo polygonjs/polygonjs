@@ -1,7 +1,7 @@
 import {LIBRARY_INSTALL_HINT} from './../common';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from './../AssetsUtils';
-import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
+import {BaseCoreImageLoader, BaseImageLoader, TextureLoadOptions} from './_BaseImageLoader';
 import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader';
 import {Poly} from '../../../engine/Poly';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
@@ -19,7 +19,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 	}
 
 	protected async _getLoader(options: TextureLoadOptions) {
-		return KTX2TextureLoader.getLoader({node: this._node});
+		return (await KTX2TextureLoader.getLoader({node: this._node})) as BaseImageLoader;
 	}
 
 	private static _loader: KTX2Loader | undefined;

@@ -1,14 +1,10 @@
-import {Euler} from 'three';
-import {Camera} from 'three';
+import {BaseEvent, Euler, Camera, EventDispatcher, Vector3, Spherical} from 'three';
 import {CorePlayer} from '../../../core/player/Player';
-import {EventDispatcher} from 'three';
-import {Vector3} from 'three';
-import {Spherical} from 'three';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 
-const changeEvent = {type: 'change'};
-const lockEvent = {type: 'lock'};
-const unlockEvent = {type: 'unlock'};
+const changeEvent: BaseEvent<'change'> = {type: 'change' as 'change'};
+const lockEvent: BaseEvent<'lock'> = {type: 'lock'};
+const unlockEvent: BaseEvent<'unlock'> = {type: 'unlock'};
 const PI_2 = Math.PI / 2;
 const tmpCameraUnproject = new Vector3();
 const spherical = new Spherical();
@@ -35,7 +31,7 @@ interface PointerLockControlsOptions {
 	lockHTMLElement?: HTMLElement;
 }
 
-export class PointerLockControls extends EventDispatcher {
+export class PointerLockControls extends EventDispatcher<{change: any}> {
 	private isLocked = false;
 	public minPolarAngle = 0; // radians
 	public maxPolarAngle = Math.PI; // radians

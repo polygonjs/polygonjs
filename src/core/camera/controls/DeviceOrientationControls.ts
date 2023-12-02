@@ -39,7 +39,7 @@ declare global {
 		): void;
 	}
 }
-class DeviceOrientationControls extends EventDispatcher {
+class DeviceOrientationControls extends EventDispatcher<{change:any}> {
 	protected _relativeQuaternion = new Quaternion();
 	protected _blendedQuaternion = new Quaternion();
 	public enabled = true;

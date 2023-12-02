@@ -1,4 +1,4 @@
-import {Camera, Vector3, EventDispatcher} from 'three';
+import {BaseEvent, Camera, Vector3, EventDispatcher} from 'three';
 import {CameraControls} from '../../nodes/event/_BaseCameraControls';
 import type {OrbitControls} from '../../nodes/event/CameraOrbitControls';
 import {TypedViewer} from '../_Base';
@@ -10,10 +10,10 @@ export enum CameraControlsEvent {
 	end = 'end',
 }
 export const CAMERA_CONTROLS_EVENTS: CameraControlsEvent[] = [CameraControlsEvent.start, CameraControlsEvent.end];
-const START_EVENT = {type: CameraControlsEvent.start};
-const END_EVENT = {type: CameraControlsEvent.end};
+const START_EVENT: BaseEvent<'start'> = {type: CameraControlsEvent.start};
+const END_EVENT: BaseEvent<'end'> = {type: CameraControlsEvent.end};
 
-export class ViewerControlsController<C extends Camera> extends EventDispatcher {
+export class ViewerControlsController<C extends Camera> extends EventDispatcher<{change: any}> {
 	protected _active: boolean = false;
 	private _updateControlsFunc: UpdateControlsFunc | undefined;
 	protected _controls: CameraControls | undefined;

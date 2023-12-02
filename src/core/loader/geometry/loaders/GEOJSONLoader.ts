@@ -36,12 +36,12 @@ import {arrayCompact} from '../../../ArrayUtils';
 import {CoreType} from '../../../Type';
 import {ThreejsCoreObject} from '../../../geometry/modules/three/ThreejsCoreObject';
 
-export class GEOJSONLoader extends Loader {
+export class GEOJSONLoader extends Loader<Group> {
 	constructor(manager: LoadingManager) {
 		super(manager);
 	}
 
-	load(url: string, onLoad: OnSuccess<Group>, onProgress?: OnProgress, onError?: OnError) {
+	override load(url: string, onLoad: OnSuccess<Group>, onProgress?: OnProgress, onError?: OnError) {
 		const scope = this;
 
 		// const path = scope.path === '' ? LoaderUtils.extractUrlBase(url) : scope.path;

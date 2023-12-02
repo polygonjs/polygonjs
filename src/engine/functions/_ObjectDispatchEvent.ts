@@ -1,12 +1,13 @@
 import {Ref} from '@vue/reactivity';
-import {Object3D} from 'three';
+import {BaseEvent,Object3D} from 'three';
 import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction2, ObjectNamedFunction3} from './_Base';
 import {ref} from '../../core/reactivity/CoreReactivity';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {ObjectEvent} from '../../core/geometry/Event';
+import { Object3DWithEvent } from '../../core/geometry/ObjectContent';
 
 type Listener = () => void;
-const EVENT = {type: ''};
+const EVENT:BaseEvent<string> = {type: ''};
 
 const lastEventByObject: Map<Object3D, Ref<string>> = new Map();
 function getOrCreateRef(object3D: Object3D) {
@@ -41,8 +42,8 @@ export class objectDispatchEvent extends ObjectNamedFunction1<[string]> {
 		return 'objectDispatchEvent';
 	}
 	func(object3D: Object3D, eventName: string): void {
-		EVENT.type = eventName;
-		object3D.dispatchEvent(EVENT);
+		(EVENT as any).type = eventName;
+		(object3D as Object3DWithEvent<any>).dispatchEvent(EVENT);
 		setLastEventName(object3D, eventName);
 	}
 }

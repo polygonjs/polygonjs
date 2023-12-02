@@ -18,12 +18,12 @@ export class STEPLoaderHandler extends BaseLoaderHandler<CadObjectArray, TypedCa
 	}
 }
 
-class STEPLoader extends Loader {
+class STEPLoader extends Loader<CadObjectArray> {
 	constructor(manager: LoadingManager) {
 		super(manager);
 	}
 
-	load(url: string, onLoad: OnSuccess<CadObjectArray>, onProgress?: OnProgress, onError?: OnError) {
+	override load(url: string, onLoad: OnSuccess<CadObjectArray>, onProgress?: OnProgress, onError?: OnError) {
 		return new Promise(async (resolve) => {
 			const oc = await CadLoader.core();
 			const newObjects: CadObject<CadGeometryType>[] = [];

@@ -1,4 +1,4 @@
-import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
+import {BufferGeometry, Object3D, Material, Matrix4, Object3DEventMap} from 'three';
 import {objectCloneDeep} from '../ObjectUtils';
 import type {CadGeometry} from './modules/cad/CadCommon';
 import type {CsgGeometry} from './modules/csg/CsgCommon';
@@ -44,8 +44,13 @@ export interface ObjectContent<T extends CoreObjectType> {
 	applyMatrix4(matrix: Matrix4): void;
 	add: (...object: any[]) => void;
 	remove: (...object: any[]) => void;
-	dispatchEvent: (event: {type: string}) => void;
+	dispatchEvent: (event: {type: string | any}) => void;
 }
+
+type Object3DEventMapExtended<T extends string> = Object3DEventMap & {
+	[P in T]: any;
+};
+export type Object3DWithEvent<T extends string> = Object3D<Object3DEventMapExtended<T>>;
 
 export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is Object3D {
 	return o instanceof Object3D || (o as Object3D).isObject3D == true;

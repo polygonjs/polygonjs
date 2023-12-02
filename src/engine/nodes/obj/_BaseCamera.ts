@@ -1,5 +1,5 @@
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {Camera} from 'three';
+import {BaseEvent, Camera} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {LayersController, LayerParamConfig} from './utils/LayersController';
@@ -32,6 +32,7 @@ import {CameraRenderSceneSopOperation} from '../../operations/sop/CameraRenderSc
 import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
 import {CorePath} from '../../../core/geometry/CorePath';
+import {Object3DWithEvent} from '../../../core/geometry/ObjectContent';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -39,7 +40,7 @@ export interface OrthoOrPerspCamera extends Camera {
 	getFocalLength?: () => void;
 }
 
-const EVENT_CHANGE = {type: 'change'};
+const EVENT_CHANGE: BaseEvent<'change'> = {type: 'change'};
 
 export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -126,7 +127,7 @@ export abstract class TypedCameraObjNode<
 
 	override async cook() {
 		this.updateCamera();
-		this._object.dispatchEvent(EVENT_CHANGE);
+		(this._object as Object3DWithEvent<'change'>).dispatchEvent(EVENT_CHANGE);
 		this.cookController.endCook();
 	}
 
@@ -309,7 +310,7 @@ export class TypedThreejsCameraObjNode<
 		// can both return if the camera has changed
 		// and we can run this here instead of inside the update_transform and update_camera
 		// this._object.dispatchEvent( EVENT_CHANGE )
-		this._object.dispatchEvent(EVENT_CHANGE);
+		(this._object as Object3DWithEvent<'change'>).dispatchEvent(EVENT_CHANGE);
 		this.scene().camerasController.updateFromChangeInObject(this.object);
 		this.cookController.endCook();
 	}

@@ -1,4 +1,4 @@
-import {Euler, Quaternion, Vector3, Object3D} from 'three';
+import {BaseEvent, Euler, Quaternion, Vector3, Object3D} from 'three';
 import {degToRad, radToDeg} from 'three/src/math/MathUtils';
 
 export type ScreenOrientation = number;
@@ -7,7 +7,7 @@ export interface DeviceOrientationEventExtended extends DeviceOrientationEvent {
 	webkitCompassHeading?: number;
 }
 
-export const CHANGE_EVENT = {type: 'change'};
+export const CHANGE_EVENT: BaseEvent<'change'> = {type: 'change'};
 export const EPS = 0.000001;
 export const PI_DEG = radToDeg(Math.PI);
 export const PI_DEG2 = 2 * radToDeg(Math.PI);

@@ -1,4 +1,4 @@
-import {EventDispatcher} from 'three';
+import {EventDispatcher,BaseEvent} from 'three';
 import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
@@ -7,8 +7,8 @@ interface DisconnectionOptions {
 	setInput?: boolean;
 	ignoreLockedState?: boolean;
 }
-export const NODE_CONNECTION_TRIGGERED_EVENT_NAME = 'triggered';
-export const NODE_CONNECTION_TRIGGERED_EVENT = {type: NODE_CONNECTION_TRIGGERED_EVENT_NAME};
+export const NODE_CONNECTION_TRIGGERED_EVENT_NAME:'triggered' = 'triggered';
+export const NODE_CONNECTION_TRIGGERED_EVENT:BaseEvent<'triggered'> = {type: NODE_CONNECTION_TRIGGERED_EVENT_NAME};
 
 export class TypedNodeConnection<NC extends NodeContext> {
 	private static _nextId: number = 0;
@@ -79,7 +79,7 @@ export class TypedNodeConnection<NC extends NodeContext> {
 	}
 
 	// observer
-	private __eventDispatcher: EventDispatcher | undefined;
+	private __eventDispatcher: EventDispatcher<{triggered:any}> | undefined;
 	_eventDispatcher() {
 		return this.__eventDispatcher;
 	}

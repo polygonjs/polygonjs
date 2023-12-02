@@ -1,9 +1,9 @@
-import {EventDispatcher, Vector2, Vector3, Box3, TOUCH, MOUSE} from 'three';
+import {EventDispatcher, Vector2, Vector3, Box3, TOUCH, MOUSE, BaseEvent} from 'three';
 import type {Camera, PerspectiveCamera, OrthographicCamera, Matrix4} from 'three';
 
-const _changeEvent = {type: 'change'};
-const _startEvent = {type: 'start'};
-const _endEvent = {type: 'end'};
+const _changeEvent: BaseEvent<'change'> = {type: 'change'};
+const _startEvent: BaseEvent<'start'> = {type: 'start'};
+const _endEvent: BaseEvent<'end'> = {type: 'end'};
 
 const STATE = {
 	NONE: -1,
@@ -26,7 +26,7 @@ interface Touches {
 	TWO: TOUCH | null;
 }
 const EPS = 0.000001;
-export class PanZoomControls extends EventDispatcher {
+export class PanZoomControls extends EventDispatcher<{change: any}> {
 	public enabled = true;
 	public enablePan = true;
 	public enableZoom = true;

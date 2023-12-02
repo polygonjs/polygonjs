@@ -40,6 +40,8 @@ import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
 export interface NodeDeletedEmitData {
 	parent_id: CoreGraphNodeId;
 }
+type AnyString= 'any-string'
+const ANY_STRING:AnyString='any-string'
 export interface NodeCreatedEmitData {
 	child_node_json: NodeSerializerData;
 }
@@ -458,18 +460,18 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent, data: object | null = null): void {
 		this.scene().dispatchController.dispatch(this, event_name, data);
 	}
-	private __eventsDispatcher: EventDispatcher<BaseNodeEvent> | undefined;
+	private __eventsDispatcher: EventDispatcher<{[ANY_STRING]:any}> | undefined;
 	private _eventsDispatcher() {
 		return (this.__eventsDispatcher = this.__eventsDispatcher || new EventDispatcher());
 	}
-	dispatchEvent(event: {type: string}) {
+	dispatchEvent(event: BaseEvent<string>) {
 		this._eventsDispatcher().dispatchEvent(event);
 	}
 	addEventListener(type: string, listener: NodeEventListener) {
-		this._eventsDispatcher().addEventListener(type, listener);
+		this._eventsDispatcher().addEventListener(type as AnyString, listener);
 	}
 	removeEventListener(type: string, listener: NodeEventListener) {
-		this._eventsDispatcher().removeEventListener(type, listener);
+		this._eventsDispatcher().removeEventListener(type as AnyString, listener);
 	}
 
 	// serializer

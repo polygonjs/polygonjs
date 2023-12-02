@@ -5,14 +5,14 @@ import {AudioContext, FileLoader, Loader, LoadingManager} from 'three';
 
 type OnLoad = (buffer: AudioBuffer) => void;
 type OnProgress = (buffer: ProgressEvent) => void;
-type OnError = (event: ErrorEvent) => void;
+type OnError = (event: unknown) => void;
 
-class AudioLoader extends Loader {
+class AudioLoader extends Loader<AudioBuffer> {
 	constructor(public override manager: LoadingManager) {
 		super(manager);
 	}
 
-	load(url: string, onLoad: OnLoad, onProgress: OnProgress, onError: OnError) {
+	override load(url: string, onLoad: OnLoad, onProgress: OnProgress, onError: OnError) {
 		const scope = this;
 
 		const loader = new FileLoader(this.manager);

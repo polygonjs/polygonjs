@@ -19,11 +19,11 @@ const VIDEO_SOURCE_TYPE_BY_EXT: VideoSourceTypeByExt = {
 type OnLoad = (texture: VideoTexture) => void;
 type OnProgress = (progress: number) => void;
 type OnError = (error: Error) => void;
-class VideoTextureLoader extends Loader {
+class VideoTextureLoader extends Loader<VideoTexture> {
 	constructor(manager: LoadingManager, protected originalUrls: string[]) {
 		super(manager);
 	}
-	load(urls: string[], onLoad: OnLoad, onProgress?: OnProgress, onError?: OnError) {
+	loadMultipleUrls(urls: string[], onLoad: OnLoad, onProgress?: OnProgress, onError?: OnError) {
 		const video = document.createElement('video');
 		video.setAttribute('crossOrigin', 'anonymous');
 		video.setAttribute('playinline', `${true}`);
@@ -77,7 +77,7 @@ export class CoreVideoTextureLoader extends CoreBaseLoader<string[]> {
 
 			urls.forEach((url) => CoreLoaderTexture.incrementInProgressLoadsCount());
 			await CoreLoaderTexture.waitForMaxConcurrentLoadsQueueFreed();
-			loader.load(
+			loader.loadMultipleUrls(
 				urls,
 				(texture: VideoTexture) => {
 					urls.forEach((url, i) => {

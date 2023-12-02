@@ -11,7 +11,7 @@ export interface JumpParams {
 	force: number;
 }
 
-export class BaseCollisionHandler extends EventDispatcher {
+export class BaseCollisionHandler extends EventDispatcher<{change: any}> {
 	protected _playerCollisionController: PlayerCollisionController | undefined;
 
 	setCheckCollisions(collisionObject?: Object3D) {

@@ -1,6 +1,6 @@
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from './../AssetsUtils';
-import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
+import {BaseCoreImageLoader, BaseImageLoader, TextureLoadOptions} from './_BaseImageLoader';
 import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader';
 
 export class HDRTextureLoader extends BaseCoreImageLoader {
@@ -15,6 +15,6 @@ export class HDRTextureLoader extends BaseCoreImageLoader {
 		if (options.tdataType) {
 			loader.setDataType(options.dataType);
 		}
-		return loader;
+		return loader as BaseImageLoader;
 	}
 }

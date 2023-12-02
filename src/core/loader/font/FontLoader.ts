@@ -6,12 +6,12 @@ type OnLoad = (font: Font) => void;
 type OnProgress = (event: ProgressEvent<EventTarget>) => void;
 type OnError = (error: any) => void;
 
-export class FontLoader extends Loader {
+export class FontLoader extends Loader<Font> {
 	constructor(manager: LoadingManager) {
 		super(manager);
 	}
 
-	load(url: string, onLoad: OnLoad, onProgress?: OnProgress, onError?: OnError) {
+	override load(url: string, onLoad: OnLoad, onProgress?: OnProgress, onError?: OnError) {
 		const scope = this;
 
 		const loader = new FileLoader(this.manager);

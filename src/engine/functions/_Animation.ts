@@ -1,11 +1,12 @@
-import {Object3D} from 'three';
+import {Object3D, BaseEvent} from 'three';
 import {AnimPropertyTarget} from '../../core/animation/PropertyTarget';
 import {NodeContext} from '../poly/NodeContext';
 import {ObjectNamedFunction1} from './_Base';
 import {gsapTimeline} from '../../core/thirdParty/gsap/gsapFactory';
+import {Object3DWithEvent} from '../../core/geometry/ObjectContent';
 
-const EVENT_ANIMATION_STARTED = {type: 'onAnimationStarted'};
-const EVENT_ANIMATION_COMPLETED = {type: 'onAnimationCompleted'};
+const EVENT_ANIMATION_STARTED: BaseEvent<'onAnimationStarted'> = {type: 'onAnimationStarted'};
+const EVENT_ANIMATION_COMPLETED: BaseEvent<'onAnimationCompleted'> = {type: 'onAnimationCompleted'};
 
 export class playAnimation extends ObjectNamedFunction1<[string]> {
 	static override type() {
@@ -41,11 +42,11 @@ export class playAnimation extends ObjectNamedFunction1<[string]> {
 			const propertyTarget = new AnimPropertyTarget(this.scene, {object: {list: [object3D]}});
 			timelineBuilder.populate(timeline, {registerproperties: true, propertyTarget: propertyTarget});
 			timeline.vars.onStart = () => {
-				object3D.dispatchEvent(EVENT_ANIMATION_STARTED);
+				(object3D as Object3DWithEvent<'onAnimationStarted'>).dispatchEvent(EVENT_ANIMATION_STARTED);
 				// this._triggerAnimationStarted(context);
 			};
 			timeline.vars.onComplete = () => {
-				object3D.dispatchEvent(EVENT_ANIMATION_COMPLETED);
+				(object3D as Object3DWithEvent<'onAnimationCompleted'>).dispatchEvent(EVENT_ANIMATION_COMPLETED);
 				// this._triggerAnimationCompleted(context);
 			};
 		});

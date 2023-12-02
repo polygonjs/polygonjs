@@ -8,7 +8,7 @@ import {
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
-const THREE_VERSION = 155;
+const THREE_VERSION = 156;
 
 export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 	qUnit.test('sop/cameraViewerCode simple', async (assert) => {

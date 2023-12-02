@@ -1,5 +1,5 @@
 import {BaseEvent, Camera, EventDispatcher, Ray, WebGLRenderer, XRTargetRaySpace} from 'three';
-import {BASE_XR_SESSION_EVENT_NAMES} from './Common';
+import {BASE_XR_SESSION_EVENT_NAMES, BaseXRSessionEventName} from './Common';
 import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
@@ -10,8 +10,14 @@ export interface BaseCoreXRControllerEvent extends BaseEvent {
 export function webXRControllerName(controllerIndex: number): string {
 	return `webXRController-${controllerIndex}`;
 }
-
-export class CoreWebXRControllerContainer extends EventDispatcher<BaseCoreXRControllerEvent> {
+interface CoreWebXRControllerContainerEventMap {
+	[BaseXRSessionEventName.CONNECTED]: any;
+	[BaseXRSessionEventName.DISCONNECTED]: any;
+	[BaseXRSessionEventName.SELECT]: any;
+	[BaseXRSessionEventName.SELECT_START]: any;
+	[BaseXRSessionEventName.SELECT_END]: any;
+}
+export class CoreWebXRControllerContainer extends EventDispatcher<CoreWebXRControllerContainerEventMap> {
 	public readonly ray: Ray = new Ray();
 	public readonly controller: XRTargetRaySpace;
 	constructor(

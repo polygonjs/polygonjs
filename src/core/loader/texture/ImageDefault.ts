@@ -1,6 +1,6 @@
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from '../AssetsUtils';
-import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
+import {BaseCoreImageLoader, BaseImageLoader, TextureLoadOptions} from './_BaseImageLoader';
 import {TextureLoader} from 'three';
 
 export class ImageDefaultTextureLoader extends BaseCoreImageLoader {
@@ -12,6 +12,6 @@ export class ImageDefaultTextureLoader extends BaseCoreImageLoader {
 
 	protected async _getLoader(options: TextureLoadOptions) {
 		const loader = new TextureLoader(this.loadingManager);
-		return loader;
+		return loader as BaseImageLoader;
 	}
 }

@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {Poly} from '../../../Poly';
+import {Object3DWithEvent} from '../../../../core/geometry/ObjectContent';
 
 interface TransformedParamConfigDefaultParams {
 	matrixAutoUpdate?: boolean;
@@ -95,7 +96,7 @@ export class TransformController {
 			// object.matrixAutoUpdate = false;
 			object.matrix.copy(matrix);
 
-			object.dispatchEvent({type: 'change'});
+			(object as Object3DWithEvent<'change'>).dispatchEvent({type: 'change'});
 		} else {
 			this._update_matrix_from_params_with_core_transform();
 			// this.update_transform_from_params();
@@ -126,7 +127,7 @@ export class TransformController {
 			object.matrixAutoUpdate = true;
 		}
 
-		object.dispatchEvent({type: 'change'});
+		(object as Object3DWithEvent<'change'>).dispatchEvent({type: 'change'});
 	}
 
 	// private _look_at_target_t = new Vector3();
