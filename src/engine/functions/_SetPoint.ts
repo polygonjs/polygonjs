@@ -21,11 +21,11 @@ export function _setPointAttributeVector3Name(namedFunction: BaseNamedFunction, 
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 3);
+			newValue.toArray(attribute.array, ptnum * 3);
 		} else {
 			_v3.fromBufferAttribute(attribute, ptnum);
 			_v3.lerp(newValue, lerp);
-			_v3.toArray(attribute.array as number[], ptnum * 3);
+			_v3.toArray(attribute.array, ptnum * 3);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -42,11 +42,11 @@ export function _setPointAttributeVector3MultName(namedFunction: BaseNamedFuncti
 		}
 		_v3m.copy(newValue).multiplyScalar(mult);
 		if (lerp >= 1) {
-			_v3m.toArray(attribute.array as number[], ptnum * 3);
+			_v3m.toArray(attribute.array, ptnum * 3);
 		} else {
 			_v3.fromBufferAttribute(attribute, ptnum);
 			_v3.lerp(_v3m, lerp);
-			_v3.toArray(attribute.array as number[], ptnum * 3);
+			_v3.toArray(attribute.array, ptnum * 3);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -62,11 +62,11 @@ export function _setPointAttributeQuaternionName(namedFunction: BaseNamedFunctio
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 4);
+			newValue.toArray(attribute.array, ptnum * 4);
 		} else {
 			_q.fromBufferAttribute(attribute, ptnum);
 			_q.slerp(newValue, lerp);
-			_q.toArray(attribute.array as number[], ptnum * 4);
+			_q.toArray(attribute.array, ptnum * 4);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -88,10 +88,10 @@ export function _setPointAttributeNumberForNamedFunction(namedFunction: BaseName
 			return;
 		}
 		if (lerp >= 1) {
-			(attribute.array as number[])[ptnum] = newValue;
+			attribute.array[ptnum] = newValue;
 		} else {
-			const oldValue = (attribute.array as number[])[ptnum];
-			(attribute.array as number[])[ptnum] = oldValue + (newValue - oldValue) * lerp;
+			const oldValue = attribute.array[ptnum];
+			attribute.array[ptnum] = oldValue + (newValue - oldValue) * lerp;
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -114,11 +114,11 @@ export function _setPointAttributeColorForNamedFunction(namedFunction: BaseNamed
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 3);
+			newValue.toArray(attribute.array, ptnum * 3);
 		} else {
 			_c.fromBufferAttribute(attribute, ptnum);
 			_c.lerp(newValue, lerp);
-			_c.toArray(attribute.array as number[], ptnum * 3);
+			_c.toArray(attribute.array, ptnum * 3);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -140,11 +140,11 @@ export function _setPointAttributeVector2ForNamedFunction(namedFunction: BaseNam
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 2);
+			newValue.toArray(attribute.array, ptnum * 2);
 		} else {
 			_v2.fromBufferAttribute(attribute, ptnum);
 			_v2.lerp(newValue, lerp);
-			_v2.toArray(attribute.array as number[], ptnum * 2);
+			_v2.toArray(attribute.array, ptnum * 2);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -166,11 +166,11 @@ export function _setPointAttributeVector3ForNamedFunction(namedFunction: BaseNam
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 3);
+			newValue.toArray(attribute.array, ptnum * 3);
 		} else {
 			_v3.fromBufferAttribute(attribute, ptnum);
 			_v3.lerp(newValue, lerp);
-			_v3.toArray(attribute.array as number[], ptnum * 3);
+			_v3.toArray(attribute.array, ptnum * 3);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};
@@ -192,11 +192,11 @@ export function _setPointAttributeVector4ForNamedFunction(namedFunction: BaseNam
 			return;
 		}
 		if (lerp >= 1) {
-			newValue.toArray(attribute.array as number[], ptnum * 4);
+			newValue.toArray(attribute.array, ptnum * 4);
 		} else {
 			_v4.fromBufferAttribute(attribute, ptnum);
 			_v4.lerp(newValue, lerp);
-			_v4.toArray(attribute.array as number[], ptnum * 4);
+			_v4.toArray(attribute.array, ptnum * 4);
 		}
 		markAttributeAsNeedsUpdateForFrame(attribute, namedFunction.timeController.frame());
 	};

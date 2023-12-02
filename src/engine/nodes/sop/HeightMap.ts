@@ -77,7 +77,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		// }
 		const corePointClass = corePointClassFactory(object);
 
-		const positions = (corePointClass.attribute(object, Attribute.POSITION) as BufferAttribute).array as number[];
+		const positions = (corePointClass.attribute(object, Attribute.POSITION) as BufferAttribute).array;
 		const uvAttrib = corePointClass.attribute(object, Attribute.UV) as BufferAttribute;
 		const normalAttrib = corePointClass.attribute(object, Attribute.NORMAL) as BufferAttribute;
 

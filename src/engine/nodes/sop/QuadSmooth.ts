@@ -13,6 +13,7 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {setToArray} from '../../../core/SetUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
+import {typedArrayCopy} from '../../../core/ArrayUtils';
 
 const _current = new Vector3();
 const _neighbourAverage = new Vector3();
@@ -106,8 +107,8 @@ export class QuadSmoothSopNode extends QuadSopNode<QuadSmoothSopParamsConfig> {
 		if (!position) {
 			return;
 		}
-		const tmpPositionArray0 = [...(position.array as number[])];
-		const tmpPositionArray1 = [...tmpPositionArray0];
+		const tmpPositionArray0 = typedArrayCopy(position.array, new Float32Array(position.array.length));
+		const tmpPositionArray1 = typedArrayCopy(tmpPositionArray0, new Float32Array(position.array.length));
 
 		const index = geometry.index;
 		const quadsCount = geometry.quadsCount();
@@ -159,7 +160,7 @@ export class QuadSmoothSopNode extends QuadSopNode<QuadSmoothSopParamsConfig> {
 		}
 		const adjacentIdByIndex = new Map<number, number[]>();
 		adjacentIdByIndexWithSets.forEach((adjacentIds, index) => {
-			adjacentIdByIndex.set(index, setToArray(adjacentIds,[]));
+			adjacentIdByIndex.set(index, setToArray(adjacentIds, []));
 		});
 		adjacentIdByIndexWithSets.clear();
 

@@ -39,7 +39,7 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 	private _updateAttrib(attribName: string, geometry: BufferGeometry, params: AttribAddMultSopParams) {
 		const attribute = geometry.getAttribute(attribName) as BufferAttribute;
 		if (attribute) {
-			const values = attribute.array as number[];
+			const values = attribute.array ;
 
 			const preAdd = params.preAdd;
 			const mult = params.mult;

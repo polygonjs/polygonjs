@@ -1,12 +1,12 @@
 import {BaseCorePoint, CorePoint} from '../entities/point/CorePoint';
-import {Float32BufferAttribute, Vector2, BufferGeometry, Mesh} from 'three';
+import {Float32BufferAttribute, Vector2, BufferGeometry, Mesh, TypedArray} from 'three';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {CoreObjectType, ObjectContent, isObject3D} from '../ObjectContent';
 import {pointsFromObject, pointAttributeNames, pointAttributeSizes} from '../entities/point/CorePointUtils';
 
 const _points:CorePoint<CoreObjectType>[]=[]
 export class CoreGeometryUtilCurve {
-	static accumulatedCurvePointIndices(indices: number[]) {
+	static accumulatedCurvePointIndices(indices: TypedArray) {
 		let curve_point_indices: number[] = [];
 		const accumulated_curve_point_indices = [];
 		let last_index_added: number | null = null;
@@ -109,7 +109,7 @@ export class CoreGeometryUtilCurve {
 			return;
 		}
 
-		const indices = (geometry.getIndex()?.array as number[]) || [];
+		const indices = (geometry.getIndex()?.array ) || new Uint32Array(0);
 
 		const accumulated_curve_point_indices = this.accumulatedCurvePointIndices(indices);
 

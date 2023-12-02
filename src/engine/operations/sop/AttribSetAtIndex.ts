@@ -10,7 +10,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
-import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 
 interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	index: number;
@@ -24,7 +24,7 @@ interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	value4: Vector4;
 	string: string;
 }
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
 
 export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
@@ -144,7 +144,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		}
 
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		const {index, size} = params;
 		switch (size) {
 			case 1: {
@@ -210,7 +210,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 
 		const value = params.string;
 
-		pointsFromObject(object,_points);
+		pointsFromObject(object, _points);
 		const indexPoint = _points[params.index];
 		let stringValues: string[] = new Array(_points.length);
 

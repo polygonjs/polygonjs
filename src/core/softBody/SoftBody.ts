@@ -1,5 +1,5 @@
 import {VOL_ID_ORDER} from './Common';
-import {Mesh, BufferGeometry, Vector3} from 'three';
+import {Mesh, BufferGeometry, Vector3, TypedArray} from 'three';
 import {
 	vecSetZero,
 	vecAdd,
@@ -52,7 +52,7 @@ export class SoftBody {
 	public readonly numParticles: number;
 	public readonly numTets: number;
 	public readonly pos: Float32Array;
-	public readonly prevPos: number[];
+	public readonly prevPos: TypedArray;
 	public readonly vel: Float32Array;
 	public readonly tetIds: number[];
 	public readonly edgeIds: number[];
@@ -71,7 +71,7 @@ export class SoftBody {
 	private numVisVerts: number;
 	private skinningInfo: Float32Array;
 	private highResGeometry: BufferGeometry | undefined;
-	private highResObjectPosition: number[];
+	private highResObjectPosition: TypedArray;
 	//
 	private _node: TetSoftBodySolverSopNode;
 
@@ -85,7 +85,7 @@ export class SoftBody {
 		this.numParticles = tetObject.geometry.pointsCount(); //tetMesh.verts.length / 3;
 		this.numTets = tetObject.geometry.tetsCount(); //tetMesh.tetIds.length / 4;
 		this.pos = this.bufferGeometry.attributes.position.array! as Float32Array; //new Float32Array(tetMesh.verts);
-		this.prevPos = (this.bufferGeometry.attributes.position.array as number[]).slice();
+		this.prevPos = this.bufferGeometry.attributes.position.array.slice();
 		this.vel = new Float32Array(3 * this.numParticles);
 
 		const newOrderByPoint: Map<number, number> = new Map();
@@ -108,8 +108,8 @@ export class SoftBody {
 		// high res object
 		this.highResGeometry = highResObject ? (highResObject as Mesh).geometry : undefined;
 		this.highResObjectPosition = this.highResGeometry
-			? (this.highResGeometry.attributes.position.array as number[])
-			: [];
+			? this.highResGeometry.attributes.position.array
+			: new Float32Array([]);
 		const visVerts = this.highResObjectPosition;
 		this.numVisVerts = visVerts.length / 3;
 		this.skinningInfo = new Float32Array(4 * this.numVisVerts);
@@ -119,7 +119,7 @@ export class SoftBody {
 		}
 	}
 
-	private _computeSkinningInfo(visVerts: number[]) {
+	private _computeSkinningInfo(visVerts: TypedArray) {
 		// create a hash for all vertices of the visual mesh
 
 		const hash = new Hash({

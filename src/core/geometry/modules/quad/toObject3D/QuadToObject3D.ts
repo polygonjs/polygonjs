@@ -178,7 +178,7 @@ function quadToLine(quadObject: QuadObject, options: QUADTesselationParams) {
 		addEdge(_v4.w, _v4.x);
 	}
 
-	const positions = [...(srcPositions as number[])];
+	const positions = [...(srcPositions)];
 	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
 	geometry.setIndex(newIndices);
 	const material = _createOrFindLineMaterial(options.wireframeColor);

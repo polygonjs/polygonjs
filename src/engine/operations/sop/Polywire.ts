@@ -80,7 +80,10 @@ export class PolywireSopOperation extends BaseSopOperation {
 		const corePointClass = corePointClassFactory(lineSegment);
 		const attributeNames = corePointClass.attributeNamesMatchingMask(lineSegment, params.attributesToCopy);
 		pointsFromObject(lineSegment, _points);
-		const indices = geometry.getIndex()?.array as number[];
+		const indices = geometry.getIndex()?.array;
+		if (!indices) {
+			return;
+		}
 
 		const accumulatedCurvePointIndices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
 

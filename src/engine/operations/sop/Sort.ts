@@ -329,7 +329,7 @@ export class SortSopOperation extends BaseSopOperation {
 	private _updateAttribute(attribute: BufferAttribute, newIndices: number[]) {
 		const clonedAttribute = attribute.clone();
 		const srcArray = attribute.array;
-		const clonedArray = clonedAttribute.array as number[];
+		const clonedArray = clonedAttribute.array;
 		const itemSize = clonedAttribute.itemSize;
 		this._debug(newIndices);
 		for (let newIndex of newIndices) {

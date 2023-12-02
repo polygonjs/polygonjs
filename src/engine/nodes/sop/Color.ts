@@ -5,7 +5,7 @@
  * Note that just like the attrib_create, it is possible to use an expression to set the attribute value
  *
  */
-import {BufferAttribute,Mesh,BufferGeometry,Color} from 'three';
+import {BufferAttribute, Mesh, BufferGeometry, Color, TypedArray} from 'three';
 import {CoreColor} from '../../../core/Color';
 import {TypedSopNode} from './_Base';
 import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
@@ -14,7 +14,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
 
 type ValueArrayByName = PolyDictionary<number[]>;
 interface ArrayByGeometryUUID {
@@ -109,12 +109,12 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 
 		this._createInitColor(object);
-		pointsFromObject(object,_points);
-		const pointsCount = _points.length
+		pointsFromObject(object, _points);
+		const pointsCount = _points.length;
 
 		const srcAttribSize = corePointClass.attribSize(object, attribName);
 		const srcArray = srcAttrib.array;
-		const destArray = (corePointClass.attribute(object, COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
+		const destArray = (corePointClass.attribute(object, COLOR_ATTRIB_NAME) as BufferAttribute).array;
 
 		switch (srcAttribSize) {
 			case 1: {
@@ -179,8 +179,8 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	}
 
 	async _evalExpressions<T extends CoreObjectType>(object: ObjectContent<T>) {
-		const points:CorePoint<CoreObjectType>[]=[]
-		pointsFromObject(object,points);
+		const points: CorePoint<CoreObjectType>[] = [];
+		pointsFromObject(object, points);
 
 		if (!isObject3D(object)) {
 			return;
@@ -191,7 +191,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// }
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
-			const array = (geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
+			const array = (geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).array;
 
 			const tmpArrayR = await this._updateFromParam(geometry, array, points, 0);
 			const tmpArrayG = await this._updateFromParam(geometry, array, points, 1);
@@ -259,7 +259,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	private async _updateFromParam(
 		geometry: BufferGeometry,
-		array: number[],
+		array: TypedArray,
 		points: BaseCorePoint[],
 		offset: number
 	): Promise<number[] | undefined> {
@@ -311,7 +311,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		return arraysByGeometryUUID[uuid];
 	}
 
-	private _commitTmpValues(tmpArray: number[], targetArray: number[], offset: number) {
+	private _commitTmpValues(tmpArray: number[], targetArray: TypedArray, offset: number) {
 		for (let i = 0; i < tmpArray.length; i++) {
 			targetArray[i * 3 + offset] = tmpArray[i];
 		}

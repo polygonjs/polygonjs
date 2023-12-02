@@ -117,7 +117,7 @@ export class QuadExtrudeSopNode extends QuadSopNode<QuadExtrudeSopParamsConfig> 
 			const array = attribute.array;
 			const additionalPointAttributeItemsCount = additionalPointsCount * attribute.itemSize;
 			attribute.count += additionalPointsCount;
-			const newValues: number[] = [...(array as number[])];
+			const newValues: number[] = [...(array)];
 			newValues.length += additionalPointAttributeItemsCount;
 			attribute.array = new Float32Array(newValues);
 		}
@@ -242,7 +242,7 @@ export class QuadExtrudeSopNode extends QuadSopNode<QuadExtrudeSopParamsConfig> 
 						continue;
 					}
 					const attribute = geometry.attributes[pointAttributeName];
-					const array = attribute.array as number[];
+					const array = attribute.array;
 					const itemSize = attribute.itemSize;
 					for (let k = 0; k < itemSize; k++) {
 						const pointIndex = _pointIndex(i);

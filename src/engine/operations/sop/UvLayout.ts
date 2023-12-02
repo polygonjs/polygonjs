@@ -68,7 +68,7 @@ export class UvLayoutSopOperation extends BaseSopOperation {
 			if (index != null) {
 				const mesh = meshes[index] as Mesh;
 				const uv2 = (mesh.geometry.getAttribute(params.uv) as BufferAttribute).clone();
-				const array = uv2.array as number[];
+				const array = uv2.array;
 				for (let i = 0; i < uv2.array.length; i += uv2.itemSize) {
 					array[i] = (uv2.array[i] + uvBoxResult.x + padding) / dimensions.w;
 					array[i + 1] = (uv2.array[i + 1] + uvBoxResult.y + padding) / dimensions.h;

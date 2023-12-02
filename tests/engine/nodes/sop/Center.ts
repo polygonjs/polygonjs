@@ -18,7 +18,7 @@ export function testenginenodessopCenter(qUnit: QUnit) {
 
 		let container = await center1.compute();
 		const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+		const positions = (geometry.getAttribute('position') as BufferAttribute).array ;
 		assert.deepEqual(positions.join(','), [1, 3, 4].join(','));
 	});
 
@@ -36,7 +36,7 @@ export function testenginenodessopCenter(qUnit: QUnit) {
 
 		let container = await center1.compute();
 		const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+		const positions = (geometry.getAttribute('position') as BufferAttribute).array ;
 		assert.deepEqual(positions.join(','), [1, 3, 4].join(','));
 	});
 
@@ -63,7 +63,7 @@ export function testenginenodessopCenter(qUnit: QUnit) {
 
 		let container = await center1.compute();
 		const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+		const positions = (geometry.getAttribute('position') as BufferAttribute).array;
 		assert.deepEqual(positions.join(','), [1, 3, 4, 0, 0, 0].join(','));
 	});
 
@@ -89,7 +89,7 @@ export function testenginenodessopCenter(qUnit: QUnit) {
 
 		let container = await center1.compute();
 		const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+		const positions = (geometry.getAttribute('position') as BufferAttribute).array;
 		assert.deepEqual(positions.join(','), [1, 3, 4, -1, 5, 2].join(','));
 	});
 }

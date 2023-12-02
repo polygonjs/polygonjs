@@ -88,16 +88,16 @@ export class CoreAttribute {
 		}
 	}
 
-	static copy(src: BufferAttribute, dest: BufferAttribute, mark_as_needs_update = true) {
-		const src_array = src?.array as number[] | undefined;
-		const dest_array = dest?.array as number[] | undefined;
-		if (src_array && dest_array) {
-			const min_length = Math.min(src_array.length, dest_array.length);
+	static copy(src: BufferAttribute, dest: BufferAttribute, markAsNeedsUpdate = true) {
+		const srcArray = src?.array;
+		const destArray = dest?.array;
+		if (srcArray && destArray) {
+			const min_length = Math.min(srcArray.length, destArray.length);
 			for (let i = 0; i < min_length; i++) {
-				dest_array[i] = src_array[i];
+				destArray[i] = srcArray[i];
 			}
 
-			if (mark_as_needs_update) {
+			if (markAsNeedsUpdate) {
 				dest.needsUpdate = true;
 			}
 		}

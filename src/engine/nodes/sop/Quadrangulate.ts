@@ -110,7 +110,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		const {regular, granular, irregularAmount, subdivide, seed} = this.pv;
 
 		const quadGeometry = new QuadGeometry();
-		const newPositionArray = [...(positionAttribute.clone().array as number[])];
+		const newPositionArray = [...positionAttribute.clone().array];
 
 		const quadIndices: number[] = [];
 

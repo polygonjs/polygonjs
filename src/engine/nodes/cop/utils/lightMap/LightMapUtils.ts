@@ -22,7 +22,7 @@ export function invertNormals(object: Object3D) {
 
 	// invert normals
 	const normalAttribute = geometry.getAttribute('normal');
-	const array = normalAttribute.array as number[];
+	const array = normalAttribute.array;
 	const length = array.length;
 	for (let i = 0; i < length; i++) {
 		array[i] *= -1;

@@ -235,7 +235,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
 		geometry = core_group.threejsObjectsWithGeo()[0].geometry;
-		array = (geometry.getAttribute('uv') as BufferAttribute).array as number[];
+		array = (geometry.getAttribute('uv') as BufferAttribute).array ;
 		assert.ok(core_group);
 		assert.ok(geometry);
 
@@ -247,7 +247,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		container = await attrib_create1.compute();
 		core_group = container.coreContent()!;
 		geometry = core_group.threejsObjectsWithGeo()[0].geometry;
-		array = (geometry.getAttribute('uv') as BufferAttribute).array as number[];
+		array = (geometry.getAttribute('uv') as BufferAttribute).array ;
 		assert.equal(array.join(','), [1, 0, 1, 1, 0, 0, 0, 1].join(','));
 	});
 

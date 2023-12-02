@@ -4,6 +4,7 @@ adapted from https://github.com/matthias-research/pages/blob/master/tenMinutePhy
 
 */
 
+import {TypedArray} from 'three';
 import {Number3} from '../types/GlobalTypes';
 
 export interface HashOptions {
@@ -37,7 +38,7 @@ export class Hash {
 		return Math.floor(coord / this.spacing);
 	}
 
-	hashPos(pos: number[], nr: number) {
+	hashPos(pos: TypedArray, nr: number) {
 		return this.hashCoords(
 			this.intCoord(pos[3 * nr]),
 			this.intCoord(pos[3 * nr + 1]),
@@ -45,7 +46,7 @@ export class Hash {
 		);
 	}
 
-	create(pos: number[]) {
+	create(pos: TypedArray) {
 		var numObjects = Math.min(pos.length / 3, this.cellEntries.length);
 
 		// determine cell sizes

@@ -271,7 +271,7 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 			const container = await delete1.compute();
 			const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 			const geometry = object.geometry;
-			const indexArray = geometry.index!.array as number[];
+			const indexArray = geometry.index!.array;
 			return [...indexArray];
 		}
 

@@ -31,13 +31,13 @@ export function testenginenodessopAdjacency(qUnit: QUnit) {
 			'position',
 			'uv',
 		]);
-		assert.equal((geometry.attributes.adjacency0.array as number[]).join(','), '2,-1,0,2,3,1,1,-1', 'adjacency0');
+		assert.equal((geometry.attributes.adjacency0.array ).join(','), '2,-1,0,2,3,1,1,-1', 'adjacency0');
 		assert.equal(
-			(geometry.attributes.attribLookupUv.array as number[]).join(','),
+			(geometry.attributes.attribLookupUv.array ).join(','),
 			'0.25,0.25,0.75,0.25,0.25,0.75,0.75,0.75',
 			'attribLookupUv'
 		);
-		assert.equal((geometry.attributes.attribLookupId.array as number[]).join(','), '0,1,2,3', 'attribLookupId');
+		assert.equal((geometry.attributes.attribLookupId.array).join(','), '0,1,2,3', 'attribLookupId');
 
 		// with sphere
 		const sphere1 = geo1.createNode('sphere');

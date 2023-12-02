@@ -183,7 +183,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 					(destAttrib as BufferAttribute).needsUpdate = true;
 				}
 			} else {
-				const src_array = srcAttrib.array as number[];
+				const src_array = srcAttrib.array;
 				const destPointsCount = (geo.dest.getAttribute('position') as BufferAttribute).array.length / 3;
 				const dest_array = src_array.slice(0, destPointsCount * size);
 				geo.dest.setAttribute(attribName.dest, new Float32BufferAttribute(dest_array, size));
@@ -198,8 +198,8 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		src_attribute: BufferAttribute,
 		params: AttribCopySopParams
 	) {
-		const dest_array = dest_attribute.array as number[];
-		const src_array = src_attribute.array as number[];
+		const dest_array = dest_attribute.array;
+		const src_array = src_attribute.array;
 		const dest_array_size = dest_array.length;
 		const dest_item_size = dest_attribute.itemSize;
 		const src_item_size = src_attribute.itemSize;

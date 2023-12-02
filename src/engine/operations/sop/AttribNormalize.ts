@@ -72,8 +72,8 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 	private max3: Vector3 = new Vector3();
 	private _normalize_from_min_max_to_01(src_attrib: BufferAttribute, dest_attrib: BufferAttribute) {
 		const attrib_size = src_attrib.itemSize;
-		const src_array = src_attrib.array as number[];
-		const dest_array = dest_attrib.array as number[];
+		const src_array = src_attrib.array;
+		const dest_array = dest_attrib.array;
 		// const values = points.map((point) => point.attribValue(params.name));
 		switch (attrib_size) {
 			case 1: {

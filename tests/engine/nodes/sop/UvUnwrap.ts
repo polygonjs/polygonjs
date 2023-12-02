@@ -22,7 +22,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0, 0, 0.25, 0.3333333432674408, 0.25, 0, 0.5, 0, 0.5, 0, 0.75, 0.3333333432674408, 0.75, 0, 1, 0, 0,
 				0.3333333432674408, 0.25, 0.6666666865348816, 0.25, 0.3333333432674408, 0.5, 0.3333333432674408, 0.5,
@@ -37,7 +37,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		core_group = container.coreContent()!;
 		geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.4985436797142029, 0.9970873594284058, 0.4985436797142029, 0.002912621246650815,
 				0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
@@ -47,7 +47,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		let geometry1 = core_group.threejsObjectsWithGeo()[1].geometry;
 
 		assert.deepEqual(
-			((geometry1.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry1.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.9985436797142029, 0.9970873594284058, 0.9985436797142029, 0.002912621246650815,
 				0.5014563202857971, 0.9970873594284058, 0.5014563202857971, 0.002912621246650815, 0.9985436797142029,
@@ -84,7 +84,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0, 0, 0.25, 0.3333333432674408, 0.25, 0, 0.5, 0, 0.5, 0, 0.75, 0.3333333432674408, 0.75, 0, 1, 0, 0,
 				0.3333333432674408, 0.25, 0.6666666865348816, 0.25, 0.3333333432674408, 0.5, 0.3333333432674408, 0.5,
@@ -99,7 +99,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		core_group = container.coreContent()!;
 		geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.9970873594284058, 0.9970873594284058, 0.9970873594284058, 0.002912621246650815,
 				0.002912621246650815, 0.9970873594284058, 0.002912621246650815, 0.002912621246650815,
@@ -139,7 +139,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		let core_group = container.coreContent()!;
 		let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.9997755885124207, 0.5201187133789062, 0.6734739542007446, 0.5201187133789062, 0.9997755885124207,
 				0.9996702075004578, 0.6734739542007446, 0.9996702075004578, 0.9872082471847534, 0.5062664747238159,
@@ -159,7 +159,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		core_group = container.coreContent()!;
 		geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.4985436797142029, 0.9970873594284058, 0.4985436797142029, 0.002912621246650815,
 				0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
@@ -168,7 +168,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		);
 		let geometry1 = core_group.threejsObjectsWithGeo()[1].geometry;
 		assert.deepEqual(
-			((geometry1.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry1.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.9985436797142029, 0.9970873594284058, 0.9985436797142029, 0.002912621246650815,
 				0.5014563202857971, 0.9970873594284058, 0.5014563202857971, 0.002912621246650815, 0.9985436797142029,
@@ -203,7 +203,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		let core_group = container.coreContent()!;
 		let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.9997755885124207, 0.5201187133789062, 0.6734739542007446, 0.5201187133789062, 0.9997755885124207,
 				0.9996702075004578, 0.6734739542007446, 0.9996702075004578, 0.9872082471847534, 0.5062664747238159,
@@ -223,7 +223,7 @@ export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 		core_group = container.coreContent()!;
 		geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
-			((geometry0.getAttribute('uvLightMap') as BufferAttribute).array as number[]).join(';'),
+			(geometry0.getAttribute('uvLightMap') as BufferAttribute).array.join(';'),
 			[
 				0.002912621246650815, 0.9970873594284058, 0.9970873594284058, 0.9970873594284058, 0.002912621246650815,
 				0.002912621246650815, 0.9970873594284058, 0.002912621246650815, 0.002912621246650815,

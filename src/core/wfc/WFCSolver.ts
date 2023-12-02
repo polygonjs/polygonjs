@@ -3,7 +3,7 @@ import {configTilesStats, TileConfigStats, solidTilesStats} from './WFCCommon';
 import {EMPTY_TILE_ID, GRID_BORDER_ID, GRID_BORDER_SIDE_NAME} from './WFCConstant';
 import {TileConfig, tileConfigToString, ERRORED_TILE_CONFIG, tileConfigsToString} from './WFCTileConfig';
 import {CoreWFCTileAttribute, WFCQuadAttribute} from './WFCAttributes';
-import {Object3D} from 'three';
+import {Object3D,TypedArray} from 'three';
 import {NeighbourData} from '../geometry/modules/quad/graph/QuadGraph';
 import {QuadNode} from '../geometry/modules/quad/graph/QuadNode';
 import {Attribute} from '../geometry/Attribute';
@@ -56,7 +56,7 @@ export class WFCSolver {
 	private _maxResolvedQuadsCount: number;
 	private _stepsCount: number = 0;
 	private _tilesCollection: WFCTilesCollection;
-	private _quadPositionArrays: number[][] = [];
+	private _quadPositionArrays: TypedArray[] = [];
 	private _lowestEntropy: number = Number.POSITIVE_INFINITY;
 	private _quadNodeByEntropy: Map<number, QuadNode[]> = new Map();
 	private _floorGraphs: WFCFloorGraph[] = [];
@@ -113,7 +113,7 @@ export class WFCSolver {
 
 		// create graphs
 		this._quadIndicesByFloorIndex.forEach((quadIndices, floorIndex) => {
-			this._quadPositionArrays[floorIndex] = quadObject.geometry.attributes[Attribute.POSITION].array as number[];
+			this._quadPositionArrays[floorIndex] = quadObject.geometry.attributes[Attribute.POSITION].array;
 			const floorGraph = new WFCFloorGraph(quadObject, floorIndex);
 			this._floorGraphs.push(floorGraph);
 			for (const quadIndex of quadIndices) {

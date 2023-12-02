@@ -26,9 +26,9 @@ import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve'
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {Attribute} from '../../../core/geometry/Attribute';
-import { CoreObjectType } from '../../../core/geometry/ObjectContent';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
@@ -87,14 +87,16 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 
-		const resampledObjects = [];
+		const resampledObjects: LineSegments[] = [];
 		if (this.pv.pointsCount >= 2) {
 			const coreObjects = coreGroup.threejsCoreObjects();
 			for (const coreObject of coreObjects) {
 				const object = coreObject.object();
 				if (object instanceof LineSegments) {
-					const resampled_object = this._resample(object);
-					resampledObjects.push(resampled_object);
+					const resampledObject = this._resample(object);
+					if (resampledObject) {
+						resampledObjects.push(resampledObject);
+					}
 				}
 			}
 		}
@@ -107,8 +109,11 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 	_resample(lineSegment: LineSegments) {
 		const geometry = lineSegment.geometry as BufferGeometry;
-		pointsFromObject(lineSegment,_points);
-		const indices = geometry.getIndex()?.array as number[];
+		pointsFromObject(lineSegment, _points);
+		const indices = geometry.getIndex()?.array;
+		if (!indices) {
+			return;
+		}
 
 		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
 		// accumulated_curve_point_indices = [accumulated_curve_point_indices[0]]

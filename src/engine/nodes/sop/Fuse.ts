@@ -105,7 +105,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			return;
 		}
 		const newIndices: number[] = [];
-		const indexArray = index.array as number[];
+		const indexArray = index.array;
 		const segmentsCount = indexArray.length / 2;
 		for (let i = 0; i < segmentsCount; i++) {
 			vector2.fromArray(indexArray, i * 2);
@@ -128,7 +128,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (!index) {
 			return;
 		}
-		const indexArray = index.array as number[];
+		const indexArray = [...index.array];
 		const newIndices: number[] = [];
 		arrayUniq(indexArray, newIndices);
 		newIndices.sort((a, b) => a - b);
@@ -143,7 +143,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (!index) {
 			return;
 		}
-		const indexArray = index.array as number[];
+		const indexArray = index.array;
 		const precision = this.pv.dist;
 		const position = geometry.getAttribute('position') as BufferAttribute;
 		const pointsCount = position.array.length / 3;

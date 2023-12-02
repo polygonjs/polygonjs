@@ -1,3 +1,4 @@
+import type {TypedArray} from 'three';
 import {MapUtils} from './MapUtils';
 import {setUnion, setToArray, setIntersection, setDifference, setXOR} from './SetUtils';
 import {CoreType} from './Type';
@@ -287,4 +288,12 @@ export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>
 export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {
 	targetArray.length = 0;
 	arrayPushItems(srcArray, targetArray);
+}
+
+export function typedArrayCopy<T1 extends TypedArray, T2 extends TypedArray>(
+	srcArray: Readonly<T1>,
+	targetArray: T2
+): T2 {
+	targetArray.set(srcArray);
+	return targetArray;
 }

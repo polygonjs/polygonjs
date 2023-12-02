@@ -146,7 +146,7 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		if (!values) {
 			return;
 		}
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		const valuesSize = this.pv.valuesSize;
 		const analyserValuesCount = values.length;
 		const index = this.pv.index;

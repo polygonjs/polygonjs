@@ -243,7 +243,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 				variable.toArray(attribute.array, ptnum * attribute.itemSize);
 			} else {
 				if (isNumber(variable)) {
-					(attribute.array as number[])[ptnum] = variable;
+					attribute.array[ptnum] = variable;
 				}
 			}
 		}

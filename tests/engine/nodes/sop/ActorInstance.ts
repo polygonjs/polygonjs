@@ -161,7 +161,7 @@ export function testenginenodessopActorInstance(qUnit: QUnit) {
 			if (!attribute) {
 				return [0];
 			}
-			return [...(attribute.array as number[])];
+			return [...(attribute.array)];
 		};
 
 		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
@@ -193,7 +193,7 @@ export function testenginenodessopActorInstance(qUnit: QUnit) {
 			if (!attribute) {
 				return [0];
 			}
-			return [...(attribute.array as number[])];
+			return [...(attribute.array)];
 		};
 
 		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
@@ -270,7 +270,7 @@ export function testenginenodessopActorInstance(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0], 'init');
@@ -308,7 +308,7 @@ export function testenginenodessopActorInstance(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0]);
@@ -348,7 +348,7 @@ export function testenginenodessopActorInstance(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array ;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0, 0, 0], 'init');

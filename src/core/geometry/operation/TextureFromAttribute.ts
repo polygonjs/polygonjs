@@ -105,7 +105,7 @@ export function textureFromAttributes(geometry: BufferGeometry, attribNames: str
 
 		if (attribute) {
 			const attribSize = attribute.itemSize;
-			const attribArray = attribute.array as number[];
+			const attribArray = attribute.array;
 			if (attribSize == 1) {
 				for (let i = 0; i < pointsCount; i++) {
 					pixelBuffer[i * 4 + currentIndex] = attribArray[i];

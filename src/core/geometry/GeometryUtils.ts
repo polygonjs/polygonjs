@@ -21,10 +21,10 @@ export function truncateBufferGeometry(geometry: BufferGeometry, maxCount: numbe
 
 	for (const attributeName of attributeNames) {
 		const attribute = geometry.getAttribute(attributeName) as BufferAttribute;
-		const originalArray = attribute.array as number[];
+		const originalArray = attribute.array;
 		const itemSize = attribute.itemSize;
 		const expectedArraySize = maxCount * itemSize;
-		const newArray: number[] = originalArray.slice(0, expectedArraySize); //new Array(expectedArraySize);
+		const newArray = originalArray.slice(0, expectedArraySize); //new Array(expectedArraySize);
 		// for(let i=0;i<expectedArraySize;i++){
 		// 	newArray[i]=originalArray[i];
 		// }

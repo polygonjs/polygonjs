@@ -41,9 +41,7 @@ export function testenginenodessopSkin(qUnit: QUnit) {
 		assert.deepEqual(coreGroup.pointAttribNames().sort(), ['position', 'h'].sort());
 		assert.equal(container.coreContent()!.pointsCount(), 4);
 		assert.equal(
-			((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(
-				''
-			),
+			(coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array.join(''),
 			[0, 1, 2, 3].join('')
 		);
 
@@ -57,9 +55,7 @@ export function testenginenodessopSkin(qUnit: QUnit) {
 		assert.equal(container.coreContent()!.pointsCount(), 4);
 		assert.deepEqual(coreGroup.pointAttribNames().sort(), ['normal', 'position', 'h'].sort());
 		assert.equal(
-			((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(
-				''
-			),
+			(coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array.join(''),
 			[0, 1, 2, 3].join('')
 		);
 	});

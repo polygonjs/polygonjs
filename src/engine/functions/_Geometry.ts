@@ -22,7 +22,7 @@ export class getGeometryPositions extends ObjectNamedFunction1<[Vector3[]]> {
 		if (!positionAttribute) {
 			return target;
 		}
-		const positionArray = positionAttribute.array as number[];
+		const positionArray = positionAttribute.array;
 		const pointsCount = positionArray.length / STRIDE;
 		_setArrayLength(target, pointsCount, () => new Vector3());
 		for (let i = 0; i < pointsCount; i++) {
@@ -82,7 +82,7 @@ export class setGeometryPositions extends ObjectNamedFunction5<[Vector3[], numbe
 			return;
 		}
 		const doLerp = lerp < 1;
-		const positionArray = positionAttribute.array as number[];
+		const positionArray = positionAttribute.array;
 
 		const geoPointsCount = positionArray.length / STRIDE;
 		const valuesCount = values.length;

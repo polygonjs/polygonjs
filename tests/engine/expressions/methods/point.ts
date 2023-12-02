@@ -23,7 +23,7 @@ qUnit.test('expression points works with path', async (assert) => {
 
 	const container = await attrib_create2.compute();
 	const array = (container.coreContent()!.threejsObjectsWithGeo()[0].geometry.attributes['t'] as BufferAttribute)
-		.array as number[];
+		.array ;
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -45,7 +45,7 @@ qUnit.test('expression points works with input index', async (assert) => {
 
 	const container = await attrib_create2.compute();
 	const array = (container.coreContent()!.threejsObjectsWithGeo()[0].geometry.attributes['t'] as BufferAttribute)
-		.array as number[];
+		.array ;
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -64,7 +64,7 @@ qUnit.test('expression points works in a point sop on scene load', async (assert
 	let container = await point1.compute();
 	assert.notOk(point1.states.error.active());
 	let geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-	let positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+	let positions = (geometry.getAttribute('position') as BufferAttribute).array 
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 
 	const data = await new SceneJsonExporter(scene).data();
@@ -76,7 +76,7 @@ qUnit.test('expression points works in a point sop on scene load', async (assert
 	container = await point2.compute();
 	assert.notOk(point2.states.error.active());
 	geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
-	positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+	positions = (geometry.getAttribute('position') as BufferAttribute).array ;
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 });
 

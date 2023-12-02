@@ -1,7 +1,7 @@
-import {Vector3} from 'three';
+import {Vector3, TypedArray} from 'three';
 import {Number3, Number9} from '../../types/GlobalTypes';
 
-type AllowedArray = Float32Array | Number3 | Number9 | number[];
+type AllowedArray = TypedArray | Number3 | Number9 | number[];
 
 export function vecSetZero(a: AllowedArray, anr: number) {
 	anr *= 3;

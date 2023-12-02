@@ -24,7 +24,7 @@ export function testenginenodessopAttribId(qUnit: QUnit) {
 		assert.ok(geo.getAttribute('id'));
 		assert.ok(geo.getAttribute('idn'));
 		assert.deepEqual(
-			((geo.getAttribute('id') as BufferAttribute).array as number[]).join(','),
+			((geo.getAttribute('id') as BufferAttribute).array ).join(','),
 			[0, 1, 2, 3].join(',')
 		);
 		assert.deepEqual(
@@ -49,7 +49,7 @@ export function testenginenodessopAttribId(qUnit: QUnit) {
 		const geo = coreGroup.threejsObjectsWithGeo()[0].geometry;
 		assert.ok(geo.getAttribute('id'));
 		assert.ok(geo.getAttribute('idn'));
-		assert.deepEqual(((geo.getAttribute('id') as BufferAttribute).array as number[]).join(','), [0].join(','));
+		assert.deepEqual(((geo.getAttribute('id') as BufferAttribute).array ).join(','), [0].join(','));
 		assert.deepEqual(
 			AttributeHelper.toArray(geo.getAttribute('idn') as BufferAttribute)
 				.map((n) => n.toFixed(3))

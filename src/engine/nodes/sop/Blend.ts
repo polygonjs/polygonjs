@@ -65,8 +65,8 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 			return;
 		}
 
-		const attrib0_array = attrib0.array as number[];
-		const attrib1_array = attrib1.array as number[];
+		const attrib0_array = attrib0.array;
+		const attrib1_array = attrib1.array;
 
 		let c0, c1;
 		for (let i = 0; i < attrib0_array.length; i++) {

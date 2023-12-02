@@ -1,6 +1,6 @@
 import { Triangle, Box3, Ray, Sphere, Object3D } from 'three';
 
-import { Capsule } from './Capsule';
+import { Capsule } from './Capsule.js';
 
 export class Octree {
     constructor(box?: Box3);

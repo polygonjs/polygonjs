@@ -70,7 +70,7 @@ async function _addNumericAttributeToPoints<T extends CoreObjectType>(
 			return;
 		}
 		attrib.needsUpdate = true;
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		if (size == 1) {
 			const paramN = params.value1;
 			if (paramN.expressionController) {

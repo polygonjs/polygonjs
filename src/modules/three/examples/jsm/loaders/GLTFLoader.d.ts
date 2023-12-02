@@ -19,8 +19,8 @@ import {
     Skeleton,
 } from 'three';
 
-import { DRACOLoader } from './DRACOLoader';
-import { KTX2Loader } from './KTX2Loader';
+import { DRACOLoader } from './DRACOLoader.js';
+import { KTX2Loader } from './KTX2Loader.js';
 
 export interface GLTF {
     animations: AnimationClip[];

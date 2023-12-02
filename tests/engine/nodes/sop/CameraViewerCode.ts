@@ -7,6 +7,9 @@ import {
 } from '../../../../examples/presets/sop/CameraViewerCode';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+
+const THREE_VERSION = 154;
+
 export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 	qUnit.test('sop/cameraViewerCode simple', async (assert) => {
 		const scene = window.scene;
@@ -76,7 +79,7 @@ export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 		await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
 			scene.play();
 			await CoreSleep.sleep(500);
-			const THREE_VERSION = 153;
+
 			const id = viewer.id();
 			assert.equal(
 				viewer.domElement()?.innerHTML,

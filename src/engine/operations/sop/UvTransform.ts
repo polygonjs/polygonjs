@@ -29,7 +29,7 @@ export class UvTransformSopOperation extends BaseSopOperation {
 		for (let object of objects) {
 			const geometry = object.geometry;
 			const attrib = geometry.getAttribute(params.attribName) as BufferAttribute;
-			const array = attrib.array as number[];
+			const array = attrib.array;
 			const ptsCount = array.length / 2;
 			for (let i = 0; i < ptsCount; i++) {
 				array[i * 2 + 0] = params.t.x + params.pivot.x + params.s.x * (array[i * 2 + 0] - params.pivot.x);

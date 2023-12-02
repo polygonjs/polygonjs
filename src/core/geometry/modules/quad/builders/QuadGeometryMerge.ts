@@ -42,7 +42,7 @@ function _mergePointAttribute(
 	let indexOffset = 0;
 	for (const object of quadObjects) {
 		const attribute = QuadPoint.attribute(object, attributeName)!;
-		const array = attribute.array as number[];
+		const array = attribute.array;
 		for (const item of array) {
 			values.push(item);
 		}

@@ -32,12 +32,12 @@ export function testenginenodessopFuse(qUnit: QUnit) {
 	async function getIndex(node: BaseSopNodeType) {
 		const container = await node.compute();
 		const object = container.coreContent()!.threejsObjectsWithGeo()[0];
-		return [...(object.geometry.getIndex()!.array as number[])];
+		return [...object.geometry.getIndex()!.array];
 	}
 	async function getPosition(node: BaseSopNodeType) {
 		const container = await node.compute();
 		const object = container.coreContent()!.threejsObjectsWithGeo()[0];
-		return [...((object.geometry.getAttribute('position')! as BufferAttribute).array as number[])];
+		return [...(object.geometry.getAttribute('position')! as BufferAttribute).array];
 	}
 
 	qUnit.test('fuse on simple mesh', async (assert) => {

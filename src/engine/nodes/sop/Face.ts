@@ -93,26 +93,29 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		for (const object of objects) {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
-				const faces = arrayChunk((geometry.index?.array as number[]) || [], 3);
-				const pointsCount = faces.length * 3;
-				for (const attrib_name of Object.keys(geometry.attributes)) {
-					const attrib = geometry.attributes[attrib_name] as BufferAttribute;
-					const attrib_size = attrib.itemSize;
-					const new_values = new Float32Array(pointsCount * attrib_size);
-					let new_value_index = 0;
-					faces.forEach((face) => {
-						face.forEach((index) => {
-							for (let i = 0; i < attrib_size; i++) {
-								const current_value = attrib.array[index * attrib_size + i];
-								new_values[new_value_index] = current_value;
-								new_value_index += 1;
-							}
+				const index = geometry.index?.array;
+				if (index) {
+					const faces = arrayChunk([...index], 3);
+					const pointsCount = faces.length * 3;
+					for (const attrib_name of Object.keys(geometry.attributes)) {
+						const attrib = geometry.attributes[attrib_name] as BufferAttribute;
+						const attrib_size = attrib.itemSize;
+						const new_values = new Float32Array(pointsCount * attrib_size);
+						let new_value_index = 0;
+						faces.forEach((face) => {
+							face.forEach((index) => {
+								for (let i = 0; i < attrib_size; i++) {
+									const current_value = attrib.array[index * attrib_size + i];
+									new_values[new_value_index] = current_value;
+									new_value_index += 1;
+								}
+							});
 						});
-					});
-					geometry.setAttribute(attrib_name, new BufferAttribute(new_values, attrib_size));
+						geometry.setAttribute(attrib_name, new BufferAttribute(new_values, attrib_size));
+					}
+					const newIndices = rangeWithEnd(pointsCount);
+					geometry.setIndex(newIndices);
 				}
-				const newIndices = rangeWithEnd(pointsCount);
-				geometry.setIndex(newIndices);
 			}
 		}
 	}

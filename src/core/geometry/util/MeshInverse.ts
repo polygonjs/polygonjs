@@ -5,7 +5,7 @@ export function meshInverse(mesh: Mesh) {
 		return;
 	}
 	const facesCount = index.count / 3;
-	const array = index.array as number[];
+	const array = index.array;
 	for (let i = 0; i < facesCount; i++) {
 		const a = array[i * 3];
 		const b = array[i * 3 + 1];

@@ -261,7 +261,7 @@ export abstract class BaseEntityBuilderSopNode<P extends BaseEntityBuilderSopPar
 				variable.toArray(attribute.array, index * attribute.itemSize);
 			} else {
 				if (isNumber(variable)) {
-					(attribute.array as number[])[index] = variable;
+					(attribute.array)[index] = variable;
 				}
 			}
 		}

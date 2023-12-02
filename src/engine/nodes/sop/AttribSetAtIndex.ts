@@ -197,7 +197,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 			corePointClass.addNumericAttribute(object, attribName, this.pv.size, 0);
 		}
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		const {index, size} = this.pv;
 		switch (size) {
 			case 1: {

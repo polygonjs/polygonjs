@@ -113,7 +113,7 @@ export function testenginenodessopActorPoint(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0], 'init');
@@ -151,7 +151,7 @@ export function testenginenodessopActorPoint(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0]);
@@ -190,7 +190,7 @@ export function testenginenodessopActorPoint(qUnit: QUnit) {
 		await CoreSleep.sleep(50);
 
 		const _getGeometryAttribNumber = () => {
-			const values = object.geometry.getAttribute(attribName).array as number[];
+			const values = object.geometry.getAttribute(attribName).array;
 			return [...values];
 		};
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0, 0, 0], 'init');

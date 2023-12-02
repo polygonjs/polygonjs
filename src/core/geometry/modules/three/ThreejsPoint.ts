@@ -241,7 +241,7 @@ export class ThreejsPoint extends CorePoint<CoreObjectType.THREEJS> {
 		if (!index) {
 			return;
 		}
-		const indexArray = index.array as number[];
+		const indexArray = index.array;
 		let i = 0;
 		for (const indexValue of indexArray) {
 			if (indexValue == pointIndex) {

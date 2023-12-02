@@ -33,7 +33,7 @@ function _setGeometryInstancePositions(
 		return;
 	}
 	const doLerp = lerp < 1;
-	const instancePositionArray = instancePositionAttribute.array as number[];
+	const instancePositionArray = instancePositionAttribute.array;
 	let i = 0;
 
 	for (let value of newValues) {
@@ -66,7 +66,7 @@ function _setGeometryInstanceQuaternions(
 		return;
 	}
 	const doLerp = lerp < 1;
-	const instanceQuaternionArray = instanceQuaternionAttribute.array as number[];
+	const instanceQuaternionArray = instanceQuaternionAttribute.array;
 	let i = 0;
 	for (let value of newValues) {
 		if (doLerp) {
@@ -98,7 +98,7 @@ function _setGeometryInstanceScales(
 		return;
 	}
 	const doLerp = lerp < 1;
-	const instanceScaleArray = instanceScaleAttribute.array as number[];
+	const instanceScaleArray = instanceScaleAttribute.array;
 	let i = 0;
 
 	if (scaleValues && multValues) {
@@ -265,7 +265,7 @@ export class setGeometryInstanceAttributeFloat extends ObjectNamedFunction4<[str
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array;
 		let i = 0;
 
 		for (let value of newValues) {
@@ -304,7 +304,7 @@ export class setGeometryInstanceAttributeColor extends ObjectNamedFunction4<[str
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array ;
 		let i = 0;
 
 		for (let value of newValues) {
@@ -347,7 +347,7 @@ export class setGeometryInstanceAttributeQuaternion extends ObjectNamedFunction4
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array ;
 		let i = 0;
 		for (let value of newValues) {
 			if (doLerp) {
@@ -390,7 +390,7 @@ export class setGeometryInstanceAttributeVector2 extends ObjectNamedFunction4<
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array;
 		let i = 0;
 
 		for (let value of newValues) {
@@ -434,7 +434,7 @@ export class setGeometryInstanceAttributeVector3 extends ObjectNamedFunction4<
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array;
 		let i = 0;
 
 		for (let value of newValues) {
@@ -478,7 +478,7 @@ export class setGeometryInstanceAttributeVector4 extends ObjectNamedFunction4<
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array as number[];
+		const instanceAttributeArray = instanceAttribute.array;
 		let i = 0;
 
 		for (let value of newValues) {

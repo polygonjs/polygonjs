@@ -5,14 +5,12 @@
  * This node is similar to the Color and Normal SOPs, and can update the vertex positions with expressions
  *
  */
-import {BufferGeometry} from 'three';
+import {BufferGeometry, TypedArray, BufferAttribute, Mesh} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferAttribute} from 'three';
-import {Mesh} from 'three';
 import {BooleanParam} from '../../params/Boolean';
 import {FloatParam} from '../../params/Float';
 
@@ -111,7 +109,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		const points: CorePoint<CoreObjectType>[] = [];
 		pointsFromObject(object, points);
 
-		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array as number[];
+		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array;
 
 		const tmp_array_x = await this._updateFromParam(
 			geometry,
@@ -142,13 +140,13 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		);
 
 		if (tmp_array_x) {
-			this._commit_tmp_values(tmp_array_x, array, 0);
+			this._commitTmpValues(tmp_array_x, array, 0);
 		}
 		if (tmp_array_y) {
-			this._commit_tmp_values(tmp_array_y, array, 1);
+			this._commitTmpValues(tmp_array_y, array, 1);
 		}
 		if (tmp_array_z) {
-			this._commit_tmp_values(tmp_array_z, array, 2);
+			this._commitTmpValues(tmp_array_z, array, 2);
 		}
 	}
 
@@ -205,8 +203,8 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 	}
 
-	private _array_for_component(geometry: BufferGeometry, points_count: number, offset: ComponentOffset) {
-		const new_array = new Array<number>(points_count);
+	private _array_for_component(geometry: BufferGeometry, pointsCount: number, offset: ComponentOffset) {
+		const new_array = new Array<number>(pointsCount);
 		const src_array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array;
 		for (let i = 0; i < new_array.length; i++) {
 			new_array[i] = src_array[i * 3 + offset];
@@ -214,9 +212,9 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		return new_array;
 	}
 
-	private _commit_tmp_values(tmp_array: number[], target_array: number[], offset: number) {
+	private _commitTmpValues(tmp_array: number[], targetArray: TypedArray, offset: number) {
 		for (let i = 0; i < tmp_array.length; i++) {
-			target_array[i * 3 + offset] = tmp_array[i];
+			targetArray[i * 3 + offset] = tmp_array[i];
 		}
 	}
 }

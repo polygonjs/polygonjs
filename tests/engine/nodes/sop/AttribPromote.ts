@@ -192,7 +192,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 			const object = coreGroup.allObjects()[0];
 			// const corePointClass = corePointClassFactory(object);
 			const attribute = (object as Mesh).geometry.getAttribute('test');
-			const attributeValues = [...(attribute.array as number[])];
+			const attributeValues = [...attribute.array];
 			return attributeValues; //corePointClass.attribValue(object, 0, 'test');
 		}
 

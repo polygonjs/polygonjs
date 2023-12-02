@@ -224,7 +224,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attribute) {
 			return;
 		}
-		const array = (attribute as BufferAttribute).array as number[];
+		const array = (attribute as BufferAttribute).array;
 		return (array[this._index] = newValueIndex);
 	}
 
@@ -346,7 +346,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attrib) {
 			return;
 		}
-		target.fromArray(attrib.array as number[], this._index * 2);
+		target.fromArray(attrib.array, this._index * 2);
 		return target;
 	}
 	attribValueVector3(attribName: string, target: Vector3) {
@@ -354,7 +354,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attrib) {
 			return;
 		}
-		target.fromArray(attrib.array as number[], this._index * 3);
+		target.fromArray(attrib.array, this._index * 3);
 		return target;
 	}
 	attribValueVector4(attribName: string, target: Vector4) {
@@ -362,7 +362,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attrib) {
 			return;
 		}
-		target.fromArray(attrib.array as number[], this._index * 4);
+		target.fromArray(attrib.array, this._index * 4);
 		return target;
 	}
 
@@ -390,7 +390,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attrib) {
 			return;
 		}
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		const attribSize = attrib.itemSize;
 
 		if (isArray(value)) {
@@ -443,7 +443,7 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (!attrib) {
 			return;
 		}
-		const array = attrib.array as number[];
+		const array = attrib.array;
 		array[this._index] = value;
 	}
 	setAttribValueFromVector2(attribName: string, value: Vector2) {
@@ -452,21 +452,21 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 			return;
 		}
 
-		value.toArray(attrib.array as number[], this._index * 2);
+		value.toArray(attrib.array, this._index * 2);
 	}
 	setAttribValueFromVector3(attribName: string, value: Vector3) {
 		const attrib = this.attribute(attribName);
 		if (!attrib || this.isStringAttribute(attribName)) {
 			return;
 		}
-		value.toArray(attrib.array as number[], this._index * 3);
+		value.toArray(attrib.array, this._index * 3);
 	}
 	setAttribValueFromVector4(attribName: string, value: Vector4) {
 		const attrib = this.attribute(attribName);
 		if (!attrib || this.isStringAttribute(attribName)) {
 			return;
 		}
-		value.toArray(attrib.array as number[], this._index * 4);
+		value.toArray(attrib.array, this._index * 4);
 	}
 
 	//

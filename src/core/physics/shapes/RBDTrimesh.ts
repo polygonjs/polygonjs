@@ -10,10 +10,10 @@ export function createPhysicsTriMesh(PhysicsLib: PhysicsLib, object: Object3D) {
 	if (!position) {
 		return;
 	}
-	let indexArray = geometry.getIndex()?.array as number[];
+	let indexArray = geometry.getIndex()?.array;
 	if (!indexArray) {
 		const pointsCount = position.array.length / 3;
-		indexArray = new Array(pointsCount);
+		indexArray = new Uint32Array(pointsCount);
 		for (let i = 0; i < pointsCount; i++) {
 			indexArray[i] = i;
 		}

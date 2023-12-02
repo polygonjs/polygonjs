@@ -1,4 +1,4 @@
-import { OrbitControls } from './OrbitControls';
+import { OrbitControls } from './OrbitControls.js';
 import { Camera } from 'three';
 
 /**

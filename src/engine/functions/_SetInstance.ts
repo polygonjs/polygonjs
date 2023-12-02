@@ -32,14 +32,14 @@ export class setPointInstanceLookAt extends ObjectNamedFunction4<[number, Vector
 		quatLookAt(_v3, targetPosition, up, _q);
 
 		if (lerp >= 1) {
-			_q.toArray(quaternionAttribute.array as number[], ptnum * 4);
+			_q.toArray(quaternionAttribute.array, ptnum * 4);
 		} else {
 			if (!quaternionAttribute) {
 				return;
 			}
 			_q2.fromBufferAttribute(quaternionAttribute, ptnum);
 			_q2.slerp(_q, lerp);
-			_q2.toArray(quaternionAttribute.array as number[], ptnum * 4);
+			_q2.toArray(quaternionAttribute.array, ptnum * 4);
 		}
 		markAttributeAsNeedsUpdateForFrame(quaternionAttribute, this.timeController.frame());
 	}
