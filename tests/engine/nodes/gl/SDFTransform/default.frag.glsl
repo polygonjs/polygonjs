@@ -502,25 +502,11 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k, i
 }
 vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 	vec3 dif = vec3(0.,0.,0.);
-	GeometricContext geometry;
-	// geometry.position = _p;
-	// geometry.normal = _n;
-	// geometry.viewDir = rayDir;
-
-	// vec4 mvPosition = vec4( p, 1.0 );
-	// mvPosition = modelViewMatrix * mvPosition;
-	// vec3 vViewPosition = - mvPosition.xyz;
 	vec3 pWorld = ( vModelMatrix * vec4( _p, 1.0 )).xyz;
 	vec3 nWorld = transformDirection(_n, vModelMatrix);
-	// geometry.position = (VViewMatrix * vec4( _p, 1.0 )).xyz;
-	geometry.position = (VViewMatrix * vec4(pWorld, 1.0 )).xyz;
-	// geometry.normal = transformDirection(_n, VViewMatrix);
-	// geometry.normal = inverseTransformDirection(transformDirection(_n, VViewMatrix), vInverseModelMatrix);
-	geometry.normal = transformDirection(nWorld, VViewMatrix);
-	geometry.viewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( cameraPosition - geometry.position );
-
+	vec3 geometryPosition = (VViewMatrix * vec4(pWorld, 1.0 )).xyz;
+	vec3 geometryNormal = transformDirection(nWorld, VViewMatrix);
 	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0 || NUM_POINT_LIGHTS > 0 || NUM_RECT_AREA_LIGHTS > 0
-
 		IncidentLight directLight;
 		ReflectedLight reflectedLight;
 		vec3 lightPos, lightDir, worldLightDir, objectSpaceLightDir, lighDif, directDiffuse;
@@ -536,25 +522,12 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {
 				spotLightRayMarching = spotLightsRayMarching[ i ];
 				spotLight = spotLights[ i ];
-				getSpotLightInfo( spotLight, geometry, directLight );
-
-				// #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
-				// 	spotLightShadow = spotLightShadows[ i ];
-				// 	vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
-				// 	directLight.color *= (directLight.visible && receiveShadow) ? getShadow(
-				// 		spotShadowMap[ i ],
-				// 		spotLightShadow.shadowMapSize,
-				// 		spotLightShadow.shadowBias,
-				// 		spotLightShadow.shadowRadius,
-				// 		spotLightShadowCoord
-				// 	) : 1.0;
-				// #endif
-
+				getSpotLightInfo( spotLight, geometryPosition, directLight );
 				lightPos = spotLight.position;
-				lightDir = normalize(lightPos-geometry.position);
+				lightDir = normalize(lightPos-geometryPosition);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
-				lightDistance = distance(geometry.position,lightPos);
+				lightDistance = distance(geometryPosition,lightPos);
 				spotLightSdfShadow =
 					dot( _n, objectSpaceLightDir ) < spotLightRayMarching.shadowBiasAngle
 					? 1.
@@ -562,11 +535,11 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 						_p,
 						objectSpaceLightDir,
 						spotLightRayMarching.shadowBiasDistance,
-						distance(geometry.position,lightPos),
+						distance(geometryPosition,lightPos),
 						1./max(spotLightRayMarching.penumbra*0.2,0.001),
 						sdfContext
 					);
-				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				dotNL = saturate( dot( geometryNormal, directLight.direction ) );
 				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * spotLightSdfShadow;
 			}
@@ -584,20 +557,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				directionalLightRayMarching = directionalLightsRayMarching[ i ];
 				directionalLight = directionalLights[ i ];
 				
-				getDirectionalLightInfo( directionalLight, geometry, directLight );
-
-				// #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_DIR_LIGHT_SHADOWS )
-				// 	directionalLightShadow = directionalLightShadows[ i ];
-				// 	vec4 dirLightShadowCoord = directionalShadowMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
-				// 	directLight.color *= (directLight.visible && receiveShadow) ? getShadow(
-				// 		directionalShadowMap[ i ],
-				// 		directionalLightShadow.shadowMapSize,
-				// 		directionalLightShadow.shadowBias,
-				// 		directionalLightShadow.shadowRadius,
-				// 		dirLightShadowCoord
-				// 	) : 1.0;
-				// #endif
-
+				getDirectionalLightInfo( directionalLight, directLight );
 				lightDir = directionalLight.direction;
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
@@ -609,31 +569,24 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 						_p,
 						objectSpaceLightDir,
 						directionalLightRayMarching.shadowBiasDistance,
-						MAX_DIST,//distance(geometry.position,lightPos),
-						1./max(directionalLightRayMarching.penumbra*0.2,0.001),
+						MAX_DIST,						1./max(directionalLightRayMarching.penumbra*0.2,0.001),
 						sdfContext
 					);
-				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
-				// lighDif = directLight.color * dotNL * dirLightSdfShadow;
+				dotNL = saturate( dot( geometryNormal, directLight.direction ) );
 				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * dirLightSdfShadow;
 			}
 			#pragma unroll_loop_end
 		#endif
-
 		#if ( NUM_HEMI_LIGHTS > 0 )
-
 			#pragma unroll_loop_start
 			HemisphereLight hemiLight;
 			for ( int i = 0; i < NUM_HEMI_LIGHTS; i ++ ) {
 				hemiLight = hemisphereLights[ i ];
-				dif += getHemisphereLightIrradiance( hemiLight, geometry.normal ) * BRDF_Lambert( vec3(1.) );
-
+				dif += getHemisphereLightIrradiance( hemiLight, geometryNormal ) * BRDF_Lambert( vec3(1.) );
 			}
 			#pragma unroll_loop_end
-
 		#endif
-
 		#if NUM_POINT_LIGHTS > 0
 			PointLightRayMarching pointLightRayMarching;
 			PointLight pointLight;
@@ -645,9 +598,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			for ( int i = 0; i < NUM_POINT_LIGHTS; i ++ ) {
 				pointLightRayMarching = pointLightsRayMarching[ i ];
 				pointLight = pointLights[ i ];
-				getPointLightInfo( pointLight, geometry, directLight );
-
-
+				getPointLightInfo( pointLight, geometryPosition, directLight );
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_POINT_LIGHT_SHADOWS )
 					pointLightShadow = pointLightShadows[ i ];
 					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
@@ -661,9 +612,8 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 						pointLightShadow.shadowCameraFar
 					) : 1.0;
 				#endif
-
 				lightPos = pointLight.position;
-				lightDir = normalize(lightPos-geometry.position);
+				lightDir = normalize(lightPos-geometryPosition);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
 				pointLightSdfShadow =
@@ -674,43 +624,36 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 					_p,
 					objectSpaceLightDir,
 					pointLightRayMarching.shadowBiasDistance,
-					distance(geometry.position,lightPos),
+					distance(geometryPosition,lightPos),
 					1./max(pointLightRayMarching.penumbra*0.2,0.001),
 					sdfContext
 				);
-				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				dotNL = saturate( dot( geometryNormal, directLight.direction ) );
 				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * pointLightSdfShadow;
 			}
 			#pragma unroll_loop_end
 		#endif
-
 		#if ( NUM_RECT_AREA_LIGHTS > 0 ) && defined( RE_Direct_RectArea )
-
 			RectAreaLight rectAreaLight;
-			// AreaLightRayMarching areaLightRayMarching;
 			PhysicalMaterial material;
 			material.roughness = 1.;
 			material.specularColor = vec3(1.);
 			material.diffuseColor = vec3(1.);
-
+			vec3 geometryClearcoatNormal = geometryNormal;
 			#pragma unroll_loop_start
 			for ( int i = 0; i < NUM_RECT_AREA_LIGHTS; i ++ ) {
-				// areaLightRayMarching = areaLightsRayMarching[ i ];
 				rectAreaLight = rectAreaLights[ i ];
-				// rectAreaLight.position = areaLightRayMarching.worldPos;
-
-				RE_Direct_RectArea( rectAreaLight, geometry, material, reflectedLight );
+				RE_Direct_RectArea( rectAreaLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );
 			}
 			#pragma unroll_loop_end
 			dif += reflectedLight.directDiffuse;
-
 		#endif
 	#endif
-
 	vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );
-
-	irradiance += getLightProbeIrradiance( lightProbe, geometry.normal );
+	#if defined( USE_LIGHT_PROBES )
+		irradiance += getLightProbeIrradiance( lightProbe, geometryNormal );
+	#endif
 	dif += irradiance;
 	return dif;
 }

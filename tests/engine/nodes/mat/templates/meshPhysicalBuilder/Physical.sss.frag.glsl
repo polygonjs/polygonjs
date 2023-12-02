@@ -119,12 +119,13 @@ struct SSSModel {
 
 void RE_Direct_Scattering(
 	const in IncidentLight directLight,
-	const in GeometricContext geometry,
+	const in vec3 geometryNormal,
+	const in vec3 geometryViewDir,
 	const in SSSModel sssModel,
 	inout ReflectedLight reflectedLight
 	){
-	vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * sssModel.distortion));
-	float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), sssModel.power) * sssModel.scale;
+	vec3 scatteringHalf = normalize(directLight.direction + (geometryNormal * sssModel.distortion));
+	float scatteringDot = pow(saturate(dot(geometryViewDir, -scatteringHalf)), sssModel.power) * sssModel.scale;
 	vec3 scatteringIllu = (scatteringDot + sssModel.ambient) * (sssModel.color * (1.0-sssModel.thickness));
 	reflectedLight.directDiffuse += scatteringIllu * sssModel.attenuation * directLight.color;
 }
@@ -209,7 +210,7 @@ void main() {
 	#include <lights_physical_fragment>
 	#include <lights_fragment_begin>
 if(POLY_SSSModel.isActive){
-	RE_Direct_Scattering(directLight, geometry, POLY_SSSModel, reflectedLight);
+	RE_Direct_Scattering(directLight, geometryNormal, geometryViewDir, POLY_SSSModel, reflectedLight);
 }
 
 
@@ -261,7 +262,7 @@ if(POLY_SSSModel.isActive){
 
 	#ifdef USE_CLEARCOAT
 
-		float dotNVcc = saturate( dot( geometry.clearcoatNormal, geometry.viewDir ) );
+		float dotNVcc = saturate( dot( geometryClearcoatNormal, geometryViewDir ) );
 
 		vec3 Fcc = F_Schlick( material.clearcoatF0, material.clearcoatF90, dotNVcc );
 
