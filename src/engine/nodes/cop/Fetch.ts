@@ -68,11 +68,11 @@ export class FetchCopNode extends TypedCopNode<FetchCopParamsConfig> {
 		}
 		this.setTexture(texture);
 	}
-	private _textureFromMaterial(material: Material) {
+	private _textureFromMaterial(material: Material):Texture|undefined {
 		const textureName = this.pv.name;
 		const texture = material[textureName as keyof Material];
 		if (texture && (texture as Texture).isTexture) {
-			return texture;
+			return texture as Texture;
 		}
 	}
 }

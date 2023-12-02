@@ -71,7 +71,7 @@ const RENDER_HOOK_USER_DATA_KEY = 'POLY_render_hook';
 
 interface MaterialWithRenderHook extends Material {
 	userData: {
-		[RENDER_HOOK_USER_DATA_KEY]: RenderHookWithObject;
+		[RENDER_HOOK_USER_DATA_KEY]?: RenderHookWithObject;
 	};
 }
 
@@ -154,7 +154,7 @@ export function addUserDataRenderHook(material: Material, renderHook: RenderHook
 }
 export function applyRenderHook(object: Object3D, material: MaterialWithRenderHook) {
 	if (material.userData) {
-		const renderHook: RenderHookWithObject = material.userData[RENDER_HOOK_USER_DATA_KEY];
+		const renderHook: RenderHookWithObject | undefined = material.userData[RENDER_HOOK_USER_DATA_KEY];
 		if (renderHook) {
 			object.onBeforeRender = (
 				renderer: WebGLRenderer,

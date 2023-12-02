@@ -1,5 +1,6 @@
 
 #include <common>
+#include <batching_pars_vertex>
 #include <uv_pars_vertex>
 #include <envmap_pars_vertex>
 #include <color_pars_vertex>

@@ -10,6 +10,7 @@ varying vec3 vViewPosition;
 #endif
 
 #include <common>
+#include <batching_pars_vertex>
 #include <uv_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <color_pars_vertex>
@@ -212,6 +213,7 @@ void main() {
 
 
 	#include <morphcolor_vertex>
+	#include <batching_vertex>
 
 // removed:
 //	#include <beginnormal_vertex>

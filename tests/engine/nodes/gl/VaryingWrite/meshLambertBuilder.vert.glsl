@@ -1,6 +1,7 @@
 #define LAMBERT
 varying vec3 vViewPosition;
 #include <common>
+#include <batching_pars_vertex>
 #include <uv_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <envmap_pars_vertex>
@@ -36,6 +37,7 @@ void main() {
 	
 	ptColor = v_POLY_hsvToRgb1_rgb;
 	#include <morphcolor_vertex>
+	#include <batching_vertex>
 	#include <morphnormal_vertex>
 	#include <skinbase_vertex>
 	#include <skinnormal_vertex>

@@ -1,5 +1,6 @@
 
 #include <common>
+#include <batching_pars_vertex>
 #include <uv_pars_vertex>
 #include <envmap_pars_vertex>
 #include <color_pars_vertex>
@@ -38,6 +39,7 @@ void main() {
 
 
 	#include <morphcolor_vertex>
+	#include <batching_vertex>
 
 	#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )
 
