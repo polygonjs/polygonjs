@@ -4,6 +4,7 @@ import {CSS2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
 import {CSS3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
 import {PathTracingRendererRopNode} from '../../../nodes/rop/PathTracingRenderer';
 import {WebGLRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
+import {WebGPURendererRopNode} from '../../../nodes/rop/WebGPURenderer';
 // networks
 import {ActorsNetworkRopNode} from '../../../nodes/rop/ActorsNetwork';
 import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
@@ -19,6 +20,7 @@ export interface RopNodeChildrenMap {
 	CSS3DRenderer: CSS3DRendererRopNode;
 	pathTracingRenderer: PathTracingRendererRopNode;
 	WebGLRenderer: WebGLRendererRopNode;
+	WebGPURenderer: WebGPURendererRopNode;
 	// networks
 	actorsNetwork: ActorsNetworkRopNode;
 	animationsNetwork: AnimationsNetworkRopNode;
@@ -39,6 +41,7 @@ export class RopRegister {
 		poly.registerNode(PathTracingRendererRopNode, CATEGORY_ROP.WEBGL);
 		// }
 		poly.registerNode(WebGLRendererRopNode, CATEGORY_ROP.WEBGL);
+		poly.registerNode(WebGPURendererRopNode, CATEGORY_ROP.WEBGL);
 		// networks
 		poly.registerNode(ActorsNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(AnimationsNetworkRopNode, CATEGORY_ROP.NETWORK);

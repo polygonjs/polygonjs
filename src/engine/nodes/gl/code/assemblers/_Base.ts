@@ -18,7 +18,7 @@ import {ShadersCollectionController} from '../utils/ShadersCollectionController'
 import {CustomMaterialName, IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {ShaderChunk} from 'three';
+
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {GlNodeFinder} from '../utils/NodeFinder';
 import {VaryingWriteGlNode} from '../../VaryingWrite';
@@ -559,24 +559,6 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 	getCustomMaterials(): Map<CustomMaterialName, ShaderMaterial> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
-	}
-
-	static expandShader(shader_string: string) {
-		function parseIncludes(string: string) {
-			const pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
-			function replace(match: string, include: string): string {
-				const replace = ShaderChunk[include as keyof typeof ShaderChunk];
-
-				if (replace === undefined) {
-					throw new Error('Can not resolve #include <' + include + '>');
-				}
-
-				return parseIncludes(replace);
-			}
-
-			return string.replace(pattern, replace);
-		}
-		return parseIncludes(shader_string);
 	}
 
 	//

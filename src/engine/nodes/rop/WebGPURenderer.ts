@@ -7,8 +7,9 @@
  */
 import {TypedRopNode} from './_Base';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
+// @ts-ignore
+import {WebGPURenderer} from 'three';
 import {
-	WebGLRenderer,
 	WebGLRendererParameters,
 	Mesh,
 	// color space
@@ -131,9 +132,7 @@ const SHADOW_MAP_TYPE_VALUES: ShadowMapTypeValue[] = [
 export const SHADOW_MAP_TYPES = [BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap];
 export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as ShadowMapType;
 
-// TODO: set debug.checkShaderErrors to false in prod
-
-class WebGLRendererRopParamsConfig extends NodeParamsConfig {
+class WebGPURendererRopParamsConfig extends NodeParamsConfig {
 	//
 	//
 	//
@@ -147,7 +146,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMapping(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateToneMapping(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param tone mapping exposure */
@@ -155,7 +154,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		range: [0, 2],
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMappingExposure(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateToneMappingExposure(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param output color space */
@@ -168,7 +167,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateOutputColorSpace(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateOutputColorSpace(node as WebGPURendererRopNode);
 		},
 	});
 
@@ -176,14 +175,14 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	sortObjects = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateSortObjects(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateSortObjects(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, window.devicePixelRatio) for other devices */
 	tpixelRatio = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param higher pixelRatio improves render sharpness but reduces performance */
@@ -193,7 +192,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGPURendererRopNode);
 		},
 	});
 	//
@@ -206,7 +205,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	tshadowMap = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param toggle on to recompute the shadow maps on every frame. If all objects are static, you may want to turn this off */
@@ -214,7 +213,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		visibleIf: {tshadowMap: 1},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param toggle on to trigger shadows update */
@@ -222,7 +221,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		visibleIf: {tshadowMap: 1},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGPURendererRopNode);
 		},
 	});
 	/** @param shadows type */
@@ -238,7 +237,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+			WebGPURendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGPURendererRopNode);
 		},
 	});
 
@@ -289,18 +288,18 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 
 	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
 }
-const ParamsConfig = new WebGLRendererRopParamsConfig();
+const ParamsConfig = new WebGPURendererRopParamsConfig();
 
-export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsConfig> {
+export class WebGPURendererRopNode extends TypedRopNode<WebGPURendererRopParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<RopType.WEBGL> {
-		return RopType.WEBGL;
+	static override type(): Readonly<RopType.WEBGPU> {
+		return RopType.WEBGPU;
 	}
 
-	private _rendererByCanvas: Map<HTMLCanvasElement, WebGLRenderer> = new Map();
+	private _rendererByCanvas: Map<HTMLCanvasElement, WebGPURenderer> = new Map();
 
 	// private _renderersbyCamera: Map<Camera, WebGLRenderer> = new Map();
-	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
+	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGPURenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(WEBGL_RENDERER_DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -347,7 +346,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		this.cookController.endCook();
 	}
-	private _updateRenderer(renderer: WebGLRenderer) {
+	private _updateRenderer(renderer: WebGPURenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		this._updateRendererOutputColorSpace(renderer);
 		this._updateRendererToneMapping(renderer);
@@ -377,33 +376,33 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	//
 	//
 
-	static PARAM_CALLBACK_updateToneMapping(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateToneMapping(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererToneMapping(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updateToneMappingExposure(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateToneMappingExposure(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererToneMappingExposure(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updateOutputColorSpace(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateOutputColorSpace(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererOutputColorSpace(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updateShadow(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateShadow(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererShadow(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updateSortObjects(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateSortObjects(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererSortObjects(renderer);
 		});
 	}
 
-	static PARAM_CALLBACK_updatePixelRatio(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updatePixelRatio(node: WebGPURendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererPixelRatio(renderer);
 		});
@@ -411,26 +410,26 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	}
 	//
 	//
-	private _updateRendererToneMapping(renderer: WebGLRenderer) {
+	private _updateRendererToneMapping(renderer: WebGPURenderer) {
 		renderer.toneMapping = this.pv.toneMapping as ToneMapping;
 	}
-	private _updateRendererToneMappingExposure(renderer: WebGLRenderer) {
+	private _updateRendererToneMappingExposure(renderer: WebGPURenderer) {
 		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 	}
-	private _updateRendererOutputColorSpace(renderer: WebGLRenderer) {
+	private _updateRendererOutputColorSpace(renderer: WebGPURenderer) {
 		renderer.outputColorSpace = this.pv.outputColorSpace as ColorSpace;
 	}
-	private _updateRendererShadow(renderer: WebGLRenderer) {
+	private _updateRendererShadow(renderer: WebGPURenderer) {
 		renderer.shadowMap.enabled = this.pv.tshadowMap;
 		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
 		renderer.shadowMap.needsUpdate = this.pv.shadowMapNeedsUpdate;
 		renderer.shadowMap.type = this.pv.shadowMapType as ShadowMapType;
 	}
-	private _updateRendererSortObjects(renderer: WebGLRenderer): void {
+	private _updateRendererSortObjects(renderer: WebGPURenderer): void {
 		renderer.sortObjects = this.pv.sortObjects;
 	}
 
-	private _updateRendererPixelRatio(renderer: WebGLRenderer) {
+	private _updateRendererPixelRatio(renderer: WebGPURenderer) {
 		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.path()}'`);

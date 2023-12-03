@@ -1,5 +1,4 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BaseGlShaderAssembler} from './../../../../src/engine/nodes/gl/code/assemblers/_Base';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -17,6 +16,7 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 import {MeshPhysicalBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhysicalBuilder';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {expandShader} from '../../../../src/engine/nodes/gl/code/utils/ExpandShader';
 export function testenginenodesmatMeshPhysicalBuilder(qUnit: QUnit) {
 	const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 	const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
@@ -364,18 +364,16 @@ export function testenginenodesmatMeshPhysicalBuilder(qUnit: QUnit) {
 		assert.equal(geoSopGroup!.children.length, 1);
 
 		await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-		let expandedFragment = BaseGlShaderAssembler.expandShader(
-			(await meshPhysicalBuilder1.material()).fragmentShader
-		);
+		let expandedFragment = expandShader((await meshPhysicalBuilder1.material()).fragmentShader);
 
 		assert.includes(expandedFragment, 'float POLY_thickness = 1.0;');
 		assert.includes(expandedFragment, 'float POLY_transmission = 1.0;');
 		assert.includes(
-			BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
+			expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 			'material.thickness = thickness * POLY_thickness;'
 		);
 		assert.includes(
-			BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
+			expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 			'material.transmission = transmission * POLY_transmission;'
 		);
 
@@ -383,18 +381,18 @@ export function testenginenodesmatMeshPhysicalBuilder(qUnit: QUnit) {
 		output1.setInput('transmission', constant_transmission);
 		output1.setInput('thickness', constant_thickness);
 		await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-		expandedFragment = BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader);
+		expandedFragment = expandShader((await meshPhysicalBuilder1.material()).fragmentShader);
 
 		assert.includes(expandedFragment, 'float v_POLY_thickness_val = 0.3;');
 		assert.includes(expandedFragment, 'float POLY_thickness = v_POLY_thickness_val;');
 		assert.includes(expandedFragment, 'float v_POLY_transmission_val = 0.2;');
 		assert.includes(expandedFragment, 'float POLY_transmission = v_POLY_transmission_val;');
 		assert.includes(
-			BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
+			expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 			'material.thickness = thickness * POLY_thickness;'
 		);
 		assert.includes(
-			BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
+			expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 			'material.transmission = transmission * POLY_transmission;'
 		);
 

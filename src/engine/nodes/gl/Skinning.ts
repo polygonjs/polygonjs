@@ -12,10 +12,10 @@ import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {BaseGlShaderAssembler} from './code/assemblers/_Base';
+import {expandShader} from './code/utils/ExpandShader';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
-const TEMPLATE = BaseGlShaderAssembler.expandShader(SKINNING);
+const TEMPLATE = expandShader(SKINNING);
 const TO_REPLACE_INPUT_POS = `vec4( transformed, 1.0 )`;
 const TO_REPLACE_INPUT_NORMAL = `vec4( objectNormal, 0.0 )`;
 const TO_REPLACE_OUTPUT_POS = `transformed = `;
