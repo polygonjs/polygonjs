@@ -3,6 +3,7 @@ import {Poly} from '../../Poly';
 import {AbstractRenderer} from '../../viewers/Common';
 import {WebGLRenderer} from 'three';
 import type {PathTracingRendererContainer} from '../../nodes/rop/utils/pathTracing/PathTracingRendererContainer';
+import {arrayCopy} from '../../../core/ArrayUtils';
 
 type SceneRenderersRegisterCallback = (value: AbstractRenderer) => void;
 
@@ -88,10 +89,8 @@ export class SceneRenderersRegister {
 
 	private _flushCallbacksWithRenderer(renderer: AbstractRenderer) {
 		const callbacks: SceneRenderersRegisterCallback[] = [];
-		for (const r of this._resolves) {
-			callbacks.push(r);
-		}
-		this._resolves = [];
+		arrayCopy(this._resolves, callbacks);
+		this._resolves.length = 0;
 		for (const c of callbacks) {
 			c(renderer);
 		}

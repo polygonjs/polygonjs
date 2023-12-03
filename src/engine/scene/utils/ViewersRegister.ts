@@ -34,8 +34,7 @@ export class ViewersRegister {
 			canvas: options.canvas,
 			scene: this._scene,
 		};
-		const newViewer = Poly.camerasRegister.createViewer(createViewerOptions); //cameraNode.createViewer();
-		return newViewer;
+		return Poly.camerasRegister.createViewer(createViewerOptions);
 	}
 
 	firstViewer() {

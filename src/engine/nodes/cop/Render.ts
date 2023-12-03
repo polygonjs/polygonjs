@@ -139,12 +139,14 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			return camera;
 		}
 		return new Promise((resolve) => {
-			this.scene().camerasController.onCameraObjectsUpdated(async () => {
+			const onCameraUpdated = async () => {
 				const camera = this._getCameraSync();
+				this.scene().camerasController.removeOnCameraObjectsUpdated(onCameraUpdated);
 				if (camera) {
 					resolve(camera);
 				}
-			});
+			};
+			this.scene().camerasController.onCameraObjectsUpdated(onCameraUpdated);
 		});
 	}
 

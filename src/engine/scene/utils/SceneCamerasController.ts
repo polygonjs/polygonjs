@@ -29,8 +29,8 @@ export class SceneCamerasController {
 		if (this._cameraObjectsRecentlyUpdated.length > 0) {
 			this._coreGraphNode.setDirty();
 		}
-		if (this._onCameraObjectsUpdated) {
-			this._onCameraObjectsUpdated();
+		for (const callback of this._onCameraObjectsUpdatedCallbacks) {
+			callback();
 		}
 	}
 	cameraObjects(target: Array<Camera>) {
@@ -133,8 +133,18 @@ export class SceneCamerasController {
 		});
 	}
 
-	private _onCameraObjectsUpdated: OnCameraObjectsUpdated | undefined;
-	onCameraObjectsUpdated(callback: OnCameraObjectsUpdated | undefined) {
-		this._onCameraObjectsUpdated = callback;
+	private _onCameraObjectsUpdatedCallbacks: OnCameraObjectsUpdated[] = [];
+	onCameraObjectsUpdated(callback: OnCameraObjectsUpdated) {
+		const index = this._onCameraObjectsUpdatedCallbacks.indexOf(callback);
+		if (index >= 0) {
+			return;
+		}
+		this._onCameraObjectsUpdatedCallbacks.push(callback);
+	}
+	removeOnCameraObjectsUpdated(callback: OnCameraObjectsUpdated) {
+		const index = this._onCameraObjectsUpdatedCallbacks.indexOf(callback);
+		if (index >= 0) {
+			this._onCameraObjectsUpdatedCallbacks.splice(index, 1);
+		}
 	}
 }

@@ -160,8 +160,7 @@ export class ScenePlayerImporter {
 					scene.renderersRegister.registerRenderer(this.options.renderer);
 				}
 				// now we must wait that a camera matching the mainCamera is found in the hierarchy.
-				this._onCameraCreatorNodeLoadedResolve = () => resolve(scene);
-				scene.camerasController.onCameraObjectsUpdated(async () => {
+				const onCameraUpdated = async () => {
 					const camera = await scene.camerasController.mainCamera({
 						findAnyCamera: false,
 						printCameraNotFoundError: this._progress >= 1, // we display a warning if progress is 1
@@ -176,7 +175,12 @@ export class ScenePlayerImporter {
 							this._onCameraCreatorNodeLoadedResolve();
 						}
 					}
-				});
+				};
+				this._onCameraCreatorNodeLoadedResolve = () => {
+					scene.camerasController.removeOnCameraObjectsUpdated(onCameraUpdated);
+					resolve(scene);
+				};
+				scene.camerasController.onCameraObjectsUpdated(onCameraUpdated);
 				// this._cameraCreatorNode = await scene.root().loadProgress.cameraCreatorNode();
 			});
 		};
