@@ -544,6 +544,7 @@ import {testenginenodessopQuadPlane} from './engine/nodes/sop/QuadPlane';
 import {testenginenodessopQuadrangulate} from './engine/nodes/sop/Quadrangulate';
 import {testenginenodessopQuadSmooth} from './engine/nodes/sop/QuadSmooth';
 import {testenginenodessopQuadTriangulate} from './engine/nodes/sop/QuadTriangulate';
+import {testenginenodessopQuadUniqueneighbourId} from './engine/nodes/sop/QuadUniqueNeighbourId';
 import {testenginenodessopRay} from './engine/nodes/sop/Ray';
 import {testenginenodessopReflector} from './engine/nodes/sop/Reflector';
 import {testenginenodessopResample} from './engine/nodes/sop/Resample';
@@ -1142,6 +1143,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopQuadrangulate,
 		testenginenodessopQuadSmooth,
 		testenginenodessopQuadTriangulate,
+		testenginenodessopQuadUniqueneighbourId,
 		testenginenodessopRay,
 		testenginenodessopReflector,
 		testenginenodessopResample,

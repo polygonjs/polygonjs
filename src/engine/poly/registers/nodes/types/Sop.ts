@@ -160,6 +160,7 @@ export enum SopType {
 	QUAD_PLANE = 'quadPlane',
 	QUAD_SMOOTH = 'quadSmooth',
 	QUAD_TRIANGULATE = 'quadTriangulate',
+	QUAD_UNIQUE_NEIGHBOUR_ID = 'quadUniqueNeighbourId',
 	QUADRANGULATE = 'quadrangulate',
 	//
 	RAY = 'ray',
