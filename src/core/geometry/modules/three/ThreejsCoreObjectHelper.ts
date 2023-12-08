@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {watch, WatchStopHandle} from 'vue';
+import {watch, WatchStopHandle} from '@vue-reactivity/watch';
 import {PolyScene} from '../../../../engine/scene/PolyScene';
 import {BaseSopNodeType} from '../../../../../src/engine/nodes/sop/_Base';
 import {ThreejsCoreObject} from './ThreejsCoreObject';
