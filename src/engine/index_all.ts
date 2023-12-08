@@ -19,11 +19,8 @@ import {CoreSleep} from '../core/Sleep';
 import {CoreUserAgent} from '../core/UserAgent';
 import {CoreGroup} from '../core/geometry/Group';
 import {ThreejsCoreObject} from '../core/geometry/modules/three/ThreejsCoreObject';
-import {
-	objectFromNode,
-	CoreObjectHelper,
-	CoreObjectHelperOptions,
-} from '../core/geometry/modules/three/ThreejsCoreObjectHelper';
+import {objectFromNode, CoreObjectHelper} from '../core/geometry/modules/three/ThreejsCoreObjectHelper';
+import type {CoreObjectHelperOptions} from '../core/geometry/modules/three/ThreejsCoreObjectHelper';
 import {CoreFeaturesController} from '../core/FeaturesController';
 import {CoreMath, clamp, fit, randFloat, radToDeg} from '../core/math/_Module';
 import {sanitizeName} from '../core/String';
@@ -58,6 +55,7 @@ export type {
 	ComplexParamJsonExporterData,
 	// core
 	LogStyle,
+	CoreObjectHelperOptions,
 	// params
 	ParamType,
 };
@@ -85,7 +83,6 @@ export {
 	ThreejsCoreObject,
 	objectFromNode,
 	CoreObjectHelper,
-	CoreObjectHelperOptions,
 	CoreFeaturesController,
 	CoreMath,
 	clamp,
