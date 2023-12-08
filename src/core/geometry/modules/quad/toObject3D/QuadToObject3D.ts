@@ -178,7 +178,7 @@ function quadToLine(quadObject: QuadObject, options: QUADTesselationParams) {
 		addEdge(_v4.w, _v4.x);
 	}
 
-	const positions = [...(srcPositions)];
+	const positions = [...srcPositions];
 	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
 	geometry.setIndex(newIndices);
 	const material = _createOrFindLineMaterial(options.wireframeColor);
@@ -189,19 +189,12 @@ function quadToLine(quadObject: QuadObject, options: QUADTesselationParams) {
 function quadToCenter(quadObject: QuadObject, options: QUADTesselationParams) {
 	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
-	const indices = quadGeometry.index;
-	const srcPositions = quadGeometry.attributes.position.array;
 
 	const geometry = new BufferGeometry();
 	const newIndices = new Array(quadsCount);
 	const positions = new Array(quadsCount * 3);
 	for (let i = 0; i < quadsCount; i++) {
-		_v4.fromArray(indices, i * 4);
-		_p0.fromArray(srcPositions, _v4.x * 3);
-		_p1.fromArray(srcPositions, _v4.y * 3);
-		_p2.fromArray(srcPositions, _v4.z * 3);
-		_p3.fromArray(srcPositions, _v4.w * 3);
-		_center.copy(_p0).add(_p1).add(_p2).add(_p3).multiplyScalar(0.25);
+		QuadPrimitive.position(quadObject, i, _center);
 		_center.toArray(positions, i * 3);
 
 		newIndices[i] = i;

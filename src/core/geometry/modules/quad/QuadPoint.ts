@@ -100,19 +100,43 @@ export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 		}
 		return positionAttribute.count;
 	}
-	override position(target: Vector3): Vector3 {
-		if (!this._geometry) {
+	static position<T extends CoreObjectType>(
+		quadObject: ObjectContent<T> | undefined,
+		pointIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(quadObject && quadObject.geometry)) {
 			return target;
 		}
-		const {array} = this.attribute(Attribute.POSITION) as BufferAttribute;
-		return target.fromArray(array, this._index * 3);
+		const attribute = (quadObject.geometry as QuadGeometry).attributes[Attribute.POSITION] as
+			| BufferAttribute
+			| undefined;
+		if (!attribute) {
+			return target;
+		}
+		return target.fromArray(attribute.array, pointIndex * 3);
+	}
+	override position(target: Vector3): Vector3 {
+		return (this.constructor as typeof QuadPoint).position(this._object, this._index, target);
+	}
+	static normal<T extends CoreObjectType>(
+		quadObject: ObjectContent<T> | undefined,
+		pointIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(quadObject && quadObject.geometry)) {
+			return target;
+		}
+		const attribute = (quadObject.geometry as QuadGeometry).attributes[Attribute.NORMAL] as
+			| BufferAttribute
+			| undefined;
+		if (!attribute) {
+			return target;
+		}
+		return target.fromArray(attribute.array, pointIndex * 3);
 	}
 	override normal(target: Vector3) {
-		if (!this._geometry) {
-			return target;
-		}
-		const {array} = this.attribute(Attribute.NORMAL) as BufferAttribute;
-		return target.fromArray(array, this._index * 3);
+		return (this.constructor as typeof QuadPoint).normal(this._object, this._index, target);
 	}
 	static override computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
 		if (!object.geometry) {

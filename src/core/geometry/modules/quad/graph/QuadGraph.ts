@@ -58,6 +58,9 @@ export class QuadGraph extends PrimitiveGraph {
 	quadNode(quadId: number) {
 		return this._quadsById.get(quadId);
 	}
+	quadIdsByPointIndex(pointIndex: number) {
+		return this._quadIdsByPointIndex.get(pointIndex);
+	}
 	neighbourData(quadId: number, sideIndex: NeighbourIndex, target: NeighbourData): void {
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
