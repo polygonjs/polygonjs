@@ -1,4 +1,4 @@
-import {Vector3, Vector4,BufferAttribute, Triangle} from 'three';
+import {Vector3, Vector4, BufferAttribute, Triangle} from 'three';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 import {QuadObject} from './QuadObject';
 import {QuadGeometry} from './QuadGeometry';
@@ -30,7 +30,7 @@ const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
-const stride = 4;
+const STRIDE = 4;
 
 export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	protected _geometry?: QuadGeometryWithPrimitiveAttributes;
@@ -132,11 +132,11 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		}
 		const positionArray = positionAttribute.array;
 		const index = (quadObject as any as QuadObject).geometry.index;
-		_v4.fromArray(index, primitiveIndex * stride);
-		_p0.fromArray(positionArray, index[_v4.x] * 3);
-		_p1.fromArray(positionArray, index[_v4.y] * 3);
-		_p2.fromArray(positionArray, index[_v4.z] * 3);
-		_p3.fromArray(positionArray, index[_v4.w] * 3);
+		_v4.fromArray(index, primitiveIndex * STRIDE);
+		_p0.fromArray(positionArray, _v4.x * 3);
+		_p1.fromArray(positionArray, _v4.y * 3);
+		_p2.fromArray(positionArray, _v4.z * 3);
+		_p3.fromArray(positionArray, _v4.w * 3);
 		target.copy(_p0).add(_p1).add(_p2).add(_p3).divideScalar(4);
 		return target;
 	}
@@ -156,18 +156,15 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 			return target;
 		}
 		const positionArray = positionAttribute.array;
-		const i0 = primitiveIndex * stride + 0;
-		const i1 = primitiveIndex * stride + 1;
-		const i2 = primitiveIndex * stride + 2;
-		const i3 = primitiveIndex * stride + 3;
 		const index = (quadObject as any as QuadObject).geometry.index;
-		_triangle.a.fromArray(positionArray, index[i0] * 3);
-		_triangle.b.fromArray(positionArray, index[i1] * 3);
-		_triangle.c.fromArray(positionArray, index[i2] * 3);
+		_v4.fromArray(index, primitiveIndex * STRIDE);
+		_triangle.a.fromArray(positionArray, _v4.x * 3);
+		_triangle.b.fromArray(positionArray, _v4.y * 3);
+		_triangle.c.fromArray(positionArray, _v4.z * 3);
 		_triangle.getNormal(_n0);
-		_triangle.a.fromArray(positionArray, index[i2] * 3);
-		_triangle.b.fromArray(positionArray, index[i3] * 3);
-		_triangle.c.fromArray(positionArray, index[i0] * 3);
+		_triangle.a.fromArray(positionArray, _v4.z * 3);
+		_triangle.b.fromArray(positionArray, _v4.w * 3);
+		_triangle.c.fromArray(positionArray, _v4.x * 3);
 		_triangle.getNormal(_n1);
 		return target.copy(_n0).add(_n1).divideScalar(2);
 	}
@@ -193,9 +190,9 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 			target.length = 0;
 			return;
 		}
-		target.length = stride;
-		for (let i = 0; i < stride; i++) {
-			target[i] = primitiveIndex * stride + i;
+		target.length = STRIDE;
+		for (let i = 0; i < STRIDE; i++) {
+			target[i] = primitiveIndex * STRIDE + i;
 		}
 	}
 	static override relatedVertexClass<T extends CoreObjectType>(object: ObjectContent<T>) {

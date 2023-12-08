@@ -117,7 +117,7 @@ export class QuadExtrudeSopNode extends QuadSopNode<QuadExtrudeSopParamsConfig> 
 			const array = attribute.array;
 			const additionalPointAttributeItemsCount = additionalPointsCount * attribute.itemSize;
 			attribute.count += additionalPointsCount;
-			const newValues: number[] = [...(array)];
+			const newValues: number[] = [...array];
 			newValues.length += additionalPointAttributeItemsCount;
 			attribute.array = new Float32Array(newValues);
 		}
