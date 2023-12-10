@@ -9,23 +9,23 @@ export const QUAD_OBJECT_TYPES_SET: Set<QUADObjectType> = new Set(QUAD_OBJECT_TY
 
 export interface QUADTesselationParams {
 	triangles: boolean;
-	splitQuads:boolean
 	wireframe: boolean;
 	wireframeColor: Color;
 	center: boolean;
 	innerRadius: boolean;
 	outerRadius: boolean;
+	splitQuads: boolean;
 	pointAttributes: string;
 	primitiveAttributes: string;
 }
 export interface QUADOBJTesselationParams {
 	QUADTriangles: boolean;
-	QUADSplitQuads:boolean
 	QUADWireframe: boolean;
 	QUADWireframeColor: Color;
 	QUADCenter: boolean;
 	QUADInnerRadius: boolean;
 	QUADOuterRadius: boolean;
+	QUADSplitQuads: boolean;
 	QUADPointAttributes: string;
 	QUADPrimitiveAttributes: string;
 }

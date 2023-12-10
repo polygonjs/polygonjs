@@ -6,10 +6,6 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 	return class Mixin extends Base {
 		/** @param triangles */
 		triangles = ParamConfig.BOOLEAN(true);
-		/** @param split quads */
-		splitQuads = ParamConfig.BOOLEAN(false, {
-			visibleIf: [{triangles: true}],
-		});
 		/** @param wireframe */
 		wireframe = ParamConfig.BOOLEAN(true, {
 			separatorBefore: true,
@@ -30,15 +26,17 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		outerRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
 		});
+		/** @param split quads */
+		splitQuads = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+			visibleIf: [{triangles: true}, {wireframe: true}],
+		});
 		/** @param pointAttributes */
 		pointAttributes = ParamConfig.STRING('*', {
-			separatorBefore: true,
 			visibleIf: [{triangles: true}],
 		});
 		/** @param primitiveAttributes */
-		primitiveAttributes = ParamConfig.STRING('*', {
-			visibleIf: [{triangles: true}, {center: true}],
-		});
+		primitiveAttributes = ParamConfig.STRING('*');
 	};
 }
 
@@ -46,10 +44,6 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 	return class Mixin extends Base {
 		/** @param wireframe */
 		QUADTriangles = ParamConfig.BOOLEAN(true);
-		/** @param split quads */
-		QUADSplitQuads = ParamConfig.BOOLEAN(false, {
-			visibleIf: [{QUADTriangles: true}],
-		});
 		/** @param wireframe */
 		QUADWireframe = ParamConfig.BOOLEAN(true, {
 			separatorBefore: true,
@@ -70,15 +64,17 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		QUADOuterRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {QUADCenter: true},
 		});
+		/** @param split quads */
+		QUADSplitQuads = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+			visibleIf: [{QUADTriangles: true}, {QUADWireframe: true}],
+		});
 		/** @param pointAttributes */
 		QUADPointAttributes = ParamConfig.STRING('*', {
-			separatorBefore: true,
 			visibleIf: [{QUADTriangles: true}],
 		});
 		/** @param primitiveAttributes */
-		QUADPrimitiveAttributes = ParamConfig.STRING('*', {
-			visibleIf: [{QUADTriangles: true}, {QUADCenter: true}],
-		});
+		QUADPrimitiveAttributes = ParamConfig.STRING('*');
 	};
 }
 

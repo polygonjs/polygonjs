@@ -152,37 +152,111 @@ function quadToMesh(quadObject: QuadObject, options: QUADTesselationParams) {
 	return mesh;
 }
 function quadToLine(quadObject: QuadObject, options: QUADTesselationParams) {
+	const splitQuads = options.splitQuads;
 	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
 	const indices = quadGeometry.index;
 	const srcPositions = quadGeometry.attributes.position.array;
 
-	const newIndices = new Array();
-	const geometry = new BufferGeometry();
 	const edges = new Map<number, number>();
 
-	const addEdge = (a: number, b: number) => {
-		if (edges.get(a) == b || edges.get(b) == a) {
-			return;
+	const splitGeometry = () => {
+		const newIndices: number[] = new Array();
+		const positions: number[] = [];
+
+		for (let i = 0; i < quadsCount; i++) {
+			_v4.fromArray(indices, i * 4);
+			_p0.fromArray(srcPositions, _v4.x * 3);
+			_p1.fromArray(srcPositions, _v4.y * 3);
+			_p2.fromArray(srcPositions, _v4.z * 3);
+			_p3.fromArray(srcPositions, _v4.w * 3);
+
+			const j = i * 4 * 3;
+			const k = i * 8;
+			const m = i * 4;
+			_p0.toArray(positions, j);
+			_p1.toArray(positions, j + 3);
+			_p2.toArray(positions, j + 6);
+			_p3.toArray(positions, j + 9);
+
+			newIndices[k] = m;
+			newIndices[k + 1] = m + 1;
+			newIndices[k + 2] = m + 1;
+			newIndices[k + 3] = m + 2;
+			newIndices[k + 4] = m + 2;
+			newIndices[k + 5] = m + 3;
+			newIndices[k + 6] = m + 3;
+			newIndices[k + 7] = m;
 		}
-		edges.set(a, b);
-		edges.set(b, a);
-		newIndices.push(a, b);
+
+		const geometry = new BufferGeometry();
+		geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
+		geometry.setIndex(newIndices);
+		return geometry;
 	};
 
-	for (let i = 0; i < quadsCount; i++) {
-		_v4.fromArray(indices, i * 4);
-		addEdge(_v4.x, _v4.y);
-		addEdge(_v4.y, _v4.z);
-		addEdge(_v4.z, _v4.w);
-		addEdge(_v4.w, _v4.x);
-	}
+	const unsplitGeometry = () => {
+		const newIndices: number[] = new Array();
+		const addEdgeUnsplit = (a: number, b: number) => {
+			if (edges.get(a) == b || edges.get(b) == a) {
+				return;
+			}
+			edges.set(a, b);
+			edges.set(b, a);
+			newIndices.push(a, b);
+		};
+		for (let i = 0; i < quadsCount; i++) {
+			_v4.fromArray(indices, i * 4);
+			addEdgeUnsplit(_v4.x, _v4.y);
+			addEdgeUnsplit(_v4.y, _v4.z);
+			addEdgeUnsplit(_v4.z, _v4.w);
+			addEdgeUnsplit(_v4.w, _v4.x);
+		}
 
-	const positions = [...srcPositions];
-	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
-	geometry.setIndex(newIndices);
+		const positions = [...srcPositions];
+		const geometry = new BufferGeometry();
+		geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
+		geometry.setIndex(newIndices);
+		return geometry;
+	};
+
+	const geometry = splitQuads ? splitGeometry() : unsplitGeometry();
 	const material = _createOrFindLineMaterial(options.wireframeColor);
 	const lineSegments = new LineSegments(geometry, material);
+
+	// primitive attributes
+	if (splitQuads) {
+		const primitiveAttributes = QuadPrimitive.attributesFromGeometry(quadGeometry);
+		if (primitiveAttributes) {
+			const primitiveAttributeNames = Object.keys(primitiveAttributes).filter((attributeName) =>
+				stringMatchMask(attributeName, options.primitiveAttributes)
+			);
+			for (const primitiveAttributeName of primitiveAttributeNames) {
+				const srcAttribute = primitiveAttributes[primitiveAttributeName];
+				const destPrimitivesCount = quadsCount * 4;
+				const destAttribute = {
+					itemSize: srcAttribute.itemSize,
+					isString: srcAttribute.isString,
+					array: new Array(destPrimitivesCount * srcAttribute.itemSize),
+				};
+				ThreejsPrimitiveTriangle.addAttribute(lineSegments, primitiveAttributeName, destAttribute);
+				const srcArray = srcAttribute.array;
+				const destArray = destAttribute.array;
+				const srcArraySize = srcArray.length;
+				let j = 0;
+				for (let i = 0; i < srcArraySize; i++) {
+					// 1 quad -> 4 lines
+					destArray[j] = srcArray[i];
+					destArray[j + 1] = srcArray[i];
+					destArray[j + 2] = srcArray[i];
+					destArray[j + 3] = srcArray[i];
+
+					j += 4;
+				}
+			}
+		}
+	}
+
 	prepareObject(lineSegments, {shadow: false});
 	return lineSegments;
 }
