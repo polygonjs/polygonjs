@@ -539,6 +539,7 @@ import {testenginenodessopPointLight} from './engine/nodes/sop/PointLight';
 import {testenginenodessopPolarTransform} from './engine/nodes/sop/PolarTransform';
 import {testenginenodessopPoly} from './engine/nodes/sop/Poly';
 import {testenginenodessopPolywire} from './engine/nodes/sop/Polywire';
+import {testenginenodessopQuadCorners} from './engine/nodes/sop/QuadCorners';
 import {testenginenodessopQuadExtrude} from './engine/nodes/sop/QuadExtrude';
 import {testenginenodessopQuadPlane} from './engine/nodes/sop/QuadPlane';
 import {testenginenodessopQuadrangulate} from './engine/nodes/sop/Quadrangulate';
@@ -1138,6 +1139,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopPolarTransform,
 		testenginenodessopPoly,
 		testenginenodessopPolywire,
+		testenginenodessopQuadCorners,
 		testenginenodessopQuadExtrude,
 		testenginenodessopQuadPlane,
 		testenginenodessopQuadrangulate,
