@@ -11,6 +11,9 @@ export class TriangleGraph extends PrimitiveGraph {
 	private _edgesByTriangleId: Map<number, TriangleEdge[]> = new Map();
 	private _edgesById: Map<string, TriangleEdge> = new Map();
 	private _edgeIds: Set<string> = new Set();
+	constructor() {
+		super();
+	}
 	addTriangle(triangle: Number3): TriangleNode {
 		this._nextTriangleId++;
 		const triangleId = this._nextTriangleId;
@@ -24,7 +27,7 @@ export class TriangleGraph extends PrimitiveGraph {
 			const _edgeId = edgeId(pointIdPair);
 			let edge = this._edgesById.get(_edgeId);
 			if (!edge) {
-				edge = new TriangleEdge(_edgeId, pointIdPair);
+				edge = new TriangleEdge(this, _edgeId, pointIdPair);
 				this._edgesById.set(_edgeId, edge);
 			}
 			edge.addTriangle(triangleId);

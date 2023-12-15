@@ -20,7 +20,7 @@ export function testenginenodessopQuadCorners(qUnit: QUnit) {
 			return {objects};
 		}
 
-		assert.equal((await compute()).objects.length, 60, 'objects count');
+		assert.equal((await compute()).objects.length, 46, 'objects count');
 		assert.equal(ThreejsCoreObject.attribValue((await compute()).objects[0], 'cornersCount'), 3, 'corners count');
 	});
 }

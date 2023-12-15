@@ -12,11 +12,16 @@ import {Vector3, BufferGeometry, Mesh, BufferAttribute} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
-import {Number3} from '../../../types/GlobalTypes';
 import {sample} from '../../../core/ArrayUtils';
-import {TriangleGraph} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraph';
 import {objectContentCopyProperties} from '../../../core/geometry/ObjectContent';
-import {triangleGraphFindExpandedEdge} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraphUtils';
+import {
+	getFirstEdgeIdBetweenTriangles,
+	sortEdgesFromLargestToSmallest,
+	triangleGraphFindExpandedEdge,
+	triangleGraphFindNextLargest,
+	triangleGraphFromGeometry,
+} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraphUtils';
+import {triangleEdgeLength} from '../../../core/geometry/modules/three/graph/triangle/TriangleEdge';
 
 const _v3 = new Vector3();
 const _p0 = new Vector3();
@@ -95,18 +100,15 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 	}
 
 	private _processGeometry(geometry: BufferGeometry): QuadObject | undefined {
-		const index = geometry.getIndex();
-		if (!index) {
-			return;
-		}
-		const polygonsCount = index.array.length / 3;
-		if (polygonsCount < 2) {
+		const graph = triangleGraphFromGeometry(geometry);
+		if (!graph) {
 			return;
 		}
 		const positionAttribute = geometry.getAttribute(Attribute.POSITION);
 		if (!positionAttribute) {
 			return;
 		}
+		const positions = geometry.getAttribute(Attribute.POSITION).array;
 		const {regular, granular, irregularAmount, subdivide, seed} = this.pv;
 
 		const quadGeometry = new QuadGeometry();
@@ -114,14 +116,16 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 
 		const quadIndices: number[] = [];
 
-		const graph = new TriangleGraph();
-		for (let i = 0; i < polygonsCount; i++) {
-			_v3.fromArray(index.array, i * 3);
-			graph.addTriangle(_v3.toArray() as Number3);
-		}
 		const edgeIds: string[] = [];
 		graph.edgeIds(edgeIds);
-		edgeIds.sort();
+		const edgeLengthById: Map<string, number> = new Map();
+		for (const edgeId of edgeIds) {
+			const edge = graph.edge(edgeId);
+			if (edge) {
+				edgeLengthById.set(edgeId, triangleEdgeLength(edge, positions));
+			}
+		}
+		sortEdgesFromLargestToSmallest(edgeIds, edgeLengthById);
 
 		//
 		const edgeCenterIndexByEdgeIndices: Map<number, Map<number, number>> = new Map();
@@ -181,38 +185,48 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			return quadObject;
 		};
 
-		const _nextEdgeIdWithRegularMethod = () => {
-			return edgeIds.pop();
-		};
-		// let _lastRemoveTriangles: TriangeNodePair | undefined;
 		let _preparedNextEdgeId: string | undefined;
 		const visitedEdgeIds: Set<string> = new Set();
-
-		const _prepareNextEdgeId = (startEdgeId: string, step: number) => {
-			const foundEdgeId = triangleGraphFindExpandedEdge(
-				graph,
-				startEdgeId,
-				seed,
-				step,
-				irregularAmount,
-				visitedEdgeIds
-			);
-
-			_preparedNextEdgeId = foundEdgeId;
+		const _randomSample = (step: number) => {
+			return sample(edgeIds, seed + step);
 		};
-		const _nextEdgeIdWithIrregularMethod = (i: number) => {
-			const _randomSample = () => {
-				return sample(edgeIds, seed + i);
-			};
-			const _sampleFromIrregularity = () => {
-				if (_preparedNextEdgeId != null) {
-					return _preparedNextEdgeId;
+		const _prepareNextEdgeId = (startEdgeId: string, step: number) => {
+			if (regular) {
+				return triangleGraphFindNextLargest(edgeLengthById, graph, startEdgeId, visitedEdgeIds);
+			} else {
+				return triangleGraphFindExpandedEdge(
+					edgeLengthById,
+					graph,
+					startEdgeId,
+					// edgeIds,
+					seed,
+					step,
+					irregularAmount,
+					visitedEdgeIds,
+					_randomSample
+				);
+			}
+		};
+
+		const _nextEdgeIdWithRegularMethod = () => {
+			const foundEdgeId =
+				_preparedNextEdgeId != null ? _preparedNextEdgeId : getFirstEdgeIdBetweenTriangles(graph, edgeIds);
+
+			if (foundEdgeId != null) {
+				const index = edgeIds.indexOf(foundEdgeId);
+				if (index >= 0) {
+					edgeIds.splice(index, 1);
 				}
+			}
+			return foundEdgeId;
+		};
 
-				return _randomSample();
+		const _nextEdgeIdWithIrregularMethod = (step: number) => {
+			const _sampleFromIrregularity = () => {
+				return _preparedNextEdgeId != null ? _preparedNextEdgeId : _randomSample(step);
 			};
 
-			const edgeId = granular == true ? _sampleFromIrregularity() : _randomSample();
+			const edgeId = granular == true ? _sampleFromIrregularity() : _randomSample(step);
 			if (edgeId != null) {
 				const index = edgeIds.indexOf(edgeId);
 
@@ -236,27 +250,33 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 
 			visitedEdgeIds.add(edgeId);
 
-			const _prepareNextEdgeIdIfTest = () => {
-				if (granular == true && regular == false) {
-					_prepareNextEdgeId(edgeId, i);
+			const _prepareNextEdgeIdIfRequired = () => {
+				// we need to prepare the next edge id here,
+				// as we will delete the triangles from the graph
+				// in the loop, which will make the current edge useless to traverse the graph.
+				if (regular == true || (granular == true && regular == false)) {
+					_preparedNextEdgeId = _prepareNextEdgeId(
+						edgeId,
+						i +
+							1 /* we add 1 as we are computing for the next step. This is necessary to match the behavior when granular is off */
+					);
 				}
 			};
-
 			const edge = graph.edge(edgeId);
 			if (!edge) {
-				_prepareNextEdgeIdIfTest();
+				_prepareNextEdgeIdIfRequired();
 				continue;
 			}
 			const triangleIds = edge.triangleIds;
 			const triangle0 = graph.triangle(triangleIds[0]);
 			const triangle1 = graph.triangle(triangleIds[1]);
 			if (!triangle0 || !triangle1) {
-				_prepareNextEdgeIdIfTest();
+				_prepareNextEdgeIdIfRequired();
 				continue;
 			}
 			// when using irregular method,
 			// we get the triangle neighbours now, before deleting the triangles
-			_prepareNextEdgeIdIfTest();
+			_prepareNextEdgeIdIfRequired();
 
 			// remove triangles
 			graph.removeTriangle(triangle0.id);

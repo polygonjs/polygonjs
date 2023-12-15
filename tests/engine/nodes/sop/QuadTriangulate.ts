@@ -85,7 +85,7 @@ export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 			return {pointsCount, hasInnerRadius, hasOuterRadius, innerRadius, outerRadius};
 		}
 
-		assert.equal((await compute()).pointsCount, 34, 'points count');
+		assert.equal((await compute()).pointsCount, 36, 'points count');
 		assert.equal((await compute()).hasInnerRadius, false, 'no attrib');
 		assert.equal((await compute()).hasOuterRadius, false, 'no attrib');
 

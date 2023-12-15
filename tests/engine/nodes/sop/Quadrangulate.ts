@@ -24,7 +24,7 @@ export function testenginenodessopQuadrangulate(qUnit: QUnit) {
 		hexagons1.p.hexagonRadius.set(0.5005);
 
 		quadrangulate1.p.regular.set(true);
-		assert.equal(await primsCount(), 24, 'prims count');
+		assert.equal(await primsCount(), 21, 'prims count');
 
 		quadrangulate1.p.regular.set(false);
 		quadrangulate1.p.granular.set(false);
