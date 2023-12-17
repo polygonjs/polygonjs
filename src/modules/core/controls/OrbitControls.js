@@ -111,8 +111,8 @@ class OrbitControls extends EventDispatcher {
 		this._domElementKeyEvents = null;
 
 		//
-		const mouseBefore = new Vector3(0,0,0);
-		const mouseAfter = new Vector3(0,0,0);
+		const mouseBefore = new Vector3(0, 0, 0);
+		const mouseAfter = new Vector3(0, 0, 0);
 
 		//
 		// public methods

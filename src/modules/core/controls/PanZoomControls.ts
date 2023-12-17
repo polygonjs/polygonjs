@@ -745,9 +745,8 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 						// this.object.updateMatrixWorld();
 					} else if ((this.object as OrthographicCamera).isOrthographicCamera) {
 						// adjust the ortho camera position based on zoom changes
-						mouseBefore.x = mouse.x;
-						mouseBefore.y = mouse.y;
-						mouseBefore.z = 0;
+						mouseBefore.set(mouse.x, mouse.y, 0);
+						mouseAfter.set(mouse.x, mouse.y, 0);
 						mouseBefore.unproject(this.object);
 
 						(this.object as OrthographicCamera).zoom = Math.max(
@@ -757,9 +756,6 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 						(this.object as OrthographicCamera).updateProjectionMatrix();
 						zoomChanged = true;
 
-						mouseAfter.x = mouse.x;
-						mouseAfter.y = mouse.y;
-						mouseAfter.z = 0;
 						mouseAfter.unproject(this.object);
 
 						this.object.position.sub(mouseAfter).add(mouseBefore);
@@ -802,14 +798,14 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 				// 		}
 				// 	}
 				// } else
-				if ((this.object as OrthographicCamera).isOrthographicCamera) {
-					(this.object as OrthographicCamera).zoom = Math.max(
-						this.minZoom,
-						Math.min(this.maxZoom, (this.object as OrthographicCamera).zoom / scale)
-					);
-					(this.object as OrthographicCamera).updateProjectionMatrix();
-					zoomChanged = true;
-				}
+				// if ((this.object as OrthographicCamera).isOrthographicCamera) {
+				// 	(this.object as OrthographicCamera).zoom = Math.max(
+				// 		this.minZoom,
+				// 		Math.min(this.maxZoom, (this.object as OrthographicCamera).zoom / scale)
+				// 	);
+				// 	(this.object as OrthographicCamera).updateProjectionMatrix();
+				// 	zoomChanged = true;
+				// }
 
 				scale = 1;
 				performCursorZoom = false;
