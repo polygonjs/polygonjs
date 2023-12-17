@@ -38,6 +38,8 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 	public zoomSpeed = 1.0;
 	public screenSpacePanning = true;
 	public zoomToCursor = true;
+	public panThreshold: number = 5;
+	private _panThresholdDistanceTotal: number = 0;
 	public clampPosition: boolean = false;
 	public positionBounds = new Box3(
 		new Vector3(-Infinity, -Infinity, -Infinity),
@@ -173,6 +175,7 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 				panStart.set(x, y);
 			}
+			this._panThresholdDistanceTotal = 0;
 		};
 		const handleTouchStartDolly = () => {
 			const dx = pointers[0].pageX - pointers[1].pageX;
@@ -194,6 +197,7 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 		const handleMouseDownPan = (event: PointerEvent) => {
 			panStart.set(event.clientX, event.clientY);
+			this._panThresholdDistanceTotal = 0;
 		};
 		const handleTouchMovePan = (event: PointerEvent) => {
 			if (pointers.length === 1) {
@@ -211,6 +215,7 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			pan(panDelta.x, panDelta.y);
 
+			this._panThresholdDistanceTotal += panDelta.length();
 			panStart.copy(panEnd);
 		};
 		const handleTouchMoveDolly = (event: PointerEvent) => {
@@ -257,9 +262,12 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			pan(panDelta.x, panDelta.y);
 
+			this._panThresholdDistanceTotal += panDelta.length();
 			panStart.copy(panEnd);
 
-			this.update(null);
+			if (this._panThresholdDistanceTotal > this.panThreshold) {
+				this.update(null);
+			}
 		};
 
 		const dollyOut = (dollyScale: number) => {
@@ -624,6 +632,9 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 			// const twoPI = 2 * Math.PI;
 
 			const _update = (deltaTime: number | null = null) => {
+				if (this._panThresholdDistanceTotal < this.panThreshold) {
+					return;
+				}
 				const position = this.object.position;
 
 				// offset.copy(position).sub(this.target);

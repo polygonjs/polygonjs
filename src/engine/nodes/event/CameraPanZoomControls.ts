@@ -48,6 +48,14 @@ class CameraPanZoomEventParamsConfig extends NodeParamsConfig {
 	enabled = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow pan */
 	allowPan = ParamConfig.BOOLEAN(1);
+	/** @param minimum distance the cursor must travel before the camera is actually moved */
+	panThreshold = ParamConfig.FLOAT(0, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		visibleIf: {
+			allowPan: 1,
+		},
+	});
 	/** @param toggle on to allow zoom */
 	allowZoom = ParamConfig.BOOLEAN(1);
 	/** @param zoom speed */
@@ -187,6 +195,7 @@ export class CameraPanZoomControlsEventNode extends TypedCameraControlsEventNode
 		controls.enabled = isBooleanTrue(this.pv.enabled);
 
 		controls.enablePan = isBooleanTrue(this.pv.allowPan);
+		controls.panThreshold = this.pv.panThreshold;
 		controls.enableZoom = isBooleanTrue(this.pv.allowZoom);
 		controls.zoomSpeed = this.pv.zoomSpeed;
 		controls.zoomToCursor = isBooleanTrue(this.pv.zoomToCursor);
