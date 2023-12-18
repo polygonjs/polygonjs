@@ -212,10 +212,11 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 			}
 
 			panDelta.subVectors(panEnd, panStart).multiplyScalar(this.panSpeed);
-
-			pan(panDelta.x, panDelta.y);
-
 			this._panThresholdDistanceTotal += panDelta.length();
+			if (this._panThresholdDistanceTotal > this.panThreshold) {
+				pan(panDelta.x, panDelta.y);
+			}
+
 			panStart.copy(panEnd);
 		};
 		const handleTouchMoveDolly = (event: PointerEvent) => {
@@ -260,14 +261,14 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			panDelta.subVectors(panEnd, panStart).multiplyScalar(this.panSpeed);
 
-			pan(panDelta.x, panDelta.y);
-
 			this._panThresholdDistanceTotal += panDelta.length();
+			if (this._panThresholdDistanceTotal > this.panThreshold) {
+				pan(panDelta.x, panDelta.y);
+			}
+
 			panStart.copy(panEnd);
 
-			if (this._panThresholdDistanceTotal > this.panThreshold) {
-				this.update(null);
-			}
+			this.update(null);
 		};
 
 		const dollyOut = (dollyScale: number) => {
@@ -632,9 +633,6 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 			// const twoPI = 2 * Math.PI;
 
 			const _update = (deltaTime: number | null = null) => {
-				if (this._panThresholdDistanceTotal < this.panThreshold) {
-					return;
-				}
 				const position = this.object.position;
 
 				// offset.copy(position).sub(this.target);
