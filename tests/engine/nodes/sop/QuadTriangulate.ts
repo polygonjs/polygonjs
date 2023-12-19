@@ -36,6 +36,34 @@ export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 		assert.equal((await compute()).primitivesCount, 50, 'prims count');
 	});
 
+	qUnit.test('sop/quadTriangulate as lines', async (assert) => {
+		const geo1 = window.geo1;
+
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const quadTriangulate1 = geo1.createNode('quadTriangulate');
+		quadTriangulate1.setInput(0, quadPlane1);
+		quadTriangulate1.p.triangles.set(false);
+		quadTriangulate1.p.wireframe.set(true);
+		quadTriangulate1.p.center.set(false);
+		quadTriangulate1.p.unsharedEdges.set(false);
+
+		async function compute() {
+			const container = await quadTriangulate1.compute();
+			const object = container.coreContent()!.allObjects()[0];
+			const primitives: CorePrimitive<CoreObjectType>[] = [];
+			primitivesFromObject(object, primitives);
+			const primitivesCount = primitives.length;
+			return {primitivesCount};
+		}
+
+		quadPlane1.p.useSegmentsCount.set(true);
+		quadPlane1.p.segments.set([20, 10]);
+		assert.equal((await compute()).primitivesCount, 610, 'prims count');
+
+		quadTriangulate1.p.unsharedEdges.set(true);
+		assert.equal((await compute()).primitivesCount, 60, 'prims count');
+	});
+
 	qUnit.test('sop/quadTriangulate center with attributes', async (assert) => {
 		const geo1 = window.geo1;
 

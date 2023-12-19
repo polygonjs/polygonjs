@@ -10,6 +10,10 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		wireframe = ParamConfig.BOOLEAN(true, {
 			separatorBefore: true,
 		});
+		/** @param unsharedEdges */
+		unsharedEdges = ParamConfig.BOOLEAN(false, {
+			visibleIf: {wireframe: true},
+		});
 		/** @param wireframe color */
 		wireframeColor = ParamConfig.COLOR([0, 0, 0], {
 			visibleIf: {wireframe: true},
@@ -47,6 +51,10 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		/** @param wireframe */
 		QUADWireframe = ParamConfig.BOOLEAN(true, {
 			separatorBefore: true,
+		});
+		/** @param unsharedEdges */
+		QUADUnsharedEdges = ParamConfig.BOOLEAN(false, {
+			visibleIf: {wireframe: true},
 		});
 		/** @param wireframe color */
 		QUADWireframeColor = ParamConfig.COLOR([0, 0, 0], {

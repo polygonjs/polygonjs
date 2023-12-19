@@ -29,6 +29,7 @@ const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
 	splitQuads: false,
 	wireframe: true,
+	unsharedEdges: false,
 	wireframeColor: new Color(0, 0, 0),
 	center: false,
 	innerRadius: false,
@@ -40,6 +41,7 @@ function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.triangles = params.QUADTriangles;
 	QUAD_TESSELATION_PARAMS.splitQuads = params.QUADSplitQuads;
 	QUAD_TESSELATION_PARAMS.wireframe = params.QUADWireframe;
+	QUAD_TESSELATION_PARAMS.unsharedEdges = params.QUADUnsharedEdges;
 	QUAD_TESSELATION_PARAMS.wireframeColor.copy(params.QUADWireframeColor);
 	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
 	QUAD_TESSELATION_PARAMS.innerRadius = params.QUADInnerRadius;
