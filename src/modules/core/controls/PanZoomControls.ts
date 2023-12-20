@@ -780,41 +780,46 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 					}
 				}
 
-				// 	// handle the placement of the target
-				// 	if (newRadius !== null) {
-				// 		if (this.screenSpacePanning) {
-				// 			// position the orbit target in front of the new camera position
-				// 			this.target
-				// 				.set(0, 0, -1)
-				// 				.transformDirection(this.object.matrix)
-				// 				.multiplyScalar(newRadius)
-				// 				.add(this.object.position);
-				// 			_clampTarget();
-				// 		} else {
-				// 			// get the ray and translation plane to compute target
-				// 			_ray.origin.copy(this.object.position);
-				// 			_ray.direction.set(0, 0, -1).transformDirection(this.object.matrix);
+				if (!zoomChanged) {
+					// 	// handle the placement of the target
+					// 	if (newRadius !== null) {
+					// 		if (this.screenSpacePanning) {
+					// 			// position the orbit target in front of the new camera position
+					// 			this.target
+					// 				.set(0, 0, -1)
+					// 				.transformDirection(this.object.matrix)
+					// 				.multiplyScalar(newRadius)
+					// 				.add(this.object.position);
+					// 			_clampTarget();
+					// 		} else {
+					// 			// get the ray and translation plane to compute target
+					// 			_ray.origin.copy(this.object.position);
+					// 			_ray.direction.set(0, 0, -1).transformDirection(this.object.matrix);
 
-				// 			// if the camera is 20 degrees above the horizon then don't adjust the focus target to avoid
-				// 			// extremely large values
-				// 			if (Math.abs(this.object.up.dot(_ray.direction)) < TILT_LIMIT) {
-				// 				object.lookAt(this.target);
-				// 			} else {
-				// 				_plane.setFromNormalAndCoplanarPoint(this.object.up, this.target);
-				// 				_ray.intersectPlane(_plane, this.target);
-				// 				_clampTarget();
-				// 			}
-				// 		}
-				// 	}
-				// } else
-				// if ((this.object as OrthographicCamera).isOrthographicCamera) {
-				// 	(this.object as OrthographicCamera).zoom = Math.max(
-				// 		this.minZoom,
-				// 		Math.min(this.maxZoom, (this.object as OrthographicCamera).zoom / scale)
-				// 	);
-				// 	(this.object as OrthographicCamera).updateProjectionMatrix();
-				// 	zoomChanged = true;
-				// }
+					// 			// if the camera is 20 degrees above the horizon then don't adjust the focus target to avoid
+					// 			// extremely large values
+					// 			if (Math.abs(this.object.up.dot(_ray.direction)) < TILT_LIMIT) {
+					// 				object.lookAt(this.target);
+					// 			} else {
+					// 				_plane.setFromNormalAndCoplanarPoint(this.object.up, this.target);
+					// 				_ray.intersectPlane(_plane, this.target);
+					// 				_clampTarget();
+					// 			}
+					// 		}
+					// 	}
+					// } else
+					if ((this.object as OrthographicCamera).isOrthographicCamera) {
+						// this zoom must not be run if the zoomToCursor zoom above is run,
+						// as this would be a double zoom, and would mess up with the zoomToCursor.
+						// But it does need to be run as otherwise we don't get a zoom on mobile.
+						(this.object as OrthographicCamera).zoom = Math.max(
+							this.minZoom,
+							Math.min(this.maxZoom, (this.object as OrthographicCamera).zoom / scale)
+						);
+						(this.object as OrthographicCamera).updateProjectionMatrix();
+						zoomChanged = true;
+					}
+				}
 
 				scale = 1;
 				performCursorZoom = false;
