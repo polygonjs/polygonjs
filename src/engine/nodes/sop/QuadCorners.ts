@@ -3,7 +3,7 @@
  *
  *
  */
-import {Vector3, Plane, Object3D, BoxGeometry, BufferGeometry} from 'three';
+import {Vector2, Vector3, Plane, Object3D, BoxGeometry, BufferGeometry} from 'three';
 import {QuadSopNode} from './_BaseQuad';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -35,6 +35,12 @@ const _pointIdsSet: Set<number> = new Set();
 const BOX_DIVISIONS = 1;
 const _newObjectsForPoint: Object3D[] = [];
 
+enum StarMode {
+	ALONG_EDGES = 'along edges',
+	TO_CENTER = 'to center',
+}
+const STAR_MODES: StarMode[] = [StarMode.ALONG_EDGES, StarMode.TO_CENTER];
+
 class QuadCornersSopParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.BOOLEAN(1);
 	star = ParamConfig.BOOLEAN(1);
@@ -49,6 +55,12 @@ class QuadCornersSopParamsConfig extends NodeParamsConfig {
 	});
 	starSize = ParamConfig.VECTOR2([0.05, 0.3], {
 		visibleIf: {star: 1},
+	});
+	starMode = ParamConfig.INTEGER(STAR_MODES.indexOf(StarMode.ALONG_EDGES), {
+		visibleIf: {star: 1},
+		menu: {
+			entries: STAR_MODES.map((name, value) => ({name, value})),
+		},
 	});
 	cornersAttribName = ParamConfig.STRING('cornersCount');
 	quadsAttribName = ParamConfig.STRING('quadsCount');
@@ -86,6 +98,7 @@ export class QuadCornersSopNode extends QuadSopNode<QuadCornersSopParamsConfig> 
 		const {center, star, centerSize, starSize, height, cornersAttribName, quadsAttribName} = this.pv;
 		const graph = quadGraphFromQuadObject(quadObject);
 		const pointsCount = QuadPoint.entitiesCount(quadObject);
+		const starMode = STAR_MODES[this.pv.starMode];
 
 		for (let i = 0; i < pointsCount; i++) {
 			_newObjectsForPoint.length = 0;
@@ -110,9 +123,9 @@ export class QuadCornersSopNode extends QuadSopNode<QuadCornersSopParamsConfig> 
 
 			_plane.normal.divideScalar(quadIds.size).normalize();
 			_plane.constant = _plane.distanceToPoint(_currentPointPosition);
-			_normal.copy(_plane.normal).multiplyScalar(height);
 
 			if (center) {
+				_normal.copy(_plane.normal).multiplyScalar(height / 2);
 				_positions.length = 0;
 				_pointIdsSet.forEach((pointId, neighbourPointIndex) => {
 					QuadPoint.position(quadObject, pointId, _neighbourPosition);
@@ -121,9 +134,10 @@ export class QuadCornersSopNode extends QuadSopNode<QuadCornersSopParamsConfig> 
 
 					_delta.normalize().multiplyScalar(centerSize);
 					_neighbourPositionOnPlane.copy(_delta);
-					_positions.push(_neighbourPositionOnPlane.clone());
-					_neighbourPositionOnPlane.add(_normal);
-					_positions.push(_neighbourPositionOnPlane.clone());
+					_tmp.copy(_neighbourPositionOnPlane).add(_normal);
+					_positions.push(_tmp.clone());
+					_tmp.copy(_neighbourPositionOnPlane).sub(_normal);
+					_positions.push(_tmp.clone());
 				});
 
 				const newGeo = new ConvexGeometry(_positions);
@@ -141,16 +155,8 @@ export class QuadCornersSopNode extends QuadSopNode<QuadCornersSopParamsConfig> 
 					BOX_DIVISIONS
 				);
 				const geometries: BufferGeometry[] = [];
-				_pointIdsSet.forEach((pointId, neighbourPointIndex) => {
-					QuadPoint.position(quadObject, pointId, _neighbourPosition);
-					_plane.projectPoint(_neighbourPosition, _neighbourPositionOnPlane);
-					_delta.copy(_neighbourPositionOnPlane).sub(_currentPointPosition);
+				this._applyStarMode(starMode, quadObject, boxGeometry, starSize, geometries, _pointIdsSet, quadIds);
 
-					const currentBoxGeometry = boxGeometry.clone();
-					currentBoxGeometry.translate(0, 0, starSize.y * 0.5);
-					currentBoxGeometry.lookAt(_delta);
-					geometries.push(currentBoxGeometry);
-				});
 				const mergedGeometry = mergeGeometries(geometries);
 				const object = this.createObject(mergedGeometry, ObjectType.MESH);
 				object.position.copy(_currentPointPosition);
@@ -163,4 +169,42 @@ export class QuadCornersSopNode extends QuadSopNode<QuadCornersSopParamsConfig> 
 			}
 		}
 	}
+	private _applyStarMode(
+		starMode: StarMode,
+		quadObject: QuadObject,
+		boxGeometry: BoxGeometry,
+		starSize: Vector2,
+		geometries: BufferGeometry[],
+		pointIdsSet: Set<number>,
+		quadIdsSet: Set<number>
+	) {
+		switch (starMode) {
+			case StarMode.ALONG_EDGES: {
+				pointIdsSet.forEach((pointId) => {
+					QuadPoint.position(quadObject, pointId, _neighbourPosition);
+					const currentBoxGeometry = _createBoxTowardPoint(boxGeometry, _neighbourPosition, starSize);
+					geometries.push(currentBoxGeometry);
+				});
+				return;
+			}
+			case StarMode.TO_CENTER: {
+				quadIdsSet.forEach((quadId) => {
+					QuadPrimitive.position(quadObject, quadId, _neighbourPosition);
+					const currentBoxGeometry = _createBoxTowardPoint(boxGeometry, _neighbourPosition, starSize);
+					geometries.push(currentBoxGeometry);
+				});
+				return;
+			}
+		}
+	}
+}
+
+function _createBoxTowardPoint(boxGeometry: BoxGeometry, target: Vector3, starSize: Vector2) {
+	_plane.projectPoint(target, _neighbourPositionOnPlane);
+	_delta.copy(_neighbourPositionOnPlane).sub(_currentPointPosition);
+
+	const currentBoxGeometry = boxGeometry.clone();
+	currentBoxGeometry.translate(0, 0, starSize.y * 0.5);
+	currentBoxGeometry.lookAt(_delta);
+	return currentBoxGeometry;
 }
