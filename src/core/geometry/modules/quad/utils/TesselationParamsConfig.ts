@@ -34,6 +34,10 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		edgeCenterVectors = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
 		});
+		/** @param edgeNearestPointVectors */
+		edgeNearestPointVectors = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
 		/** @param split quads */
 		splitQuads = ParamConfig.BOOLEAN(false, {
 			separatorBefore: true,
@@ -78,6 +82,10 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		});
 		/** @param QUADEdgeCenterVectors */
 		QUADEdgeCenterVectors = ParamConfig.BOOLEAN(false, {
+			visibleIf: {QUADCenter: true},
+		});
+		/** @param QUADEdgeNearestPointVectors */
+		QUADEdgeNearestPointVectors = ParamConfig.BOOLEAN(false, {
 			visibleIf: {QUADCenter: true},
 		});
 		/** @param split quads */

@@ -16,6 +16,7 @@ export interface QUADTesselationParams {
 	innerRadius: boolean;
 	outerRadius: boolean;
 	edgeCenterVectors: boolean;
+	edgeNearestPointVectors: boolean;
 	splitQuads: boolean;
 	pointAttributes: string;
 	primitiveAttributes: string;
@@ -29,6 +30,7 @@ export interface QUADOBJTesselationParams {
 	QUADInnerRadius: boolean;
 	QUADOuterRadius: boolean;
 	QUADEdgeCenterVectors: boolean;
+	QUADEdgeNearestPointVectors: boolean;
 	QUADSplitQuads: boolean;
 	QUADPointAttributes: string;
 	QUADPrimitiveAttributes: string;
@@ -37,4 +39,5 @@ export enum QuadTriangulationAttribute {
 	INNER_RADIUS = 'innerRadius',
 	OUTER_RADIUS = 'outerRadius',
 	EDGE_CENTER_VECTOR = 'edgeCenterVector',
+	EDGE_NEAREST_POINT_VECTOR = 'edgeNearestPointVector',
 }
