@@ -119,7 +119,7 @@ export function arraySum(array: number[]): number {
 	}
 	return sum;
 }
-export function arrayChunk<T extends number | string>(array: Array<T>, chunkSize: number): Array<Array<T>> {
+export function arrayChunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
 	const newArray: Array<Array<T>> = [];
 
 	let newSubArray: Array<T> = [];
@@ -135,7 +135,7 @@ export function arrayChunk<T extends number | string>(array: Array<T>, chunkSize
 	return newArray;
 }
 
-export function arrayUnion<T extends number | string>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
+export function arrayUnion<T>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
 	setUnion(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
 	for (const item of _tmp) {
@@ -144,11 +144,7 @@ export function arrayUnion<T extends number | string>(array0: Array<T>, array1: 
 
 	return target;
 }
-export function arrayIntersection<T extends number | string>(
-	array0: Array<T>,
-	array1: Array<T>,
-	target: Array<T>
-): Array<T> {
+export function arrayIntersection<T>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
 	setIntersection(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
 	for (const item of _tmp) {
@@ -157,11 +153,7 @@ export function arrayIntersection<T extends number | string>(
 
 	return target;
 }
-export function arrayDifference<T extends number | string>(
-	array0: Array<T>,
-	array1: Array<T>,
-	target: Array<T>
-): Array<T> {
+export function arrayDifference<T>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
 	setDifference(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
 	for (const item of _tmp) {
@@ -170,7 +162,7 @@ export function arrayDifference<T extends number | string>(
 
 	return target;
 }
-export function arrayXOR<T extends number | string>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
+export function arrayXOR<T>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
 	setXOR(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
 	for (const item of _tmp) {
