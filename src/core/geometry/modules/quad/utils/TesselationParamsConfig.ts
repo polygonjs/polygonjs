@@ -30,6 +30,10 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		outerRadius = ParamConfig.BOOLEAN(false, {
 			visibleIf: {center: true},
 		});
+		/** @param edgeCenterVectors */
+		edgeCenterVectors = ParamConfig.BOOLEAN(false, {
+			visibleIf: {center: true},
+		});
 		/** @param split quads */
 		splitQuads = ParamConfig.BOOLEAN(false, {
 			separatorBefore: true,
@@ -70,6 +74,10 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		});
 		/** @param QUADOuterRadius */
 		QUADOuterRadius = ParamConfig.BOOLEAN(false, {
+			visibleIf: {QUADCenter: true},
+		});
+		/** @param QUADEdgeCenterVectors */
+		QUADEdgeCenterVectors = ParamConfig.BOOLEAN(false, {
 			visibleIf: {QUADCenter: true},
 		});
 		/** @param split quads */

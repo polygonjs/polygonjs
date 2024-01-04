@@ -1,4 +1,4 @@
-import {BufferAttribute, BufferGeometry, Points, Vector3} from 'three';
+import {BufferAttribute, BufferGeometry, Points, Vector3, Vector4} from 'three';
 import {QuadObject} from '../QuadObject';
 import {QUADTesselationParams, QuadTriangulationAttribute} from '../QuadCommon';
 import {QuadPrimitive} from '../QuadPrimitive';
@@ -7,8 +7,19 @@ import {Attribute} from '../../../Attribute';
 import {stringMatchMask} from '../../../../String';
 import {quadInnerRadius, quadOuterRadius} from '../utils/QuadUtils';
 import {prepareObject} from './QuadToObject3DCommon';
+import {HalfEdgeIndices, quadHalfEdgeIndices} from '../graph/QuadGraphCommon';
+import {Number4} from '../../../../../types/GlobalTypes';
 
+const _p0 = new Vector3();
+const _p1 = new Vector3();
 const _center = new Vector3();
+const _v4 = new Vector4();
+const _v4Array: Number4 = [0, 0, 0, 0];
+const _halfEdgeIndices: HalfEdgeIndices = {index0: 0, index1: 0};
+
+export function quadToCenterEdgeCenterVectorAttributeName(edgeIndex: number) {
+	return `${QuadTriangulationAttribute.EDGE_CENTER_VECTOR}_${edgeIndex}`;
+}
 
 export function quadToCenter(quadObject: QuadObject, options: QUADTesselationParams) {
 	const quadGeometry = quadObject.geometry;
@@ -43,8 +54,8 @@ export function quadToCenter(quadObject: QuadObject, options: QUADTesselationPar
 			}
 		}
 	}
-	if (options.innerRadius) {
-		const innerRadiusValues = new Array(quadsCount);
+	if (options.innerRadius == true) {
+		const innerRadiusValues: number[] = new Array(quadsCount);
 		for (let i = 0; i < quadsCount; i++) {
 			const innerRadius = quadInnerRadius(quadObject, i);
 			innerRadiusValues[i] = innerRadius;
@@ -54,8 +65,8 @@ export function quadToCenter(quadObject: QuadObject, options: QUADTesselationPar
 			new BufferAttribute(new Float32Array(innerRadiusValues), 1)
 		);
 	}
-	if (options.outerRadius) {
-		const outerRadiusValues = new Array(quadsCount);
+	if (options.outerRadius == true) {
+		const outerRadiusValues: number[] = new Array(quadsCount);
 		for (let i = 0; i < quadsCount; i++) {
 			const outerRadius = quadOuterRadius(quadObject, i);
 			outerRadiusValues[i] = outerRadius;
@@ -65,6 +76,33 @@ export function quadToCenter(quadObject: QuadObject, options: QUADTesselationPar
 			new BufferAttribute(new Float32Array(outerRadiusValues), 1)
 		);
 	}
+	if (options.edgeCenterVectors == true) {
+		const indices = quadObject.geometry.index;
+		const positionAttribute = quadObject.geometry.attributes[Attribute.POSITION];
+		const positions = positionAttribute.array;
+		for (let edgeIndex = 0; edgeIndex < 4; edgeIndex++) {
+			const attributeName = quadToCenterEdgeCenterVectorAttributeName(edgeIndex);
+			const edgeCenterVectors: number[] = new Array(quadsCount * 3).fill(-1);
+
+			for (let i = 0; i < quadsCount; i++) {
+				_v4.fromArray(indices, i * 4);
+				_v4.toArray(_v4Array);
+				quadHalfEdgeIndices(_v4Array, edgeIndex, _halfEdgeIndices);
+				_p0.fromArray(positions, _halfEdgeIndices.index0 * 3);
+				_p1.fromArray(positions, _halfEdgeIndices.index1 * 3);
+				_p0.add(_p1).multiplyScalar(0.5);
+
+				//
+				QuadPrimitive.position(quadObject, i, _center);
+				_p0.sub(_center);
+
+				//
+				_p0.toArray(edgeCenterVectors, i * 3);
+			}
+			geometry.setAttribute(attributeName, new BufferAttribute(new Float32Array(edgeCenterVectors), 3));
+		}
+	}
+
 	prepareObject(points, {shadow: false});
 	return points;
 }

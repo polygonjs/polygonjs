@@ -6,6 +6,7 @@ import {pointsFromObject} from '../../../../src/core/geometry/entities/point/Cor
 import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {corePointClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {QuadTriangulationAttribute} from '../../../../src/core/geometry/modules/quad/QuadCommon';
+import {quadToCenterEdgeCenterVectorAttributeName} from '../../../../src/core/geometry/modules/quad/toObject3D/QuadToPoint';
 export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 	qUnit.test('sop/quadTriangulate prim count', async (assert) => {
 		const geo1 = window.geo1;
@@ -101,6 +102,22 @@ export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 				object,
 				QuadTriangulationAttribute.OUTER_RADIUS
 			);
+			const hasEdgeCenterVector0 = corePointClassFactory(object).hasAttribute(
+				object,
+				quadToCenterEdgeCenterVectorAttributeName(0)
+			);
+			const hasEdgeCenterVector1 = corePointClassFactory(object).hasAttribute(
+				object,
+				quadToCenterEdgeCenterVectorAttributeName(1)
+			);
+			const hasEdgeCenterVector2 = corePointClassFactory(object).hasAttribute(
+				object,
+				quadToCenterEdgeCenterVectorAttributeName(2)
+			);
+			const hasEdgeCenterVector3 = corePointClassFactory(object).hasAttribute(
+				object,
+				quadToCenterEdgeCenterVectorAttributeName(3)
+			);
 
 			const innerRadius = hasInnerRadius
 				? (points[0].attribValue(QuadTriangulationAttribute.INNER_RADIUS) as number)
@@ -110,17 +127,36 @@ export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 				: -1;
 
 			//
-			return {pointsCount, hasInnerRadius, hasOuterRadius, innerRadius, outerRadius};
+			return {
+				pointsCount,
+				hasInnerRadius,
+				hasOuterRadius,
+				hasEdgeCenterVector0,
+				hasEdgeCenterVector1,
+				hasEdgeCenterVector2,
+				hasEdgeCenterVector3,
+				innerRadius,
+				outerRadius,
+			};
 		}
 
 		assert.equal((await compute()).pointsCount, 36, 'points count');
 		assert.equal((await compute()).hasInnerRadius, false, 'no attrib');
 		assert.equal((await compute()).hasOuterRadius, false, 'no attrib');
+		assert.equal((await compute()).hasEdgeCenterVector0, false, 'no attrib');
+		assert.equal((await compute()).hasEdgeCenterVector1, false, 'no attrib');
+		assert.equal((await compute()).hasEdgeCenterVector2, false, 'no attrib');
+		assert.equal((await compute()).hasEdgeCenterVector3, false, 'no attrib');
 
 		quadTriangulate1.p.innerRadius.set(true);
 		quadTriangulate1.p.outerRadius.set(true);
+		quadTriangulate1.p.edgeCenterVectors.set(true);
 		assert.equal((await compute()).hasInnerRadius, true, 'attrib');
 		assert.equal((await compute()).hasOuterRadius, true, 'attrib');
+		assert.equal((await compute()).hasEdgeCenterVector0, true, 'attrib');
+		assert.equal((await compute()).hasEdgeCenterVector1, true, 'attrib');
+		assert.equal((await compute()).hasEdgeCenterVector2, true, 'attrib');
+		assert.equal((await compute()).hasEdgeCenterVector3, true, 'attrib');
 		assert.in_delta((await compute()).innerRadius, 0.0497, 0.01, 'inner');
 		assert.in_delta((await compute()).outerRadius, 0.084, 0.01, 'outer');
 	});

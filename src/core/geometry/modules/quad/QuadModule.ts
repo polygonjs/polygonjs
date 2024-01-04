@@ -34,6 +34,7 @@ const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	center: false,
 	innerRadius: false,
 	outerRadius: false,
+	edgeCenterVectors: false,
 	pointAttributes: '*',
 	primitiveAttributes: '*',
 };
@@ -46,6 +47,7 @@ function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
 	QUAD_TESSELATION_PARAMS.innerRadius = params.QUADInnerRadius;
 	QUAD_TESSELATION_PARAMS.outerRadius = params.QUADOuterRadius;
+	QUAD_TESSELATION_PARAMS.edgeCenterVectors = params.QUADEdgeCenterVectors;
 	QUAD_TESSELATION_PARAMS.pointAttributes = params.QUADPointAttributes;
 	QUAD_TESSELATION_PARAMS.primitiveAttributes = params.QUADPrimitiveAttributes;
 }
