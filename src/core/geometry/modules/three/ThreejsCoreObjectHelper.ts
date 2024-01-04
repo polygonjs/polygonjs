@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {watch, WatchStopHandle} from '@vue-reactivity/watch';
+import {watch, WatchStopHandle, WatchCallback, WatchOptions, WatchSource} from '@vue-reactivity/watch';
 import {PolyScene} from '../../../../engine/scene/PolyScene';
 import {BaseSopNodeType} from '../../../../../src/engine/nodes/sop/_Base';
 import {ThreejsCoreObject} from './ThreejsCoreObject';
@@ -42,6 +42,14 @@ export class CoreObjectHelper<S extends PolyScene> {
 		const watchStopHandle = watch(attributeRef.current, callback);
 		this._watchStopHandles.push(watchStopHandle);
 	}
+	watch<T, Immediate extends Readonly<boolean> = false>(
+		source: WatchSource<T>,
+		cb: WatchCallback<T, Immediate extends true ? T | undefined : T>,
+		options?: WatchOptions<Immediate>
+	): void {
+		const watchHandle = watch(source, cb, options);
+		this._watchStopHandles.push(watchHandle);
+	}
 }
 
 type CreateCoreObjectHelper<S extends PolyScene, T extends CoreObjectHelper<S>> = (
@@ -56,14 +64,14 @@ export async function objectFromNode<S extends PolyScene, T extends CoreObjectHe
 	const container = await node.compute();
 	const coreGroup = container.coreContent();
 	if (!coreGroup) {
-		console.error('no core group');
+		console.error(`no core group found in node '${node.path()}'`);
 		console.log(node.states.error.message());
 		return;
 	}
 	const objects = coreGroup.threejsObjects();
 	const object = objects.find((o) => o.name == objectName);
 	if (!object) {
-		console.error('no click target');
+		console.error(`no object with name '${objectName}'`);
 		return;
 	}
 	return creatFunction({object});
