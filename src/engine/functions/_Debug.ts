@@ -122,7 +122,8 @@ function optionsToDebugLines(
 	});
 
 	// console.log({options, displayableValue, objectName, currentValue, currentFrame});
-	const lastProcessedFrame = debugDataController.lastProcessedFrameByNodePath.get(nodePath) || -1;
+	const cachedProcessedFrame = debugDataController.lastProcessedFrameByNodePath.get(nodePath);
+	const lastProcessedFrame = cachedProcessedFrame != null ? cachedProcessedFrame : -1;
 	if (!lastProcessedFrame) {
 		debugDataController.lastProcessedFrameByNodePath.set(nodePath, lastProcessedFrame);
 	}

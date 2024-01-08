@@ -21,7 +21,8 @@ export class getChildrenAttributes extends ObjectNamedFunction3<[string, string,
 		const children = object3D.children;
 		for (let child of children) {
 			const _refs = getOrCreateObjectAttributeRef(child, attribName, type);
-			const value = ThreejsCoreObject.attribValue(child, attribName) || _refs.current.value;
+			const currentValue = ThreejsCoreObject.attribValue(child, attribName);
+			const value = currentValue != null ? currentValue : _refs.current.value;
 			_dummyReadAttributeRefVal(_refs.current.value);
 			values[i] = value;
 			i++;

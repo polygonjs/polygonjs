@@ -11,7 +11,16 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
+import {
+	DOT,
+	ComponentName,
+	COMPONENT_INDICES,
+	GroupString,
+	AttribClass,
+	AttribSize,
+	AttribType,
+	ComponentIndex,
+} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 import type {CorePoint} from '../point/CorePoint';
@@ -135,8 +144,8 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntityWit
 		if (attribName === Attribute.VERTEX_INDEX) {
 			return index;
 		} else {
-			let componentName = null;
-			let componentIndex = null;
+			let componentName: ComponentName | null = null;
+			let componentIndex: ComponentIndex | null = null;
 			if (attribName[attribName.length - 2] === DOT) {
 				componentName = attribName[attribName.length - 1] as ComponentName;
 				componentIndex = COMPONENT_INDICES[componentName];

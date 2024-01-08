@@ -329,7 +329,8 @@ export enum ComponentName {
 	g = 'g',
 	b = 'b',
 }
-export const COMPONENT_INDICES = {
+export type ComponentIndex = 0 | 1 | 2 | 3;
+export const COMPONENT_INDICES: Record<ComponentName, ComponentIndex> = {
 	x: 0,
 	y: 1,
 	z: 2,

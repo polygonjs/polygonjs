@@ -677,7 +677,7 @@ export class mathPrimArray_1 extends MathNamedFunction3<[MathFunction1, number[]
 		return 'mathPrimArray_1';
 	}
 	func(_func: MathFunction1, srcElements: number[], targetElements: number[]): number[] {
-		_matchArrayLength(srcElements, targetElements, () => srcElements[0] || 0);
+		_matchArrayLength(srcElements, targetElements, () => (srcElements[0] != null ? srcElements[0] : 0));
 		let i = 0;
 		for (let src of srcElements) {
 			targetElements[i] = _func(src);
@@ -691,7 +691,7 @@ export class mathPrimArray_2 extends MathNamedFunction4<[MathFunction2, number[]
 		return 'mathPrimArray_2';
 	}
 	func(_func: MathFunction2, srcElements: number[], arg1: number, targetElements: number[]): number[] {
-		_matchArrayLength(srcElements, targetElements, () => srcElements[0] || 0);
+		_matchArrayLength(srcElements, targetElements, () => (srcElements[0] != null ? srcElements[0] : 0));
 		let i = 0;
 		for (let src of srcElements) {
 			targetElements[i] = _func(src, arg1);
@@ -705,7 +705,7 @@ export class mathPrimArray_3 extends MathNamedFunction5<[MathFunction3, number[]
 		return 'mathPrimArray_3';
 	}
 	func(_func: MathFunction3, srcElements: number[], arg1: number, arg2: number, targetElements: number[]): number[] {
-		_matchArrayLength(srcElements, targetElements, () => srcElements[0] || 0);
+		_matchArrayLength(srcElements, targetElements, () => (srcElements[0] != null ? srcElements[0] : 0));
 		let i = 0;
 		for (let src of srcElements) {
 			targetElements[i] = _func(src, arg1, arg2);
@@ -726,7 +726,7 @@ export class mathPrimArray_4 extends MathNamedFunction6<[MathFunction4, number[]
 		arg3: number,
 		targetElements: number[]
 	): number[] {
-		_matchArrayLength(srcElements, targetElements, () => srcElements[0] || 0);
+		_matchArrayLength(srcElements, targetElements, () => (srcElements[0] != null ? srcElements[0] : 0));
 		let i = 0;
 		for (let src of srcElements) {
 			targetElements[i] = _func(src, arg1, arg2, arg3);
@@ -750,7 +750,7 @@ export class mathPrimArray_5 extends MathNamedFunction7<
 		arg4: number,
 		targetElements: number[]
 	): number[] {
-		_matchArrayLength(srcElements, targetElements, () => srcElements[0] || 0);
+		_matchArrayLength(srcElements, targetElements, () => (srcElements[0] != null ? srcElements[0] : 0));
 		let i = 0;
 		for (let src of srcElements) {
 			targetElements[i] = _func(src, arg1, arg2, arg3, arg4);

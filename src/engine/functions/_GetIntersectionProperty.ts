@@ -1,12 +1,17 @@
 import {Intersection, Vector2, Vector3, Object3D} from 'three';
 import {NamedFunction1, NamedFunction2, ObjectNamedFunction1} from './_Base';
 
+const DISTANCE_NOT_FOUND = -1; // it could be argued that 0 would be a better default value, but -1 may be clearer that it's not been set
+const INDEX_NOT_FOUND = -1;
 export class getIntersectionPropertyDistance extends NamedFunction1<[Intersection | undefined]> {
 	static override type() {
 		return 'getIntersectionPropertyDistance';
 	}
 	func(intersection: Intersection | undefined): number {
-		return intersection?.distance || 0;
+		if (!intersection) {
+			return DISTANCE_NOT_FOUND;
+		}
+		return intersection.distance;
 	}
 }
 export class getIntersectionPropertyFaceIndex extends NamedFunction1<[Intersection | undefined]> {
@@ -14,7 +19,14 @@ export class getIntersectionPropertyFaceIndex extends NamedFunction1<[Intersecti
 		return 'getIntersectionPropertyFaceIndex';
 	}
 	func(intersection: Intersection | undefined): number {
-		return intersection?.faceIndex || -1;
+		if (!intersection) {
+			return INDEX_NOT_FOUND;
+		}
+		const faceIndex = intersection.faceIndex;
+		if (faceIndex == null) {
+			return INDEX_NOT_FOUND;
+		}
+		return faceIndex;
 	}
 }
 export class getIntersectionPropertyObject extends ObjectNamedFunction1<[Intersection | undefined]> {

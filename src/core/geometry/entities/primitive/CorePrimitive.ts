@@ -11,7 +11,16 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
+import {
+	DOT,
+	ComponentName,
+	COMPONENT_INDICES,
+	GroupString,
+	AttribClass,
+	AttribSize,
+	AttribType,
+	ComponentIndex,
+} from '../../Constant';
 import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
 import {TypeAssert} from '../../../../engine/poly/Assert';
@@ -139,8 +148,8 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		if (attribName === Attribute.PRIMITIVE_INDEX) {
 			return index;
 		}
-		let componentName = null;
-		let componentIndex = null;
+		let componentName: ComponentName | null = null;
+		let componentIndex: ComponentIndex | null = null;
 		if (attribName[attribName.length - 2] === DOT) {
 			componentName = attribName[attribName.length - 1] as ComponentName;
 			componentIndex = COMPONENT_INDICES[componentName];
@@ -149,10 +158,10 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		const remapedName = CoreAttribute.remapName(attribName);
 
 		if (remapedName == Attribute.POSITION) {
-			return this.position(object as any, index, target as Vector3);
+			return this.position(object, index, target as Vector3);
 		}
 		if (remapedName == Attribute.NORMAL) {
-			return this.normal(object as any, index, target as Vector3);
+			return this.normal(object, index, target as Vector3);
 		}
 
 		const attrib = this.attribute(object, remapedName);

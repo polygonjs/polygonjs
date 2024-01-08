@@ -82,10 +82,10 @@ export class CoreCameraOrthographicFrameMode {
 		// TypeAssert.unreachable(mode);
 	}
 	private static _adjustFOVFromModeDefault(options: BasicCoreCameraOrthographicFrameModeOptions) {
-		this._adjustFOVFromSize(options.size || 1, options);
+		this._adjustFOVFromSize(options.size != null ? options.size : 1, options);
 	}
 	private static _adjustFOVFromModeCover(options: CoreCameraOrthographicFrameModeOptions) {
-		const size = options.size || 1;
+		const size = options.size != null ? options.size : 1;
 		if (options.aspect > options.expectedAspectRatio) {
 			// window too large
 			this._adjustFOVFromSize((options.expectedAspectRatio * size) / options.aspect, options);
@@ -96,7 +96,7 @@ export class CoreCameraOrthographicFrameMode {
 	}
 
 	private static _adjustFOVFromModeContain(options: CoreCameraOrthographicFrameModeOptions) {
-		const size = options.size || 1;
+		const size = options.size != null ? options.size : 1;
 		if (options.aspect > options.expectedAspectRatio) {
 			// window too large
 			this._adjustFOVFromSize(size, options);

@@ -10,7 +10,16 @@ import {BufferAttribute, Vector4, Vector3, Vector2, InterleavedBufferAttribute} 
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {isArray} from '../../../Type';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
-import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString, AttribClass, AttribSize} from '../../Constant';
+import {
+	DOT,
+	ComponentName,
+	COMPONENT_INDICES,
+	AttribType,
+	GroupString,
+	AttribClass,
+	AttribSize,
+	ComponentIndex,
+} from '../../Constant';
 import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
@@ -268,8 +277,8 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		if (attribName === Attribute.POINT_INDEX) {
 			return index;
 		} else {
-			let componentName = null;
-			let componentIndex = null;
+			let componentName: ComponentName | null = null;
+			let componentIndex: ComponentIndex | null = null;
 			if (attribName[attribName.length - 2] === DOT) {
 				componentName = attribName[attribName.length - 1] as ComponentName;
 				componentIndex = COMPONENT_INDICES[componentName];
