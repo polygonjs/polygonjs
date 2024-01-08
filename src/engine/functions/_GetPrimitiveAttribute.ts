@@ -23,7 +23,6 @@ export class getPrimitiveAttribute<T extends ParamConvertibleJsType> extends Obj
 		}
 		// TODO: add target for vector attributes
 		const value = primitiveClass.attribValue(object3D, index, attribName /*, defaultValue as Vector3*/);
-		console.log(index, value);
 		if (value == null) {
 			return defaultValue;
 		}
