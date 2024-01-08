@@ -16,11 +16,11 @@ export interface NeighbourData {
 }
 
 export class QuadGraph extends PrimitiveGraph {
-	private _quadsById: Map<number, QuadNode> = new Map();
-	private _edgesByIndex: Map<number, Map<number, QuadHalfEdge>> = new Map();
-	private _halfEdgeByHalfEdge: Map<QuadHalfEdge, QuadHalfEdge | undefined> = new Map();
-	private _halfEdgeByQuadId: Map<number, Map<number, QuadHalfEdge>> = new Map();
-	private _quadIdsByPointIndex: Map<number, Set<number>> = new Map();
+	protected _quadsById: Map<number, QuadNode> = new Map();
+	protected _edgesByIndex: Map<number, Map<number, QuadHalfEdge>> = new Map();
+	protected _halfEdgeByHalfEdge: Map<QuadHalfEdge, QuadHalfEdge | undefined> = new Map();
+	protected _halfEdgeByQuadId: Map<number, Map<number, QuadHalfEdge>> = new Map();
+	protected _quadIdsByPointIndex: Map<number, Set<number>> = new Map();
 	addQuad(quadId: number, quadIndices: Number4): QuadNode {
 		const quadNode = new QuadNode(quadId, quadIndices);
 		this._quadsById.set(quadId, quadNode);
@@ -64,6 +64,8 @@ export class QuadGraph extends PrimitiveGraph {
 	neighbourData(quadId: number, sideIndex: NeighbourIndex, target: NeighbourData): void {
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
+			target.quadNode = null;
+			target.neighbourIndex = null;
 			return;
 		}
 		quadHalfEdgeIndices(quadNode.indices, sideIndex, _indices);
@@ -88,6 +90,8 @@ export class QuadGraph extends PrimitiveGraph {
 	// 	return this._halfEdgeByHalfEdge.has(halfEdge);
 	// }
 	neighbourIdsSharingEdge(quadId: number, target: number[]): void {
+		target.length = 0;
+
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
 			return;
@@ -105,13 +109,14 @@ export class QuadGraph extends PrimitiveGraph {
 		setToArray(_neighbourIdsSet, target);
 	}
 	neighbourIdsSharingPoint(quadId: number, target: number[]): void {
-		_neighbourIdsSet.clear();
+		target.length = 0;
 
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
 			return;
 		}
 
+		_neighbourIdsSet.clear();
 		const indices = quadNode.indices;
 		for (const index of indices) {
 			const neighbourIndices = this._quadIdsByPointIndex.get(index);

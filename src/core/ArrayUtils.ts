@@ -278,8 +278,12 @@ export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>
 }
 
 export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {
-	targetArray.length = 0;
-	arrayPushItems(srcArray, targetArray);
+	targetArray.length = srcArray.length;
+	let i = 0;
+	for (const srcItem of srcArray) {
+		targetArray[i] = srcItem;
+		i++;
+	}
 }
 
 export function typedArrayCopy<T1 extends TypedArray, T2 extends TypedArray>(
