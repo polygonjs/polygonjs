@@ -72,6 +72,14 @@ class CameraPanZoomEventParamsConfig extends NodeParamsConfig {
 			allowZoom: 1,
 		},
 	});
+	/** @param minimum distance the cursor must travel before the camera starts zooming */
+	zoomThreshold = ParamConfig.FLOAT(0, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		visibleIf: {
+			allowZoom: 1,
+		},
+	});
 	/** @param toggle on to have damping */
 	tdamping = ParamConfig.BOOLEAN(1);
 	/** @param damping value */
@@ -199,6 +207,7 @@ export class CameraPanZoomControlsEventNode extends TypedCameraControlsEventNode
 		controls.enableZoom = isBooleanTrue(this.pv.allowZoom);
 		controls.zoomSpeed = this.pv.zoomSpeed;
 		controls.zoomToCursor = isBooleanTrue(this.pv.zoomToCursor);
+		controls.dollyThreshold = this.pv.zoomThreshold;
 
 		controls.enableDamping = isBooleanTrue(this.pv.tdamping);
 		controls.dampingFactor = this.pv.damping;

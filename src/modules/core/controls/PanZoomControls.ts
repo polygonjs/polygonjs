@@ -38,8 +38,12 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 	public zoomSpeed = 1.0;
 	public screenSpacePanning = true;
 	public zoomToCursor = true;
-	public panThreshold: number = 5;
-	private _panThresholdDistanceTotal: number = 0;
+	// threshold
+	public panThreshold: number = 0;
+	public dollyThreshold: number = 0;
+	private _panMoveDistanceTotal: number = 0;
+	private _dollyMoveDistanceTotal: number = 0;
+	//
 	public clampPosition: boolean = false;
 	public positionBounds = new Box3(
 		new Vector3(-Infinity, -Infinity, -Infinity),
@@ -175,7 +179,7 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 				panStart.set(x, y);
 			}
-			this._panThresholdDistanceTotal = 0;
+			this._panMoveDistanceTotal = 0;
 		};
 		const handleTouchStartDolly = () => {
 			const dx = pointers[0].pageX - pointers[1].pageX;
@@ -184,6 +188,7 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 			const distance = Math.sqrt(dx * dx + dy * dy);
 
 			dollyStart.set(0, distance);
+			this._dollyMoveDistanceTotal = 0;
 		};
 		const handleTouchStartDollyPan = () => {
 			if (this.enableZoom) handleTouchStartDolly();
@@ -193,11 +198,12 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 		const handleMouseDownDolly = (event: PointerEvent) => {
 			updateMouseParameters(event);
 			dollyStart.set(event.clientX, event.clientY);
+			this._dollyMoveDistanceTotal = 0;
 		};
 
 		const handleMouseDownPan = (event: PointerEvent) => {
 			panStart.set(event.clientX, event.clientY);
-			this._panThresholdDistanceTotal = 0;
+			this._panMoveDistanceTotal = 0;
 		};
 		const handleTouchMovePan = (event: PointerEvent) => {
 			if (pointers.length === 1) {
@@ -212,8 +218,8 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 			}
 
 			panDelta.subVectors(panEnd, panStart).multiplyScalar(this.panSpeed);
-			this._panThresholdDistanceTotal += panDelta.length();
-			if (this._panThresholdDistanceTotal > this.panThreshold) {
+			this._panMoveDistanceTotal += panDelta.length();
+			if (this._panMoveDistanceTotal > this.panThreshold) {
 				pan(panDelta.x, panDelta.y);
 			}
 
@@ -231,7 +237,10 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			dollyDelta.set(0, Math.pow(dollyEnd.y / dollyStart.y, this.zoomSpeed));
 
-			dollyOut(dollyDelta.y);
+			this._dollyMoveDistanceTotal += dollyDelta.length();
+			if (this._dollyMoveDistanceTotal > this.dollyThreshold) {
+				dollyOut(dollyDelta.y);
+			}
 
 			dollyStart.copy(dollyEnd);
 		};
@@ -245,10 +254,13 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			dollyDelta.subVectors(dollyEnd, dollyStart);
 
-			if (dollyDelta.y > 0) {
-				dollyOut(getZoomScale());
-			} else if (dollyDelta.y < 0) {
-				dollyIn(getZoomScale());
+			this._dollyMoveDistanceTotal += dollyDelta.length();
+			if (this._dollyMoveDistanceTotal > this.dollyThreshold) {
+				if (dollyDelta.y > 0) {
+					dollyOut(getZoomScale());
+				} else if (dollyDelta.y < 0) {
+					dollyIn(getZoomScale());
+				}
 			}
 
 			dollyStart.copy(dollyEnd);
@@ -261,8 +273,8 @@ export class PanZoomControls extends EventDispatcher<{change: any}> {
 
 			panDelta.subVectors(panEnd, panStart).multiplyScalar(this.panSpeed);
 
-			this._panThresholdDistanceTotal += panDelta.length();
-			if (this._panThresholdDistanceTotal > this.panThreshold) {
+			this._panMoveDistanceTotal += panDelta.length();
+			if (this._panMoveDistanceTotal > this.panThreshold) {
 				pan(panDelta.x, panDelta.y);
 			}
 
