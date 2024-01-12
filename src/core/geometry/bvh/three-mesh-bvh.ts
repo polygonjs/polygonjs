@@ -9,6 +9,7 @@ import {
 	CENTER,
 	AVERAGE,
 	SAH,
+	StaticGeometryGenerator,
 } from 'three-mesh-bvh';
 export {
 	computeBoundsTree,
@@ -20,6 +21,7 @@ export {
 	CENTER,
 	AVERAGE,
 	SAH,
+	StaticGeometryGenerator,
 };
 export type ShapecastIntersection = number;
 
