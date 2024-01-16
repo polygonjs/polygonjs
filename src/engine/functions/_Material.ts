@@ -12,7 +12,7 @@ import type {
 } from 'three';
 
 import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../core/material/uniform';
-import {CoreType} from '../../core/Type';
+import {isArray} from '../../core/Type';
 import {MaterialUserDataUniforms} from '../nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {
 	NamedFunction2,
@@ -77,7 +77,7 @@ export class setObjectMaterialColor extends ObjectNamedFunction2<[Color, number]
 	}
 	func(object3D: Object3D, color: Color, lerp: number): void {
 		const material = (object3D as Mesh).material;
-		if (CoreType.isArray(material)) {
+		if (isArray(material)) {
 			for (let mat of material) {
 				_setMaterialColor(mat, color, lerp);
 			}

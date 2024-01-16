@@ -6,7 +6,7 @@ export class ParamStringJsonExporter extends ParamJsonExporter<StringParam> {
 	override add_main() {
 		// let val = this._param.input_value();
 		let val = this._param.rawInput();
-		// if (CoreType.isString(val)){
+		// if (isString(val)){
 		val = sanitizeExportedString(val);
 		// }
 		if (this._require_data_complex()) {

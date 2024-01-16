@@ -1,4 +1,4 @@
-import {CoreType} from './Type';
+import {isNumberValid} from './Type';
 import {arrayUniq, range} from './ArrayUtils';
 import {arrayPushItems} from './ArrayUtils';
 
@@ -259,12 +259,12 @@ export function stringToIndices(indicesString: string, target: number[]): number
 				const rangeEnd = rangeElements[1];
 				const rangeStartI = parseInt(rangeStart);
 				const rangeEndI = parseInt(rangeEnd);
-				if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
+				if (isNumberValid(rangeStartI) && isNumberValid(rangeEndI)) {
 					return range(rangeStartI, rangeEndI + 1, 1, target);
 				}
 			} else {
 				const parsed = parseInt(element);
-				if (CoreType.isNumberValid(parsed)) {
+				if (isNumberValid(parsed)) {
 					target.push(parsed);
 					return target;
 				}

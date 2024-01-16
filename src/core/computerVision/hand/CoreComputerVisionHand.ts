@@ -3,7 +3,7 @@ import {Hands, Options, Results} from '@mediapipe/hands';
 import {CoreComputerVisionHandAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';
-import {CoreType} from '../../Type';
+import {isBoolean, isNumber, isString} from '../../Type';
 import {DEFAULT_POSITION} from './Data';
 import {ComputerVisionValidSource} from '../Common';
 import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
@@ -65,15 +65,13 @@ function attributes(object: Object3D): HandTrackingObjectAttributes {
 	);
 
 	const data = {
-		selfieMode: CoreType.isBoolean(selfieMode) ? selfieMode : DEFAULT.selfieMode,
-		maxNumHands: CoreType.isNumber(maxNumHands) ? maxNumHands : DEFAULT.maxNumHands,
-		modelComplexity: CoreType.isBoolean(modelComplexity) ? modelComplexity : DEFAULT.modelComplexity,
-		minDetectionConfidence: CoreType.isNumber(minDetectionConfidence)
+		selfieMode: isBoolean(selfieMode) ? selfieMode : DEFAULT.selfieMode,
+		maxNumHands: isNumber(maxNumHands) ? maxNumHands : DEFAULT.maxNumHands,
+		modelComplexity: isBoolean(modelComplexity) ? modelComplexity : DEFAULT.modelComplexity,
+		minDetectionConfidence: isNumber(minDetectionConfidence)
 			? minDetectionConfidence
 			: DEFAULT.minDetectionConfidence,
-		minTrackingConfidence: CoreType.isNumber(minTrackingConfidence)
-			? minTrackingConfidence
-			: DEFAULT.minTrackingConfidence,
+		minTrackingConfidence: isNumber(minTrackingConfidence) ? minTrackingConfidence : DEFAULT.minTrackingConfidence,
 	};
 	return data;
 }
@@ -197,7 +195,7 @@ export class CoreComputerVisionHand {
 	static trackerKey(object: Object3D): string {
 		const coreObjectClass = coreObjectClassFactory(object);
 		let key = coreObjectClass.attribValue(object, CoreComputerVisionHandAttribute.KEY);
-		if (!key || !CoreType.isString(key)) {
+		if (!key || !isString(key)) {
 			key = createKey(object);
 			coreObjectClass.addAttribute(object, CoreComputerVisionHandAttribute.KEY, key);
 		}

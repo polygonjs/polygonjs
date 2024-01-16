@@ -13,7 +13,7 @@
  * - `len('ab')` - returns 2
  *
  */
-import {CoreType} from './../../../core/Type';
+import {isString,isArray} from './../../../core/Type';
 import {BaseMethod} from './_Base';
 
 export class LenExpression extends BaseMethod {
@@ -24,7 +24,7 @@ export class LenExpression extends BaseMethod {
 	override async processArguments(args: any[]): Promise<number> {
 		if (args.length == 1) {
 			const arg = args[0];
-			if (CoreType.isString(arg) || CoreType.isArray(arg)) {
+			if (isString(arg) || isArray(arg)) {
 				return arg.length;
 			}
 		}

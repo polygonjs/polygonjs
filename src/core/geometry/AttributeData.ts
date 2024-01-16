@@ -1,4 +1,4 @@
-import {CoreType} from '../Type';
+import {isString,isArray} from '../Type';
 import {AttribType} from './Constant';
 
 export class CoreAttributeData {
@@ -12,8 +12,8 @@ export class CoreAttributeData {
 	}
 
 	static from_value(attrib_value: any) {
-		const type = CoreType.isString(attrib_value) ? AttribType.STRING : AttribType.NUMERIC;
-		const size = CoreType.isArray(attrib_value) ? attrib_value.length : 1;
+		const type = isString(attrib_value) ? AttribType.STRING : AttribType.NUMERIC;
+		const size = isArray(attrib_value) ? attrib_value.length : 1;
 
 		return new this(size, type);
 	}

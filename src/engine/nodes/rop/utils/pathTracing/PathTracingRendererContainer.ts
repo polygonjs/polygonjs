@@ -15,7 +15,7 @@ import {
 import {Scene, Camera, MeshBasicMaterial} from 'three';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
-import {CoreType} from '../../../../../core/Type';
+import {isArray} from '../../../../../core/Type';
 import {CoreSleep} from '../../../../../core/Sleep';
 import {
 	PathTracingRenderer,
@@ -418,7 +418,7 @@ function prepareScene(scene: Scene) {
 			return false;
 		}
 		const material = (object as Mesh).material;
-		if (CoreType.isArray(material)) {
+		if (isArray(material)) {
 			for (const mat of material) {
 				if (!_isValidMaterial(mat)) {
 					return false;

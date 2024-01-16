@@ -1,6 +1,6 @@
 import type {Object3D} from 'three';
 import {stringMatchMask} from '../String';
-import {CoreType} from '../Type';
+import {coreTypeIsNaN} from '../Type';
 import {CorePath} from './CorePath';
 import type {CoreGroup} from './Group';
 import {BaseCoreObject} from './entities/object/BaseCoreObject';
@@ -72,7 +72,7 @@ function filterCoreObjects<T extends CoreObjectType>(
 		return coreObjects;
 	}
 	const index = parseInt(groupString);
-	if (!CoreType.isNaN(index)) {
+	if (!coreTypeIsNaN(index)) {
 		const coreObject = coreObjects[index];
 		if (coreObject) {
 			return [coreObject];

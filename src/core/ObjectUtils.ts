@@ -1,5 +1,5 @@
 import {arrayIsEqual} from './ArrayUtils';
-import {CoreType} from './Type';
+import {isBoolean,isNumber,isString,isObject} from './Type';
 import cloneDeep from 'lodash-es/cloneDeep';
 import clone from 'lodash-es/clone';
 
@@ -12,17 +12,17 @@ export function getObjectMethodNames(obj: any): string[] {
 	return [...properties.keys()].filter((item) => typeof (obj as any)[item as string] === 'function') as string[];
 }
 export function objectIsEqual(object0: any, object1: any): boolean {
-	if (CoreType.isBoolean(object0) && CoreType.isBoolean(object1)) {
+	if (isBoolean(object0) && isBoolean(object1)) {
 		return object0 == object1;
 	}
-	if (CoreType.isNumber(object0) && CoreType.isNumber(object1)) {
+	if (isNumber(object0) && isNumber(object1)) {
 		return object0 == object1;
 	}
-	if (CoreType.isString(object0) && CoreType.isString(object1)) {
+	if (isString(object0) && isString(object1)) {
 		return object0 == object1;
 	}
 
-	if (CoreType.isObject(object0) && CoreType.isObject(object1)) {
+	if (isObject(object0) && isObject(object1)) {
 		const keys0 = Object.keys(object0);
 		const keys1 = Object.keys(object1);
 		if (!arrayIsEqual(keys0, keys1)) {
@@ -39,7 +39,7 @@ export function objectClone<T extends Array<any> | object | undefined>(value: T)
 	// return this.cloneDeep(value);
 	return clone(value);
 	// if (value) {
-	// 	if (CoreType.isArray(value)) {
+	// 	if (isArray(value)) {
 	// 		const newValues: Array<any> = value.map((v) => v);
 	// 		return newValues as T;
 	// 	} else {
@@ -63,7 +63,7 @@ export function objectCloneDeep<T extends object | number | string | boolean | u
 	// return target as T;
 
 	return cloneDeep(value);
-	// if (CoreType.isString(value) || CoreType.isNumber(value) || CoreType.isBoolean(value)) {
+	// if (isString(value) || isNumber(value) || isBoolean(value)) {
 	// 	return value;
 	// }
 	// if (this.isObject(value)) {

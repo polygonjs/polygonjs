@@ -1,6 +1,5 @@
 import {CoreString} from './String';
-// import {Color, Vector2, Vector3, Vector4} from 'three';
-import {CoreType} from './Type';
+import {isString,isBoolean,isNumber} from './Type';
 import {JsConnectionPointType} from '../engine/nodes/utils/io/connections/Js';
 
 export const COMPONENTS_BY_GL_TYPE = {
@@ -39,19 +38,19 @@ export class ThreeToJs {
 	// 	// TypeAssert.unreachable(glType)
 	// }
 	static any(value: any): string {
-		if (CoreType.isString(value)) {
+		if (isString(value)) {
 			return value;
 		}
-		if (CoreType.isBoolean(value)) {
+		if (isBoolean(value)) {
 			return `${value}`;
 		}
-		if (CoreType.isNumber(value)) {
+		if (isNumber(value)) {
 			return `${CoreString.ensureFloat(value)}`;
 		}
 		if (value == null) {
 			return 'null';
 		}
-		// if (CoreType.isArray(value)) {
+		// if (isArray(value)) {
 		// 	return this.numeric_array(value);
 		// }
 		// and if it is a vector
@@ -75,7 +74,7 @@ export class ThreeToJs {
 	// 	return `${gl_type}(${values_str.join(', ')})`;
 	// }
 	// static vector4(vec: Vector4 | string): string {
-	// 	if (CoreType.isString(vec)) {
+	// 	if (isString(vec)) {
 	// 		return vec;
 	// 	}
 	// 	const values = vec.toArray().map((v) => {
@@ -84,7 +83,7 @@ export class ThreeToJs {
 	// 	return `vec4(${values.join(', ')})`;
 	// }
 	// static vector3(vec: Vector3 | string): string {
-	// 	if (CoreType.isString(vec)) {
+	// 	if (isString(vec)) {
 	// 		return vec;
 	// 	}
 	// 	const values = vec.toArray().map((v) => {
@@ -93,7 +92,7 @@ export class ThreeToJs {
 	// 	return `vec3(${values.join(', ')})`;
 	// }
 	// static vector2(vec: Vector2 | string): string {
-	// 	if (CoreType.isString(vec)) {
+	// 	if (isString(vec)) {
 	// 		return vec;
 	// 	}
 	// 	const values = vec.toArray().map((v) => {
@@ -103,54 +102,54 @@ export class ThreeToJs {
 	// }
 
 	// static vector3_float(vec: Vector3 | string, num: number | string): string {
-	// 	if (CoreType.isNumber(num)) {
+	// 	if (isNumber(num)) {
 	// 		num = CoreString.ensureFloat(num);
 	// 	}
 	// 	return `vec4(${this.vector3(vec)}, ${num})`;
 	// }
 
 	// static float4(x: number | string, y: number | string, z: number | string, w: number | string) {
-	// 	if (CoreType.isNumber(x)) {
+	// 	if (isNumber(x)) {
 	// 		x = CoreString.ensureFloat(x);
 	// 	}
-	// 	if (CoreType.isNumber(y)) {
+	// 	if (isNumber(y)) {
 	// 		y = CoreString.ensureFloat(y);
 	// 	}
-	// 	if (CoreType.isNumber(z)) {
+	// 	if (isNumber(z)) {
 	// 		z = CoreString.ensureFloat(z);
 	// 	}
-	// 	if (CoreType.isNumber(w)) {
+	// 	if (isNumber(w)) {
 	// 		w = CoreString.ensureFloat(w);
 	// 	}
 	// 	return `vec4(${x}, ${y}, ${z}, ${w})`;
 	// }
 	// static float3(x: number | string, y: number | string, z: number | string) {
-	// 	if (CoreType.isNumber(x)) {
+	// 	if (isNumber(x)) {
 	// 		x = CoreString.ensureFloat(x);
 	// 	}
-	// 	if (CoreType.isNumber(y)) {
+	// 	if (isNumber(y)) {
 	// 		y = CoreString.ensureFloat(y);
 	// 	}
-	// 	if (CoreType.isNumber(z)) {
+	// 	if (isNumber(z)) {
 	// 		z = CoreString.ensureFloat(z);
 	// 	}
 	// 	return `vec3(${x}, ${y}, ${z})`;
 	// }
 	// static float2(x: number | string, y: number | string) {
-	// 	if (CoreType.isNumber(x)) {
+	// 	if (isNumber(x)) {
 	// 		x = CoreString.ensureFloat(x);
 	// 	}
-	// 	if (CoreType.isNumber(y)) {
+	// 	if (isNumber(y)) {
 	// 		y = CoreString.ensureFloat(y);
 	// 	}
 	// 	return `vec2(${x}, ${y})`;
 	// }
 	// static float(x: number | string): string {
-	// 	if (CoreType.isNumber(x)) {
+	// 	if (isNumber(x)) {
 	// 		return CoreString.ensureFloat(x);
 	// 	} else {
 	// 		const converted = parseFloat(x);
-	// 		if (CoreType.isNaN(converted)) {
+	// 		if (isNaN(converted)) {
 	// 			return x;
 	// 		} else {
 	// 			return CoreString.ensureFloat(converted);
@@ -158,11 +157,11 @@ export class ThreeToJs {
 	// 	}
 	// }
 	static integer(x: number | string): string {
-		if (CoreType.isNumber(x)) {
+		if (isNumber(x)) {
 			return CoreString.ensureInteger(x);
 		} else {
 			const converted = parseInt(x);
-			if (CoreType.isNaN(converted)) {
+			if (isNaN(converted)) {
 				return x;
 			} else {
 				return CoreString.ensureInteger(converted);
@@ -171,7 +170,7 @@ export class ThreeToJs {
 	}
 
 	static bool(x: boolean | string) {
-		if (CoreType.isBoolean(x)) {
+		if (isBoolean(x)) {
 			return `${x}`;
 		} else {
 			return x;

@@ -9,7 +9,7 @@ import {
 import {Vector4, Vector3, Vector2, BufferAttribute} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
 import {
 	DOT,
@@ -279,7 +279,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntityWit
 		const array = attrib.array;
 		const attribSize = attrib.itemSize;
 
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			for (let i = 0; i < attribSize; i++) {
 				array[this._index * attribSize + i] = value[i];
 			}

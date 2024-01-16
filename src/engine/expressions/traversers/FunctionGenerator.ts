@@ -159,7 +159,7 @@ import {AttributeRequirementsController} from '../AttributeRequirementsControlle
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
-import {CoreType, isArray, isVector, isColor} from '../../../core/Type';
+import {CoreType, isString, isArray, isVector, isColor} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
@@ -712,7 +712,7 @@ export class FunctionGenerator extends BaseTraverser {
 			}
 			this.methodDependencies.push(methodDependency);
 		} else {
-			if (pathNode && CoreType.isString(pathArgument)) {
+			if (pathNode && isString(pathArgument)) {
 				this.param.scene().missingExpressionReferencesController.register(this.param, pathArgument, pathNode);
 			}
 		}

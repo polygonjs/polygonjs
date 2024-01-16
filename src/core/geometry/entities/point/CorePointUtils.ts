@@ -82,7 +82,7 @@ export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	group: GroupString,
 	target: CorePoint<T>[]
-): CorePoint<T>[] {
+): void {
 	if (group) {
 		CoreString.indices(group, _indices);
 		const points = pointsFromObject(object, _tmpPoints);
@@ -93,9 +93,8 @@ export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 		);
 		target.length = 0;
 		arrayPushItems(selectedPoints, target);
-		return target;
 	} else {
-		return pointsFromObject(object, target);
+		pointsFromObject(object, target);
 	}
 }
 

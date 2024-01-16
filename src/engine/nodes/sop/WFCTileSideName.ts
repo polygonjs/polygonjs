@@ -85,7 +85,6 @@ export class WFCTileSideNameSopNode extends TypedSopNode<WFCTileSideNameSopParam
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const objects = filterObjectsFromCoreGroup(coreGroup, this.pv);
-		// const coreObjects = coreGroup.allCoreObjects();
 
 		const {sameNameForSelectedSides, south, north, west, east, bottom, top} = this.pv;
 

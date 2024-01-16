@@ -34,7 +34,7 @@ import {
 } from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
@@ -60,7 +60,7 @@ import {COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
 // 	BasicDepth = LinearSRGBColorSpace as string,
 // 	RGBADepth = DisplayP3ColorSpace as string,
 // }
-const COLOR_SPACES: ColorSpace[] = [NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, DisplayP3ColorSpace];
+const COLOR_SPACES: ColorSpace[] = [SRGBColorSpace, LinearSRGBColorSpace, DisplayP3ColorSpace];
 // const ENCODING_VALUES: EncodingValue[] = [
 // 	EncodingValue.Linear,
 // 	EncodingValue.sRGB,
@@ -362,7 +362,7 @@ export class WebGPURendererRopNode extends TypedRopNode<WebGPURendererRopParamsC
 			.traverse((object) => {
 				const material = (object as Mesh).material;
 				if (material) {
-					if (CoreType.isArray(material)) {
+					if (isArray(material)) {
 						for (const mat of material) {
 							mat.needsUpdate = true;
 						}

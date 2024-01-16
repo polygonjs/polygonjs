@@ -13,7 +13,7 @@ import {
 } from '../../../nodes/utils/io/IOController';
 import type {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
-import {CoreType, isString} from '../../../../core/Type';
+import { isString,isNumber,isArray,isBoolean,isObject} from '../../../../core/Type';
 // import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {VelocityColliderFunctionBody} from '../../../nodes/js/code/assemblers/_Base';
@@ -200,7 +200,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let i = 0; i < inputsData.length; i++) {
 			inputData = inputsData[i];
 			if (inputData && this._node.parent()) {
-				if (CoreType.isString(inputData)) {
+				if (isString(inputData)) {
 					const inputNodeName = inputData;
 					const inputNode = this._node.nodeSibling(inputNodeName);
 					this._node.setInput(i, inputNode);
@@ -417,15 +417,15 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _is_param_data_complex(param_data: ParamJsonExporterData<ParamType>): boolean {
 		// we can test here most param value serialized, except for ramp
 		if (
-			CoreType.isString(param_data) ||
-			CoreType.isNumber(param_data) ||
-			CoreType.isArray(param_data) ||
-			CoreType.isBoolean(param_data)
+			isString(param_data) ||
+			isNumber(param_data) ||
+			isArray(param_data) ||
+			isBoolean(param_data)
 		) {
 			return false;
 		}
 
-		if (CoreType.isObject(param_data)) {
+		if (isObject(param_data)) {
 			const keys = Object.keys(param_data);
 			for (let complex_key of COMPLEX_PARAM_DATA_KEYS) {
 				if (keys.includes(complex_key)) {

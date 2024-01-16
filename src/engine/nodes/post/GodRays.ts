@@ -3,7 +3,7 @@
  *
  *
  */
-import {CoreType} from './../../../core/Type';
+import {isArray} from './../../../core/Type';
 import {PolyScene} from './../../scene/PolyScene';
 import {Points} from 'three';
 import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
@@ -139,7 +139,7 @@ export class GodRaysPostNode extends TypedPostNode<EffectPass, GodRaysPostParams
 		if (lightSource) {
 			(effect as any).lightSource = lightSource;
 			const material = lightSource.material;
-			if (CoreType.isArray(material)) {
+			if (isArray(material)) {
 				for (const m of material) {
 					_updateLightSourceMaterial(m);
 				}

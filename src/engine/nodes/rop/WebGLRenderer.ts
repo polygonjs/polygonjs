@@ -13,10 +13,11 @@ import {
 	Mesh,
 	// color space
 	ColorSpace,
-	NoColorSpace,
+	// NoColorSpace,
 	SRGBColorSpace,
 	LinearSRGBColorSpace,
 	DisplayP3ColorSpace,
+	LinearDisplayP3ColorSpace,
 	// tone mapping
 	ToneMapping,
 	NoToneMapping,
@@ -33,7 +34,7 @@ import {
 } from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
@@ -59,7 +60,13 @@ import {COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
 // 	BasicDepth = LinearSRGBColorSpace as string,
 // 	RGBADepth = DisplayP3ColorSpace as string,
 // }
-const COLOR_SPACES: ColorSpace[] = [NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, DisplayP3ColorSpace];
+const COLOR_SPACES: ColorSpace[] = [
+	// NoColorSpace, // crashes the renderer
+	SRGBColorSpace,
+	LinearSRGBColorSpace,
+	DisplayP3ColorSpace,
+	LinearDisplayP3ColorSpace,
+];
 // const ENCODING_VALUES: EncodingValue[] = [
 // 	EncodingValue.Linear,
 // 	EncodingValue.sRGB,
@@ -363,7 +370,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 			.traverse((object) => {
 				const material = (object as Mesh).material;
 				if (material) {
-					if (CoreType.isArray(material)) {
+					if (isArray(material)) {
 						for (const mat of material) {
 							mat.needsUpdate = true;
 						}
@@ -418,7 +425,10 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 	}
 	private _updateRendererOutputColorSpace(renderer: WebGLRenderer) {
-		renderer.outputColorSpace = this.pv.outputColorSpace as ColorSpace;
+		const newOutputColorSpace = this.pv.outputColorSpace as ColorSpace;
+		if (newOutputColorSpace != renderer.outputColorSpace) {
+			renderer.outputColorSpace = newOutputColorSpace;
+		}
 	}
 	private _updateRendererShadow(renderer: WebGLRenderer) {
 		renderer.shadowMap.enabled = this.pv.tshadowMap;

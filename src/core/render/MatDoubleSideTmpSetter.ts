@@ -3,7 +3,7 @@ import {Mesh} from 'three';
 import {Material} from 'three';
 import {Side} from 'three';
 import {DoubleSide} from 'three';
-import {CoreType} from '../Type';
+import {isArray} from '../Type';
 import {CoreGroup} from '../geometry/Group';
 
 export class MatDoubleSideTmpSetter {
@@ -26,7 +26,7 @@ export class MatDoubleSideTmpSetter {
 	private _setObjectMaterialDoubleSided(object: Object3D) {
 		const mat = (object as Mesh).material;
 		if (mat) {
-			if (CoreType.isArray(mat)) {
+			if (isArray(mat)) {
 				for (const mati of mat) {
 					this._setMaterialDoubleSided(mati);
 				}
@@ -38,7 +38,7 @@ export class MatDoubleSideTmpSetter {
 	private _restoreObjectMaterialSide(object: Object3D) {
 		const mat = (object as Mesh).material;
 		if (mat) {
-			if (CoreType.isArray(mat)) {
+			if (isArray(mat)) {
 				for (const mati of mat) {
 					this._restoreMaterialDoubleSided(mati);
 				}

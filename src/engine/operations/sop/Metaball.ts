@@ -1,11 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-// import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
-// import {MarchingCubes} from 'three/examples/jsm/objects/MarchingCubes';
 import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
 import {Vector3} from 'three';
-import {CoreType} from '../../../core/Type';
+import {isNumber} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -69,14 +67,14 @@ export class MetaballSopOperation extends BaseSopOperation {
 			let metaStrength = params.metaStrength;
 			if (isBooleanTrue(params.useMetaStrengthAttrib)) {
 				let metaStrengthAttrib = point.attribValue('metaStrength') as number;
-				if (CoreType.isNumber(metaStrengthAttrib)) {
+				if (isNumber(metaStrengthAttrib)) {
 					metaStrength *= metaStrengthAttrib;
 				}
 			}
 			let metaSubtract = params.metaSubtract;
 			if (isBooleanTrue(params.useMetaSubtractAttrib)) {
 				let metaSubtractAttrib = point.attribValue('metaSubtract') as number;
-				if (CoreType.isNumber(metaSubtractAttrib)) {
+				if (isNumber(metaSubtractAttrib)) {
 					metaSubtract *= metaSubtractAttrib;
 				}
 			}

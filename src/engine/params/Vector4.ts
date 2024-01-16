@@ -5,7 +5,7 @@ import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isArray} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR4: Readonly<string[]> = ['x', 'y', 'z', 'w'];
 const tmp: Number4 = [0, 0, 0, 0];
@@ -30,7 +30,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		return COMPONENT_NAMES_VECTOR4;
 	}
 	override defaultValueSerialized() {
-		if (CoreType.isArray(this._default_value)) {
+		if (isArray(this._default_value)) {
 			return this._default_value;
 		} else {
 			return this._default_value.toArray() as Number4;

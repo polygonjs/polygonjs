@@ -7,7 +7,7 @@ import {Poly} from '../../../Poly';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {SopOperationContainer} from '../../../../engine/operations/container/sop';
 import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../operations/_Base';
-import {CoreType} from '../../../../core/Type';
+import {isString} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
 import {TypedNodeConnection} from '../../../nodes/utils/io/NodeConnection';
@@ -105,7 +105,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			return;
 		}
 		for (let input_data of inputs_data) {
-			if (CoreType.isString(input_data)) {
+			if (isString(input_data)) {
 				const input_node_data = data[input_data];
 				if (input_node_data) {
 					if (
@@ -183,7 +183,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	// 	const inputs = current_node_data['inputs'];
 	// 	if (inputs) {
 	// 		for (let input_data of inputs) {
-	// 			if (CoreType.isString(input_data)) {
+	// 			if (isString(input_data)) {
 	// 				const input_node_name = input_data;
 	// 				// if (input_node_name != current_node_name) {
 	// 				const input_node_data = data[input_node_name];
@@ -265,7 +265,7 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				const inputs = node_data['inputs'];
 				if (inputs) {
 					for (let input_data of inputs) {
-						if (CoreType.isString(input_data)) {
+						if (isString(input_data)) {
 							const input_node_name = input_data;
 							if (input_node_name == current_node_name) {
 								output_node_names.add(node_name);

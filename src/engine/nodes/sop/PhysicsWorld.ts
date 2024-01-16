@@ -18,7 +18,7 @@ import {createOrFindPhysicsWorld} from '../../../core/physics/PhysicsWorld';
 import {updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreType} from '../../../core/Type';
+import {isFunction} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
@@ -182,7 +182,7 @@ export function getPhysicsWorldNodeFromWorldObject(
 	if (!graphNode) {
 		return;
 	}
-	const node: BaseNodeType | null = CoreType.isFunction((graphNode as BaseNodeType).context)
+	const node: BaseNodeType | null = isFunction((graphNode as BaseNodeType).context)
 		? (graphNode as BaseNodeType)
 		: null;
 	if (!node) {

@@ -143,7 +143,7 @@ export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateSc
 	// private _printResolve() {
 	// 	let firstPass: EffectPass | undefined;
 	// 	this._passesByEffectsComposer.forEach((passOrPasses) => {
-	// 		const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+	// 		const passes = isArray(passOrPasses) ? passOrPasses : [passOrPasses];
 	// 		firstPass = firstPass || passes[0];
 	// 	});
 	// 	if (firstPass) {
@@ -160,7 +160,7 @@ export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateSc
 	}
 	// private _resetMat() {
 	// 	this._passesByEffectsComposer.forEach((passOrPasses) => {
-	// 		const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+	// 		const passes = isArray(passOrPasses) ? passOrPasses : [passOrPasses];
 	// 		for (let pass of passes) {
 	// 			const effect = _effectFromPass(pass);
 	// 			if (effect) {

@@ -13,8 +13,7 @@ import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
 import {Vector3Param} from '../../../../params/Vector3';
 import {RaycastCPUVelocityController} from './VelocityController';
-import {CoreType} from '../../../../../core/Type';
-
+import {isString} from '../../../../../core/Type';
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {IntersectDataEventNode} from '../../IntersectData';
@@ -165,7 +164,7 @@ export class RaycastCPUController extends BaseRaycastController {
 					return;
 				}
 				case AttribType.STRING: {
-					if (CoreType.isString(attribValue)) {
+					if (isString(attribValue)) {
 						this._node.p.geoAttributeValues.set(attribValue);
 					}
 					return;

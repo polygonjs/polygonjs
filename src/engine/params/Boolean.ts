@@ -3,7 +3,7 @@ import {ParamType} from '../poly/ParamType';
 import {CoreString} from '../../core/String';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isString,isBoolean,isNumber} from '../../core/Type';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	static override type() {
@@ -11,7 +11,7 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	}
 	// TODO: be careful as this does not allow serialization of expressions as default value
 	override defaultValueSerialized() {
-		if (CoreType.isString(this._default_value)) {
+		if (isString(this._default_value)) {
 			return this._default_value;
 		} else {
 			return this.convert(this._default_value) || false;
@@ -39,13 +39,13 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 		return val1 == val2;
 	}
 	override convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {
-		if (CoreType.isBoolean(raw_val)) {
+		if (isBoolean(raw_val)) {
 			return raw_val;
 		} else {
-			if (CoreType.isNumber(raw_val)) {
+			if (isNumber(raw_val)) {
 				return raw_val >= 1;
 			} else {
-				if (CoreType.isString(raw_val)) {
+				if (isString(raw_val)) {
 					if (CoreString.isBoolean(raw_val)) {
 						return CoreString.toBoolean(raw_val);
 					} else {

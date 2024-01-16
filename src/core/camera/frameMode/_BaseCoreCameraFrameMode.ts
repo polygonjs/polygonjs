@@ -1,5 +1,5 @@
 import {Camera} from 'three';
-import {CoreType} from '../../Type';
+import {isNumber} from '../../Type';
 import {CameraAttribute} from '../CoreCamera';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../CoreCameraFrameMode';
 import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
@@ -16,7 +16,7 @@ export class BaseCoreCameraFrameMode {
 		if (!frameModeAttribVal) {
 			return;
 		}
-		if (!CoreType.isNumber(frameModeAttribVal)) {
+		if (!isNumber(frameModeAttribVal)) {
 			return;
 		}
 		return CAMERA_FRAME_MODES[frameModeAttribVal];

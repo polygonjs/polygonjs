@@ -25,7 +25,7 @@ import {Box} from '../../../core/geometry/modules/sdf/SDFCommon';
 import {TypedSopNode} from './_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {SDFObject} from '../../../core/geometry/modules/sdf/SDFObject';
-import {CoreType} from '../../../core/Type';
+import {isArray, isBoolean, isNumberValid, isColor, isVector} from '../../../core/Type';
 import {SDFPersistedConfig} from '../js/code/assemblers/sdf/SDFPersistedConfig';
 import {ParamType} from '../../poly/ParamType';
 import {JsParamConfig} from '../js/code/utils/JsParamConfig';
@@ -164,7 +164,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			const sdfObject = new SDFObject(geometry);
 			const results = sdfObject.toObject3D(this.pv);
 			if (results) {
-				if (CoreType.isArray(results)) {
+				if (isArray(results)) {
 					this.setObjects(results);
 				} else {
 					this.setObjects([results]);
@@ -286,10 +286,10 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			const spareParam = this.params.get(paramName);
 			if (spareParam && spareParam.value != null) {
 				if (
-					CoreType.isBoolean(spareParam.value) ||
-					CoreType.isNumberValid(spareParam.value) ||
-					CoreType.isColor(spareParam.value) ||
-					CoreType.isVector(spareParam.value)
+					isBoolean(spareParam.value) ||
+					isNumberValid(spareParam.value) ||
+					isColor(spareParam.value) ||
+					isVector(spareParam.value)
 				) {
 					list.push(spareParam.value);
 				} else {

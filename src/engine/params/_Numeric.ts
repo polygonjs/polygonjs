@@ -4,7 +4,7 @@ import {ExpressionController} from './utils/ExpressionController';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isArray,isString} from '../../core/Type';
 
 export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
 	override isNumeric() {
@@ -15,7 +15,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 	}
 
 	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
-		if (CoreType.isArray(raw_input)) {
+		if (isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[T];
 		} else {
 			return raw_input;
@@ -36,7 +36,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 				this.setSuccessorsDirty(this);
 			}
 		} else {
-			if (CoreType.isString(this._raw_input)) {
+			if (isString(this._raw_input)) {
 				this.states.error.clear();
 				this._expression_controller = this._expression_controller || new ExpressionController(this);
 				if (this._raw_input != this._expression_controller.expression()) {

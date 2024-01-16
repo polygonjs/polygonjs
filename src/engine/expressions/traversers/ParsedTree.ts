@@ -1,5 +1,5 @@
 import jsep from 'jsep';
-import {CoreType} from '../../../core/Type';
+import {isString} from '../../../core/Type';
 import {BaseParamType} from '../../params/_Base';
 jsep.addUnaryOp('@');
 let precedence = 10;
@@ -16,7 +16,7 @@ const STRING_EXPRESSION_SEPARATOR = '`';
 
 export function stringValueElements(v: string): string[] {
 	if (v != null) {
-		if (CoreType.isString(v)) {
+		if (isString(v)) {
 			return v.split(STRING_EXPRESSION_SEPARATOR);
 		} else {
 			return [];

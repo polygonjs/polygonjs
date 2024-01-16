@@ -12,7 +12,7 @@ import {
 	Euler,
 	EulerOrder,
 } from 'three';
-import {CoreType} from '../../../../../core/Type';
+import {isBoolean, isNumber, isString} from '../../../../../core/Type';
 import {Number2, Number3, Number4, Number16} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
 import {
@@ -411,21 +411,21 @@ export function serializeVariable<T extends SerializedVariableType>(
 	if ((variable as PrimitiveArray<any>).isPrimitiveArray) {
 		const elements = variable.elements();
 		const firstElement = elements[0];
-		if (CoreType.isBoolean(firstElement)) {
+		if (isBoolean(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.boolean_Array> = {
 				type: SerializedVariableType.boolean_Array,
 				data: elements.map((v) => v as boolean),
 			};
 			return data as SerializedVariable<T>;
 		}
-		if (CoreType.isNumber(firstElement)) {
+		if (isNumber(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.number_Array> = {
 				type: SerializedVariableType.number_Array,
 				data: elements.map((v) => v as number),
 			};
 			return data as SerializedVariable<T>;
 		}
-		if (CoreType.isString(firstElement)) {
+		if (isString(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.string_Array> = {
 				type: SerializedVariableType.string_Array,
 				data: elements.map((v) => v as string),

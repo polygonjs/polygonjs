@@ -15,7 +15,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
-import {CoreType} from '../../../core/Type';
+import {isString,isNumber} from '../../../core/Type';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {AttribType} from '../../../core/geometry/Constant';
@@ -150,7 +150,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 		// check the first pt attrib size
 		const currentAttribValue: AttribValue = firstPt.attribValue(destAttribName);
-		if (CoreType.isString(currentAttribValue)) {
+		if (isString(currentAttribValue)) {
 			this.states.error.set('cannot add noise to a string attribute');
 			return;
 		}
@@ -446,7 +446,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _amplitudeFromAttrib(point: BaseCorePoint, base_amplitude: number): number {
 		const attrib_value = point.attribValue(this.pv.amplitudeAttrib) as NumericAttribValue;
 
-		if (CoreType.isNumber(attrib_value)) {
+		if (isNumber(attrib_value)) {
 			return attrib_value * base_amplitude;
 		} else {
 			if (attrib_value instanceof Vector2 || attrib_value instanceof Vector3 || attrib_value instanceof Vector4) {

@@ -4,7 +4,7 @@ import {NodeStatesController} from '../../engine/nodes/utils/StatesController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 import {BaseNodeType} from '../nodes/_Base';
-import {CoreType} from '../../core/Type';
+import {isBoolean, isNumber, isString, isArray} from '../../core/Type';
 import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../core/Walker';
 import {Vector3} from 'three';
 import {SimpleParamJsonExporterData} from '../nodes/utils/io/IOController';
@@ -53,11 +53,11 @@ export class BaseOperation<NC extends NodeContext> {
 	convertExportParamData(options: ConvertExportParamDataParams) {
 		const {params, paramName, paramData} = options;
 		const default_param = params[paramName];
-		if (CoreType.isBoolean(paramData)) {
+		if (isBoolean(paramData)) {
 			return paramData;
 		}
-		if (CoreType.isNumber(paramData)) {
-			if (CoreType.isBoolean(default_param)) {
+		if (isNumber(paramData)) {
+			if (isBoolean(default_param)) {
 				// if we receive 0, it may be for a boolean param,
 				// so if the default is a boolean, we convert
 				return paramData >= 1 ? true : false;
@@ -65,7 +65,7 @@ export class BaseOperation<NC extends NodeContext> {
 				return paramData;
 			}
 		}
-		if (CoreType.isString(paramData)) {
+		if (isString(paramData)) {
 			if (default_param) {
 				if (default_param instanceof TypedNodePathParamValue) {
 					return default_param.setPath(paramData);
@@ -76,7 +76,7 @@ export class BaseOperation<NC extends NodeContext> {
 			}
 			return paramData;
 		}
-		if (CoreType.isArray(paramData)) {
+		if (isArray(paramData)) {
 			(params[paramName] as Vector3).fromArray(paramData as number[]);
 		}
 	}

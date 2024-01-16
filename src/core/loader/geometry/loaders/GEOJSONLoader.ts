@@ -33,7 +33,7 @@ import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../../geometry/Constant';
 import {createGeometriesFromTypeFlat} from '../../../geometry/text/TextFlat';
 import {arrayCompact} from '../../../ArrayUtils';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {ThreejsCoreObject} from '../../../geometry/modules/three/ThreejsCoreObject';
 
 export class GEOJSONLoader extends Loader<Group> {
@@ -116,7 +116,7 @@ export class GEOJSONLoader extends Loader<Group> {
 		for (const feature of features) {
 			const objects = this._parseFeature(feature);
 			if (objects) {
-				if (CoreType.isArray(objects)) {
+				if (isArray(objects)) {
 					for (const object of objects) {
 						this._addAttributes(object, feature);
 						group.add(object);

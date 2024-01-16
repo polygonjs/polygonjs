@@ -3,7 +3,7 @@ import {BaseViewerType} from './../../engine/viewers/_Base';
 import {Camera, Vector3} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {CameraAttribute} from './CoreCamera';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 interface CreateControlsConfigOptions {
 	scene: PolyScene;
@@ -30,7 +30,7 @@ export class CoreCameraControlsController {
 
 		let controlsNode: ApplicableControlsNode | undefined; //TypedCameraControlsEventNode<any> | undefined;
 		const foundNodeId = coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.CONTROLS_NODE_ID);
-		if (foundNodeId && CoreType.isNumber(foundNodeId)) {
+		if (foundNodeId && isNumber(foundNodeId)) {
 			const foundNode = scene.graph.nodeFromId(foundNodeId);
 			// if (foundNode && foundNode instanceof TypedNode && this.isCameraControlsNode(foundNode)) {
 			if (foundNode && (foundNode as unknown as ApplicableControlsNode).applyControls) {

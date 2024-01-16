@@ -1,6 +1,6 @@
 import {BaseParamType} from '../../params/_Base';
 import jsep from 'jsep';
-import {CoreType} from '../../../core/Type';
+import {isString} from '../../../core/Type';
 export const VARIABLE_PREFIX = '$';
 
 export abstract class BaseTraverser {
@@ -16,7 +16,7 @@ export abstract class BaseTraverser {
 	}
 	protected _set_error_from_error_bound = this._set_error_from_error.bind(this);
 	private _set_error_from_error(error: Error | string) {
-		if (CoreType.isString(error)) {
+		if (isString(error)) {
 			this._errorMessage = error;
 		} else {
 			this._errorMessage = error.message;

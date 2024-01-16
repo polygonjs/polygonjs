@@ -116,14 +116,14 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// convert_value(v) {
 	// 	let is_json = false
 
-	// 	if (CoreType.isString(v)) {
+	// 	if (isString(v)) {
 	// 		v = JSON.parse(v)
 	// 		is_json = true
 	// 	}
 
 	// 	if (!is_json) {
 	// 		if (v.interpolation && v.points) {
-	// 			if (CoreType.isArray(v.points)) {
+	// 			if (isArray(v.points)) {
 	// 				is_json = true
 	// 			}
 	// 		}

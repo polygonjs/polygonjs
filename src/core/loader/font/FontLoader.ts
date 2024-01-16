@@ -1,5 +1,5 @@
 import {FileLoader, Loader, LoadingManager} from 'three';
-import {CoreType} from '../../Type';
+import {isString} from '../../Type';
 import {Font, FontData} from './Font';
 
 type OnLoad = (font: Font) => void;
@@ -21,7 +21,7 @@ export class FontLoader extends Loader<Font> {
 		loader.load(
 			url,
 			function (text) {
-				if (!CoreType.isString(text)) {
+				if (!isString(text)) {
 					return;
 				}
 				let json: FontData | undefined;

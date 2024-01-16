@@ -1,6 +1,6 @@
 import {Object3D, Material, Matrix4, Box3, Sphere} from 'three';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../../ObjectContent';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {TetGeometry} from './TetGeometry';
 import {TetTesselationParams} from './TetCommon';
 import {tetToOuterMesh} from './toObject3D/tetToOuterMesh';
@@ -58,7 +58,7 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	toObject3D(tesselationParams: TetTesselationParams): Object3D | Object3D[] | undefined {
 		const object = TetObject.toObject3D(this, tesselationParams);
 		if (object) {
-			if (CoreType.isArray(object)) {
+			if (isArray(object)) {
 				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}

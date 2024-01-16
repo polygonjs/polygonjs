@@ -5,7 +5,7 @@ import type {CSS3DRendererRopNode} from '../../engine/nodes/rop/CSS3DRenderer';
 import type {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {CameraAttribute} from './CoreCamera';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 import {CSS3DRenderer} from '../render/CSSRenderers/CSS3DRenderer';
 import {CSS2DRenderer} from '../render/CSSRenderers/CSS2DRenderer';
 import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
@@ -35,7 +35,7 @@ export class CoreCameraCSSRendererController {
 		if (nodeId == null) {
 			return;
 		}
-		if (!CoreType.isNumber(nodeId)) {
+		if (!isNumber(nodeId)) {
 			return;
 		}
 		const foundNode = scene.graph.nodeFromId(nodeId);

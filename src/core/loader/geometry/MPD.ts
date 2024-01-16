@@ -2,7 +2,7 @@ import {Group} from 'three';
 import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
 import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 import {ThreejsCoreObject} from '../../geometry/modules/three/ThreejsCoreObject';
-import {CoreType} from '../../Type';
+import {isString,isNumber,isArray} from '../../Type';
 
 // export enum MPDAttribute {
 // 	AUTHOR = 'author',
@@ -40,11 +40,11 @@ export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 					// as it would be useless to have all objects with an attribute set to null.
 					// Maybe consider checking all objects before adding an attribute?
 
-					if (CoreType.isString(value) || CoreType.isNumber(value)) {
+					if (isString(value) || isNumber(value)) {
 						ThreejsCoreObject.setAttribute(child, attribName, value);
 					} else {
-						if (CoreType.isArray(value)) {
-							const stringElements = value.filter((item) => CoreType.isString(item));
+						if (isArray(value)) {
+							const stringElements = value.filter((item) => isString(item));
 							const jointedStrings = stringElements.join(' ');
 							ThreejsCoreObject.setAttribute(child, attribName, jointedStrings);
 						}

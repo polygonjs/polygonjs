@@ -10,7 +10,7 @@ import {ParamsUpdateOptions} from '../params/ParamsController';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import {CoreType} from '../../../../core/Type';
+import {isArray,isNumber} from '../../../../core/Type';
 import {objectClone} from '../../../../core/ObjectUtils';
 
 /*
@@ -131,16 +131,16 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 								init_value = connection_point.init_value;
 							}
 						}
-						if (CoreType.isArray(connection_point.init_value)) {
+						if (isArray(connection_point.init_value)) {
 							// if we need to use an init_value from a float to an array
-							if (CoreType.isNumber(init_value)) {
+							if (isNumber(init_value)) {
 								const array = new Array(connection_point.init_value.length) as Number2;
 								array.fill(init_value);
 								init_value = array;
 							}
 							// if we need to use an init_value from a array to an array, we need to check their length.
 							// if they are different, we need to match them.
-							else if (CoreType.isArray(init_value)) {
+							else if (isArray(init_value)) {
 								// if (init_value.length < connection_point.init_value.length) {
 								// }
 								// if (init_value.length > connection_point.init_value.length) {

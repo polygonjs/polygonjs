@@ -27,19 +27,19 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	attributesToCopy = ParamConfig.STRING('', {
 		visibleIf: {copyAttributes: true},
 	});
-	/** @param defines if the vertex id attribute is used to create the html id attribute */
+	/** @param defines if the htmlId attribute is used to create the html id attribute */
 	overrideId = ParamConfig.BOOLEAN(true);
 	/** @param value of the html element id attribute */
 	id = ParamConfig.STRING(DEFAULT_CSS2DOBJECT.id, {
 		visibleIf: {overrideId: 1},
 	});
-	/** @param defines if the vertex class attribute is used to create the html class */
+	/** @param defines if the htmlClass attribute is used to create the html class */
 	overrideClassName = ParamConfig.BOOLEAN(true);
 	/** @param value of the html class */
 	className = ParamConfig.STRING(DEFAULT_CSS2DOBJECT.className, {
 		visibleIf: {overrideClassName: 1},
 	});
-	/** @param defines if the vertex html attribute is used to create the html content */
+	/** @param defines if the html attribute is used to create the html content */
 	overrideHTML = ParamConfig.BOOLEAN(true);
 	/** @param value of the html content */
 	html = ParamConfig.STRING(DEFAULT_CSS2DOBJECT.html, {
@@ -63,7 +63,7 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		if (coreGroup) {
-			// if there are input objects,
+			// if there are input threejs objects,
 			// add attributes to them
 			const objects = coreGroup.allObjects();
 			for (const object of objects) {

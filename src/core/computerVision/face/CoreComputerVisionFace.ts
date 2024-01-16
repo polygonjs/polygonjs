@@ -3,7 +3,7 @@ import {FaceMesh, Options, Results} from '@mediapipe/face_mesh';
 import {CoreComputerVisionFaceAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';
-import {CoreType} from '../../Type';
+import {isBoolean,isNumber,isString} from '../../Type';
 import {DEFAULT_POSITION} from './Data';
 import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
@@ -66,13 +66,13 @@ function attributes(object: Object3D): FaceTrackingObjectAttributes {
 	);
 
 	const data = {
-		selfieMode: CoreType.isBoolean(selfieMode) ? selfieMode : DEFAULT.selfieMode,
-		maxNumFaces: CoreType.isNumber(maxNumFaces) ? maxNumFaces : DEFAULT.maxNumFaces,
-		refineLandmarks: CoreType.isBoolean(refineLandmarks) ? refineLandmarks : DEFAULT.refineLandmarks,
-		minDetectionConfidence: CoreType.isNumber(minDetectionConfidence)
+		selfieMode: isBoolean(selfieMode) ? selfieMode : DEFAULT.selfieMode,
+		maxNumFaces: isNumber(maxNumFaces) ? maxNumFaces : DEFAULT.maxNumFaces,
+		refineLandmarks: isBoolean(refineLandmarks) ? refineLandmarks : DEFAULT.refineLandmarks,
+		minDetectionConfidence: isNumber(minDetectionConfidence)
 			? minDetectionConfidence
 			: DEFAULT.minDetectionConfidence,
-		minTrackingConfidence: CoreType.isNumber(minTrackingConfidence)
+		minTrackingConfidence: isNumber(minTrackingConfidence)
 			? minTrackingConfidence
 			: DEFAULT.minTrackingConfidence,
 	};
@@ -175,7 +175,7 @@ export class CoreComputerVisionFace {
 	static trackerKey(object: Object3D): string {
 		const coreObjectClass = coreObjectClassFactory(object);
 		let key = coreObjectClass.attribValue(object, CoreComputerVisionFaceAttribute.KEY);
-		if (!key || !CoreType.isString(key)) {
+		if (!key || !isString(key)) {
 			key = createKey(object);
 			coreObjectClass.addAttribute(object, CoreComputerVisionFaceAttribute.KEY, key);
 		}

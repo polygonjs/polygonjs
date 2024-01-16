@@ -7,20 +7,17 @@ import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {
 	GL_CONNECTION_POINT_TYPES,
-	// GlConnectionPoint,
 	GlConnectionPointType,
 	GlConnectionPointInitValueMap,
 	GlConnectionPointTypeToParamTypeMap,
 } from '../utils/io/connections/Gl';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from '../../poly/ParamType';
 import {UniformGLDefinition} from './utils/GLDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-// import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/GLParamConfig';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {UNIFORM_PARAM_PREFIX} from '../../../core/material/uniform';
 
 class ParamGlParamsConfig extends NodeParamsConfig {
@@ -91,7 +88,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		if (
 			param_type == ParamType.VECTOR3 &&
 			this.p.asColor.value &&
-			CoreType.isArray(default_value) &&
+			isArray(default_value) &&
 			default_value.length == 3
 		) {
 			const param_config = new GlParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniformName());

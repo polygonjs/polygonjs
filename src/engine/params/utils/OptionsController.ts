@@ -5,7 +5,7 @@ import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ColorConversion} from '../../../core/Color';
-import {CoreType, isFunction} from '../../../core/Type';
+import {isString, isArray, isFunction} from '../../../core/Type';
 import {arrayDifference, arrayCompact, arrayUniq} from '../../../core/ArrayUtils';
 import {objectCloneDeep, objectIsEqual} from '../../../core/ObjectUtils';
 import {PolyScene} from '../../scene/PolyScene';
@@ -276,7 +276,7 @@ export class OptionsController {
 	}
 
 	set(options: ParamOptions) {
-		if (CoreType.isString(options)) {
+		if (isString(options)) {
 			console.warn('options input invalid', options, typeof options);
 		}
 		this._default_options = options;
@@ -617,7 +617,7 @@ export class OptionsController {
 	// 	const options = this.paramSelectionOptions();
 	// 	if (options) {
 	// 		const type_or_boolean = options;
-	// 		if (!CoreType.isBoolean(type_or_boolean)) {
+	// 		if (!isBoolean(type_or_boolean)) {
 	// 			return type_or_boolean;
 	// 		}
 	// 	}
@@ -725,7 +725,7 @@ export class OptionsController {
 			return [];
 		}
 		let predecessorNames: string[] = [];
-		if (CoreType.isArray(visibilityOptions)) {
+		if (isArray(visibilityOptions)) {
 			arrayUniq(visibilityOptions.map((options) => Object.keys(options)).flat(), predecessorNames);
 		} else {
 			predecessorNames = Object.keys(visibilityOptions);
@@ -787,7 +787,7 @@ export class OptionsController {
 			});
 			this._programaticVisibleState = false;
 			await Promise.all(promises);
-			if (CoreType.isArray(options)) {
+			if (isArray(options)) {
 				for (const optionsSet of options) {
 					const optionSetParamNames = Object.keys(optionsSet);
 					const optionSetParams: BaseParamType[] = [];

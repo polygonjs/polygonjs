@@ -16,7 +16,7 @@
  *
  */
 
-import {CoreType} from '../../../core/Type';
+import {isNumber,isString} from '../../../core/Type';
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
@@ -24,13 +24,13 @@ function toString(arg: any) {
 	if (arg == null) {
 		return '';
 	}
-	return CoreType.isString(arg) ? arg : `${arg}`;
+	return isString(arg) ? arg : `${arg}`;
 }
 function toInt(arg: any, defaultVal: number) {
 	if (arg == null) {
 		return defaultVal;
 	}
-	return CoreType.isNumber(arg) ? arg : parseInt(arg);
+	return isNumber(arg) ? arg : parseInt(arg);
 }
 export class StrSubExpression extends BaseMethod {
 	// str_chars_count('bla') => 3

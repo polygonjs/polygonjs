@@ -1,6 +1,6 @@
-import {CoreString} from './String';
+import {ensureFloat, ensureInteger} from './String';
 import {Color, Matrix3, Matrix4, Vector2, Vector3, Vector4} from 'three';
-import {CoreType} from './Type';
+import {isString, isBoolean, isNumber, isArray} from './Type';
 import {GlConnectionPointType} from '../engine/nodes/utils/io/connections/Gl';
 
 export const COMPONENTS_BY_GL_TYPE = {
@@ -40,16 +40,16 @@ export class ThreeToGl {
 		// TypeAssert.unreachable(glType)
 	}
 	static any(value: any): string {
-		if (CoreType.isString(value)) {
+		if (isString(value)) {
 			return value;
 		}
-		if (CoreType.isBoolean(value)) {
+		if (isBoolean(value)) {
 			return `${value}`;
 		}
-		if (CoreType.isNumber(value)) {
-			return `${CoreString.ensureFloat(value)}`;
+		if (isNumber(value)) {
+			return `${ensureFloat(value)}`;
 		}
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			return this.numeric_array(value);
 		}
 		// and if it is a vector
@@ -67,127 +67,127 @@ export class ThreeToGl {
 	static numeric_array(values: number[]): string {
 		const values_str = new Array(values.length);
 		for (let i = 0; i < values.length; i++) {
-			values_str[i] = `${CoreString.ensureFloat(values[i])}`;
+			values_str[i] = `${ensureFloat(values[i])}`;
 		}
 		const gl_type = `vec${values.length}`;
 		return `${gl_type}(${values_str.join(', ')})`;
 	}
 	static mat4(vec: Matrix4 | string): string {
-		if (CoreType.isString(vec)) {
+		if (isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensureFloat(v)}`;
+			return `${ensureFloat(v)}`;
 		});
 		return `mat4(${values.join(', ')})`;
 	}
 	static mat3(vec: Matrix3 | string): string {
-		if (CoreType.isString(vec)) {
+		if (isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensureFloat(v)}`;
+			return `${ensureFloat(v)}`;
 		});
 		return `mat3(${values.join(', ')})`;
 	}
 	static vector4(vec: Vector4 | string): string {
-		if (CoreType.isString(vec)) {
+		if (isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensureFloat(v)}`;
+			return `${ensureFloat(v)}`;
 		});
 		return `vec4(${values.join(', ')})`;
 	}
 	static vector3(vec: Vector3 | string): string {
-		if (CoreType.isString(vec)) {
+		if (isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensureFloat(v)}`;
+			return `${ensureFloat(v)}`;
 		});
 		return `vec3(${values.join(', ')})`;
 	}
 	static vector2(vec: Vector2 | string): string {
-		if (CoreType.isString(vec)) {
+		if (isString(vec)) {
 			return vec;
 		}
 		const values = vec.toArray().map((v) => {
-			return `${CoreString.ensureFloat(v)}`;
+			return `${ensureFloat(v)}`;
 		});
 		return `vec2(${values.join(', ')})`;
 	}
 
 	static vector3_float(vec: Vector3 | string, num: number | string): string {
-		if (CoreType.isNumber(num)) {
-			num = CoreString.ensureFloat(num);
+		if (isNumber(num)) {
+			num = ensureFloat(num);
 		}
 		return `vec4(${this.vector3(vec)}, ${num})`;
 	}
 
 	static float4(x: number | string, y: number | string, z: number | string, w: number | string) {
-		if (CoreType.isNumber(x)) {
-			x = CoreString.ensureFloat(x);
+		if (isNumber(x)) {
+			x = ensureFloat(x);
 		}
-		if (CoreType.isNumber(y)) {
-			y = CoreString.ensureFloat(y);
+		if (isNumber(y)) {
+			y = ensureFloat(y);
 		}
-		if (CoreType.isNumber(z)) {
-			z = CoreString.ensureFloat(z);
+		if (isNumber(z)) {
+			z = ensureFloat(z);
 		}
-		if (CoreType.isNumber(w)) {
-			w = CoreString.ensureFloat(w);
+		if (isNumber(w)) {
+			w = ensureFloat(w);
 		}
 		return `vec4(${x}, ${y}, ${z}, ${w})`;
 	}
 	static float3(x: number | string, y: number | string, z: number | string) {
-		if (CoreType.isNumber(x)) {
-			x = CoreString.ensureFloat(x);
+		if (isNumber(x)) {
+			x = ensureFloat(x);
 		}
-		if (CoreType.isNumber(y)) {
-			y = CoreString.ensureFloat(y);
+		if (isNumber(y)) {
+			y = ensureFloat(y);
 		}
-		if (CoreType.isNumber(z)) {
-			z = CoreString.ensureFloat(z);
+		if (isNumber(z)) {
+			z = ensureFloat(z);
 		}
 		return `vec3(${x}, ${y}, ${z})`;
 	}
 	static float2(x: number | string, y: number | string) {
-		if (CoreType.isNumber(x)) {
-			x = CoreString.ensureFloat(x);
+		if (isNumber(x)) {
+			x = ensureFloat(x);
 		}
-		if (CoreType.isNumber(y)) {
-			y = CoreString.ensureFloat(y);
+		if (isNumber(y)) {
+			y = ensureFloat(y);
 		}
 		return `vec2(${x}, ${y})`;
 	}
 	static float(x: number | string): string {
-		if (CoreType.isNumber(x)) {
-			return CoreString.ensureFloat(x);
+		if (isNumber(x)) {
+			return ensureFloat(x);
 		} else {
 			const converted = parseFloat(x);
-			if (CoreType.isNaN(converted)) {
+			if (isNaN(converted)) {
 				return x;
 			} else {
-				return CoreString.ensureFloat(converted);
+				return ensureFloat(converted);
 			}
 		}
 	}
 	static integer(x: number | string): string {
-		if (CoreType.isNumber(x)) {
-			return CoreString.ensureInteger(x);
+		if (isNumber(x)) {
+			return ensureInteger(x);
 		} else {
 			const converted = parseInt(x);
-			if (CoreType.isNaN(converted)) {
+			if (isNaN(converted)) {
 				return x;
 			} else {
-				return CoreString.ensureInteger(converted);
+				return ensureInteger(converted);
 			}
 		}
 	}
 
 	static bool(x: boolean | string) {
-		if (CoreType.isBoolean(x)) {
+		if (isBoolean(x)) {
 			return `${x}`;
 		} else {
 			return x;

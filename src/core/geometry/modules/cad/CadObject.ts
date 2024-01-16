@@ -179,23 +179,6 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 			}
 		}
 		TypeAssert.unreachable(type);
-
-		// const geometry = cadObject.cadGeometry();
-
-		// const buildObject = () => {
-
-		// };
-		// const object3D = buildObject();
-		// if (object3D) {
-		// 	if (CoreType.isArray(object3D)) {
-		// 		for (let object of object3D) {
-		// 			objectContentCopyProperties(cadObject, object);
-		// 		}
-		// 	} else {
-		// 		objectContentCopyProperties(cadObject, object3D);
-		// 	}
-		// }
-		// return object3D;
 	}
 
 	boundingBox(target: Box3): void {

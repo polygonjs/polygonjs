@@ -328,7 +328,7 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	// override setupForAspectRatio(aspect: number) {
-	// 	if (CoreType.isNaN(aspect)) {
+	// 	if (isNaN(aspect)) {
 	// 		return;
 	// 	}
 	// 	if (aspect && this._aspect != aspect) {

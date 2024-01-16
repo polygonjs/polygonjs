@@ -8,7 +8,7 @@ import {BaseContainer} from '../../containers/_Base';
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
-import {CoreType} from '../../../core/Type';
+import {isNumber, isString} from '../../../core/Type';
 
 export interface BaseMethodFindDependencyArgs {
 	indexOrPath: string | number | undefined;
@@ -93,7 +93,7 @@ export class BaseMethod {
 	}
 
 	findReferencedGraphNode(indexOrPath: number | string, decomposedPath?: DecomposedPath): CoreGraphNode | null {
-		const is_index = CoreType.isNumber(indexOrPath);
+		const is_index = isNumber(indexOrPath);
 		// let node
 		if (is_index) {
 			const index = indexOrPath as number;
@@ -118,7 +118,7 @@ export class BaseMethod {
 		// } else {
 		let node: BaseNodeType | null = null;
 		const current_node = this.node();
-		if (CoreType.isString(indexOrPath)) {
+		if (isString(indexOrPath)) {
 			if (current_node) {
 				const path = indexOrPath;
 				node = CoreWalker.findNode(current_node, path, decomposedPath);

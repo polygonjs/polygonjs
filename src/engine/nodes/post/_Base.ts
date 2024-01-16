@@ -8,7 +8,7 @@ import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNetworkPostProcessNodeType, EffectComposerController} from './utils/EffectComposerController';
 import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPostProcessController';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {BaseViewerType} from '../../viewers/_Base';
 
 export interface TypedPostNodeContext {
@@ -77,7 +77,7 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 	protected _setupComposerIfActive(context: TypedPostNodeContext) {
 		const pass = this.createPassForContext(context);
 		if (pass) {
-			const array = CoreType.isArray(pass) ? pass : [pass];
+			const array = isArray(pass) ? pass : [pass];
 			for (const p of array) {
 				context.composerController.addPassByNodeInBuildPassesProcess(this, p, context.composer);
 			}
@@ -112,7 +112,7 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 	}
 	protected _updatePasses() {
 		this._passesByEffectsComposer.forEach((passOrPasses) => {
-			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+			const passes = isArray(passOrPasses) ? passOrPasses : [passOrPasses];
 			for (const pass of passes) {
 				this.updatePass(pass);
 			}

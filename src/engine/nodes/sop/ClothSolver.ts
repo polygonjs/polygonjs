@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreType} from '../../../core/Type';
+import {isFunction} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {ClothIdAttribute} from '../../../core/cloth/ClothAttribute';
@@ -31,7 +31,7 @@ import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {ClothController} from '../../../core/cloth/ClothController';
-import { coreObjectClassFactory } from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class ClothSolverSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClothSolverSopParamsConfig();
 
@@ -233,7 +233,7 @@ export function getClothControllerNodeFromWorldObject(
 	if (!graphNode) {
 		return;
 	}
-	const node: BaseNodeType | null = CoreType.isFunction((graphNode as BaseNodeType).context)
+	const node: BaseNodeType | null = isFunction((graphNode as BaseNodeType).context)
 		? (graphNode as BaseNodeType)
 		: null;
 	if (!node) {

@@ -2,7 +2,7 @@ import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
 import {Number2} from '../../types/GlobalTypes';
-import {CoreType} from '../../core/Type';
+import {isNumber} from '../../core/Type';
 
 export class TextureContainer extends TypedContainer<NodeContext.COP> {
 	override set_content(content: ContainableMap[NodeContext.COP]) {
@@ -54,7 +54,7 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 					return _resolutionFromHTMLVideoElement(image);
 				}
 				// check if image data
-				if (CoreType.isNumber(image.width) && CoreType.isNumber(image.height)) {
+				if (isNumber(image.width) && isNumber(image.height)) {
 					return [image.width, image.height];
 				}
 
@@ -68,7 +68,7 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 				}
 
 				const data = source.data;
-				if (data && CoreType.isNumber(data.width) && CoreType.isNumber(data.height)) {
+				if (data && isNumber(data.width) && isNumber(data.height)) {
 					return [data.width, data.height];
 				}
 			}

@@ -5,7 +5,7 @@ import {ParamType} from '../poly/ParamType';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isArray} from '../../core/Type';
 import {CoreParamSerializer} from './utils/CoreParamSerializer';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
@@ -51,7 +51,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 				serializerClass: this._serializer?.constructor as typeof CoreParamSerializer<any> | undefined,
 			}); //, `${this.name}${name}`);
 			let default_val;
-			if (CoreType.isArray(this._default_value)) {
+			if (isArray(this._default_value)) {
 				default_val = this._default_value[index];
 			} else {
 				default_val = (this._default_value as any)[componentName];
@@ -108,7 +108,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		this.removeDirtyState();
 	}
 	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
-		if (!CoreType.isArray(raw_input)) {
+		if (!isArray(raw_input)) {
 			const numberOrString = raw_input as number | string;
 			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => numberOrString);
 			return raw_input_wrapped_in_array as ParamInitValuesTypeMap[T];
@@ -125,10 +125,10 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			c.emitController.blockParentEmit();
 		}
 
-		// if (CoreType.isArray(values)) {
+		// if (isArray(values)) {
 		const value = this._raw_input;
 		let prevValue: number = 0;
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			for (let i = 0; i < this._componentsCount; i++) {
 				let componentValue = (value as any)[i];
 				// use the prev value, in case we give an array that is too short

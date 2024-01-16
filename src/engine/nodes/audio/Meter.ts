@@ -7,7 +7,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {Meter} from 'tone/build/esm/component/analysis/Meter';
 import {AudioNodeAnalyserType} from '../../poly/NodeContext';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {isNumber, isBooleanTrue} from '../../../core/Type';
 import {effectParamsOptions} from './utils/EffectsController';
 import {BaseNodeType} from '../_Base';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
@@ -96,7 +96,7 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 	getAnalyserValue() {
 		if (this.__effect__) {
 			const value = this.__effect__.getValue();
-			if (CoreType.isNumber(value)) {
+			if (isNumber(value)) {
 				this._arrayValue[0] = value;
 				return this._arrayValue;
 			} else {
@@ -154,7 +154,7 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 		// we check that we have a number again in case meter.getValue()
 		// returns Infinity
 		if (isBooleanTrue(this.pv.updateValueParam)) {
-			if (CoreType.isNumber(valueN)) {
+			if (isNumber(valueN)) {
 				this.p.value.set(valueN);
 			}
 		}

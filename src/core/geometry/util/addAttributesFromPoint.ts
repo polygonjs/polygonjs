@@ -1,5 +1,5 @@
 import {BufferAttribute, BufferGeometry, Vector3} from 'three';
-import {CoreType} from '../../Type';
+import {isString} from '../../Type';
 import {BaseCorePoint} from '../entities/point/CorePoint';
 
 export function addAttributesFromPoint(geometry: BufferGeometry, point: BaseCorePoint, attributeNames: string[]) {
@@ -17,7 +17,7 @@ function addAttributeFromPoint(
 ) {
 	const value = point.attribValue(attributeName);
 
-	if (!CoreType.isString(value)) {
+	if (!isString(value)) {
 		const size = point.attribSize(attributeName);
 
 		let values = new Array(pointsCount * size);

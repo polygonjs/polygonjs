@@ -8,7 +8,7 @@ import {ContainerMap} from '../../../containers/utils/ContainerMap';
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
-import {CoreType} from '../../../../core/Type';
+import {isString} from '../../../../core/Type';
 import {arrayShallowClone} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
@@ -390,7 +390,7 @@ export class NodeInputsController<NC extends NodeContext> {
 		return -1;
 	}
 	getInputIndex(input_index_or_name: number | string): number {
-		if (CoreType.isString(input_index_or_name)) {
+		if (isString(input_index_or_name)) {
 			if (this.hasNamedInputs()) {
 				return this.getNamedInputIndex(input_index_or_name);
 			} else {

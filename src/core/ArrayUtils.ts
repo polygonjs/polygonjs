@@ -1,7 +1,7 @@
 import type {TypedArray} from 'three';
-import {MapUtils} from './MapUtils';
+import {pushOnArrayAtEntry} from './MapUtils';
 import {setUnion, setToArray, setIntersection, setDifference, setXOR} from './SetUtils';
-import {CoreType} from './Type';
+import {isString} from './Type';
 import {randFloat} from './math/_Module';
 
 export type ArrayToItemFunction<T> = (array: Array<T>) => T;
@@ -199,7 +199,7 @@ export function arraySortBy<T, K extends number | string>(array: Array<T>, callb
 	for (const elem of array) {
 		const value: K = callback(elem);
 		valuesSet.add(value);
-		MapUtils.pushOnArrayAtEntry(elementsByValue, value, elem);
+		pushOnArrayAtEntry(elementsByValue, value, elem);
 	}
 	const values: K[] = new Array(valuesSet.size);
 	let i = 0;
@@ -209,7 +209,7 @@ export function arraySortBy<T, K extends number | string>(array: Array<T>, callb
 	});
 
 	// sort differently if the callback return value is a string or a number
-	if (CoreType.isString(values[0])) {
+	if (isString(values[0])) {
 		values.sort();
 	} else {
 		values.sort((a, b) => (a as number) - (b as number));

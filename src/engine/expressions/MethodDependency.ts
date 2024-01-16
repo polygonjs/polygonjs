@@ -4,7 +4,7 @@ import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
 import {BaseNodeType} from '../nodes/_Base';
 import jsep from 'jsep';
-import {CoreType} from '../../core/Type';
+import {isString} from '../../core/Type';
 
 export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
@@ -31,7 +31,7 @@ export class MethodDependency extends CoreGraphNode {
 
 			const literal = this.jsep_node as jsep.Literal;
 			const {indexOrPath} = this.pathArgs;
-			if (literal && CoreType.isString(indexOrPath)) {
+			if (literal && isString(indexOrPath)) {
 				literal.value = `${literal.value}`.replace(`${indexOrPath}`, new_path);
 				literal.raw = literal.raw.replace(`${indexOrPath}`, new_path);
 			}
@@ -89,7 +89,7 @@ export class MethodDependency extends CoreGraphNode {
 			instance.set_resolved_graph_node(node);
 		} else {
 			const {indexOrPath} = pathArgs;
-			if (CoreType.isString(indexOrPath)) {
+			if (isString(indexOrPath)) {
 				instance.set_unresolved_path(indexOrPath);
 			}
 		}

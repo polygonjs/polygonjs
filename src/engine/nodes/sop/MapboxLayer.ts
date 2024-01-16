@@ -9,7 +9,7 @@
  *
  */
 import {Object3D} from 'three';
-import {CoreType} from '../../../core/Type';
+import {isBoolean} from '../../../core/Type';
 import {FeatureConverter} from '../../../core/thirdParty/Mapbox/FeatureConverter';
 import {NodeParamsConfig, ParamConfig} from '../../nodes/utils/params/ParamsConfig';
 // import {MapboxListenerParamConfig, MapboxListenerSopNode} from './utils/MapboxListener';
@@ -133,7 +133,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		const currentValuesByName: Map<string, boolean> = new Map();
 		for (const spareParam of currentSpareParams) {
 			const value = spareParam.value;
-			if (CoreType.isBoolean(value)) {
+			if (isBoolean(value)) {
 				currentValuesByName.set(spareParam.name(), value);
 			}
 		}

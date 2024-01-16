@@ -16,7 +16,7 @@ import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
 import {EvaluatorEventData} from './ActorEvaluator';
 import {ActorAssemblerConstant} from './ActorAssemblerCommon';
-import {CoreType} from '../../../../../../core/Type';
+import {isFunction,isArray} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
@@ -194,10 +194,10 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		const eventDatas: EvaluatorEventData[] = [];
 		this.currentJsParentNode().childrenController?.traverseChildren((child) => {
 			const eventDataFunction = (child as BaseJsNodeType).eventData;
-			if (eventDataFunction && CoreType.isFunction(eventDataFunction)) {
+			if (eventDataFunction && isFunction(eventDataFunction)) {
 				const eventData = (child as BaseJsNodeType).eventData();
 				if (eventData) {
-					if (CoreType.isArray(eventData)) {
+					if (isArray(eventData)) {
 						eventDatas.push(...eventData);
 					} else {
 						eventDatas.push(eventData);

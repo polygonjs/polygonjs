@@ -8,7 +8,7 @@ import {
 } from '../../engine/nodes/rop/WebGLRenderer';
 import {defaultPixelRatio} from '../render/defaultPixelRatio';
 import {CameraAttribute} from './CoreCamera';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {NodeContext} from '../../engine/poly/NodeContext';
 import {TypedNode} from '../../engine/nodes/_Base';
@@ -67,7 +67,7 @@ export class CoreCameraRendererController {
 	static rendererNode(options: RendererRopOptions) {
 		const {scene, camera} = options;
 		const rendererROPId = coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
-		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
+		if (rendererROPId && isNumber(rendererROPId)) {
 			const rendererROP = scene.graph.nodeFromId(rendererROPId);
 			return rendererROP;
 		}

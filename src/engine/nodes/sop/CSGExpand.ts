@@ -10,7 +10,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/modules/csg/operations/CsgCorner';
 import {CsgGeometry, CsgGeometryType} from '../../../core/geometry/modules/csg/CsgCommon';
 import {csgGeometryTypeFromGeometry} from '../../../core/geometry/modules/csg/CsgCoreType';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {expansions, maths, geometries} from '@jscad/modeling';
 const {expand} = expansions;
 
@@ -78,7 +78,7 @@ export class CSGExpandSopNode extends CSGSopNode<CSGExpandSopParamsConfig> {
 				const is2D = type == CsgGeometryType.PATH2 || type == CsgGeometryType.GEOM2;
 				if (is2D || mode == ExpandMode._2D_AND_3D_ONLY) {
 					const result = expand(options, inputObject.csgGeometry());
-					if (CoreType.isArray(result)) {
+					if (isArray(result)) {
 						newGeometries.push(...result);
 					} else {
 						newGeometries.push(result as geometries.geom2.Geom2);

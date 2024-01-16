@@ -281,7 +281,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				const component = ALL_COMPONENTS[i];
 				assembly_args.push(`${noise}${component}`);
 				const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-				// if (CoreType.isArray(input_constructor)) {
+				// if (isArray(input_constructor)) {
 				// TODO: for noise3Dgrad and other noises with 2 inputs
 				// } else {
 				const offset_gl_type = input_type;
@@ -361,7 +361,7 @@ float ${this.fbmMethodName()}(in ${inputType} st) {
 
 		// add other args if required
 		// const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-		// if (CoreType.isArray(input_constructor)) {
+		// if (isArray(input_constructor)) {
 		// 	const properties = clone(input_constructor);
 		// 	properties.shift(); // remove position
 		// 	properties.forEach((property) => {

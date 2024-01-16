@@ -13,7 +13,7 @@
  * - `strCharCount('a word')` - returns 6
  *
  */
-import {CoreType} from './../../../core/Type';
+import {isString} from './../../../core/Type';
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
@@ -31,7 +31,7 @@ export class StrCharsCountExpression extends BaseMethod {
 	override async processArguments(args: any[]): Promise<number> {
 		if (args.length == 1) {
 			const string = args[0];
-			if (CoreType.isString(string)) {
+			if (isString(string)) {
 				return string.length;
 			}
 		}

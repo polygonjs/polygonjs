@@ -120,7 +120,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		// if (
 		// 	param_type == ParamType.VECTOR3 &&
 		// 	isBooleanTrue(this.p.asColor.value) &&
-		// 	CoreType.isArray(default_value) &&
+		// 	isArray(default_value) &&
 		// 	default_value.length == 3
 		// ) {
 		// 	const param_config = new JsParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniformName());

@@ -10,7 +10,7 @@ import {
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {arrayUniq} from '../ArrayUtils';
 import {stringToAttribNames, stringMatchMask} from '../String';
-import {CoreType} from '../Type';
+import {isString,isNumber,isArray} from '../Type';
 import {AttribSize, GroupString} from './Constant';
 
 export enum Attribute {
@@ -104,10 +104,10 @@ export class CoreAttribute {
 	}
 
 	static attribSizeFromValue(val: AttribValue): AttribSize | null {
-		if (CoreType.isString(val) || CoreType.isNumber(val)) {
+		if (isString(val) || isNumber(val)) {
 			return AttribSize.FLOAT;
 		}
-		if (CoreType.isArray(val)) {
+		if (isArray(val)) {
 			return val.length;
 		}
 

@@ -10,7 +10,7 @@ import {
 import {CameraAttribute} from '../CoreCamera';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../../engine/operations/sop/CameraWebXRARMarkerTracking';
-import {CoreType} from '../../Type';
+import {isString, isNumber} from '../../Type';
 import {Camera} from 'three';
 import {Poly} from '../../../engine/Poly';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../loader/FileExtensionRegister';
@@ -126,10 +126,10 @@ export class CoreCameraMarkerTrackingController {
 		) {
 			return;
 		}
-		if (!CoreType.isString(barCodeType)) {
+		if (!isString(barCodeType)) {
 			return;
 		}
-		if (!CoreType.isString(transformMode)) {
+		if (!isString(transformMode)) {
 			return;
 		}
 		if (!Poly.thirdParty.markerTracking().barCodeTypes().includes(barCodeType)) {
@@ -138,7 +138,7 @@ export class CoreCameraMarkerTrackingController {
 		if (!MARKER_TRACKING_TRANSFORM_MODES.includes(transformMode as MarkerTrackingTransformMode)) {
 			return;
 		}
-		if (!CoreType.isNumber(barCodeValue)) {
+		if (!isNumber(barCodeValue)) {
 			return;
 		}
 

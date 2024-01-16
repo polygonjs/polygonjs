@@ -10,7 +10,7 @@ import {
 import {BaseCorePoint, CorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
 // import {CoreGeometry} from './Geometry';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {CoreObjectType} from './ObjectContent';
@@ -225,7 +225,7 @@ export class CoreInstancer {
 			let i = 0;
 			for (const pt of _instancePts) {
 				const value = pt.attribValue(attribName);
-				if (CoreType.isNumber(value)) {
+				if (isNumber(value)) {
 					values[i] = value;
 				} else {
 					(value as Vector3).toArray(values, i * attribSize);

@@ -1,7 +1,7 @@
 import {Vector3} from 'three';
 import {arraySum, arrayMax} from '../ArrayUtils';
 import {BaseCorePoint} from '../geometry/entities/point/CorePoint';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 
 const _positionSrc = new Vector3();
 const _positionDest = new Vector3();
@@ -48,7 +48,7 @@ export class CoreInterpolate {
 		const distance = _positionDest.distanceTo(_positionSrc);
 
 		const value_src = point_src.attribValue(attrib_name);
-		if (CoreType.isNumber(value_src)) {
+		if (isNumber(value_src)) {
 			return this._weighted_value_from_distance(
 				point_dest,
 				value_src,
@@ -79,7 +79,7 @@ export class CoreInterpolate {
 			return value_src;
 		} else {
 			const value_dest = point_dest.attribValue(attrib_name);
-			if (CoreType.isNumber(value_dest)) {
+			if (isNumber(value_dest)) {
 				const blend = this._weight_from_distance(distance, distance_threshold, blend_with);
 				return blend * value_dest + (1 - blend) * value_src;
 			} else {

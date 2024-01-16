@@ -5,10 +5,9 @@
  */
 import {TypedJsNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-// import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {CoreType} from '../../../core/Type';
+import {isNumber} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {JsConnectionPointType, JS_CONNECTION_TYPES_FOR_CONSTANT} from '../utils/io/connections/Js';
 import {ConstantJsDefinition} from './utils/JsDefinition';
@@ -121,7 +120,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 			// ensure that it is an integer when needed
 			// as ThreeToGl.any can only detect if this is a number for now
 			// and therefore does not make the distinction between float and int
-			if (param.name() == this.p.int.name() && CoreType.isNumber(param.value)) {
+			if (param.name() == this.p.int.name() && isNumber(param.value)) {
 				value = ThreeToGl.integer(param.value);
 			}
 			return value;

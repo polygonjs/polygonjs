@@ -18,7 +18,7 @@
 // 	referenced_asset(): string | null {
 // 		if (this.param.options.asset_reference) {
 // 			const val = this.param.value;
-// 			if (CoreType.isString(val)) {
+// 			if (isString(val)) {
 // 				return val;
 // 			}
 // 			return null;

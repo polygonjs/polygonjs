@@ -37,7 +37,7 @@
 // 			console.warn('no main camera found');
 // 			return;
 // 		}
-// 		const element = CoreType.isString(data.domElement) ? document.getElementById(data.domElement) : data.domElement;
+// 		const element = isString(data.domElement) ? document.getElementById(data.domElement) : data.domElement;
 // 		if (!element) {
 // 			console.warn('no element to mount the viewer onto');
 // 			return;

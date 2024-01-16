@@ -12,6 +12,7 @@ export function isNumber(value: any): value is number {
 export function isNumberValid(value: any): value is number {
 	return isNumber(value) && !isNaN(value);
 }
+export const coreTypeIsNaN = isNaN;
 // export function _isNaN(value: any): boolean {
 // 	return isNaN(value);
 // }
@@ -58,7 +59,7 @@ export class CoreType {
 	static isQuaternion = isQuaternion;
 	static isString = isString;
 	static isBoolean = isBoolean;
-	static isNaN = isNaN;
+	static isNaN = coreTypeIsNaN;
 	static isArray = isArray;
 	static isObject = isObject;
 	static isFunction = isFunction;

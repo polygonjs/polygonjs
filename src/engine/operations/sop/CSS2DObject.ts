@@ -81,10 +81,10 @@
 // 				const attribNames = CoreString.attribNames(params.attributesToCopy);
 // 				for (let attribName of attribNames) {
 // 					const attribValue = point.attribValue(attribName);
-// 					if (CoreType.isString(attribValue)) {
+// 					if (isString(attribValue)) {
 // 						element.setAttribute(attribName, attribValue);
 // 					} else {
-// 						if (CoreType.isNumber(attribValue)) {
+// 						if (isNumber(attribValue)) {
 // 							element.setAttribute(attribName, `${attribValue}`);
 // 						}
 // 					}

@@ -1,9 +1,5 @@
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {Color} from 'three';
-import {Quaternion} from 'three';
-import {Object3D} from 'three';
+import {Object3D,Quaternion,Color,Vector2,Vector3,Vector4} from 'three';
+import {} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {ParamType} from '../../engine/poly/ParamType';
@@ -11,7 +7,7 @@ import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {Poly} from '../../engine/Poly';
-import {CoreType} from '../Type';
+import {isNumber,isEuler,isVector,isColor,isQuaternion} from '../Type';
 import {ColorParam} from '../../engine/params/Color';
 import {IntegerParam} from '../../engine/params/Integer';
 import {RegisterableProperty} from './AnimatedPropertiesRegister';
@@ -79,7 +75,7 @@ export class TimelineBuilderProperty {
 			cloned.setName(this._propertyName);
 		}
 		if (this._targetValue != null) {
-			const newTargetValue = CoreType.isNumber(this._targetValue) ? this._targetValue : this._targetValue.clone();
+			const newTargetValue = isNumber(this._targetValue) ? this._targetValue : this._targetValue.clone();
 			cloned.setTargetValue(newTargetValue);
 		}
 
@@ -177,36 +173,36 @@ export class TimelineBuilderProperty {
 			);
 		}
 		// number
-		if (CoreType.isNumber(targetProperty)) {
-			if (CoreType.isNumber(targetValue)) {
+		if (isNumber(targetProperty)) {
+			if (isNumber(targetValue)) {
 				return populateVarsForNumber({targetValue, vars, targetProperty, propertyNames, operation});
 			}
 			return warnMismatch('number');
 		}
-		// euler (needs to be positioned before the CoreType.isVector, as it would other be caught in the isVector )
+		// euler (needs to be positioned before the isVector, as it would other be caught in the isVector )
 		// note that for euler, we first test targetProperty, as otherwise a 'position' property would test true here
-		if (CoreType.isEuler(targetProperty)) {
+		if (isEuler(targetProperty)) {
 			if (targetValue instanceof Vector3) {
 				return populateVarsForEuler({targetValue, vars, targetProperty, propertyNames, operation});
 			}
 			return warnMismatch('euler');
 		}
 		// vector
-		if (CoreType.isVector(targetProperty)) {
-			if (CoreType.isVector(targetValue)) {
+		if (isVector(targetProperty)) {
+			if (isVector(targetValue)) {
 				return populateVarsForVector({targetValue, vars, targetProperty, propertyNames, operation});
 			}
 			return warnMismatch('vector');
 		}
 		// color
-		if (CoreType.isColor(targetProperty)) {
-			if (CoreType.isColor(targetValue)) {
+		if (isColor(targetProperty)) {
+			if (isColor(targetValue)) {
 				return populateVarsForColor({targetValue, vars, targetProperty, propertyNames, operation});
 			}
 			return warnMismatch('color');
 		}
 
-		if (CoreType.isQuaternion(targetProperty)) {
+		if (isQuaternion(targetProperty)) {
 			//
 		}
 		Poly.warn(`targetValue and targetProp are not recognized types`, targetValue, targetProperty);
@@ -227,7 +223,7 @@ export class TimelineBuilderProperty {
 			const targetProperty = (object as any)[propertyName as any] as AnimPropertyTargetValue;
 			let toTarget: object | null = null;
 			const propertyNames: string[] = [];
-			if (CoreType.isNumber(targetProperty)) {
+			if (isNumber(targetProperty)) {
 				toTarget = object;
 				propertyNames.push(propertyName);
 			} else {

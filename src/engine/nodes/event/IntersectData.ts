@@ -12,7 +12,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {Intersection} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {CoreType} from '../../../core/Type';
+import {isString, isNumber, isArray, isVector} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {resolveIntersectGeometryAttribute} from '../../../core/geometry/intersect/CoreIntersect';
 import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
@@ -125,7 +125,7 @@ export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsCo
 					return;
 				}
 				case AttribType.STRING: {
-					if (CoreType.isString(attribValue)) {
+					if (isString(attribValue)) {
 						this.p.attributeValues.set(attribValue);
 					}
 					return;
@@ -140,13 +140,13 @@ export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsCo
 		if (value == null) {
 			return;
 		}
-		if (CoreType.isNumber(value) || CoreType.isString(value)) {
+		if (isNumber(value) || isString(value)) {
 			return value;
 		}
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			return value[0];
 		}
-		if (CoreType.isVector(value)) {
+		if (isVector(value)) {
 			return value.x;
 		}
 	}

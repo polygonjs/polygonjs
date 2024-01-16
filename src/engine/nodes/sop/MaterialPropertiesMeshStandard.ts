@@ -71,7 +71,7 @@
 
 // 		for (let selectedObject of selectedObjects) {
 // 			const material = (selectedObject as Mesh).material;
-// 			if (CoreType.isArray(material)) {
+// 			if (isArray(material)) {
 // 				for (let mat of material) {
 // 					this._updateMaterial(mat);
 // 				}

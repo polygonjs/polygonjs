@@ -7,7 +7,7 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ColorConversion} from '../../core/Color';
 import {TypeAssert} from '../poly/Assert';
-import {CoreType} from '../../core/Type';
+import {isArray} from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 const tmp: Number3 = [0, 0, 0];
@@ -35,7 +35,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		return COMPONENT_NAMES_COLOR;
 	}
 	override defaultValueSerialized() {
-		if (CoreType.isArray(this._default_value)) {
+		if (isArray(this._default_value)) {
 			return this._default_value;
 		} else {
 			return this._default_value.toArray() as Number3;

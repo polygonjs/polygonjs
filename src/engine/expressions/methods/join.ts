@@ -15,7 +15,7 @@
  * - `join([1,2,3],',')` - returns '1,2,3'
  *
  */
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 import {BaseMethod} from './_Base';
 
 export class JoinExpression extends BaseMethod {
@@ -33,7 +33,7 @@ export class JoinExpression extends BaseMethod {
 			if (separator == null) {
 				separator = ' ';
 			}
-			if (CoreType.isArray(arg)) {
+			if (isArray(arg)) {
 				return arg.join(separator);
 			}
 		}

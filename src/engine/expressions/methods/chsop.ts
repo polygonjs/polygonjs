@@ -14,7 +14,7 @@
  * - `chsop('./material1/material')` - returns the value of the parameter material of node ./material1
  *
  */
-import {CoreType} from './../../../core/Type';
+import {isString} from './../../../core/Type';
 import {BaseMethodFindDependencyArgs} from './_Base';
 import {TypedParamPathParamValue, TypedNodePathParamValue} from './../../../core/Walker';
 import {BaseMethod} from './_Base';
@@ -33,7 +33,7 @@ export class ChsopExpression extends BaseMethod {
 		if (indexOrPath == null) {
 			return null;
 		}
-		if (!CoreType.isString(indexOrPath)) {
+		if (!isString(indexOrPath)) {
 			return null;
 		}
 		const decomposedPath = new DecomposedPath();

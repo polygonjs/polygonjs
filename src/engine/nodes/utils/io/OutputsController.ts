@@ -2,11 +2,11 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
-import {CoreType} from '../../../../core/Type';
+import {isNumber, isString} from '../../../../core/Type';
 import {arrayUniq} from '../../../../core/ArrayUtils';
 import {TypedNodeConnection} from './NodeConnection';
 
-const _uniqOutputIndices:number[]=[]
+const _uniqOutputIndices: number[] = [];
 const _usedOutputIndices: number[] = [];
 
 export class OutputsController<NC extends NodeContext> {
@@ -82,7 +82,7 @@ export class OutputsController<NC extends NodeContext> {
 	}
 	private _getOutputIndex(output_index_or_name: number | string): number {
 		if (output_index_or_name != null) {
-			if (CoreType.isString(output_index_or_name)) {
+			if (isString(output_index_or_name)) {
 				if (this.hasNamedOutputs()) {
 					return this.getNamedOutputIndex(output_index_or_name);
 				} else {
@@ -136,15 +136,16 @@ export class OutputsController<NC extends NodeContext> {
 		const connectionsController = this.node.io.connections;
 		if (connectionsController) {
 			connectionsController.outputConnections(this._connections);
-			
-			 arrayUniq(
-				this._connections.map((connection) => (connection ? connection.outputIndex() : null))
-			,_uniqOutputIndices);
+
+			arrayUniq(
+				this._connections.map((connection) => (connection ? connection.outputIndex() : null)),
+				_uniqOutputIndices
+			);
 			// outputIndices = arrayUniq(output_indices);
 			// const used_output_indices: number[] = [];
 			_usedOutputIndices.length = 0;
-			for(const index of _uniqOutputIndices){
-				if (CoreType.isNumber(index)) {
+			for (const index of _uniqOutputIndices) {
+				if (isNumber(index)) {
 					_usedOutputIndices.push(index);
 				}
 			}

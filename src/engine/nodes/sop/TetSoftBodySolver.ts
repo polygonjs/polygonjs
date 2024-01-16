@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreType, isArray} from '../../../core/Type';
+import {isBoolean, isNumberValid, isColor, isVector, isArray, isFunction} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
@@ -386,10 +386,10 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 				const spareParam = this.params.get(paramName);
 				if (spareParam && spareParam.value != null) {
 					if (
-						CoreType.isBoolean(spareParam.value) ||
-						CoreType.isNumberValid(spareParam.value) ||
-						CoreType.isColor(spareParam.value) ||
-						CoreType.isVector(spareParam.value)
+						isBoolean(spareParam.value) ||
+						isNumberValid(spareParam.value) ||
+						isColor(spareParam.value) ||
+						isVector(spareParam.value)
 					) {
 						list[i] = spareParam.value;
 						i++;
@@ -420,7 +420,7 @@ export function getSoftBodyControllerNodeFromSolverObject(
 	if (!graphNode) {
 		return;
 	}
-	const node: BaseNodeType | null = CoreType.isFunction((graphNode as BaseNodeType).context)
+	const node: BaseNodeType | null = isFunction((graphNode as BaseNodeType).context)
 		? (graphNode as BaseNodeType)
 		: null;
 	if (!node) {

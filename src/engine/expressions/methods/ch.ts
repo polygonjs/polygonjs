@@ -14,7 +14,7 @@
  * - `ch('/geo1/tx')` - returns the value of the tx of the node /geo1
  *
  */
-import {CoreType} from './../../../core/Type';
+import {isString} from './../../../core/Type';
 import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';
@@ -32,7 +32,7 @@ export class ChExpression extends BaseMethod {
 		if (indexOrPath == null) {
 			return null;
 		}
-		if (!CoreType.isString(indexOrPath)) {
+		if (!isString(indexOrPath)) {
 			return null;
 		}
 		const decomposedPath = new DecomposedPath();

@@ -2,7 +2,7 @@ import {Material, Matrix4, Box3, Sphere, Object3D, Vector3, Quaternion, Euler} f
 import {SDFGeometry, SDFObjectType, SDFTesselationParams} from './SDFCommon';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../../ObjectContent';
 import {SDFGeometryToObject3D} from './toObject3D/SDFToObject3D';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {Number3} from '../../../../types/GlobalTypes';
 import {SDFLoaderSync} from './SDFLoaderSync';
 
@@ -116,7 +116,7 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	toObject3D(tesselationParams: SDFTesselationParams): Object3D | Object3D[] | undefined {
 		const object = SDFGeometryToObject3D(this.geometry, tesselationParams);
 		if (object) {
-			if (CoreType.isArray(object)) {
+			if (isArray(object)) {
 				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}

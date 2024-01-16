@@ -8,7 +8,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {isNumber, isBooleanTrue} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES_FOR_CONSTANT} from '../utils/io/connections/Gl';
 import {GlType} from '../../poly/registers/nodes/types/Gl';
@@ -117,7 +117,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 			// ensure that it is an integer when needed
 			// as ThreeToGl.any can only detect if this is a number for now
 			// and therefore does not make the distinction between float and int
-			if (param.name() == this.p.int.name() && CoreType.isNumber(param.value)) {
+			if (param.name() == this.p.int.name() && isNumber(param.value)) {
 				value = ThreeToGl.integer(param.value);
 			}
 			return value;

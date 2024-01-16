@@ -3,7 +3,7 @@ import {stringMatchesOneMask, stringToAttribNames} from '../../String';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {Attribute, CoreAttribute} from '../../geometry/Attribute';
-import {CoreType} from '../../Type';
+import {isString, isObject, isArray} from '../../Type';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
 import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 
@@ -82,7 +82,7 @@ export class JSONDataParser {
 				if (data.type() === AttribType.STRING) {
 					if (this._options.doConvert && stringMatchesOneMask(attrib_name, convert_to_numeric_masks)) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
-							if (CoreType.isString(v)) {
+							if (isString(v)) {
 								return parseFloat(v) || 0;
 							} else {
 								return v;
@@ -162,6 +162,6 @@ export class JSONDataParser {
 	}
 
 	_value_has_subentries(value: any): boolean {
-		return CoreType.isObject(value) && !CoreType.isArray(value);
+		return isObject(value) && !isArray(value);
 	}
 }

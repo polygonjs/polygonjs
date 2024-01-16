@@ -1,7 +1,7 @@
 import {Texture, Material} from 'three';
 import {NamedFunction1} from './_Base';
 import {NodeContext} from '../poly/NodeContext';
-import {CoreType} from '../../core/Type';
+import {isFunction} from '../../core/Type';
 import {BaseCopNodeType} from '../nodes/cop/_Base';
 import {BasePrimitiveMatNodeType} from '../nodes/mat/_Base';
 import {getOrCreateNodeRef} from '../../core/reactivity/NodeReactivity';
@@ -16,7 +16,7 @@ export class getTexture extends NamedFunction1<[string]> {
 
 		const node = this.scene.node(nodePath);
 		if (node && node.context() == NodeContext.COP) {
-			if (CoreType.isFunction((node as BaseCopNodeType).__textureSync__)) {
+			if (isFunction((node as BaseCopNodeType).__textureSync__)) {
 				if (node.isDirty()) {
 					node.compute();
 				}
@@ -35,7 +35,7 @@ export class getMaterial extends NamedFunction1<[string]> {
 
 		const node = this.scene.node(nodePath);
 		if (node && node.context() == NodeContext.MAT) {
-			if (node && CoreType.isFunction((node as BasePrimitiveMatNodeType).__materialSync__)) {
+			if (node && isFunction((node as BasePrimitiveMatNodeType).__materialSync__)) {
 				if (node.isDirty()) {
 					node.compute();
 				}

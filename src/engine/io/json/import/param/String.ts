@@ -9,7 +9,7 @@ export class ParamStringJsonImporter extends ParamJsonImporter<StringParam> {
 	override add_main(data: ComplexParamJsonExporterData<ParamType.STRING>) {
 		let raw_input = data['raw_input'];
 		if (raw_input !== undefined) {
-			// if (CoreType.isString(value)) {
+			// if (isString(value)) {
 			raw_input = raw_input.replace(LINE_BREAK_REGEXP, '\n');
 			this._param.set(raw_input);
 			// }

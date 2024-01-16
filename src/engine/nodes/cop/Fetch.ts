@@ -8,7 +8,7 @@ import {Material, Mesh, Texture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreMask} from '../../../core/geometry/Mask';
-import {CoreType} from '../../../core/Type';
+import {isArray} from '../../../core/Type';
 
 class FetchCopParamsConfig extends NodeParamsConfig {
 	/** @param sop node */
@@ -53,7 +53,7 @@ export class FetchCopNode extends TypedCopNode<FetchCopParamsConfig> {
 		for (const selectedObject of selectedObjects) {
 			const material = (selectedObject as Mesh).material;
 			if (material) {
-				if (CoreType.isArray(material)) {
+				if (isArray(material)) {
 					for (const mat of material) {
 						texture = texture || this._textureFromMaterial(mat);
 					}
@@ -68,7 +68,7 @@ export class FetchCopNode extends TypedCopNode<FetchCopParamsConfig> {
 		}
 		this.setTexture(texture);
 	}
-	private _textureFromMaterial(material: Material):Texture|undefined {
+	private _textureFromMaterial(material: Material): Texture | undefined {
 		const textureName = this.pv.name;
 		const texture = material[textureName as keyof Material];
 		if (texture && (texture as Texture).isTexture) {

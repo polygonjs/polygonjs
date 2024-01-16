@@ -9,7 +9,7 @@ import {FFT} from 'tone/build/esm/component/analysis/FFT';
 import {AudioNodeAnalyserType} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {effectParamsOptions} from './utils/EffectsController';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {isNumber, isBooleanTrue} from '../../../core/Type';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
 import {Number2} from '../../../types/GlobalTypes';
 import {
@@ -205,10 +205,10 @@ export class FFTAudioNode extends BaseAnalyserAudioNode<FFTAudioParamsConfig> {
 		const max = Math.max(...values);
 		this.p.range.set([min, max]);
 
-		if (min < this.pv.maxRange.x && CoreType.isNumber(min) && isFinite(min)) {
+		if (min < this.pv.maxRange.x && isNumber(min) && isFinite(min)) {
 			this.p.maxRange.x.set(min);
 		}
-		if (max > this.pv.maxRange.y && CoreType.isNumber(max) && isFinite(max)) {
+		if (max > this.pv.maxRange.y && isNumber(max) && isFinite(max)) {
 			this.p.maxRange.y.set(max);
 		}
 	}

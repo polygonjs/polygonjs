@@ -3,7 +3,7 @@ import {BufferGeometry} from 'three';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {Attribute, CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';
-import {CoreType} from '../../Type';
+import {isString} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreBaseLoader} from '../_Base';
@@ -75,7 +75,7 @@ export class CsvLoader extends CoreBaseLoader<string> {
 		}
 	}
 	private _value_from_line_element(attribute_value: number | string) {
-		if (CoreType.isString(attribute_value)) {
+		if (isString(attribute_value)) {
 			if (`${parseFloat(attribute_value)}` === attribute_value) {
 				return parseFloat(attribute_value);
 			} else if (attribute_value[0] === '[' && attribute_value[attribute_value.length - 1] === ']') {

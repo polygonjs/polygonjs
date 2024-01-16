@@ -31,7 +31,7 @@
 // 			for (let sdfObject of sdfObjects) {
 // 				const objects = sdfObject.toObject3D(this.pv);
 // 				if (objects) {
-// 					if (CoreType.isArray(objects)) {
+// 					if (isArray(objects)) {
 // 						newObjects.push(...objects);
 // 					} else {
 // 						newObjects.push(objects);

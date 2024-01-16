@@ -9,7 +9,7 @@ import {
 	ObjectContentCopyPropertiesOptions,
 } from '../../ObjectContent';
 import {quadToObject3D} from './toObject3D/QuadToObject3D';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 
 const _box = new Box3();
 const _size = new Vector3();
@@ -72,7 +72,7 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 		};
 
 		if (object) {
-			if (CoreType.isArray(object)) {
+			if (isArray(object)) {
 				for (const element of object) {
 					_objectContentCopyProperties(this, element);
 				}

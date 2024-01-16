@@ -106,30 +106,19 @@ export class TransformSopOperation extends BaseSopOperation {
 		}
 		TypeAssert.unreachable(mode);
 	}
-	// private _applyCadTransform(objects: CadCoreObject<CadGeometryType>[]|undefined, params: TransformSopParams) {
-	// 	if(!objects){
-	// 		return
-	// 	}
-	// 	for(let object of objects){
-	// 		cadTransform(object, params.t, params.r, params.scale)
-	// 	}
-	// }
 
 	private _updateGeometry(object: Object3D, params: TransformSopParams) {
 		const matrix = this._matrix(params);
 
 		const pointGroup = params.pointGroup;
 		if (pointGroup.trim() === '') {
-			// object.traverse((childObject) => {
 			const geometry = (object as Object3DWithGeometry).geometry;
 			if (geometry) {
 				geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
 				geometry.applyMatrix4(matrix);
 				geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
 			}
-			// });
 		} else {
-			// const coreGroup = CoreGroup._fromObjects(objects);
 			pointsFromObjectFromGroup(object, pointGroup, _points);
 			for (const point of _points) {
 				const position = point.position(_pointPos).sub(params.pivot);

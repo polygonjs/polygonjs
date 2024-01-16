@@ -10,12 +10,12 @@ import {watch} from '@vue-reactivity/watch';
 // 	if (seen.has(value)) {
 // 		return value;
 // 	}
-// 	if (!CoreType.isObject(value)) {
+// 	if (!isObject(value)) {
 // 		return value;
 // 	}
 
 // 	seen.add(value); // prevent circular reference
-// 	if (CoreType.isArray(value)) {
+// 	if (isArray(value)) {
 // 		for (let i = 0; i < value.length; i++) traverse(value[i], seen);
 // 	} else {
 // 		for (const key of Object.keys(value)) traverse((value as any)[key], seen);

@@ -1,4 +1,4 @@
-import {CoreType} from './../../core/Type';
+import {isString} from './../../core/Type';
 import {BaseParamType} from './_Base';
 import {TypedPathParam} from './_BasePath';
 import {CoreWalker, TypedParamPathParamValue} from '../../core/Walker';
@@ -48,13 +48,13 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	}
 
 	protected _assignValue(value: ParamValuesTypeMap[ParamType.PARAM_PATH] | string): void {
-		const path = CoreType.isString(value) ? value : value.path();
+		const path = isString(value) ? value : value.path();
 		if (this._value.path() != path) {
 			this._setValuePathAndFindTarget(path, false);
 		}
 	}
 	override convert(rawVal: any): ParamValuesTypeMap[ParamType.PARAM_PATH] | null {
-		if (CoreType.isString(rawVal)) {
+		if (isString(rawVal)) {
 			tmpConvertedValue.setPath(rawVal);
 			return tmpConvertedValue;
 		} else {

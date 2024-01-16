@@ -2,7 +2,7 @@ import {FloatParam} from '../../../../engine/params/Float';
 import {IntegerParam} from '../../../../engine/params/Integer';
 import {Poly} from '../../../../engine/Poly';
 import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
-import {CoreType} from '../../../Type';
+import {isNumber} from '../../../Type';
 import {NodeParamProxiesRegister} from '../../NodeParamProxiesRegister';
 import {FloatParamProxy, IntegerParamProxy} from '../../ParamProxy';
 import {AnimPropertyTargetValue} from '../../TimelineBuilderProperty';
@@ -16,7 +16,7 @@ export function populateVarsForSingleNumber(
 	targetValue: AnimPropertyTargetValue,
 	options: AddToTimelineOptions
 ) {
-	if (!CoreType.isNumber(targetValue)) {
+	if (!isNumber(targetValue)) {
 		Poly.warn(
 			`TimelineBuilderProperty error: cannot animate float/integer param '${param.path()}' with targetValue`,
 			targetValue

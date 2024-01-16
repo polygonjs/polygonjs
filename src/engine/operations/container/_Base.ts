@@ -8,7 +8,7 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {BaseOperation} from '../_Base';
 import {OperationInputsController} from './utils/InputsController';
-import {CoreType} from '../../../core/Type';
+import {isNumber, isBoolean, isString} from '../../../core/Type';
 import {NodeContext} from '../../poly/NodeContext';
 import {DefaultOperationParam, DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -75,7 +75,7 @@ export class BaseOperationContainer<NC extends NodeContext> {
 	}
 
 	private _convertParamData(param_name: string, param_data: DefaultOperationParam<ParamType>) {
-		if (CoreType.isNumber(param_data) || CoreType.isBoolean(param_data) || CoreType.isString(param_data)) {
+		if (isNumber(param_data) || isBoolean(param_data) || isString(param_data)) {
 			return param_data;
 		}
 		if (param_data instanceof TypedNodePathParamValue) {

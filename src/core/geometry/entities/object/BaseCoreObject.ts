@@ -3,7 +3,7 @@ import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {AttribType, AttribSize, ObjectData, GroupString, AttribClass} from '../../Constant';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
-import {CoreType} from '../../../Type';
+import {isArray,isVector,isColor,isString} from '../../../Type';
 import {
 	ObjectContent,
 	CoreObjectType,
@@ -133,7 +133,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		this.addAttribute(object, attribName, value);
 	}
 	static addAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string, value: AttribValue) {
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			const convertedValue = _convertArrayToVector(value);
 			if (!convertedValue) {
 				const message = `value invalid`;
@@ -368,7 +368,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 				return _attribFromProperty();
 			} else {
 				// const val = _ref.value;
-				if (CoreType.isVector(val) && target) {
+				if (isVector(val) && target) {
 					if (val instanceof Vector2 && target instanceof Vector2) {
 						return target.copy(val);
 					}
@@ -379,12 +379,12 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 						return target.copy(val);
 					}
 				}
-				if (CoreType.isColor(val) && target) {
+				if (isColor(val) && target) {
 					if (val instanceof Color && target instanceof Color) {
 						return target.copy(val);
 					}
 				}
-				if (CoreType.isArray(val) && target) {
+				if (isArray(val) && target) {
 					target.fromArray(val);
 					return target;
 				}
@@ -409,7 +409,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	): string | null {
 		const str = this.attribValue(object, attribName, index);
 		if (str != null) {
-			if (CoreType.isString(str)) {
+			if (isString(str)) {
 				return str;
 			} else {
 				return `${str}`;
@@ -521,7 +521,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	}
 	static attribType<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		const val = this.attribValue(object, attribName);
-		if (CoreType.isString(val)) {
+		if (isString(val)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;

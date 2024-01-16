@@ -57,7 +57,7 @@ export function MathFunctionArgNOperationFactory(
 			// // if (isPrimitive) {
 			// // 	return values.join(' + ');
 			// // }
-			// // if (CoreType.isVector(firstType)) {
+			// // if (isVector(firstType)) {
 			// // 	return values.join('.add(') + ')';
 			// // }
 

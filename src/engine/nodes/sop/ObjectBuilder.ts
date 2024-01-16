@@ -28,7 +28,7 @@ import {SingleBodyFunctionData} from '../js/code/assemblers/_Base';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {Group, Object3D} from 'three';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {CoreType} from '../../../core/Type';
+import {isBoolean, isNumberValid, isColor, isVector} from '../../../core/Type';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {CoreMask} from '../../../core/geometry/Mask';
@@ -254,10 +254,10 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 			const spareParam = this.params.get(paramName);
 			if (spareParam && spareParam.value != null) {
 				if (
-					CoreType.isBoolean(spareParam.value) ||
-					CoreType.isNumberValid(spareParam.value) ||
-					CoreType.isColor(spareParam.value) ||
-					CoreType.isVector(spareParam.value)
+					isBoolean(spareParam.value) ||
+					isNumberValid(spareParam.value) ||
+					isColor(spareParam.value) ||
+					isVector(spareParam.value)
 				) {
 					list.push(spareParam.value);
 				} else {

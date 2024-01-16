@@ -1,6 +1,6 @@
 import {CadGeometryType, CAD_GEOMETRY_TYPES_SET, CAD_GEOMETRY_TYPES_SET_SHAPE} from './CadCommon';
 import type {CadGeometryTypeShape, CadTypeMap, CadShape} from './CadCommon';
-import {CoreType} from '../../../Type';
+import {isFunction} from '../../../Type';
 import type {CadObject} from './CadObject';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 
@@ -52,6 +52,6 @@ export class CoreCadType {
 		return CAD_GEOMETRY_TYPES_SET_SHAPE.has(object.type as CadGeometryTypeShape);
 	}
 	static isGeometryShape<T extends CadGeometryType>(geometry: CadTypeMap[T] | CadShape): geometry is CadShape {
-		return CoreType.isFunction((geometry as CadShape).ShapeType);
+		return isFunction((geometry as CadShape).ShapeType);
 	}
 }

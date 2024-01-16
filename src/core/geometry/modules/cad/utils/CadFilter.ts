@@ -1,4 +1,4 @@
-import {CoreType} from '../../../../Type';
+import {isArray} from '../../../../Type';
 import {CadGeometryType, CadGeometryTypeShape} from '../CadCommon';
 import {CoreCadType} from '../CadCoreType';
 import {CadObject} from '../CadObject';
@@ -10,7 +10,7 @@ export function cadFilterObjects<T extends CadGeometryType>(
 	if (!cadObjects) {
 		return undefined;
 	}
-	if (CoreType.isArray(type)) {
+	if (isArray(type)) {
 		return cadObjects.filter((o) => type.includes(o.type as T)) as CadObject<T>[];
 	} else {
 		return cadObjects.filter((o) => o.type == type) as CadObject<T>[];

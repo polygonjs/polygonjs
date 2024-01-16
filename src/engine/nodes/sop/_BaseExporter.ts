@@ -13,7 +13,7 @@ import {Scene} from 'three';
 import {Object3D} from 'three';
 import {downloadBlob} from '../../../core/BlobUtils';
 import {StringParam} from '../../params/String';
-import {CoreType} from '../../../core/Type';
+import {isString} from '../../../core/Type';
 
 type Result = ArrayBuffer | string | object;
 const previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
@@ -97,7 +97,7 @@ function _createBlob(result: Result) {
 		return new Blob([result], {type: 'application/octet-stream'});
 	}
 
-	if (CoreType.isString(result)) {
+	if (isString(result)) {
 		return new Blob([result], {type: 'text/plain'});
 	}
 

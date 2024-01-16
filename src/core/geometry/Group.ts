@@ -4,7 +4,7 @@ import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector2, Vec
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
-import {CoreType} from '../Type';
+import {isString} from '../Type';
 import {arraySum, arrayCompact, arrayPushItems, arrayCopy} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
@@ -453,7 +453,7 @@ export class CoreGroup extends CoreEntity {
 	}
 	attribType(name: string) {
 		const val = this.attribValue(name);
-		if (CoreType.isString(val)) {
+		if (isString(val)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;

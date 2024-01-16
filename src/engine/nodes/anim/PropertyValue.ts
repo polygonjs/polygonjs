@@ -5,7 +5,7 @@
  */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-import {CoreType} from '../../../core/Type';
+import {isNumber, isVector} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {Object3D} from 'three';
 import {Quaternion} from 'three';
@@ -164,7 +164,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		if (foundObject) {
 			const value: any = foundObject[propertyName as keyof Object3D];
 			if (value) {
-				if (CoreType.isNumber(value) || CoreType.isVector(value) || value instanceof Quaternion) {
+				if (isNumber(value) || isVector(value) || value instanceof Quaternion) {
 					timelineBuilder.setPropertyValue(value);
 				}
 			}
@@ -191,7 +191,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		}
 		const value = param.value;
 		if (value) {
-			if (CoreType.isNumber(value) || CoreType.isVector(value)) {
+			if (isNumber(value) || isVector(value)) {
 				timelineBuilder.setPropertyValue(value);
 			}
 		}

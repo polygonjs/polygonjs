@@ -5,7 +5,7 @@ import {Vector3} from 'three';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isArray} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR3: Readonly<string[]> = ['x', 'y', 'z'];
 const tmp: Number3 = [0, 0, 0];
@@ -29,7 +29,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		return COMPONENT_NAMES_VECTOR3;
 	}
 	override defaultValueSerialized() {
-		if (CoreType.isArray(this._default_value)) {
+		if (isArray(this._default_value)) {
 			return this._default_value;
 		} else {
 			return this._default_value.toArray() as Number3;
@@ -112,9 +112,9 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	// set_raw_input_from_components() {
 	// 	if (this._raw_input instanceof Vector3) {
 	// 		if (
-	// 			CoreType.isNumber(this.x.raw_input) &&
-	// 			CoreType.isNumber(this.y.raw_input) &&
-	// 			CoreType.isNumber(this.z.raw_input)
+	// 			isNumber(this.x.raw_input) &&
+	// 			isNumber(this.y.raw_input) &&
+	// 			isNumber(this.z.raw_input)
 	// 		) {
 	// 			this._raw_input.x = this.x.raw_input;
 	// 			this._raw_input.y = this.y.raw_input;
@@ -134,7 +134,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		this._value.z = this.z.value;
 	}
 	// convert(input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
-	// 	if (CoreType.isArray(input)) {
+	// 	if (isArray(input)) {
 	// 		return new Vector3().fromArray(input);
 	// 	}
 	// 	return new Vector3();

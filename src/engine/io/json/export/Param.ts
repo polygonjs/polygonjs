@@ -1,9 +1,8 @@
 import {BaseParamType} from '../../../params/_Base';
 import {ParamType} from '../../../poly/ParamType';
-
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {OverridenOptions, ComplexParamJsonExporterData} from '../../../nodes/utils/io/IOController';
-import {CoreType} from '../../../../core/Type';
+import {isString,isNumber} from '../../../../core/Type';
 
 export class ParamJsonExporter<T extends BaseParamType> {
 	// protected _simple_data: SimpleParamJsonExporterData<ParamType>=0;
@@ -55,7 +54,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 			const options_overridden = this._param.options.overriddenOptions();
 			for (let option_name of Object.keys(options_overridden)) {
 				const option_value = options_overridden[option_name as keyof ParamOptions];
-				if (CoreType.isString(option_value) || CoreType.isNumber(option_value)) {
+				if (isString(option_value) || isNumber(option_value)) {
 					overridden_options[option_name] = option_value;
 				} else {
 					overridden_options[option_name] = JSON.stringify(option_value);
@@ -85,10 +84,10 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	// gets saved as a string '[1,1]' instead of an array [1,1] (should be without quotes)
 	// protected default_value(){
 	// 	let default_value = this._param.default_value()
-	// 	if(CoreType.isString(default_value)){
+	// 	if(isString(default_value)){
 	// 		default_value = `'${default_value}'`
 	// 	}
-	// 	if (CoreType.isArray(default_value)){
+	// 	if (isArray(default_value)){
 	// 		default_value = `[${default_value}]`
 	// 	}
 	// 	return default_value

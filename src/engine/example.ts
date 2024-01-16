@@ -51,7 +51,7 @@ import ExpressionBboxHTML from '../../examples/engine/expressions/bbox.html';
 import {ExpressionCentroid} from '../../examples/engine/expressions/centroid';
 import ExpressionCentroidHTML from '../../examples/engine/expressions/centroid.html';
 
-import {CoreType} from '../core/Type';
+import {isArray} from '../core/Type';
 
 const examples = {
 	nodes: {
@@ -130,7 +130,7 @@ function loadExampleData() {
 		if (!exampleContent) {
 			return redirectToExample();
 		}
-		if (CoreType.isArray(exampleContent)) {
+		if (isArray(exampleContent)) {
 			const example = exampleContent[0];
 			const html = exampleContent[1];
 			addExampleHTML(html);

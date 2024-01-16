@@ -180,7 +180,7 @@ export class PhysicsDebugSopNode extends TypedActorSopNode<PhysicsDebugSopParams
 // 	if (!graphNode) {
 // 		return;
 // 	}
-// 	const node: BaseNodeType | null = CoreType.isFunction((graphNode as BaseNodeType).context)
+// 	const node: BaseNodeType | null = isFunction((graphNode as BaseNodeType).context)
 // 		? (graphNode as BaseNodeType)
 // 		: null;
 // 	if (!node) {

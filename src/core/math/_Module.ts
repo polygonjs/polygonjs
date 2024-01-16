@@ -7,7 +7,7 @@ import {
 	smootherstep as _smootherstep,
 } from 'three/src/math/MathUtils';
 import {Easing} from './Easing';
-import {CoreType} from '../Type';
+import {isNumber} from '../Type';
 
 const RAND_A = 12.9898;
 const RAND_B = 78.233;
@@ -61,7 +61,7 @@ export function randVec2(uv: Vector2Like) {
 	return fract(Math.sin(sn) * RAND_C);
 }
 export function rand(number: number | Vector2Like): number {
-	if (CoreType.isNumber(number)) {
+	if (isNumber(number)) {
 		return randFloat(number);
 	} else {
 		return randVec2(number);

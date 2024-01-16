@@ -2,7 +2,7 @@ import {Vector2} from 'three';
 import {Color} from 'three';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
-import {CoreType} from '../../../core/Type';
+import {isNumber} from '../../../core/Type';
 
 export interface NodeUIDataJson {
 	x: number;
@@ -67,7 +67,7 @@ export class UIData {
 	}
 
 	setPosition(newPosition: Vector2 | number, y: number = 0) {
-		if (CoreType.isNumber(newPosition)) {
+		if (isNumber(newPosition)) {
 			const x = newPosition;
 			this._position.set(x, y);
 		} else {

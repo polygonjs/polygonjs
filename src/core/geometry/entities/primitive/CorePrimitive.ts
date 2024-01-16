@@ -9,7 +9,7 @@ import {
 import {Vector4, Vector3, Vector2} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity, CoreEntityWithObject} from '../../CoreEntity';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
 import {
 	DOT,
@@ -305,7 +305,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		const array = attrib.array;
 		const attribSize = attrib.itemSize;
 
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			for (let i = 0; i < attribSize; i++) {
 				array[this._index * attribSize + i] = value[i];
 			}

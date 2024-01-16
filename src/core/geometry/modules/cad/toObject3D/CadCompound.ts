@@ -3,7 +3,7 @@ import {BaseSopNodeType} from '../../../../../engine/nodes/sop/_Base';
 import {CadLoaderSync} from '../CadLoaderSync';
 import {CadObject} from '../CadObject';
 import {Object3D} from 'three';
-import {CoreType} from '../../../../Type';
+import {isArray} from '../../../../Type';
 import {MergeSopOperation} from '../../../../../engine/operations/sop/Merge';
 import {isObject3D} from '../../../ObjectContent';
 
@@ -24,7 +24,7 @@ export function cadCompoundToObject3D(
 			const newObject = new CadObject(newShape, type);
 			const result = newObject.toObject3D(tesselationParams, displayNode);
 			if (result) {
-				if (CoreType.isArray(result)) {
+				if (isArray(result)) {
 					iteratedObjects.push(...result);
 				} else {
 					iteratedObjects.push(result);

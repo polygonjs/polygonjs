@@ -8,7 +8,7 @@ import {geom3ToObject3D} from './toObject3D/CsgGeom3ToObject3D';
 import {matrix4ToMat4} from './math/CsgMat4';
 import {csgBoundingBoxPath2, csgBoundingBoxGeom2, csgBoundingBoxGeom3} from './math/CsgBoundingBox';
 import {TypeAssert} from '../../../../engine/poly/Assert';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 
 const _box = new Box3();
 const _size = new Vector3();
@@ -74,7 +74,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	toObject3D(tesselationParams: CSGTesselationParams): Object3D | Object3D[] | undefined {
 		const object = CsgObject.toObject3D(this, this.type, tesselationParams);
 		if (object) {
-			if (CoreType.isArray(object)) {
+			if (isArray(object)) {
 				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}

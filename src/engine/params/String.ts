@@ -2,7 +2,7 @@ import {ParamEvent} from './../poly/ParamEvent';
 import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import {CoreType} from '../../core/Type';
+import {isString} from '../../core/Type';
 import {TypedStringParam} from './_BaseString';
 
 export class StringParam extends TypedStringParam<ParamType.STRING> {
@@ -42,7 +42,7 @@ export class StringParam extends TypedStringParam<ParamType.STRING> {
 	}
 
 	override convert(rawVal: any): string {
-		if (CoreType.isString(rawVal)) {
+		if (isString(rawVal)) {
 			return rawVal;
 		}
 		return `${rawVal}`;

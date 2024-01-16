@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {PolyEngine} from '../../../../engine/Poly';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
@@ -60,7 +60,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 			const newObject3D = tetObject.toObject3D(TET_TESSELATION_PARAMS);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;
-				if (CoreType.isArray(newObject3D)) {
+				if (isArray(newObject3D)) {
 					newObjects.push(...newObject3D);
 				} else {
 					newObjects.push(newObject3D);

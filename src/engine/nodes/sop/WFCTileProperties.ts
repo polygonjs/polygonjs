@@ -53,7 +53,6 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const coreObjects = filterCoreObjectsFromCoreGroup(coreGroup, this.pv);
-		// const coreObjects = coreGroup.allCoreObjects();
 
 		const promises: Array<Promise<void>> = [];
 		const {addName, addId} = this.pv;

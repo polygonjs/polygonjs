@@ -4,7 +4,7 @@ import {Object3D, Color} from 'three';
 import {BaseSopNodeType} from '../../../../engine/nodes/sop/_Base';
 import {PolyEngine} from '../../../../engine/Poly';
 import {SpecializedChildrenHook} from '../../../../engine/poly/PolySpecializedChildrenController';
-import {CoreType} from '../../../Type';
+import {isArray} from '../../../Type';
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
@@ -71,7 +71,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 			const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS, displayNode);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;
-				if (CoreType.isArray(newObject3D)) {
+				if (isArray(newObject3D)) {
 					newObjects.push(...newObject3D);
 				} else {
 					newObjects.push(newObject3D);

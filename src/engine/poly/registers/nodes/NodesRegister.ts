@@ -3,7 +3,7 @@ import {BaseOperation} from '../../../operations/_Base';
 import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {CoreType} from '../../../../core/Type';
+import {isArray} from '../../../../core/Type';
 
 export interface OperationRegisterOptions {
 	printWarnings?: boolean;
@@ -90,7 +90,7 @@ export class NodesRegister {
 				current_categories = new Map();
 				this._nodesRegisterCategories.set(context, current_categories);
 			}
-			const savedCategory = CoreType.isArray(tabMenuCategory) ? tabMenuCategory : [tabMenuCategory];
+			const savedCategory = isArray(tabMenuCategory) ? tabMenuCategory : [tabMenuCategory];
 			current_categories.set(nodeType, savedCategory);
 		}
 

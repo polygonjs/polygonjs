@@ -26,7 +26,7 @@ import {JsParamConfig} from '../js/code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
 import {RegisterableVariable, createVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {CoreType, isColor, isVector, isNumber} from '../../../core/Type';
+import {isBoolean, isNumberValid, isColor, isVector, isNumber} from '../../../core/Type';
 import {BufferAttribute, Color, InterleavedBufferAttribute, Vector2, Vector3, Vector4} from 'three';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
@@ -261,7 +261,7 @@ export abstract class BaseEntityBuilderSopNode<P extends BaseEntityBuilderSopPar
 				variable.toArray(attribute.array, index * attribute.itemSize);
 			} else {
 				if (isNumber(variable)) {
-					(attribute.array)[index] = variable;
+					attribute.array[index] = variable;
 				}
 			}
 		}
@@ -387,10 +387,10 @@ export abstract class BaseEntityBuilderSopNode<P extends BaseEntityBuilderSopPar
 			const spareParam = this.params.get(paramName);
 			if (spareParam && spareParam.value != null) {
 				if (
-					CoreType.isBoolean(spareParam.value) ||
-					CoreType.isNumberValid(spareParam.value) ||
-					CoreType.isColor(spareParam.value) ||
-					CoreType.isVector(spareParam.value)
+					isBoolean(spareParam.value) ||
+					isNumberValid(spareParam.value) ||
+					isColor(spareParam.value) ||
+					isVector(spareParam.value)
 				) {
 					list.push(spareParam.value);
 				} else {

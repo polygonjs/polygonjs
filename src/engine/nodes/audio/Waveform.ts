@@ -9,7 +9,7 @@ import {Waveform} from 'tone/build/esm/component/analysis/Waveform';
 import {AudioNodeAnalyserType} from '../../poly/NodeContext';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
 import {dbToGain} from 'tone/build/esm/core/type/Conversions';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {isNumber, isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Number2} from '../../../types/GlobalTypes';
 
@@ -195,10 +195,10 @@ export class WaveformAudioNode extends BaseAnalyserAudioNode<WaveformAudioParams
 		const max = Math.max(...values);
 		this.p.range.set([min, max]);
 
-		if (min < this.pv.maxRange.x && CoreType.isNumber(min) && isFinite(min)) {
+		if (min < this.pv.maxRange.x && isNumber(min) && isFinite(min)) {
 			this.p.maxRange.x.set(min);
 		}
-		if (max > this.pv.maxRange.y && CoreType.isNumber(max) && isFinite(max)) {
+		if (max > this.pv.maxRange.y && isNumber(max) && isFinite(max)) {
 			this.p.maxRange.y.set(max);
 		}
 	}

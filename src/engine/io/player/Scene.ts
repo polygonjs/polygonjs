@@ -1,6 +1,6 @@
 import {RootLoadProgressController} from './../../nodes/manager/utils/Scene/LoadProgress';
 import {WebGLRenderer} from 'three';
-import {CoreType} from '../../../core/Type';
+import {isString} from '../../../core/Type';
 import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
@@ -239,7 +239,7 @@ export class ScenePlayerImporter {
 	private _domElement(): HTMLElement | undefined {
 		const domElement = this.options.domElement;
 		if (domElement) {
-			if (CoreType.isString(domElement)) {
+			if (isString(domElement)) {
 				const element = document.getElementById(domElement);
 				if (element) {
 					return element;
