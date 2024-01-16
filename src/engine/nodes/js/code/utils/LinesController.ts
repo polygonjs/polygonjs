@@ -1,7 +1,7 @@
 import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {BaseJsDefinition} from '../../utils/JsDefinition';
 import {BaseJsNodeType} from '../../_Base';
-import {MapUtils} from '../../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export type DefinitionTraverseCallback = (definition: BaseJsDefinition) => void;
@@ -25,7 +25,7 @@ export class JsLinesController {
 	}
 	private _addDefinitionsForNodeId(nodeId: CoreGraphNodeId, definitions: BaseJsDefinition[]) {
 		for (const definition of definitions) {
-			MapUtils.pushOnArrayAtEntry(this._definitionsByNodeId, nodeId, definition);
+			pushOnArrayAtEntry(this._definitionsByNodeId, nodeId, definition);
 		}
 	}
 	definitions(node: BaseJsNodeType): BaseJsDefinition[] | undefined {
@@ -75,7 +75,7 @@ export class JsLinesController {
 		}
 
 		for (const line of linesToUsed) {
-			MapUtils.pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
+			pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
 		}
 	}
 	bodyLines(node: BaseJsNodeType): string[] | undefined {

@@ -5,7 +5,7 @@ import {ParamType} from '../../../poly/ParamType';
 import {GlAssemblerControllerType, AssemblerGlControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {setToArray, setIntersection, setUnion} from '../../../../core/SetUtils';
-import {MapUtils} from '../../../../core/MapUtils';
+import {mapGroupBy} from '../../../../core/MapUtils';
 import {GlParamConfig} from './utils/GLParamConfig';
 import {arrayToSet} from '../../../../core/ArrayUtils';
 
@@ -69,7 +69,7 @@ export class GlAssemblerNodeSpareParamsController {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const paramsUpdateOptions: ParamsUpdateOptions = {};
 		const paramConfigs = this.assembler.param_configs();
-		const paramConfigsByName = MapUtils.groupBy<GlParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
+		const paramConfigsByName = mapGroupBy<GlParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
 		const spare_param_names_to_add: Set<string> = new Set();
 		arrayToSet(assembler_param_names, spare_param_names_to_add);
@@ -172,7 +172,6 @@ export class GlAssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(paramsUpdateOptions);
-		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
 		for (const paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);

@@ -1,4 +1,4 @@
-import {MapUtils} from '../../../../../../core/MapUtils';
+import {addToSetAtEntry} from '../../../../../../core/MapUtils';
 import {setToArray} from '../../../../../../core/SetUtils';
 import {sanitizeName} from '../../../../../../core/String';
 import {NodeContext} from '../../../../../poly/NodeContext';
@@ -124,7 +124,7 @@ export function findTriggeringNodes(parent: ActorBuilderNode): Set<BaseJsNodeTyp
 export function groupNodesByType(nodes: Set<BaseJsNodeType>, nodesByType: Map<string, Set<BaseJsNodeType>>) {
 	nodesByType.clear();
 	nodes.forEach((node) => {
-		MapUtils.addToSetAtEntry(nodesByType, node.type(), node);
+		addToSetAtEntry(nodesByType, node.type(), node);
 	});
 }
 
@@ -285,12 +285,7 @@ export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
 		recursive: false,
 	});
 	setToArray(_triggerableNodesSet, _triggerableNodes);
-	// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
-	// 	nodeMethodName(n)
-	// );
-	// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
-	// 	nodeMethodName(n)
-	// );
+
 	const methodCalls: string[] = [];
 	for (const triggerableNode of _triggerableNodes) {
 		const methodName = nodeMethodName(triggerableNode);

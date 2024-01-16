@@ -19,7 +19,7 @@ import {Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {BaseCorePoint, CorePoint} from '../../../core/geometry/entities/point/CorePoint';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
@@ -85,12 +85,12 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 			if (firstPoint.isAttribIndexed(attribName)) {
 				for (const point of _points) {
 					val = point.indexedAttribValue(attribName);
-					MapUtils.pushOnArrayAtEntry(pointsByValue, val, point);
+					pushOnArrayAtEntry(pointsByValue, val, point);
 				}
 			} else {
 				for (const point of _points) {
 					val = point.attribValue(attribName) as number;
-					MapUtils.pushOnArrayAtEntry(pointsByValue, val, point);
+					pushOnArrayAtEntry(pointsByValue, val, point);
 				}
 			}
 		}

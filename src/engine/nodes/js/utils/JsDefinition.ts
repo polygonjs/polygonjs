@@ -4,7 +4,7 @@ import {JsConnectionPointType} from '../../utils/io/connections/Js';
 import {JsLinesCollectionController} from '../code/utils/JsLinesCollectionController';
 import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
-import {MapUtils} from '../../../../core/MapUtils';
+import {pushOnArrayAtEntry, mapGroupBy} from '../../../../core/MapUtils';
 import {EvaluatorMethodName} from '../code/assemblers/actor/ActorEvaluator';
 import {arrayUniq} from '../../../../core/ArrayUtils';
 import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
@@ -268,7 +268,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		const triggeringDefinitions = (
 			_definitions.filter((d) => d.definitionType() == JsDefinitionType.TRIGGERING) as TriggeringJsDefinition[]
 		).filter((d) => d._options.gatherable == true);
-		const definitionGroups = MapUtils.groupBy(
+		const definitionGroups = mapGroupBy(
 			triggeringDefinitions,
 			(definition) => definition._options.triggeringMethodName
 		);
@@ -283,7 +283,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 				${definitionMethodCalls}
 			}`;
 
-			MapUtils.pushOnArrayAtEntry(linesForShader, lineType, line);
+			pushOnArrayAtEntry(linesForShader, lineType, line);
 		});
 	}
 }

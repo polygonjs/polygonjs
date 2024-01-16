@@ -1,13 +1,13 @@
 import {CadGeometryType, OpenCascadeInstance, TopoDS_Edge, TopoDS_Wire} from '../CadCommon';
 import {CadLoaderSync} from '../CadLoaderSync';
-import {MapUtils} from '../../../../MapUtils';
+import {pushOnArrayAtEntry} from '../../../../MapUtils';
 import {CadObject} from '../CadObject';
 
 const objectsByType: Map<CadGeometryType, CadObject<CadGeometryType>[]> = new Map();
 export function cadMergeCompact(inputObjects: CadObject<CadGeometryType>[]): CadObject<CadGeometryType>[] {
 	objectsByType.clear();
 	for (const inputObject of inputObjects) {
-		MapUtils.pushOnArrayAtEntry(objectsByType, inputObject.type, inputObject);
+		pushOnArrayAtEntry(objectsByType, inputObject.type, inputObject);
 	}
 
 	const oc = CadLoaderSync.oc();

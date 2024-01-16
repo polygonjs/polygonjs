@@ -2,7 +2,7 @@ import {PolyScene} from '../../PolyScene';
 import {ActorsManager} from '../ActorsManager';
 import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
-import {MapUtils} from '../../../../core/MapUtils';
+import {addToSetAtEntry} from '../../../../core/MapUtils';
 
 export class ActorKeyboardEventsController {
 	protected _scene: PolyScene;
@@ -14,7 +14,7 @@ export class ActorKeyboardEventsController {
 
 	addTriggeredEvaluators(evaluatorGenerators: Set<ActorEvaluatorGenerator>, methodName: EvaluatorKeyboardMethod) {
 		evaluatorGenerators.forEach((evaluatorGenerator) => {
-			MapUtils.addToSetAtEntry(this._triggeredEvaluatorGeneratorsByMethodName, methodName, evaluatorGenerator);
+			addToSetAtEntry(this._triggeredEvaluatorGeneratorsByMethodName, methodName, evaluatorGenerator);
 		});
 	}
 	runTriggers() {

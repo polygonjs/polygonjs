@@ -1,6 +1,6 @@
 import {BaseJsNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
-import {MapUtils} from '../../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {JsDefinitionType, BaseJsDefinition, JsDefinitionTypeMap, TypedJsDefinition} from '../../utils/JsDefinition';
 import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
@@ -72,7 +72,7 @@ export class JsCodeBuilder {
 			const rootNodesForShader = this._rootNodesByShaderName(shaderName, rootNodes);
 
 			for (const rootNode of rootNodesForShader) {
-				MapUtils.pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
+				pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
 			}
 		}
 
@@ -166,7 +166,7 @@ export class JsCodeBuilder {
 					// 	triggerableNodes: currentTriggerableNodes,
 					// 	recursive: false,
 					// });
-					// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
+					// const triggerableMethodNames = setToArray(currentTriggerableNodes).map((n) =>
 					// 	nodeMethodName(n)
 					// );
 					// const triggerableMethodCalls = triggerableMethodNames
@@ -369,7 +369,7 @@ export class JsCodeBuilder {
 				// so that nodes which have an intersection output
 				// can have their triggering method added,
 				// even if only the intersection output is used
-				allNodes, //SetUtils.toArray(options.actor.triggeringNodes),
+				allNodes, //setToArray(options.actor.triggeringNodes),
 				shaderName,
 				JsDefinitionType.TRIGGERING,
 				LineType.BODY,
@@ -435,7 +435,7 @@ export class JsCodeBuilder {
 			if (!nodeIds.has(nodeId)) {
 				nodeIds.set(nodeId, true);
 			}
-			MapUtils.pushOnArrayAtEntry(definitions_by_node_id, nodeId, definition);
+			pushOnArrayAtEntry(definitions_by_node_id, nodeId, definition);
 		}
 		const lines_for_shader = this._lines.get(shaderName)!;
 
@@ -451,14 +451,14 @@ export class JsCodeBuilder {
 
 				if (first_definition) {
 					const comment = CodeFormatter.nodeComment(first_definition.node(), lineType);
-					MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
+					pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 
 					for (const definition of definitions) {
 						const line = CodeFormatter.lineWrap(first_definition.node(), definition.line(), lineType);
-						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
+						pushOnArrayAtEntry(lines_for_shader, lineType, line);
 					}
 					const separator = CodeFormatter.post_line_separator(lineType);
-					MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, separator);
+					pushOnArrayAtEntry(lines_for_shader, lineType, separator);
 				}
 			}
 		});
@@ -491,14 +491,14 @@ export class JsCodeBuilder {
 		if (lines && lines.length > 0) {
 			const lines_for_shader = this._lines.get(shaderName)!;
 			const comment = CodeFormatter.nodeComment(node, lineType);
-			MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
+			pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 			lines.forEach((line) => {
 				line = CodeFormatter.lineWrap(node, line, lineType);
-				MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
+				pushOnArrayAtEntry(lines_for_shader, lineType, line);
 			});
 			if (!(lineType == LineType.BODY && isLast)) {
 				const separator = CodeFormatter.post_line_separator(lineType);
-				MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, separator);
+				pushOnArrayAtEntry(lines_for_shader, lineType, separator);
 			}
 		}
 	}

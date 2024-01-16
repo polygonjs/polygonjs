@@ -16,7 +16,7 @@ import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
 import {arrayUniq} from '../../../../../core/ArrayUtils';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
-import {MapUtils} from '../../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {GlType} from '../../../../poly/registers/nodes/types/Gl';
 import {AdjacentPointsAttribSmoothGlNode} from '../../AdjacentPointsAttribSmooth';
 
@@ -191,7 +191,7 @@ export class TextureAllocationsController {
 	private _ensureVariablesAreUnique(variables: TextureVariable[]) {
 		const variableByName: Map<string, TextureVariable[]> = new Map();
 		for (const variable of variables) {
-			MapUtils.pushOnArrayAtEntry(variableByName, variable.name(), variable);
+			pushOnArrayAtEntry(variableByName, variable.name(), variable);
 		}
 		const uniqVariables: TextureVariable[] = [];
 		variableByName.forEach((variablesForName, variableName) => {

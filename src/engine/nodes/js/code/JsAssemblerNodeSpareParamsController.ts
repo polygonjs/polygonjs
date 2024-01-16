@@ -5,7 +5,7 @@ import {JsAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {setUnion, setToArray, setIntersection} from '../../../../core/SetUtils';
 import {arrayToSet} from '../../../../core/ArrayUtils';
-import {MapUtils} from '../../../../core/MapUtils';
+import {mapGroupBy} from '../../../../core/MapUtils';
 import {JsParamConfig} from './utils/JsParamConfig';
 import {BaseJsShaderAssembler} from './assemblers/_Base';
 
@@ -77,7 +77,7 @@ export class JsAssemblerNodeSpareParamsController {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const paramsUpdateOptions: ParamsUpdateOptions = {};
 		const paramConfigs = this.assembler.param_configs();
-		const paramConfigsByName = MapUtils.groupBy<JsParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
+		const paramConfigsByName = mapGroupBy<JsParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
 		arrayToSet(assembler_param_names, _spareParamNamesToAdd);
 		const validation_result = this._validateNames(_spareParamNamesToAdd);
@@ -171,7 +171,6 @@ export class JsAssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(paramsUpdateOptions);
-		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
 		for (const paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);

@@ -1,6 +1,6 @@
 import {BaseGlConnectionPoint} from './../io/connections/Gl';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
-import {MapUtils} from '../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../core/MapUtils';
 import {ShaderNameByContextMap} from './ShaderName';
 import {TypedNode} from '../../_Base';
 import {NodeContext, BaseNodeByContextMap, NetworkChildNodeType} from '../../../poly/NodeContext';
@@ -85,7 +85,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			if (depth != null) {
 				// this._graph_id_by_depth.set(depth, this._graph_id_by_depth.get(depth) || []);
 				// this._graph_id_by_depth.get(depth)?.push(graph_id);
-				MapUtils.pushOnArrayAtEntry(this._graph_id_by_depth, depth, graph_id);
+				pushOnArrayAtEntry(this._graph_id_by_depth, depth, graph_id);
 			}
 		});
 	}
@@ -211,7 +211,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			for (const inputName of inputNames) {
 				const input = rootNode.io.inputs.named_input(inputName) as BaseNodeByContextMap[NC];
 				if (input) {
-					MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), rootNode.graphNodeId());
+					pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), rootNode.graphNodeId());
 					this._findLeaves(input);
 				}
 			}
@@ -246,7 +246,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 		if (uniqueInputs.length > 0) {
 			for (const input of uniqueInputs) {
-				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
+				pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this._findLeaves(input);
 			}

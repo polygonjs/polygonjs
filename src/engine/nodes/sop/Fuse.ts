@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Mesh, Points, LineSegments} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromObject} from '../../../core/geometry/Constant';
 import {arrayUniq} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
@@ -163,7 +163,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		for (let index = 0; index < pointsCount; index++) {
 			roundedPos(index, roundedPosition);
 			const posKey = `${roundedPosition.x},${roundedPosition.y},${roundedPosition.z}`;
-			MapUtils.pushOnArrayAtEntry(indicesByPosKey, posKey, index);
+			pushOnArrayAtEntry(indicesByPosKey, posKey, index);
 			posKeyByIndex.set(index, posKey);
 		}
 

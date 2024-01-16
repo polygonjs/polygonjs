@@ -12,7 +12,7 @@ import {
 import {CorePhysicsAttribute} from '../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {MapUtils} from '../../../core/MapUtils';
+import {addToSetAtEntry, mapIncrementAtEntry} from '../../../core/MapUtils';
 import {isBooleanTrue} from '../../../core/Type';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -161,13 +161,13 @@ export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopPar
 							let idInSet = i1 < i2 ? i2 : i1;
 							existingSet = checkedPair.get(key);
 							if (existingSet == null || !existingSet.has(idInSet)) {
-								MapUtils.addToSetAtEntry(checkedPair, key, idInSet);
+								addToSetAtEntry(checkedPair, key, idInSet);
 								const jointObject = this._createJoint(object1, object2);
 								jointObject.name = `${this.name()}_${jointIndex}`;
 								jointIndex++;
 								joinObjects.push(jointObject);
-								MapUtils.incrementAtEntry(jointsCountByKey, i1, 0);
-								MapUtils.incrementAtEntry(jointsCountByKey, i2, 0);
+								mapIncrementAtEntry(jointsCountByKey, i1, 0);
+								mapIncrementAtEntry(jointsCountByKey, i2, 0);
 							}
 						}
 					}

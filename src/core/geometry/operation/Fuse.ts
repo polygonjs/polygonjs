@@ -1,5 +1,5 @@
 import {BufferGeometry, BufferAttribute, Vector2, Vector3, Vector4} from 'three';
-import {MapUtils} from '../../MapUtils';
+import {addToSetAtEntry} from '../../MapUtils';
 
 const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
@@ -98,7 +98,7 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 		const position = new Position(positionAttribute, i, tolerance);
 		positions[i] = position;
 
-		MapUtils.addToSetAtEntry(pointsBySnappedPos, position.snappedKey, position);
+		addToSetAtEntry(pointsBySnappedPos, position.snappedKey, position);
 		if (!firstPointBySnappedPos.has(position.snappedKey)) {
 			firstPointBySnappedPos.set(position.snappedKey, position);
 		}

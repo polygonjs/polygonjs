@@ -8,7 +8,7 @@ import {EventData, EventType} from '../../../../core/event/EventData';
 import {PointerEventType} from '../../../../core/event/PointerEventType';
 // import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
-import {MapUtils} from '../../../../core/MapUtils';
+import {addToSetAtEntry} from '../../../../core/MapUtils';
 import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 
 interface EventContextValue {
@@ -71,7 +71,7 @@ export abstract class BaseSceneEventsController<
 						mapForEventName = new Map();
 						this._actorEvaluatorsByEventNames.set(eventName, mapForEventName);
 					}
-					MapUtils.addToSetAtEntry(mapForEventName, emitter, evaluator);
+					addToSetAtEntry(mapForEventName, emitter, evaluator);
 				});
 			}
 			// const nodeEventNames = node.userInputEventNames();
@@ -143,7 +143,7 @@ export abstract class BaseSceneEventsController<
 			this._actorEvaluatorsByEventNames.forEach((mapForEventName, eventName) => {
 				mapForEventName.forEach((nodes, emitter) => {
 					nodes.forEach((node) => {
-						MapUtils.addToSetAtEntry(eventTypeByEmitter, emitter, eventName);
+						addToSetAtEntry(eventTypeByEmitter, emitter, eventName);
 					});
 				});
 			});

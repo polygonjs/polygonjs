@@ -1,4 +1,4 @@
-import {MapUtils} from '../../../../core/MapUtils';
+import {addToSetAtEntry} from '../../../../core/MapUtils';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
 import {PolyEventName} from '../../../poly/utils/PolyEventName';
 import {EventContext} from './_BaseEventsController';
@@ -54,6 +54,6 @@ export class SceneEventsController {
 		});
 	}
 	addObserver(eventNode: BaseEventNodeType, eventType: PolyEventName) {
-		MapUtils.addToSetAtEntry(this._observersByEventType, eventType, eventNode);
+		addToSetAtEntry(this._observersByEventType, eventType, eventNode);
 	}
 }

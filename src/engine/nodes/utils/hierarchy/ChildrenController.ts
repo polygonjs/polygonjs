@@ -10,7 +10,12 @@ import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {BaseOperationContainer} from '../../../operations/container/_Base';
 import {SopOperationContainer} from '../../../operations/container/sop';
 import {BaseSopOperation} from '../../../operations/sop/_Base';
-import {MapUtils} from '../../../../core/MapUtils';
+import {
+	addToSetAtEntry,
+	pushOnArrayAtEntry,
+	removeFromSetAtEntry,
+	popFromArrayAtEntry,
+} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
 import {CoreNodeSerializer} from '../CoreNodeSerializer';
 import {TypedNodeConnection} from '../io/NodeConnection';
@@ -318,8 +323,8 @@ export class HierarchyChildrenController {
 		const nodeId = node.graphNodeId();
 		const type = node.type();
 
-		MapUtils.addToSetAtEntry(this._childrenIdByType, type, nodeId);
-		MapUtils.pushOnArrayAtEntry(this._childrenByType, type, node);
+		addToSetAtEntry(this._childrenIdByType, type, nodeId);
+		pushOnArrayAtEntry(this._childrenByType, type, node);
 
 		this._addToChildrenAndGrandchildrenByContext(node);
 	}
@@ -327,15 +332,15 @@ export class HierarchyChildrenController {
 		const nodeId = node.graphNodeId();
 		const type = node.type();
 
-		MapUtils.removeFromSetAtEntry(this._childrenIdByType, type, nodeId);
-		MapUtils.popFromArrayAtEntry(this._childrenByType, type, node);
+		removeFromSetAtEntry(this._childrenIdByType, type, nodeId);
+		popFromArrayAtEntry(this._childrenByType, type, node);
 		this._removeFromChildrenAndGrandchildrenByContext(node);
 	}
 	private _addToChildrenAndGrandchildrenByContext(node: BaseNodeType) {
 		const nodeId = node.graphNodeId();
 		const nodeContext = node.context();
 
-		MapUtils.addToSetAtEntry(this._childrenAndGrandchildrenByContext, nodeContext, nodeId);
+		addToSetAtEntry(this._childrenAndGrandchildrenByContext, nodeContext, nodeId);
 		const parent = this.node.parent();
 		if (parent && parent.childrenAllowed()) {
 			parent.childrenController?._addToChildrenAndGrandchildrenByContext(node);
@@ -345,7 +350,7 @@ export class HierarchyChildrenController {
 		const nodeId = node.graphNodeId();
 		const type = node.context();
 
-		MapUtils.removeFromSetAtEntry(this._childrenAndGrandchildrenByContext, type, nodeId);
+		removeFromSetAtEntry(this._childrenAndGrandchildrenByContext, type, nodeId);
 		const parent = this.node.parent();
 		if (parent && parent.childrenAllowed()) {
 			parent.childrenController?._removeFromChildrenAndGrandchildrenByContext(node);

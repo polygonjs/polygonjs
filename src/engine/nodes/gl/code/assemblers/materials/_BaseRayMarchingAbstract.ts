@@ -1,5 +1,5 @@
 import {GlobalsGlNode} from '../../../Globals';
-import {MapUtils} from '../../../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../../../core/MapUtils';
 import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
@@ -38,13 +38,13 @@ export abstract class BaseShaderAssemblerRayMarchingAbstract extends ShaderAssem
 				case 'time':
 					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
 					if (globals_shader_name) {
-						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, globals_shader_name, definition);
+						pushOnArrayAtEntry(definitions_by_shader_name, globals_shader_name, definition);
 					}
 
 					body_line = `float ${var_name} = ${output_name}`;
 					for (const dependency of dependencies) {
-						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, dependency, definition);
-						MapUtils.pushOnArrayAtEntry(body_lines_by_shader_name, dependency, body_line);
+						pushOnArrayAtEntry(definitions_by_shader_name, dependency, definition);
+						pushOnArrayAtEntry(body_lines_by_shader_name, dependency, body_line);
 					}
 
 					body_lines.push(body_line);

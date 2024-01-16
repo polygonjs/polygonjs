@@ -176,7 +176,6 @@ export function objectAttributeTypeAndSizesByName(
 
 	const sizesByTypeByName: PolyDictionary<Record<AttribType, AttribSize[]>> = {};
 	_sizesByTypeByName.forEach((mapForName, attribName) => {
-		// typesByName[attribName] = SetUtils.toArray(attribTypes);
 		sizesByTypeByName[attribName] = {[AttribType.NUMERIC]: [], [AttribType.STRING]: []};
 		mapForName.forEach((attribSizes, attribType) => {
 			sizesByTypeByName[attribName][attribType] = setToArray(attribSizes, []);

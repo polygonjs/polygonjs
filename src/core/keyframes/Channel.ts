@@ -2,7 +2,7 @@ import {ChannelData, KeyframeData, ChannelInterpolation, SetCurveCallback, GetVa
 import {setCurveFromKeyframePairCubic, getValueCubic} from './channel/Cubic';
 import {setCurveFromKeyframePairLinear, getValueLinear} from './channel/Linear';
 import {mix} from '../math/_Module';
-import {MapUtils} from '../MapUtils';
+import {pushOnArrayAtEntry} from '../MapUtils';
 import {copyKeyframeData, createKeyframeData} from './KeyframeSerialize';
 
 interface KeyframePair {
@@ -52,7 +52,7 @@ export class Channel {
 
 		const keyframesByPos: Map<number, KeyframeData[]> = new Map();
 		for (const keyframe of keyframes) {
-			MapUtils.pushOnArrayAtEntry(keyframesByPos, keyframe.pos, keyframe);
+			pushOnArrayAtEntry(keyframesByPos, keyframe.pos, keyframe);
 		}
 
 		// if we have keyframes that need to be merged, adjust the sizes of the arrays

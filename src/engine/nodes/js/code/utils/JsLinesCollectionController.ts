@@ -133,7 +133,7 @@ export class JsLinesCollectionController {
 			// 	triggerableNodes: currentTriggerableNodes,
 			// 	recursive: false,
 			// });
-			// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) => nodeMethodName(n));
+			// const triggerableMethodNames = setToArray(currentTriggerableNodes).map((n) => nodeMethodName(n));
 			// triggerableLines.push(...triggerableMethodNames.map((m) => `this.${m}()`));
 			const _triggerableMethodCalls = triggerableMethodCalls(node);
 			triggerableLines.push(_triggerableMethodCalls);

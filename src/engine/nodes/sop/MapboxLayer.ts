@@ -13,7 +13,7 @@ import {isBoolean} from '../../../core/Type';
 import {FeatureConverter} from '../../../core/thirdParty/Mapbox/FeatureConverter';
 import {NodeParamsConfig, ParamConfig} from '../../nodes/utils/params/ParamsConfig';
 // import {MapboxListenerParamConfig, MapboxListenerSopNode} from './utils/MapboxListener';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {arrayChunk} from '../../../core/ArrayUtils';
 import {TypedSopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
@@ -95,7 +95,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		for (const feature of features) {
 			const name = this._feature_name(feature);
 			if (name) {
-				MapUtils.pushOnArrayAtEntry(this._featuresByName, name, feature);
+			pushOnArrayAtEntry(this._featuresByName, name, feature);
 			}
 		}
 		return this._featuresByName;

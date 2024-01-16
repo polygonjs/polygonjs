@@ -3,7 +3,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseEventConnectionPoint} from '../utils/io/connections/Event';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {Poly} from '../../Poly';
 
 type DispatchHook = (event_context: EventContext<Event>) => void;
@@ -146,7 +146,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	 */
 	public onDispatch(outputName: string, callback: DispatchHook) {
 		this._on_dispatch_hooks_by_output_name = this._on_dispatch_hooks_by_output_name || new Map();
-		MapUtils.pushOnArrayAtEntry(this._on_dispatch_hooks_by_output_name, outputName, callback);
+		pushOnArrayAtEntry(this._on_dispatch_hooks_by_output_name, outputName, callback);
 	}
 	private run_on_dispatch_hook(output_name: string, event_context: EventContext<Event>) {
 		if (this._on_dispatch_hooks_by_output_name) {

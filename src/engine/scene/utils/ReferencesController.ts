@@ -1,11 +1,10 @@
 import {PolyScene} from '../PolyScene';
 import {BaseNodeType} from '../../nodes/_Base';
 import {TypedPathParam} from '../../params/_BasePath';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry, popFromArrayAtEntry} from '../../../core/MapUtils';
 import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-// import {OperatorPathParam} from '../../params/OperatorPath';
 import {arrayShallowClone} from '../../../core/ArrayUtils';
 import {NodePathParam} from '../../params/NodePath';
 
@@ -22,7 +21,7 @@ export class ReferencesController {
 
 	setReferenceFromParam(src_param: BasePathParam, referencedGraphNode: BaseNodeType | BaseParamType) {
 		this._referenced_nodes_by_src_param_id.set(src_param.graphNodeId(), referencedGraphNode);
-		MapUtils.pushOnArrayAtEntry(
+		pushOnArrayAtEntry(
 			this._referencing_params_by_referenced_node_id,
 			referencedGraphNode.graphNodeId(),
 			src_param
@@ -32,28 +31,20 @@ export class ReferencesController {
 		src_param.decomposedPath.namedNodes(_nodes);
 
 		for (const namedNode of _nodes) {
-			MapUtils.pushOnArrayAtEntry(
-				this._referencing_params_by_all_named_node_ids,
-				namedNode.graphNodeId(),
-				src_param
-			);
+			pushOnArrayAtEntry(this._referencing_params_by_all_named_node_ids, namedNode.graphNodeId(), src_param);
 		}
 	}
 	resetReferenceFromParam(src_param: BasePathParam) {
 		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graphNodeId());
 		if (referenced_node) {
-			MapUtils.popFromArrayAtEntry(
+			popFromArrayAtEntry(
 				this._referencing_params_by_referenced_node_id,
 				referenced_node.graphNodeId(),
 				src_param
 			);
 			src_param.decomposedPath.namedNodes(_nodes);
 			for (const namedNode of _nodes) {
-				MapUtils.popFromArrayAtEntry(
-					this._referencing_params_by_all_named_node_ids,
-					namedNode.graphNodeId(),
-					src_param
-				);
+				popFromArrayAtEntry(this._referencing_params_by_all_named_node_ids, namedNode.graphNodeId(), src_param);
 			}
 
 			this._referenced_nodes_by_src_param_id.delete(src_param.graphNodeId());

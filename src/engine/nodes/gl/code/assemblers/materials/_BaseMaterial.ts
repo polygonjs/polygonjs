@@ -7,7 +7,8 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlobalsGlNode} from '../../../Globals';
 import {BaseGLDefinition, UniformGLDefinition, VaryingGLDefinition} from '../../../utils/GLDefinition';
 import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
-import {MapUtils} from '../../../../../../core/MapUtils';
+import {
+	pushOnArrayAtEntry} from '../../../../../../core/MapUtils';
 import {CustomMaterialName, MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {Material} from 'three';
@@ -424,13 +425,13 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			options.output_name
 		);
 		if (options.globals_shader_name) {
-			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
+			pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
 		}
 
 		const body_line = `float ${options.var_name} = ${options.output_name}`;
 		for (const dependency of options.dependencies) {
-			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
-			MapUtils.pushOnArrayAtEntry(options.body_lines_by_shader_name, dependency, body_line);
+			pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
+			pushOnArrayAtEntry(options.body_lines_by_shader_name, dependency, body_line);
 		}
 
 		options.body_lines.push(body_line);
@@ -446,10 +447,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			options.output_name
 		);
 		if (options.globals_shader_name) {
-			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
+			pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
 		}
 		for (const dependency of options.dependencies) {
-			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
+			pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
 		}
 
 		this.setUniformsResolutionDependent();

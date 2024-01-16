@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {Group, Material, Mesh} from 'three';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry,addToSetAtEntry} from '../../../core/MapUtils';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -83,7 +83,7 @@ export class MergeSopOperation extends BaseSopOperation {
 						if (!foundMat) {
 							materialsByObjectType.set(objectType, (object as Mesh).material as Material);
 						}
-						MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
+						pushOnArrayAtEntry(objectsByType, objectType, object);
 					}
 				}
 			});
@@ -138,7 +138,7 @@ function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
 	const coreObjectClass = coreObjectClassFactory(objects[0]);
 	objectsByMaterial.clear();
 	for (let object of objects) {
-		MapUtils.addToSetAtEntry(objectsByMaterial, object.material, object);
+		addToSetAtEntry(objectsByMaterial, object.material, object);
 	}
 	objectsByMaterial.forEach((objectSet, material) => {
 		coreObjectClass.mergeCompact({

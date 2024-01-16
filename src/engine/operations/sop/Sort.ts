@@ -6,7 +6,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three';
-import {MapUtils} from '../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
@@ -115,7 +115,7 @@ export class SortSopOperation extends BaseSopOperation {
 				}
 			}
 			positions.add(axisValue);
-			MapUtils.pushOnArrayAtEntry(objectsByPos, axisValue, coreObject);
+			pushOnArrayAtEntry(objectsByPos, axisValue, coreObject);
 		}
 
 		// sort
@@ -149,7 +149,7 @@ export class SortSopOperation extends BaseSopOperation {
 		for (let coreObject of coreObjects) {
 			sortValue = CoreMath.randFloat(params.seed, i);
 			positions[i] = sortValue;
-			MapUtils.pushOnArrayAtEntry(objectsByPos, sortValue, coreObject);
+			pushOnArrayAtEntry(objectsByPos, sortValue, coreObject);
 			i++;
 		}
 
@@ -184,7 +184,7 @@ export class SortSopOperation extends BaseSopOperation {
 			const attribValue = coreObject.attribValue(params.attribute);
 			const sortValue = isNumber(attribValue) ? attribValue : 0;
 			attribValues[i] = sortValue;
-			MapUtils.pushOnArrayAtEntry(objectsByAttribValue, sortValue, coreObject);
+			pushOnArrayAtEntry(objectsByAttribValue, sortValue, coreObject);
 			i++;
 		}
 
@@ -280,7 +280,7 @@ export class SortSopOperation extends BaseSopOperation {
 				}
 			}
 			this._positions[i] = axisValue;
-			MapUtils.pushOnArrayAtEntry(this._indicesByPos, axisValue, point.index());
+			pushOnArrayAtEntry(this._indicesByPos, axisValue, point.index());
 			i++;
 		}
 

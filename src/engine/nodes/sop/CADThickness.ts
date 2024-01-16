@@ -146,7 +146,7 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 	// 	// 	const indices = CoreString.indices(groupName);
 	// 	// 	if (indices.length != 0) {
 	// 	// 		// group by indices
-	// 	// 		const indicesSet = SetUtils.fromArray(indices);
+	// 	// 		const indicesSet = setFromArray(indices);
 	// 	// 		traverseFaces(oc, shape, (face, i) => {
 	// 	// 			if (indicesSet.has(i)) {
 	// 	// 				faces.Append_1(face);
@@ -184,10 +184,10 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 	// 	// 	// 	oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
 	// 	// 	// 	oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
 	// 	// 	// ).Current();
-	// 	// 	MapUtils.addToSetAtEntry(facesByDist, position, face);
+	// 	// 	addToSetAtEntry(facesByDist, position, face);
 	// 	// 	faceDists.add(position);
 	// 	// });
-	// 	// const dists = SetUtils.toArray(faceDists);
+	// 	// const dists = setToArray(faceDists);
 	// 	// const sortedDists = dists.sort((a, b) => (a > b ? 1 : -1));
 	// 	// const facesToRemove: TopoDS_Face[] = [];
 	// 	// for (let dist of sortedDists) {

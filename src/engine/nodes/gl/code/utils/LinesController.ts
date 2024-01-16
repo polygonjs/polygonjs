@@ -1,7 +1,7 @@
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {BaseGlNodeType} from '../../_Base';
-import {MapUtils} from '../../../../../core/MapUtils';
+import {pushOnArrayAtEntry} from '../../../../../core/MapUtils';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export type DefinitionTraverseCallback = (definition: BaseGLDefinition) => void;
@@ -36,7 +36,7 @@ export class LinesController {
 	}
 	private _addDefinitionsForNodeId(nodeId: CoreGraphNodeId, definitions: BaseGLDefinition[]) {
 		for (const definition of definitions) {
-			MapUtils.pushOnArrayAtEntry(this._definitionsByNodeId, nodeId, definition);
+			pushOnArrayAtEntry(this._definitionsByNodeId, nodeId, definition);
 		}
 	}
 	definitions(node: BaseGlNodeType): BaseGLDefinition[] | undefined {
@@ -86,7 +86,7 @@ export class LinesController {
 		}
 
 		for (const line of linesToUsed) {
-			MapUtils.pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
+			pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
 		}
 	}
 	bodyLines(node: BaseGlNodeType): string[] | undefined {

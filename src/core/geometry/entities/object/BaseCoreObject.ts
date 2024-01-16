@@ -252,17 +252,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	attribNames(): string[] {
 		return (this.constructor as typeof BaseCoreObject<CoreObjectType>).attribNames(this._object);
 	}
-	// static objectsAttribNames<T extends CoreObjectType>(objects: ObjectContent<T>[]) {
-	// 	const names: Set<string> = new Set();
-	// 	for (let object of objects) {
-	// 		const objectAttriNames = this.attribNames(object);
-	// 		for (let attribName of objectAttriNames) {
-	// 			names.add(attribName);
-	// 		}
-	// 	}
 
-	// 	return SetUtils.toArray(names);
-	// }
 	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		return attribName in this._attributesDictionary(object);
 	}

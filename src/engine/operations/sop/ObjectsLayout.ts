@@ -1,4 +1,4 @@
-import {MapUtils} from './../../../core/MapUtils';
+import {pushOnArrayAtEntry} from './../../../core/MapUtils';
 import {Vector2, Vector3, Box3, Object3D} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -79,7 +79,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 			object.position.y = currentPos.y - boxSize.y * 0.5;
 			if (isBooleanTrue(params.addAttribs)) {
 				if (addRowWidth) {
-					MapUtils.pushOnArrayAtEntry(objectsByRow, rowIndex, object);
+					pushOnArrayAtEntry(objectsByRow, rowIndex, object);
 				}
 
 				if (isBooleanTrue(params.addRowAttrib)) {
