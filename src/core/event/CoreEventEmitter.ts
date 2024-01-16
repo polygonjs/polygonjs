@@ -11,3 +11,4 @@ export const EVENT_EMITTER_PARAM_MENU_OPTIONS = {
 		}),
 	},
 };
+export type EmitterElementOrWindow = HTMLCanvasElement | Document | (Window & typeof globalThis);

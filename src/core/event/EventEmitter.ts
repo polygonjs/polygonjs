@@ -1,4 +1,4 @@
-import {CoreEventEmitter} from './CoreEventEmitter';
+import {CoreEventEmitter, EmitterElementOrWindow} from './CoreEventEmitter';
 import {EventData} from './EventData';
 import {WindowEventType} from './WindowEventType';
 
@@ -6,7 +6,7 @@ function elementFromEmitterType(emitter: CoreEventEmitter, canvas: HTMLCanvasEle
 	return emitter == CoreEventEmitter.CANVAS ? canvas : document;
 }
 
-export function getEventEmitter(eventData: EventData, canvas: HTMLCanvasElement) {
+export function getEventEmitter(eventData: EventData, canvas: HTMLCanvasElement): EmitterElementOrWindow {
 	if (eventData.type == WindowEventType.resize) {
 		return window;
 	} else {

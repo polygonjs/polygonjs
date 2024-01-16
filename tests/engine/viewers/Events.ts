@@ -2,6 +2,8 @@ import type {QUnit} from '../../helpers/QUnit';
 import {CoreSleep} from '../../../src/core/Sleep';
 import {RendererUtils} from '../../helpers/RendererUtils';
 import {sceneFromScene} from '../../helpers/ImportHelper';
+import {JsConnectionPointType} from '../../../src/engine/index_all';
+import {checkConsolePrints} from '../../helpers/Console';
 export function testengineviewersEvents(qUnit: QUnit) {
 	qUnit.test('mouse event nodes update the viewer event listeners', async (assert) => {
 		const scene = window.scene;
@@ -251,6 +253,51 @@ export function testengineviewersEvents(qUnit: QUnit) {
 
 			scene1.p.tick.set(1);
 			assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
+		});
+	});
+
+	qUnit.test('events created by actor nodes are cleared when unmounting a viewer', async (assert) => {
+		const scene = window.scene;
+		await scene.waitForCooksCompleted();
+		assert.ok(!scene.loadingController.isLoading());
+
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const actor1 = geo1.createNode('actor');
+
+		actor1.setInput(0, box1);
+		actor1.flags?.display?.set(true);
+
+		const setObjectPosition1 = actor1.createNode('setObjectPosition');
+		const onTick1 = actor1.createNode('onTick');
+		const rayIntersectPlane1 = actor1.createNode('rayIntersectPlane');
+		const rayFromCursor1 = actor1.createNode('rayFromCursor');
+		const plane1 = actor1.createNode('plane');
+
+		setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onTick1);
+		setObjectPosition1.setInput('position', rayIntersectPlane1);
+		rayIntersectPlane1.setInput(JsConnectionPointType.RAY, rayFromCursor1);
+		rayIntersectPlane1.setInput(JsConnectionPointType.PLANE, plane1);
+
+		await RendererUtils.withViewerContainer(async (element) => {
+			const viewer = (await scene.camerasController.createMainViewer())!;
+			assert.ok(viewer, 'ok viewer');
+			viewer.mount(element);
+
+			scene.play();
+			await CoreSleep.sleep(200);
+			viewer.unmount();
+
+			const consoleHistory = await checkConsolePrints(async () => {
+				await CoreSleep.sleep(100);
+				console.warn('pointermove start');
+				document.dispatchEvent(new Event('pointermove'));
+				console.warn('pointermove end');
+				await CoreSleep.sleep(100);
+			});
+			assert.equal(consoleHistory.log.length, 0, '0 logs');
+			assert.equal(consoleHistory.warn.length, 2, '2 warnings');
+			assert.equal(consoleHistory.error.length, 0, '0 errors');
 		});
 	});
 }

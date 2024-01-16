@@ -82,7 +82,7 @@ export class CursorHelper {
 	}
 	private _updateFromCursor(canvas: HTMLCanvasElement, target: Vector2) {
 		if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
-			console.warn('zero size canvas', canvas);
+			console.warn('_updateFromCursor: zero size canvas');
 			// the canvas can have a size of 0 if it has been removed from the scene
 			target.set(0, 0);
 		} else {

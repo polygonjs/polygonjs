@@ -1,10 +1,11 @@
 import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
-import {EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {EmitterElementOrWindow} from '../../../core/event/CoreEventEmitter';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {allowCanvasKeyEventsListener} from '../../../core/event/CanvasKeyFocus';
 import {getEventEmitter} from '../../../core/event/EventEmitter';
 import {EventData, EventType} from '../../../core/event/EventData';
+import {setToArray} from '../../../core/SetUtils';
 type ViewerEventListener = (e: Event) => void;
 interface EventListenerWithData {
 	listener: ViewerEventListener;
@@ -12,40 +13,54 @@ interface EventListenerWithData {
 }
 type ListenerByEventType = Map<EventType, EventListenerWithData>;
 const DEBUG = false;
+const _eventTypesSet: Set<string> = new Set();
+// let listenerId: number = 0;
 
 export class ViewerEventsController {
-	protected _boundListenerMapByEventControllerType: Map<string, ListenerByEventType> = new Map();
+	protected _eventTypes: Map<string, Map<EmitterElementOrWindow, ListenerByEventType>> = new Map();
 
 	constructor(protected viewer: BaseViewerType) {}
 
+	removeEvents(eventsController: BaseSceneEventsControllerType, _canvas?: HTMLCanvasElement) {
+		const canvas = _canvas || this.canvas();
+		if (!canvas) {
+			console.warn('no canvas found');
+			return;
+		}
+
+		this._eventTypes.forEach((mapForEmitter) => {
+			mapForEmitter.forEach((listenerByEventType, emitter) => {
+				listenerByEventType.forEach((listenerWithData, eventType: EventType) => {
+					const eventEmitter = getEventEmitter(
+						{emitter: listenerWithData.data.emitter, type: eventType},
+						canvas
+					);
+					eventEmitter.removeEventListener(eventType, listenerWithData.listener);
+				});
+				listenerByEventType.clear();
+			});
+		});
+	}
+
 	updateEvents(eventsController: BaseSceneEventsControllerType) {
 		if (DEBUG) {
-			console.log('------------ updateEvents START:', eventsController);
+			console.warn('------------ updateEvents START:', eventsController);
 		}
 		const canvas = this.canvas();
 		if (!canvas) {
 			console.warn('no canvas found');
 			return;
 		}
-		const controllerType = eventsController.type();
-		let map = this._boundListenerMapByEventControllerType.get(controllerType);
-		if (!map) {
-			map = new Map();
-			this._boundListenerMapByEventControllerType.set(controllerType, map);
-		}
-		map.forEach((listenerWithData, eventType) => {
-			for (let emitter of EVENT_EMITTERS) {
-				const eventEmitter = getEventEmitter({emitter, type: eventType}, canvas);
-				eventEmitter.removeEventListener(eventType, listenerWithData.listener);
-			}
-		});
-		map.clear();
+
+		this.removeEvents(eventsController, canvas);
 
 		// const listener = (event: Event) => {
 		// 	this.processEvent(event, eventsController, canvas);
 		// };
-		for (let eventData of eventsController.activeEventDatas()) {
+		const activeEventDatas = eventsController.activeEventDatas();
+		for (const eventData of activeEventDatas) {
 			const eventEmitter = getEventEmitter(eventData, canvas);
+			const map = this._mapForEmitter(eventsController, eventEmitter);
 			const eventType = eventData.type;
 
 			const _processEvent = (
@@ -61,11 +76,14 @@ export class ViewerEventsController {
 				};
 				controller.processEvent(eventContext);
 			};
+			// listenerId++;
+			// const _id = listenerId;
 			const listener = (event: Event) => {
+				// console.log('run listener:', _id, eventType);
 				_processEvent(event, eventsController /*, canvas*/);
 			};
 			if (DEBUG) {
-				console.log('- add event:', eventType, eventEmitter);
+				console.log('+ add event:', eventType, eventEmitter);
 			}
 			eventEmitter.addEventListener(eventType, listener, {passive: true});
 
@@ -82,6 +100,20 @@ export class ViewerEventsController {
 		if (DEBUG) {
 			console.log('------------ updateEvents DONE:');
 		}
+	}
+	private _mapForEmitter(eventsController: BaseSceneEventsControllerType, emitter: EmitterElementOrWindow) {
+		const controllerType = eventsController.type();
+		let mapForController = this._eventTypes.get(controllerType);
+		if (!mapForController) {
+			mapForController = new Map();
+			this._eventTypes.set(controllerType, mapForController);
+		}
+		let mapForEmitter = mapForController.get(emitter);
+		if (!mapForEmitter) {
+			mapForEmitter = new Map();
+			mapForController.set(emitter, mapForEmitter);
+		}
+		return mapForEmitter;
 	}
 
 	camera() {
@@ -101,25 +133,23 @@ export class ViewerEventsController {
 		});
 	}
 
-	registeredEventTypes(): string[] {
-		const list: string[] = [];
-		this._boundListenerMapByEventControllerType.forEach((map) => {
-			map.forEach((listener, eventType) => {
-				list.push(eventType);
-			});
+	unmount() {
+		this.viewer.scene().eventsDispatcher.traverseControllers((controller) => {
+			this.removeEvents(controller);
 		});
-		return list;
 	}
 
-	dispose() {
-		const canvas = this.canvas();
-		this._boundListenerMapByEventControllerType.forEach((map) => {
-			if (canvas) {
-				map.forEach((listenerWithData, eventType) => {
-					const eventOwner = getEventEmitter(listenerWithData.data, canvas);
-					eventOwner.removeEventListener(eventType, listenerWithData.listener);
+	registeredEventTypes(): string[] {
+		_eventTypesSet.clear();
+		this._eventTypes.forEach((mapForEmitter) => {
+			mapForEmitter.forEach((listenerByEventType, emitter) => {
+				listenerByEventType.forEach((listener, eventType: string) => {
+					_eventTypesSet.add(eventType);
 				});
-			}
+			});
 		});
+		const target: string[] = [];
+		setToArray(_eventTypesSet, target);
+		return target;
 	}
 }

@@ -14,7 +14,7 @@ import {
 	Mesh,
 	// color space
 	ColorSpace,
-	NoColorSpace,
+	// NoColorSpace,
 	SRGBColorSpace,
 	LinearSRGBColorSpace,
 	DisplayP3ColorSpace,
