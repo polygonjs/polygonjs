@@ -3350,10 +3350,10 @@ murmurhash-js@^1.0.0:
   resolved "https://registry.yarnpkg.com/murmurhash-js/-/murmurhash-js-1.0.0.tgz#b06278e21fc6c37fa5313732b0412bcb6ae15f51"
   integrity sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==
 
-n8ao@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.7.0.tgz#43b42d66f3bb2333522d7fb8d8c6750ea5e8a32b"
-  integrity sha512-0Ne+dnzlKByj4UR+OfPU04CanmbNPPtYcqJqWWcPw00CiMOLhkE23/gwoROLACKMRLuWsqhW2cMf5pYlywrIAQ==
+n8ao@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.7.4.tgz#0688cae3f7afe670fa1024c4cfb1e2dee8cf7c59"
+  integrity sha512-9FjHX2p8FXs/N3+hA87OzaLLOMj5FTv2cXrJOLnAxM7+bz/qIR+rzjclI7YdrFM9Bl4Dr+NsHCKTz+RFAyhY8Q==
 
 nanoid@^3.3.6:
   version "3.3.7"
@@ -3686,10 +3686,10 @@ postcss@^8.4.13, postcss@^8.4.26:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@6.33.3:
-  version "6.33.3"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.33.3.tgz#d80103f6e68581263557aa2e5d9e26af3e0d7cfd"
-  integrity sha512-zQAVvcMf7bfeggQNQeVErD/UFd1XHBi2X6+yxwIv9PjhGCLAYKue3UuzVyu95O7ZUvkDwF0TyTzKdxoaVwYi7w==
+postprocessing@6.34.1:
+  version "6.34.1"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.34.1.tgz#bdbff8def3301e861f0d45a39a188f3cafa7f252"
+  integrity sha512-xae6A2XNs61V3ohGHR+i9sQDvB4dWaoG/AICw0hg8sOYQWAYDlf+esWMRmO4hixMaYo3AJBJ9WAA7JF7OiGakw==
 
 potpack@2.0.0, potpack@^2.0.0:
   version "2.0.0"
@@ -4335,10 +4335,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three-bvh-csg@0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.13.tgz#66737315aad137898a5699384a367a1d9d3f3e23"
-  integrity sha512-Snp1aW+nqc4/6WYkPz1vSC8vF+s96xz8GHXzdheXP6kYvwXZJH0AumWwtqSz04nTlKyFfvS5v0GBzW+5NiPfOw==
+three-bvh-csg@0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.16.tgz#b5fa39072acebfb1080249a05aeec8bd494b7780"
+  integrity sha512-RgC5dY0hAKdfd1bmD3o2CDfmK9GTkvsA1ECzoqTMhSkjSc2zp1z4Wpa5+emLi/EosF5P6+aK2veTxTLZA9+Mhw==
 
 three-gpu-pathtracer@0.0.16:
   version "0.0.16"
@@ -4347,10 +4347,10 @@ three-gpu-pathtracer@0.0.16:
   dependencies:
     three-mesh-bvh "^0.5.19"
 
-three-mesh-bvh@0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.6.8.tgz#f27d18ca75bdc59316dff0f561af8fb316621a54"
-  integrity sha512-EGebF9DZx1S8+7OZYNNTT80GXJZVf+UYXD/HyTg/e2kR/ApofIFfUS4ZzIHNnUVIadpnLSzM4n96wX+l7GMbnQ==
+three-mesh-bvh@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.7.0.tgz#8327c3483060bb7fe3e0151d7863d338095527d4"
+  integrity sha512-Hj0Z1Rp02yy5H+/xtMBu/dYAeRsSONaBaVLZoST9sMpZxycHypRiUeMHucPOLWFHnpc5hwelOnONcLpkfhDg0Q==
 
 three-mesh-bvh@^0.5.19:
   version "0.5.19"

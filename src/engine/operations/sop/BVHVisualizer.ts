@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshBVHVisualizer} from '../../../core/geometry/bvh/three-mesh-bvh';
+import {MeshBVHHelper} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {Mesh, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -32,8 +32,9 @@ export class BVHVisualizerSopOperation extends BaseSopOperation {
 			object.traverse((childObject) => {
 				const mesh = childObject as Mesh;
 				if (mesh.isMesh) {
-					const visualizer = new MeshBVHVisualizer(mesh, params.depth);
+					const visualizer = new MeshBVHHelper(mesh, params.depth);
 					visualizer.opacity = params.opacity;
+					visualizer.depth = params.depth;
 					visualizer.displayEdges = params.displayEdges;
 					visualizer.displayParents = params.displayParents;
 					visualizer.update();

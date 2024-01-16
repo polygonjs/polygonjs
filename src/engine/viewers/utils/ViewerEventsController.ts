@@ -28,17 +28,16 @@ export class ViewerEventsController {
 			return;
 		}
 
-		this._eventTypes.forEach((mapForEmitter) => {
-			mapForEmitter.forEach((listenerByEventType, emitter) => {
-				listenerByEventType.forEach((listenerWithData, eventType: EventType) => {
-					const eventEmitter = getEventEmitter(
-						{emitter: listenerWithData.data.emitter, type: eventType},
-						canvas
-					);
-					eventEmitter.removeEventListener(eventType, listenerWithData.listener);
-				});
-				listenerByEventType.clear();
+		const mapForController = this._eventTypes.get(eventsController.type());
+		if (!mapForController) {
+			return;
+		}
+		mapForController.forEach((listenerByEventType, emitter) => {
+			listenerByEventType.forEach((listenerWithData, eventType: EventType) => {
+				const eventEmitter = getEventEmitter({emitter: listenerWithData.data.emitter, type: eventType}, canvas);
+				eventEmitter.removeEventListener(eventType, listenerWithData.listener);
 			});
+			listenerByEventType.clear();
 		});
 	}
 
