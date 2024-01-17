@@ -423,7 +423,7 @@ export interface JsNodeChildrenMap {
 	cursorToUv: CursorToUvJsNode;
 	debug: DebugJsNode;
 	deformGeometryCubeLattice: DeformGeometryCubeLatticeJsNode;
-	deleteClothonstraint: DeleteClothConstraintJsNode;
+	deleteClothConstraint: DeleteClothConstraintJsNode;
 	deleteObject: DeleteObjectJsNode;
 	deletePhysicsRBD: DeletePhysicsRBDJsNode;
 	deletePhysicsRBDKinematicConstraint: DeletePhysicsRBDKinematicConstraintJsNode;
