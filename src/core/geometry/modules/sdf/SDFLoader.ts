@@ -2,15 +2,15 @@ import {SDFLoaderSync} from './SDFLoaderSync';
 import {Poly} from '../../../../engine/Poly';
 import {sanitizeUrl} from '../../../UrlHelper';
 import {LIBRARY_INSTALL_HINT} from './../../../loader/common';
-import type {ManifoldStatic} from './SDFCommon';
+import type {ManifoldToplevel} from './SDFCommon';
 import {Module} from './SDFCommon';
 
 let _resolves: Resolve[] = [];
 let _importStarted = false;
-type Resolve = (value: ManifoldStatic | PromiseLike<ManifoldStatic>) => void;
-let _manifold: ManifoldStatic | undefined;
+type Resolve = (value: ManifoldToplevel | PromiseLike<ManifoldToplevel>) => void;
+let _manifold: ManifoldToplevel | undefined;
 export class SDFLoader {
-	static async core(): Promise<ManifoldStatic> {
+	static async core(): Promise<ManifoldToplevel> {
 		if (_manifold) {
 			return _manifold;
 		}
@@ -39,7 +39,7 @@ export class SDFLoader {
 						return;
 					}
 
-					const manifold: ManifoldStatic = await (Module as any)({
+					const manifold: ManifoldToplevel = await (Module as any)({
 						locateFile: () => wasmUrl,
 					});
 					manifold.setup();
@@ -55,6 +55,7 @@ export class SDFLoader {
 						_resolves.length = 0;
 					}
 				} catch (err) {
+					console.error(err);
 					onError();
 				}
 			}

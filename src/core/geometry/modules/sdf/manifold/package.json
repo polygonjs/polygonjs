@@ -1,0 +1,39 @@
+{
+  "name": "manifold-3d",
+  "version": "2.3.1",
+  "description": "Geometry library for topological robustness",
+  "main": "manifold.js",
+  "files": [
+    "manifold.js",
+    "manifold.wasm",
+    "manifold.d.ts",
+    "manifold-encapsulated-types.d.ts",
+    "manifold-global-types.d.ts"
+  ],
+  "typings": "manifold.d.ts",
+  "types": "manifold.d.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elalish/manifold.git"
+  },
+  "keywords": [
+    "3D",
+    "mesh",
+    "manifold",
+    "geometry",
+    "solid",
+    "CAD",
+    "triangle",
+    "SDF"
+  ],
+  "contributors": [
+    "Emmett Lalish <elalish>",
+    "Chun Kit LAM <pca006132>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/elalish/manifold/issues"
+  },
+  "homepage": "https://github.com/elalish/manifold#readme"
+}

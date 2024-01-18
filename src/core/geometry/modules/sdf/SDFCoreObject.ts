@@ -43,7 +43,7 @@ export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
 		let previousGeometry: SDFGeometry | undefined;
 		for (const object of sdfObjects) {
 			if (previousGeometry) {
-				previousGeometry = manifold.union(previousGeometry, object.SDFGeometry());
+				previousGeometry = manifold.Manifold.union(previousGeometry, object.SDFGeometry());
 			} else {
 				previousGeometry = object.SDFGeometry();
 			}

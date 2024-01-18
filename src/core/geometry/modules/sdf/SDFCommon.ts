@@ -1,8 +1,8 @@
 // import type {ManifoldStatic, Manifold, Mesh} from 'manifold-3d';
 // import Module from 'manifold-3d';
-import type {ManifoldStatic, Manifold, Mesh, Mat4, Smoothness, Box} from './manifold/manifold';
+import type {ManifoldToplevel, Manifold, Mesh, Mat4, Smoothness, Box} from './manifold/manifold';
 import Module from './manifold/manifold';
-export type {ManifoldStatic, Manifold, Mesh, Mat4, Smoothness, Box};
+export type {ManifoldToplevel, Manifold, Mesh, Mat4, Smoothness, Box};
 export {Module};
 import {Color} from 'three';
 

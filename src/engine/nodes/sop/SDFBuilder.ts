@@ -160,7 +160,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 				this._position.fromArray(p);
 				return -1 * _func(...args);
 			};
-			const geometry = manifold.levelSet(convertedFunction, box, this.pv.stepSize, this.pv.level);
+			const geometry = manifold.Manifold.levelSet(convertedFunction, box, this.pv.stepSize, this.pv.level);
 			const sdfObject = new SDFObject(geometry);
 			const results = sdfObject.toObject3D(this.pv);
 			if (results) {

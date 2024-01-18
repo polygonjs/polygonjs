@@ -1,4 +1,4 @@
-// Copyright 2023 The Manifold Authors.
+// Copyright 2022 The Manifold Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,30 +15,21 @@
 import * as T from './manifold-encapsulated-types';
 export * from './manifold-global-types';
 
+export type CrossSection = T.CrossSection;
 export type Manifold = T.Manifold;
 export type Mesh = T.Mesh;
 
-export interface ManifoldStatic {
-  cube: typeof T.cube;
-  cylinder: typeof T.cylinder;
-  sphere: typeof T.sphere;
-  smooth: typeof T.smooth;
-  tetrahedron: typeof T.tetrahedron;
-  extrude: typeof T.extrude;
-  revolve: typeof T.revolve;
-  union: typeof T.union;
-  difference: typeof T.difference;
-  intersection: typeof T.intersection;
-  compose: typeof T.compose;
-  levelSet: typeof T.levelSet;
+export interface ManifoldToplevel {
+  CrossSection: typeof T.CrossSection;
+  Manifold: typeof T.Manifold;
+  Mesh: typeof T.Mesh;
+  triangulate: typeof T.triangulate;
   setMinCircularAngle: typeof T.setMinCircularAngle;
   setMinCircularEdgeLength: typeof T.setMinCircularEdgeLength;
   setCircularSegments: typeof T.setCircularSegments;
   getCircularSegments: typeof T.getCircularSegments;
-  reserveIDs: typeof T.reserveIDs;
-  Manifold: typeof T.Manifold;
-  Mesh: typeof T.Mesh;
   setup: () => void;
 }
 
-export default function Module(): Promise<ManifoldStatic>;
+export default function Module(config?: {locateFile: () => string}):
+    Promise<ManifoldToplevel>;
