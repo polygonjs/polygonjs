@@ -156,7 +156,7 @@ export abstract class TypedViewer<C extends Camera> {
 	}
 	static createCanvas(id?: string) {
 		id = id || TypedViewer._nextId();
-		const canvas = document.createElement('canvas');
+		const canvas = Poly.canvasRegister.findOrCreateCanvas();
 		canvas.id = `${this._canvasIdPrefix()}_${id}`;
 		canvas.style.display = 'block';
 		canvas.style.outline = 'none';

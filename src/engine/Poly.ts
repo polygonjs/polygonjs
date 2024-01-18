@@ -1,6 +1,7 @@
 import {BaseNodeClass, BaseNodeType} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
+import {PolyCanvasRegister} from './poly/PolyCanvasRegister';
 import {PolyLibsController} from './poly/PolyLibsController';
 
 import {NodeContext} from './poly/NodeContext';
@@ -55,7 +56,8 @@ declare var __POLYGONJS_VERSION__: string;
 const POLYGONJS_VERSION = __POLYGONJS_VERSION__;
 export class PolyEngine {
 	// static _instance: Poly | undefined;
-	public readonly renderersController: RenderersController = new RenderersController();
+	public readonly renderersController: RenderersController = new RenderersController(this);
+	public readonly canvasRegister: PolyCanvasRegister = new PolyCanvasRegister(this);
 	public readonly scenesRegister: ScenesRegister = new ScenesRegister();
 	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
 	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);

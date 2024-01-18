@@ -8,6 +8,7 @@ import {
 } from 'three';
 import type {AbstractRenderer} from '../viewers/Common';
 import {WEBGL_RENDERER_DEFAULT_PARAMS} from '../../core/render/Common';
+import {PolyEngine} from '../Poly';
 
 export interface WithPolyId {
 	_polygonId?: number;
@@ -45,6 +46,8 @@ export class RenderersController {
 	private _webGLContextByCanvas: Map<HTMLCanvasElement, WebGLRenderingContext> = new Map();
 	private _defaultRendererByCanvas = new Map<HTMLCanvasElement, WebGLRenderer>();
 
+	constructor(public readonly poly: PolyEngine) {}
+
 	dispose() {
 		this._webGLContextByCanvas.clear();
 		this._defaultRendererByCanvas.forEach((renderer) => {
@@ -78,7 +81,7 @@ export class RenderersController {
 		return this._webgl2_available;
 	}
 	private _getWebGL2Available(canvas?: HTMLCanvasElement) {
-		canvas = canvas || document.createElement('canvas');
+		canvas = canvas || this.poly.canvasRegister.dummyCanvas();
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
 	defaultWebGLRendererForCanvas(canvas: HTMLCanvasElement) {
@@ -100,6 +103,12 @@ export class RenderersController {
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
 		const renderer = new WebGLRenderer(params);
+		if (params.canvas != null && params.canvas instanceof HTMLCanvasElement) {
+			this.poly.canvasRegister.registerCanvas(params.canvas, renderer);
+		} else {
+			console.warn('canvas not registerable');
+			console.log(params.canvas);
+		}
 
 		// renderer.debug.checkShaderErrors = true;
 		// renderer.debug.onShaderError = (gl, program, glVertexShader, glFragmentShader) => {
@@ -204,7 +213,7 @@ export class RenderersController {
 		return (this._linearRenderer = this._linearRenderer || this._createLinearRenderer());
 	}
 	private _createLinearRenderer() {
-		const canvas = document.createElement('canvas');
+		const canvas = this.poly.canvasRegister.findOrCreateCanvas();
 		const gl = this.getRenderingContext(canvas);
 		if (!gl) {
 			return;
@@ -218,6 +227,7 @@ export class RenderersController {
 			canvas,
 			context: gl,
 		});
+		this.poly.canvasRegister.registerCanvas(canvas, renderer);
 		renderer.outputColorSpace = NoColorSpace;
 		renderer.toneMapping = NoToneMapping;
 		return renderer;
