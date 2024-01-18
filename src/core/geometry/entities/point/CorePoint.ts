@@ -226,15 +226,13 @@ export abstract class CorePoint<T extends CoreObjectType> extends CoreEntityWith
 		return this.attribType(attribName) == AttribType.STRING;
 	}
 	setAttribIndex(attribName: string, newValueIndex: number) {
-		// if (!this._geometry) {
-		// 	return;
-		// }
 		const attribute = this.attribute(attribName);
 		if (!attribute) {
 			return;
 		}
 		const array = (attribute as BufferAttribute).array;
-		return (array[this._index] = newValueIndex);
+		array[this._index] = newValueIndex;
+		return;
 	}
 
 	//

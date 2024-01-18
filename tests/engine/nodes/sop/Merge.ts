@@ -1,6 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {Points} from 'three';
-import {Mesh} from 'three';
+import {Points, Mesh} from 'three';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
@@ -9,6 +8,10 @@ import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {CadObject} from '../../../../src/core/geometry/modules/cad/CadObject';
 import {CadGeometryType} from '../../../../src/core/geometry/modules/cad/CadCommon';
+import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
+import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+import {pointsFromThreejsObject} from '../../../../src/core/geometry/modules/three/CoreThreejsPointUtils';
+import {Object3DWithGeometry} from '../../../../src/core/geometry/Group';
 export function testenginenodessopMerge(qUnit: QUnit) {
 	qUnit.test('sop/merge simple', async (assert) => {
 		const geo1 = window.geo1;
@@ -244,6 +247,76 @@ export function testenginenodessopMerge(qUnit: QUnit) {
 
 		merge1.p.preserveMaterials.set(false);
 		assert.equal(await getObjectsCount(), 1);
+	});
+
+	qUnit.test('sop/merge preserves string attributes', async (assert) => {
+		const geo1 = window.geo1;
+
+		function _pointWithAttribute(attribValue: string) {
+			const add1 = geo1.createNode('add');
+			const attribCreate1 = geo1.createNode('attribCreate');
+			attribCreate1.setInput(0, add1);
+
+			attribCreate1.setAttribClass(AttribClass.POINT);
+			attribCreate1.setAttribType(AttribType.STRING);
+			attribCreate1.p.name.set('t');
+
+			attribCreate1.p.string.set(attribValue);
+
+			return attribCreate1;
+		}
+		function _merge(nodes: BaseSopNodeType[]) {
+			const merge = geo1.createNode('merge');
+			merge.p.compact.set(true);
+			let i = 0;
+			for (const node of nodes) {
+				merge.setInput(i, node);
+				i++;
+			}
+			return merge;
+		}
+		async function attribValues(node: BaseSopNodeType) {
+			const container = await node.compute();
+			const coreGroup = container.coreContent()!;
+			const objects = coreGroup.threejsObjects();
+			const values: string[] = [];
+			for (const object of objects) {
+				if ((object as Object3DWithGeometry).geometry) {
+					const points = pointsFromThreejsObject(object as Object3DWithGeometry);
+					for (const point of points) {
+						const attribValue = point.attribValue('t') as string;
+						values.push(attribValue);
+					}
+				}
+			}
+			return values;
+		}
+		const a = _pointWithAttribute('a');
+		const b = _pointWithAttribute('b');
+		const c = _pointWithAttribute('c');
+		const d = _pointWithAttribute('d');
+
+		async function _testABC() {
+			const m1 = _merge([a, b]);
+			const m2 = _merge([m1, c]);
+			assert.deepEqual(await attribValues(m2), ['a', 'b', 'c']);
+		}
+		async function _testABCD() {
+			const m1 = _merge([a, b]);
+			const m2 = _merge([c, d]);
+			const m3 = _merge([m1, m2]);
+			assert.deepEqual(await attribValues(m3), ['a', 'b', 'c', 'd']);
+		}
+		async function _testCDAB() {
+			const m1 = _merge([c, d]);
+			const m2 = _merge([a, b]);
+			const m3 = _merge([m1, m2]);
+			assert.deepEqual(await attribValues(m3), ['c', 'd', 'a', 'b']);
+		}
+
+		await _testABC();
+		await _testABCD();
+		await _testCDAB();
 	});
 
 	qUnit.test('sop/merge cad', async (assert) => {
