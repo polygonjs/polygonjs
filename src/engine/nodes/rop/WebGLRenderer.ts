@@ -110,6 +110,12 @@ const TONE_MAPPING_MENU_ENTRIES = TONE_MAPPING_NAMES.map((name, i) => {
 		value: TONE_MAPPING_VALUES[i],
 	};
 });
+const TONE_MAPPING_EXPOSURE_VISIBLE_OPTIONS: ToneMappingValue[] = [];
+for (const value of TONE_MAPPING_VALUES) {
+	if (value != ToneMappingValue.No) {
+		TONE_MAPPING_EXPOSURE_VISIBLE_OPTIONS.push(value);
+	}
+}
 
 enum ShadowMapTypeName {
 	Basic = 'Basic',
@@ -161,6 +167,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	toneMappingExposure = ParamConfig.FLOAT(1, {
 		range: [0, 2],
 		cook: false,
+		visibleIf: TONE_MAPPING_EXPOSURE_VISIBLE_OPTIONS.map((value) => ({toneMapping: value})),
 		callback: (node: BaseNodeType) => {
 			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMappingExposure(node as WebGLRendererRopNode);
 		},
