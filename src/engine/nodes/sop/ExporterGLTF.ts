@@ -32,7 +32,7 @@ export class ExporterGLTFSopNode extends ExporterSopNode<ExporterGLTFSopParamsCo
 				// trs: true,
 				// onlyVisible: true,
 				// truncateDrawRange: false,
-				// binary: true,
+				binary: true,
 				// maxTextureSize: Infinity
 			};
 			const exporter = new GLTFExporter();
