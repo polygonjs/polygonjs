@@ -46,7 +46,7 @@ export class IntToBoolJsNode extends TypedJsNode<IntToBoolJsParamsConfig> {
 //
 //
 class BoolToIntJsParamsConfig extends NodeParamsConfig {
-	bool = ParamConfig.INTEGER(0);
+	bool = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig_BoolToInt = new BoolToIntJsParamsConfig();
 export class BoolToIntJsNode extends TypedJsNode<BoolToIntJsParamsConfig> {
