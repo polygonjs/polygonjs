@@ -7,7 +7,8 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Mesh, Points, LineSegments} from 'three';
+import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Mesh} from 'three';
+import type {Points, LineSegments} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {pushOnArrayAtEntry} from '../../../core/MapUtils';
@@ -16,6 +17,7 @@ import {arrayUniq} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {Attribute} from '../../../core/geometry/Attribute';
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
 const vector3 = new Vector3();
@@ -80,11 +82,11 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 				return this._filterMesh(object as Mesh);
 			}
 			case ObjectType.LINE_SEGMENTS: {
-				this._fuseGeometry((object as Mesh).geometry);
+				this._fuseGeometry((object as LineSegments).geometry);
 				return this._filterLineSegments(object as LineSegments);
 			}
 			case ObjectType.POINTS: {
-				this._fuseGeometry((object as Mesh).geometry);
+				this._fuseGeometry((object as Points).geometry);
 				return this._filterPoints(object as Points);
 			}
 		}
@@ -145,8 +147,8 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		}
 		const indexArray = index.array;
 		const precision = this.pv.dist;
-		const position = geometry.getAttribute('position') as BufferAttribute;
-		const pointsCount = position.array.length / 3;
+		const position = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+		const srcPointsCount = position.array.length / 3;
 
 		function roundedPos(index: number, target: Vector3) {
 			target.fromBufferAttribute(position, index);
@@ -160,7 +162,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const indicesByPosKey: Map<string, Array<number>> = new Map();
 		const posKeyByIndex: Map<number, string> = new Map();
-		for (let index = 0; index < pointsCount; index++) {
+		for (let index = 0; index < srcPointsCount; index++) {
 			roundedPos(index, roundedPosition);
 			const posKey = `${roundedPosition.x},${roundedPosition.y},${roundedPosition.z}`;
 			pushOnArrayAtEntry(indicesByPosKey, posKey, index);
@@ -173,7 +175,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const newIndicesAfterGapsCreated: Map<number, number> = new Map();
 		let nextAvailableIndex = 0;
-		for (let index = 0; index < pointsCount; index++) {
+		for (let index = 0; index < srcPointsCount; index++) {
 			const posKey = posKeyByIndex.get(index)!;
 			const indices = indicesByPosKey.get(posKey)!;
 			if (indices.length <= 1 || indices[0] == index) {
@@ -234,20 +236,23 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 				}
 				const vector = getVector();
 
-				for (let i = 0; i < pointsCount; i++) {
-					let index = newIndexByOldIndexAfterAssignment.get(i);
-					if (index == null) {
-						index = i;
-					}
-					if (vector) {
-						vector.fromBufferAttribute(attribute, i);
-						vector.toArray(newAttribValues, index * itemSize);
-					} else {
-						const currentVal = attribute.array[i];
-						newAttribValues[index] = currentVal;
+				const visitedIndex: Set<number> = new Set();
+				for (let i = 0; i < srcPointsCount; i++) {
+					const index = newIndexByOldIndexAfterAssignment.get(i);
+
+					if (index != null) {
+						if (!visitedIndex.has(index)) {
+							visitedIndex.add(index);
+							if (vector) {
+								vector.fromBufferAttribute(attribute, i);
+								vector.toArray(newAttribValues, index * itemSize);
+							} else {
+								const currentVal = attribute.array[i];
+								newAttribValues[index] = currentVal;
+							}
+						}
 					}
 				}
-
 				geometry.setAttribute(attributeName, new BufferAttribute(new Float32Array(newAttribValues), itemSize));
 			}
 		}

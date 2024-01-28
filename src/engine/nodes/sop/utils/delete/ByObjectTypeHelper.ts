@@ -15,7 +15,7 @@ export const OBJECT_TYPE_MENU_ENTRIES = OBJECT_TYPES.map((name, value) => ({name
 export class ByObjectTypeHelper {
 	constructor(private node: DeleteSopNode) {}
 
-	eval_for_objects(coreObjects: BaseCoreObject<CoreObjectType>[]) {
+	evalForObjects(coreObjects: BaseCoreObject<CoreObjectType>[]) {
 		const objectType = OBJECT_TYPES[this.node.pv.objectType];
 
 		for (const coreObject of coreObjects) {

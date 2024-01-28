@@ -369,7 +369,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		}
 
 		if (isBooleanTrue(this.pv.byObjectType)) {
-			this.byObjectTypeHelper.eval_for_objects(coreObjects);
+			this.byObjectTypeHelper.evalForObjects(coreObjects);
 		}
 
 		if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {

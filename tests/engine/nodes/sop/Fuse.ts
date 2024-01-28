@@ -1,6 +1,8 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {range} from '../../../../src/core/ArrayUtils';
 export function testenginenodessopFuse(qUnit: QUnit) {
 	qUnit.test('fuse simple', async (assert) => {
 		const geo1 = window.geo1;
@@ -100,5 +102,42 @@ export function testenginenodessopFuse(qUnit: QUnit) {
 
 		fuse1.p.dist.set(0.5);
 		assert.deepEqual(await getIndex(fuse1), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+	});
+
+	qUnit.test('fuse on simple sphere + delete', async (assert) => {
+		const geo1 = window.geo1;
+
+		const sphere1 = geo1.createNode('sphere');
+		const delete1 = geo1.createNode('delete');
+		const fuse1 = geo1.createNode('fuse');
+
+		delete1.setInput(0, sphere1);
+		fuse1.setInput(0, delete1);
+
+		sphere1.p.resolution.set([5, 5]);
+		delete1.setAttribClass(AttribClass.OBJECT);
+		delete1.p.invert.set(true);
+		delete1.p.keepPoints.set(true);
+
+		fuse1.p.dist.set(0.5);
+		const _range: number[] = [];
+		range(0, 22, 1, _range);
+		assert.deepEqual(await getIndex(fuse1), _range);
+
+		fuse1.p.dist.set(0.75);
+		range(0, 15, 1, _range);
+		assert.deepEqual(await getIndex(fuse1), _range);
+
+		fuse1.p.dist.set(1);
+		range(0, 13, 1, _range);
+		assert.deepEqual(await getIndex(fuse1), _range);
+
+		fuse1.p.dist.set(1.5);
+		range(0, 6, 1, _range);
+		assert.deepEqual(await getIndex(fuse1), _range);
+
+		fuse1.p.dist.set(1.9);
+		range(0, 4, 1, _range);
+		assert.deepEqual(await getIndex(fuse1), _range);
 	});
 }
