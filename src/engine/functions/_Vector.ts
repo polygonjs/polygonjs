@@ -1,4 +1,4 @@
-import {Object3D, OrthographicCamera, PerspectiveCamera, Vector3} from 'three';
+import {Object3D, OrthographicCamera, PerspectiveCamera, Vector3, Matrix4} from 'three';
 import {NamedFunction2, NamedFunction3} from './_Base';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {getDefaultCamera} from './_Camera';
@@ -66,6 +66,17 @@ export class vector3Unproject extends NamedFunction3<[Vector3, Object3D, Vector3
 		// object3D.updateProjectionMatrix();
 		target.copy(src);
 		target.unproject(object3D);
+		return target;
+	}
+}
+
+export class vector3ApplyMatrix4 extends NamedFunction3<[Vector3, Matrix4, Vector3]> {
+	static override type() {
+		return 'vector3ApplyMatrix4';
+	}
+	func(src: Vector3, matrix4: Matrix4, target: Vector3): Vector3 {
+		target.copy(src);
+		target.applyMatrix4(matrix4);
 		return target;
 	}
 }

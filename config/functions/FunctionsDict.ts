@@ -483,7 +483,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'addObjectToObjectPointerupCheck',
 		'addObjectToObjectSwipeCheck',
 	],
-	Vector: ['vector3AngleTo', 'vector3Project', 'vector3ProjectOnPlane', 'vector3Unproject'],
+	Vector: ['vector3AngleTo', 'vector3Project', 'vector3ProjectOnPlane', 'vector3Unproject', 'vector3ApplyMatrix4'],
 	VectorCross: ['crossVector2', 'crossVector3'],
 	VectorDistance: ['distanceVector2', 'distanceVector3'],
 	VectorDot: ['dotVector2', 'dotVector3'],

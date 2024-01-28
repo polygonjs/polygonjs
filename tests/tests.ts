@@ -323,6 +323,7 @@ import {testenginenodesjsTwoWaySwitch} from './engine/nodes/js/TwoWaySwitch';
 import {testenginenodesjsVector2} from './engine/nodes/js/Vector2';
 import {testenginenodesjsVector3} from './engine/nodes/js/Vector3';
 import {testenginenodesjsVector3AngleTo} from './engine/nodes/js/Vector3AngleTo';
+import {testenginenodesjsVector3ApplyMatrix4} from './engine/nodes/js/Vector3ApplyMatrix4';
 import {testenginenodesjsVector3Project} from './engine/nodes/js/Vector3Project';
 import {testenginenodesjsVector3ProjectOnPlane} from './engine/nodes/js/Vector3ProjectOnPlane';
 import {testenginenodesjsVector3Unproject} from './engine/nodes/js/Vector3Unproject';
@@ -923,6 +924,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsVector2,
 		testenginenodesjsVector3,
 		testenginenodesjsVector3AngleTo,
+		testenginenodesjsVector3ApplyMatrix4,
 		testenginenodesjsVector3Project,
 		testenginenodesjsVector3ProjectOnPlane,
 		testenginenodesjsVector3Unproject,

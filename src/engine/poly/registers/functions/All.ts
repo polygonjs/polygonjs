@@ -520,6 +520,7 @@ import { vec2ToVec3 } from "../../../functions/vec2ToVec3";
 import { vec3ToColor } from "../../../functions/vec3ToColor";
 import { vec3ToVec4 } from "../../../functions/vec3ToVec4";
 import { vector3AngleTo } from "../../../functions/vector3AngleTo";
+import { vector3ApplyMatrix4 } from "../../../functions/vector3ApplyMatrix4";
 import { vector3Project } from "../../../functions/vector3Project";
 import { vector3ProjectOnPlane } from "../../../functions/vector3ProjectOnPlane";
 import { vector3Unproject } from "../../../functions/vector3Unproject";
@@ -1038,6 +1039,7 @@ export interface NamedFunctionMap {
 	vec3ToColor: vec3ToColor;
 	vec3ToVec4: vec3ToVec4;
 	vector3AngleTo: vector3AngleTo;
+	vector3ApplyMatrix4: vector3ApplyMatrix4;
 	vector3Project: vector3Project;
 	vector3ProjectOnPlane: vector3ProjectOnPlane;
 	vector3Unproject: vector3Unproject;
@@ -1559,6 +1561,7 @@ export class AllNamedFunctionRegister {
 			vec3ToColor,
 			vec3ToVec4,
 			vector3AngleTo,
+			vector3ApplyMatrix4,
 			vector3Project,
 			vector3ProjectOnPlane,
 			vector3Unproject,

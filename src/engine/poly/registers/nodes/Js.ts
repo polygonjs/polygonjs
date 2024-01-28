@@ -370,6 +370,7 @@ import {Vec4ToFloatJsNode} from '../../../nodes/js/Vec4ToFloat';
 import {Vec4ToVec3JsNode} from '../../../nodes/js/Vec4ToVec3';
 import {Vector2JsNode} from '../../../nodes/js/Vector2';
 import {Vector3JsNode} from '../../../nodes/js/Vector3';
+import {Vector3ApplyMatrix4JsNode} from '../../../nodes/js/Vector3ApplyMatrix4';
 import {Vector4JsNode} from '../../../nodes/js/Vector4';
 import {WFCBuildJsNode} from '../../../nodes/js/WFCBuild';
 
@@ -744,6 +745,7 @@ export interface JsNodeChildrenMap {
 	vec4ToVec3: Vec4ToVec3JsNode;
 	vector2: Vector2JsNode;
 	vector3: Vector3JsNode;
+	vector3ApplyMatrix4: Vector3ApplyMatrix4JsNode;
 	vector4: Vector4JsNode;
 	WFCBuild: WFCBuildJsNode;
 }
@@ -1197,6 +1199,7 @@ export class JsRegister {
 		poly.registerNode(Vec4ToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vector2JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3JsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector3ApplyMatrix4JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector4JsNode, CATEGORY_JS.MATH);
 		if (process.env.NODE_ENV == 'development') {
 			poly.registerNode(WFCBuildJsNode, CATEGORY_JS.WFC);

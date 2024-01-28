@@ -29,12 +29,12 @@ export class IntToBoolJsNode extends TypedJsNode<IntToBoolJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.BOOLEAN, JsConnectionPointType.BOOLEAN),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.int);
+	override setLines(linesController: JsLinesCollectionController) {
+		const arg0 = this.variableForInputParam(linesController, this.p.int);
 		const varName = this.jsVarName(JsConnectionPointType.BOOLEAN);
-		const func = Poly.namedFunctionsRegister.getFunction('intToBool', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('intToBool', this, linesController);
 
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(arg0)},
 		]);
 	}
@@ -60,12 +60,12 @@ export class BoolToIntJsNode extends TypedJsNode<BoolToIntJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.INT, JsConnectionPointType.INT),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.bool);
+	override setLines(linesController: JsLinesCollectionController) {
+		const arg0 = this.variableForInputParam(linesController, this.p.bool);
 		const varName = this.jsVarName(JsConnectionPointType.INT);
-		const func = Poly.namedFunctionsRegister.getFunction('boolToInt', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('boolToInt', this, linesController);
 
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(arg0)},
 		]);
 	}
@@ -91,12 +91,12 @@ export class IntToFloatJsNode extends TypedJsNode<IntToFloatJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.FLOAT, JsConnectionPointType.FLOAT),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.int);
+	override setLines(linesController: JsLinesCollectionController) {
+		const arg0 = this.variableForInputParam(linesController, this.p.int);
 		const varName = this.jsVarName(JsConnectionPointType.FLOAT);
-		const func = Poly.namedFunctionsRegister.getFunction('intToFloat', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('intToFloat', this, linesController);
 
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(arg0)},
 		]);
 	}
@@ -122,12 +122,12 @@ export class FloatToIntJsNode extends TypedJsNode<FloatToIntJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.INT, JsConnectionPointType.INT),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.float);
+	override setLines(linesController: JsLinesCollectionController) {
+		const arg0 = this.variableForInputParam(linesController, this.p.float);
 		const varName = this.jsVarName(JsConnectionPointType.INT);
-		const func = Poly.namedFunctionsRegister.getFunction('floatToInt', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('floatToInt', this, linesController);
 
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(arg0)},
 		]);
 	}
