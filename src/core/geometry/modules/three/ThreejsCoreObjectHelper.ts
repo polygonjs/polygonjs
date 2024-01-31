@@ -56,10 +56,14 @@ type CreateCoreObjectHelper<S extends PolyScene, T extends CoreObjectHelper<S>> 
 	options: CreateObjectOptions<S>
 ) => T;
 
+interface ObjectFromNodeOptions {
+	traverse?: boolean;
+}
 export async function objectFromNode<S extends PolyScene, T extends CoreObjectHelper<S>>(
 	node: BaseSopNodeType,
 	objectName: string,
-	creatFunction: CreateCoreObjectHelper<S, T>
+	creatFunction: CreateCoreObjectHelper<S, T>,
+	options?: ObjectFromNodeOptions
 ) {
 	const container = await node.compute();
 	const coreGroup = container.coreContent();
@@ -69,10 +73,21 @@ export async function objectFromNode<S extends PolyScene, T extends CoreObjectHe
 		return;
 	}
 	const objects = coreGroup.threejsObjects();
-	const object = objects.find((o) => o.name == objectName);
-	if (!object) {
+	let foundObject = objects.find((o) => o.name == objectName);
+	if (!foundObject && options?.traverse == true) {
+		for (const object of objects) {
+			if (foundObject == null) {
+				object.traverse((child) => {
+					if (child.name == objectName) {
+						foundObject = child;
+					}
+				});
+			}
+		}
+	}
+	if (!foundObject) {
 		console.error(`no object with name '${objectName}'`);
 		return;
 	}
-	return creatFunction({object});
+	return creatFunction({object: foundObject});
 }
