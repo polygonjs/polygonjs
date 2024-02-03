@@ -2,20 +2,20 @@ const CONTEXT_MENU_DISABLER = (event: MouseEvent) => {
 	event.preventDefault();
 	return false;
 };
-export class CoreDomUtils {
-	static disableContextMenu() {
-		document.addEventListener('contextmenu', CONTEXT_MENU_DISABLER);
-	}
-	static reEstablishContextMenu() {
-		document.removeEventListener('contextmenu', CONTEXT_MENU_DISABLER);
-	}
-	static isHTMLVideoElementLoaded(videoElement: HTMLVideoElement) {
-		return videoElement.readyState === 4;
-	}
-	static isHTMLVideoPaused(videoElement: HTMLVideoElement) {
-		return videoElement.paused;
-	}
+
+export function disableContextMenu() {
+	document.addEventListener('contextmenu', CONTEXT_MENU_DISABLER);
 }
+export function enableContextMenu() {
+	document.removeEventListener('contextmenu', CONTEXT_MENU_DISABLER);
+}
+export function isHTMLVideoElementLoaded(videoElement: HTMLVideoElement) {
+	return videoElement.readyState === 4;
+}
+export function isHTMLVideoPaused(videoElement: HTMLVideoElement) {
+	return videoElement.paused;
+}
+
 export function observeStyleChange(element: HTMLElement) {
 	const Observe = (element: HTMLElement, opt: any, cb: any) => {
 		const Obs = new MutationObserver((m) => [...m].forEach(cb));

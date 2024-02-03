@@ -13,14 +13,17 @@ export interface CoreObjectHelperOptions<S extends PolyScene> {
 	object: Object3D;
 }
 interface CreateObjectOptions<S extends PolyScene> {
+	scene: S;
 	object: Object3D;
 }
 type OnAttributeChangeCallback<T> = (newValue: T, prevValue: T) => void;
 
 export class CoreObjectHelper<S extends PolyScene> {
 	private _watchStopHandles: WatchStopHandle[] = [];
+	public readonly scene: S;
 	public readonly object: Object3D;
 	constructor(public readonly options: CoreObjectHelperOptions<S>) {
+		this.scene = options.scene;
 		this.object = options.object;
 	}
 	dispose() {
@@ -89,5 +92,5 @@ export async function objectFromNode<S extends PolyScene, T extends CoreObjectHe
 		console.error(`no object with name '${objectName}'`);
 		return;
 	}
-	return creatFunction({object: foundObject});
+	return creatFunction({scene: node.scene() as S, object: foundObject});
 }

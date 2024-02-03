@@ -1,6 +1,6 @@
 import {BaseEvent, Spherical, Vector3, Vector2, Euler, Camera} from 'three';
 import {CoreMath} from '../../../core/math/_Module';
-import {CoreDomUtils} from '../../../core/DomUtils';
+import {disableContextMenu, enableContextMenu} from '../../../core/DomUtils';
 import {BaseCollisionHandler} from './BaseCollisionHandler';
 import {CorePlayer} from '../../../core/player/Player';
 import {isBooleanTrue} from '../../../core/Type';
@@ -181,7 +181,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._runDomElement.style.display = isBooleanTrue(this.player.runAllowed) ? 'block' : 'none';
 	}
 	private _addEvents() {
-		CoreDomUtils.disableContextMenu();
+		disableContextMenu();
 		this.domElement.addEventListener('touchstart', this._boundMethods.onRotateStart);
 		this.domElement.addEventListener('touchmove', this._boundMethods.onRotateMove);
 		this.domElement.addEventListener('touchend', this._boundMethods.onRotateEnd);
@@ -196,7 +196,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		// its element should have no context menu callback
 		// if no mobile controls is attached. So the viewer should be in control
 		// of re-establishing the event
-		CoreDomUtils.reEstablishContextMenu();
+		enableContextMenu();
 		this.domElement.removeEventListener('touchstart', this._boundMethods.onRotateStart);
 		this.domElement.removeEventListener('touchmove', this._boundMethods.onRotateMove);
 		this.domElement.removeEventListener('touchend', this._boundMethods.onRotateEnd);

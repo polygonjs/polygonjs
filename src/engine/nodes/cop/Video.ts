@@ -31,7 +31,7 @@ import {Poly} from '../../Poly';
 import {CoreVideoTextureLoader} from '../../../core/loader/texture/Video';
 import {VideoEvent, VIDEO_EVENTS} from '../../../core/VideoEvent';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
-import {CoreDomUtils} from '../../../core/DomUtils';
+import {isHTMLVideoElementLoaded} from '../../../core/DomUtils';
 import {NodeContext} from '../../poly/NodeContext';
 // import {TypeAssert} from '../../poly/Assert'
 import {StringParam} from '../../params/String';
@@ -368,7 +368,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 
 		const texture = new VideoTexture(element);
 		return new Promise((resolve) => {
-			if (CoreDomUtils.isHTMLVideoElementLoaded(element)) {
+			if (isHTMLVideoElementLoaded(element)) {
 				resolve(texture);
 			}
 			element.onloadedmetadata = () => {

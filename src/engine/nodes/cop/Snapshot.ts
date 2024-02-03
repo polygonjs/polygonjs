@@ -11,7 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Texture} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {BaseNodeType} from '../_Base';
-import {CoreDomUtils} from '../../../core/DomUtils';
+import {isHTMLVideoElementLoaded} from '../../../core/DomUtils';
 
 export function SnapshotCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -64,7 +64,7 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 
 	private _videoSnapshotCanvas(inputTexture: VideoTexture) {
 		const videoElement = inputTexture.image as HTMLVideoElement;
-		if (!CoreDomUtils.isHTMLVideoElementLoaded(videoElement)) {
+		if (!isHTMLVideoElementLoaded(videoElement)) {
 			this.states.error.set('video not loaded');
 			return;
 		}
