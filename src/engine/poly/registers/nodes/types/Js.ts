@@ -39,6 +39,7 @@ export enum JsType {
 	ON_OBJECT_CLICK_GPU = 'onObjectClickGPU',
 	ON_OBJECT_CONTEXT_MENU = 'onObjectContextMenu',
 	ON_OBJECT_CONTEXT_MENU_GPU = 'onObjectContextMenuGPU',
+	ON_OBJECT_DOUBLE_CLICK = 'onObjectDoubleClick',
 	ON_OBJECT_DISPATCH_EVENT = 'onObjectDispatchEvent',
 	ON_OBJECT_HOVER = 'onObjectHover',
 	ON_OBJECT_HOVER_GPU = 'onObjectHoverGPU',

@@ -224,6 +224,7 @@ import {testenginenodesjsOnManualTrigger} from './engine/nodes/js/OnManualTrigge
 import {testenginenodesjsOnObjectAttributeUpdate} from './engine/nodes/js/OnObjectAttributeUpdate';
 import {testenginenodesjsOnObjectBeforeDelete} from './engine/nodes/js/OnObjectBeforeDelete';
 import {testenginenodesjsOnObjectClick} from './engine/nodes/js/OnObjectClick';
+import {testenginenodesjsOnObjectDoubleClick} from './engine/nodes/js/OnObjectDoubleClick';
 import {testenginenodesjsOnObjectMouseClick} from './engine/nodes/js/OnObjectMouseClick';
 import {testenginenodesjsOnObjectContextMenu} from './engine/nodes/js/OnObjectContextMenu';
 import {testenginenodesjsOnObjectContextMenuGPU} from './engine/nodes/js/OnObjectContextMenuGPU';
@@ -825,6 +826,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsOnObjectAttributeUpdate,
 		testenginenodesjsOnObjectBeforeDelete,
 		testenginenodesjsOnObjectClick,
+		testenginenodesjsOnObjectDoubleClick,
 		testenginenodesjsOnObjectMouseClick,
 		testenginenodesjsOnObjectContextMenu,
 		testenginenodesjsOnObjectContextMenuGPU,

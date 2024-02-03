@@ -68,7 +68,9 @@ export class RendererUtils {
 
 			// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)
 			await callback({viewer, element, canvas, renderer});
-
+			if (mount || element) {
+				viewer.unmount();
+			}
 			viewer.dispose();
 			// Poly.renderersController.disposeWebGLRendererForCanvas(canvas);
 		});

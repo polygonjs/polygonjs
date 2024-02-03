@@ -146,6 +146,9 @@ export interface ButtonsAndModifierOptions {
 	button: ButtonsOptions;
 	modifier: ModifierOptions;
 }
+export interface OnlyModifierOptions {
+	modifier: ModifierOptions;
+}
 // export interface ButtonAndModifierIndexOptions {
 // 	button: ButtonOptions;
 // 	modifier: ModifierIndexOptions;
@@ -158,12 +161,18 @@ export interface ButtonsAndModifierOptionsAsString {
 	button: ConvertToStrings<ButtonsOptions>;
 	modifier: ConvertToStrings<ModifierOptions>;
 }
+export interface ModifierOptionsAsString {
+	modifier: ConvertToStrings<ModifierOptions>;
+}
 
 interface PropertyWithButtonConfig {
 	config: ButtonAndModifierOptions;
 }
 interface PropertyWithButtonsConfig {
 	config: ButtonsAndModifierOptions;
+}
+interface PropertyWithModifierConfig {
+	config: OnlyModifierOptions;
 }
 export interface ButtonConfig {
 	button: MouseButton;
@@ -191,6 +200,16 @@ function statusMatch(modifierProperty: Status, value: boolean): boolean {
 	}
 	TypeAssert.unreachable(modifierProperty);
 }
+export function propertyMatchesModifiersConfig(
+	propertyConfig: OnlyModifierOptions,
+	buttonsConfig: ButtonsConfig | ButtonConfig
+) {
+	return (
+		statusMatch(propertyConfig.modifier.ctrl, buttonsConfig.ctrl) &&
+		statusMatch(propertyConfig.modifier.shift, buttonsConfig.shift) &&
+		statusMatch(propertyConfig.modifier.alt, buttonsConfig.alt)
+	);
+}
 export function propertyMatchesButtonConfig(propertyConfig: ButtonAndModifierOptions, buttonConfig: ButtonConfig) {
 	switch (buttonConfig.button) {
 		case MouseButton.LEFT: {
@@ -212,12 +231,9 @@ export function propertyMatchesButtonConfig(propertyConfig: ButtonAndModifierOpt
 			break;
 		}
 	}
-	return (
-		statusMatch(propertyConfig.modifier.ctrl, buttonConfig.ctrl) &&
-		statusMatch(propertyConfig.modifier.shift, buttonConfig.shift) &&
-		statusMatch(propertyConfig.modifier.alt, buttonConfig.alt)
-	);
+	return propertyMatchesModifiersConfig(propertyConfig, buttonConfig);
 }
+
 export function propertyMatchesButtonsConfig(propertyConfig: ButtonsAndModifierOptions, buttonsConfig: ButtonsConfig) {
 	switch (buttonsConfig.buttons) {
 		case MouseButtons.LEFT: {
@@ -291,11 +307,7 @@ export function propertyMatchesButtonsConfig(propertyConfig: ButtonsAndModifierO
 			break;
 		}
 	}
-	return (
-		statusMatch(propertyConfig.modifier.ctrl, buttonsConfig.ctrl) &&
-		statusMatch(propertyConfig.modifier.shift, buttonsConfig.shift) &&
-		statusMatch(propertyConfig.modifier.alt, buttonsConfig.alt)
-	);
+	return propertyMatchesModifiersConfig(propertyConfig, buttonsConfig);
 }
 function propertiesMatchesButtonConfig(
 	propertiesList: PropertyWithButtonConfig[],
@@ -314,6 +326,17 @@ function propertiesMatchesButtonsConfig(
 ): boolean {
 	for (const properties of propertiesList) {
 		if (propertyMatchesButtonsConfig(properties.config, buttonConfig)) {
+			return true;
+		}
+	}
+	return false;
+}
+function propertiesMatchesModifiersConfig(
+	propertiesList: PropertyWithModifierConfig[],
+	buttonConfig: ButtonsConfig
+): boolean {
+	for (const properties of propertiesList) {
+		if (propertyMatchesModifiersConfig(properties.config, buttonConfig)) {
 			return true;
 		}
 	}
@@ -363,6 +386,23 @@ export function filterObjectsWithMatchButtonsConfig(
 		const propertiesList = propertiesListByObject.get(object);
 		if (propertiesList) {
 			if (propertiesMatchesButtonsConfig(propertiesList, _buttonsConfig)) {
+				target.push(object);
+			}
+		}
+	}
+}
+export function filterObjectsWithMatchModifiersConfig(
+	event: Readonly<PointerEvent | MouseEvent | TouchEvent>,
+	objects: Object3D[],
+	propertiesListByObject: Map<Object3D, PropertyWithModifierConfig[]>,
+	target: Object3D[]
+) {
+	target.length = 0;
+	buttonsConfigFromEvent(event, _buttonsConfig);
+	for (const object of objects) {
+		const propertiesList = propertiesListByObject.get(object);
+		if (propertiesList) {
+			if (propertiesMatchesModifiersConfig(propertiesList, _buttonsConfig)) {
 				target.push(object);
 			}
 		}

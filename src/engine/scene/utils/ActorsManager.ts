@@ -22,6 +22,7 @@ import {RayObjectIntersectionsLongPressController} from './actors/rayObjectInter
 import {RayObjectIntersectionsSwipeController} from './actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
 import {PointerdownController} from './actors/rayObjectIntersection/PointerdownController';
 import {PointerupController} from './actors/rayObjectIntersection/PointerupController';
+import {RayObjectIntersectionsDoubleClickController} from './actors/rayObjectIntersection/RayObjectIntersectionsDoubleClickController';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -110,6 +111,7 @@ export class ActorsManager {
 			this._manualTriggerController || new ActorManualTriggersController(this));
 	}
 	public readonly rayObjectIntersectionClick = new RayObjectIntersectionsClickController(this);
+	public readonly rayObjectIntersectionDoubleClick = new RayObjectIntersectionsDoubleClickController(this);
 	public readonly rayObjectIntersectionMouseClick = new RayObjectIntersectionsMouseClickController(this);
 	public readonly rayObjectIntersectionContextmenu = new RayObjectIntersectionsContextmenuController(this);
 	public readonly rayObjectIntersectionHover = new RayObjectIntersectionsHoverController(this);

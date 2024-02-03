@@ -102,6 +102,9 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 					actorsManager.rayObjectIntersectionMouseClick.onMousedown(eventContext.event);
 					return;
 				}
+				case MouseEventType.dblclick: {
+					actorsManager.rayObjectIntersectionDoubleClick.onDoubleClick(eventContext.event);
+				}
 				case PointerEventType.pointerdown: {
 					actorsManager.rayObjectIntersectionClick.onPointerdown(eventContext.event);
 					actorsManager.rayObjectIntersectionLongPress.onPointerdown(eventContext.event);

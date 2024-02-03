@@ -475,6 +475,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	UserInput: ['addObjectToPointerdownCheck', 'addObjectToPointerupCheck'],
 	UserInputObject: [
 		'addObjectToObjectClickCheck',
+		'addObjectToObjectDoubleClickCheck',
 		'addObjectToObjectMouseClickCheck',
 		'addObjectToObjectContextmenuCheck',
 		'addObjectToObjectHoveredCheck',

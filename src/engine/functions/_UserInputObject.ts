@@ -22,6 +22,19 @@ export class addObjectToObjectClickCheck extends ObjectNamedFunction2<[ActorEval
 		});
 	}
 }
+export class addObjectToObjectDoubleClickCheck extends ObjectNamedFunction2<[ActorEvaluator, ObjectToClickOptions]> {
+	static override type() {
+		return 'addObjectToObjectDoubleClickCheck';
+	}
+	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToClickOptions) {
+		const controller = this.scene.actorsManager.rayObjectIntersectionDoubleClick;
+		controller.addPropertiesForObject(object3D, options);
+
+		evaluator.onDispose(() => {
+			controller.removePropertiesForObject(object3D, options);
+		});
+	}
+}
 export class addObjectToObjectMouseClickCheck extends ObjectNamedFunction2<
 	[ActorEvaluator, ObjectToMouseClickOptions]
 > {

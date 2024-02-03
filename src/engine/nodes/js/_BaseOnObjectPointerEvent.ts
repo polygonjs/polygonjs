@@ -13,6 +13,7 @@ import {
 	ButtonAndModifierOptionsAsString,
 	ButtonsAndModifierOptionsAsString,
 	DEFAULT_STATUS_OPTION,
+	ModifierOptionsAsString,
 	STATUS_MENU_OPTIONS,
 } from '../../scene/utils/actors/rayObjectIntersection/Common';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
@@ -25,6 +26,13 @@ export function MouseEventConfigParamConfig<TBase extends Constructor>(Base: TBa
 		buttonLeft = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, {...STATUS_MENU_OPTIONS, separatorBefore: true});
 		buttonMiddle = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
 		buttonRight = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		ctrl = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		shift = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+		alt = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
+	};
+}
+export function MouseDoubleClickConfigParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
 		ctrl = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
 		shift = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
 		alt = ParamConfig.INTEGER(DEFAULT_STATUS_OPTION, STATUS_MENU_OPTIONS);
@@ -43,6 +51,8 @@ export function PointerEventConfigParamConfig<TBase extends Constructor>(Base: T
 }
 export class BaseMouseConfigParamsConfig extends MouseEventConfigParamConfig(NodeParamsConfig) {}
 const baseMouseConfigParamsConfig = new BaseMouseConfigParamsConfig();
+export class BaseMouseDoubleClickConfigParamsConfig extends MouseDoubleClickConfigParamConfig(NodeParamsConfig) {}
+const baseMouseDoubleClickConfigParamsConfig = new BaseMouseDoubleClickConfigParamsConfig();
 export class BasePointerConfigParamsConfig extends PointerEventConfigParamConfig(NodeParamsConfig) {}
 const basePointerConfigParamsConfig = new BasePointerConfigParamsConfig();
 
@@ -98,6 +108,9 @@ export abstract class BaseOnObjectPointerGPUEventJsNode extends ExtendableOnObje
 export abstract class BaseMouseConfigJsNode extends BaseUserInputJsNode<BaseMouseConfigParamsConfig> {
 	override readonly paramsConfig = baseMouseConfigParamsConfig;
 }
+export abstract class BaseMouseDoubleClickConfigJsNode extends BaseUserInputJsNode<BaseMouseDoubleClickConfigParamsConfig> {
+	override readonly paramsConfig = baseMouseDoubleClickConfigParamsConfig;
+}
 export abstract class BasePointerConfigJsNode extends BaseUserInputJsNode<BasePointerConfigParamsConfig> {
 	override readonly paramsConfig = basePointerConfigParamsConfig;
 }
@@ -140,6 +153,21 @@ export function mouseButtonsConfig(
 			middle,
 			right,
 		},
+		modifier: {
+			ctrl,
+			shift,
+			alt,
+		},
+	};
+}
+export function mouseDoubleClickButtonsConfig(
+	node: BaseMouseDoubleClickConfigJsNode,
+	linesController: JsLinesCollectionController
+): ModifierOptionsAsString {
+	const ctrl = node.variableForInputParam(linesController, node.p.ctrl);
+	const shift = node.variableForInputParam(linesController, node.p.shift);
+	const alt = node.variableForInputParam(linesController, node.p.alt);
+	return {
 		modifier: {
 			ctrl,
 			shift,

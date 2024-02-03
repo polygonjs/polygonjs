@@ -169,6 +169,7 @@ import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
 import {OnObjectClickGPUJsNode} from '../../../nodes/js/OnObjectClickGPU';
 import {OnObjectContextMenuJsNode} from '../../../nodes/js/OnObjectContextMenu';
 import {OnObjectContextMenuGPUJsNode} from '../../../nodes/js/OnObjectContextMenuGPU';
+import {OnObjectDoubleClickJsNode} from '../../../nodes/js/OnObjectDoubleClick';
 import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEvent';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
 import {OnObjectHoverGPUJsNode} from '../../../nodes/js/OnObjectHoverGPU';
@@ -544,6 +545,7 @@ export interface JsNodeChildrenMap {
 	onObjectClickGPU: OnObjectClickGPUJsNode;
 	onObjectContextMenu: OnObjectContextMenuJsNode;
 	onObjectContextMenuGPU: OnObjectContextMenuGPUJsNode;
+	onObjectDoubleClick: OnObjectDoubleClickJsNode;
 	onObjectDispatchEvent: OnObjectDispatchEventJsNode;
 	onObjectHover: OnObjectHoverJsNode;
 	onObjectHoverGPU: OnObjectHoverGPUJsNode;
@@ -996,6 +998,7 @@ export class JsRegister {
 		poly.registerNode(OnObjectClickGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectContextMenuJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectContextMenuGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectDoubleClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectDispatchEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverGPUJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

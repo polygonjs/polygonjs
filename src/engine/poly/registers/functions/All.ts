@@ -12,6 +12,7 @@ import { addAudioStopEventListener } from "../../../functions/addAudioStopEventL
 import { addNumber } from "../../../functions/addNumber";
 import { addObjectToObjectClickCheck } from "../../../functions/addObjectToObjectClickCheck";
 import { addObjectToObjectContextmenuCheck } from "../../../functions/addObjectToObjectContextmenuCheck";
+import { addObjectToObjectDoubleClickCheck } from "../../../functions/addObjectToObjectDoubleClickCheck";
 import { addObjectToObjectHoveredCheck } from "../../../functions/addObjectToObjectHoveredCheck";
 import { addObjectToObjectLongPressCheck } from "../../../functions/addObjectToObjectLongPressCheck";
 import { addObjectToObjectMouseClickCheck } from "../../../functions/addObjectToObjectMouseClickCheck";
@@ -531,6 +532,7 @@ export interface NamedFunctionMap {
 	addNumber: addNumber;
 	addObjectToObjectClickCheck: addObjectToObjectClickCheck;
 	addObjectToObjectContextmenuCheck: addObjectToObjectContextmenuCheck;
+	addObjectToObjectDoubleClickCheck: addObjectToObjectDoubleClickCheck;
 	addObjectToObjectHoveredCheck: addObjectToObjectHoveredCheck;
 	addObjectToObjectLongPressCheck: addObjectToObjectLongPressCheck;
 	addObjectToObjectMouseClickCheck: addObjectToObjectMouseClickCheck;
@@ -1053,6 +1055,7 @@ export class AllNamedFunctionRegister {
 			addNumber,
 			addObjectToObjectClickCheck,
 			addObjectToObjectContextmenuCheck,
+			addObjectToObjectDoubleClickCheck,
 			addObjectToObjectHoveredCheck,
 			addObjectToObjectLongPressCheck,
 			addObjectToObjectMouseClickCheck,

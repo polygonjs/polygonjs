@@ -6,11 +6,17 @@ interface EventPos {
 	x: number;
 	y: number;
 }
+interface EventModifierOptions {
+	ctrl: boolean;
+	shift: boolean;
+	alt: boolean;
+}
 interface EventOptions {
 	offset?: Vector2;
 	emitter?: HTMLElement | Document;
 	button?: MouseButton;
 	buttons?: MouseButtons;
+	modifier?: Partial<EventModifierOptions>;
 }
 interface MouseEventOptions extends Partial<EventPos> {
 	button?: MouseButton;
@@ -22,7 +28,7 @@ function rectElement(emitter: HTMLElement | Document) {
 	return rect;
 }
 
-type MouseEventName = 'mousemove' | 'mousedown' | 'mouseup';
+type MouseEventName = 'mousemove' | 'mousedown' | 'mouseup' | 'dblclick';
 type PointerEventName = 'pointermove' | 'pointerdown' | 'pointerup' | 'click' | 'contextmenu';
 function triggerMouseEvent(eventName: MouseEventName, emitter: HTMLElement | Document, options?: MouseEventOptions) {
 	const offsetX = options?.x != null ? options.x : 0;
@@ -55,6 +61,9 @@ function triggerMouseEventInMiddle(eventName: MouseEventName, element: HTMLEleme
 		clientY: elementRect.top + elementRect.height * 0.5 + (options?.offset ? options.offset.y : 0),
 		button: options?.button != null ? options.button : MouseButton.LEFT,
 		buttons: options?.buttons != null ? options.buttons : MouseButtons.LEFT,
+		ctrlKey: options?.modifier?.ctrl || false,
+		shiftKey: options?.modifier?.shift || false,
+		altKey: options?.modifier?.alt || false,
 	});
 	const emitter = options?.emitter || element;
 	// const emitterRect = rectElement(emitter);
@@ -72,6 +81,9 @@ function triggerPointerEventInMiddle(
 		clientX: elementRect.left + elementRect.width * 0.5 + (options?.offset ? options.offset.x : 0),
 		clientY: elementRect.top + elementRect.height * 0.5 + (options?.offset ? options.offset.y : 0),
 		button: options?.button != null ? options.button : MouseButton.LEFT,
+		ctrlKey: options?.modifier?.ctrl || false,
+		shiftKey: options?.modifier?.shift || false,
+		altKey: options?.modifier?.alt || false,
 	});
 	const emitter = options?.emitter || element;
 	// const emitterRect = rectElement(emitter);
@@ -83,6 +95,9 @@ function triggerMouseEventAside(eventName: MouseEventName, element: HTMLElement 
 		clientX: 0,
 		clientY: 0,
 		button: options?.button != null ? options.button : MouseButton.LEFT,
+		ctrlKey: options?.modifier?.ctrl || false,
+		shiftKey: options?.modifier?.shift || false,
+		altKey: options?.modifier?.alt || false,
 	});
 	element.dispatchEvent(event);
 }
@@ -144,6 +159,10 @@ export async function triggerPointerdownAndPointerup(canvas: HTMLCanvasElement, 
 	await CoreSleep.sleep(100);
 	triggerPointerEvent('pointerup', document, options);
 }
+export async function triggerDoubleClick(canvas: HTMLCanvasElement, options?: EventPos) {
+	triggerMouseEvent('dblclick', canvas, options);
+	await CoreSleep.sleep(100);
+}
 export async function triggerMousedownAndMouseupInMiddle(canvas: HTMLCanvasElement, options?: MouseEventOptions) {
 	// triggerPointerEventInMiddle('click', canvas);
 	triggerMouseEventInMiddle('mousedown', canvas, options);
@@ -156,6 +175,14 @@ export async function triggerPointerdownAndPointerupInMiddle(canvas: HTMLCanvasE
 	await CoreSleep.sleep(100);
 	triggerPointerEventInMiddle('pointerup', document, {button});
 }
+export async function triggerDoubleClickInMiddle(
+	canvas: HTMLCanvasElement,
+	button?: MouseButton,
+	modifier?: Partial<EventModifierOptions>
+) {
+	triggerMouseEventInMiddle('dblclick', canvas, {button, modifier});
+	await CoreSleep.sleep(100);
+}
 export async function triggerMousedownAndMouseupAside(canvas: HTMLCanvasElement, options?: MouseEventOptions) {
 	triggerMouseEventAside('mousedown', canvas, options);
 	await CoreSleep.sleep(100);
@@ -165,6 +192,14 @@ export async function triggerPointerdownAndPointerupAside(canvas: HTMLCanvasElem
 	triggerPointerEventAside('pointerdown', canvas, {button});
 	await CoreSleep.sleep(100);
 	triggerPointerEventAside('pointerup', canvas, {button});
+}
+export async function triggerDoubleClickAside(
+	canvas: HTMLCanvasElement,
+	button?: MouseButton,
+	modifier?: Partial<EventModifierOptions>
+) {
+	triggerMouseEventAside('dblclick', canvas, {button, modifier});
+	await CoreSleep.sleep(100);
 }
 // contextmenu
 export function triggerContextMenu(canvas: HTMLCanvasElement, options?: EventPos) {
