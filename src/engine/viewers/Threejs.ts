@@ -1,7 +1,5 @@
 import {Camera, WebGLRenderer, Scene} from 'three';
 import {TypedViewer, TypedViewerOptions, BaseViewerMountOptions} from './_Base';
-// import {Poly} from '../Poly';
-// import {ViewerLogoController} from './utils/logo/ViewerLogoController';
 import {AvailableRenderConfig, CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
 import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostProcessController';
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
@@ -14,7 +12,7 @@ import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../
 import {MarkerTrackingControllerConfig} from '../../core/webXR/markerTracking/Common';
 import {CoreCameraMarkerTrackingController} from '../../core/camera/webXR/CoreCameraMarkerTracking';
 import {CoreCameraViewerFPSController, ViewerFPSConfig, isDeltaValid} from '../../core/camera/CoreCameraFPS';
-// import {coreDebug, coreMountDebugElement} from '../../core/DebugUtils';
+
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -410,36 +408,10 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		if (this._renderFunc) {
 			this._updateRendererSize();
 			this._renderFunc(this.scene().timeController.delta());
+			this._runOnResizeCallbacks();
 		}
-		return;
-		// if (this._resizeRequired) {
-		// 	return;
-		// }
-		// const prevRenderFunc = this._renderFunc;
-		// if (!prevRenderFunc) {
-		// 	return;
-		// }
-		// if (this._rendererSizeUpdateRequired) {
-		// 	return;
-		// }
-		// this._rendererSizeUpdateRequired = true;
-
-		// // instead of resizing the renderer on each resize event,
-		// // we set the size as recomputeRequired,
-		// // and we only recompute before next render.
-
-		// // this._scene.viewersRegister.markViewerAsResizeRequired(this);
-
-		// console.log('replace renderFunc');
-		// this._renderFunc = (delta) => {
-		// 	this._updateRendererSize();
-		// 	this._rendererSizeUpdateRequired = false;
-		// 	// restore previous render function
-		// 	this._renderFunc = prevRenderFunc;
-		// 	// render
-		// 	prevRenderFunc(delta);
-		// };
 	}
+
 	override updateSize(): boolean {
 		const renderer = this._renderer;
 

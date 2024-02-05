@@ -18,6 +18,7 @@ const HOVERED_CLASS_NAME = 'hovered';
 type ViewerTickCallback = (delta: number) => void;
 type ViewerRenderCallback = (delta: number, renderer: AbstractRenderer) => void;
 type ViewerBaseCallback = ViewerTickCallback | ViewerRenderCallback;
+type OnResizeCallback = (width: number, height: number) => void;
 interface BaseViewerCallbackOptions {
 	persistent?: boolean;
 }
@@ -408,6 +409,37 @@ export abstract class TypedViewer<C extends Camera> {
 			return;
 		}
 		this._observer.unobserve(this._domElement);
+	}
+
+	//
+	//
+	// RESIZE CALLBACKS
+	//
+	//
+	protected _onResizeCallbacks: OnResizeCallback[] | undefined;
+	registerOnResizeCallback(callback: OnResizeCallback) {
+		this._onResizeCallbacks = this._onResizeCallbacks || [];
+		this._onResizeCallbacks.push(callback);
+	}
+	unregisterOnResizeCallback(callback: OnResizeCallback) {
+		if (!this._onResizeCallbacks) {
+			return;
+		}
+		const index = this._onResizeCallbacks.indexOf(callback);
+		if (index >= 0) {
+			this._onResizeCallbacks.splice(index, 1);
+		}
+		if (this._onResizeCallbacks.length == 0) {
+			this._onResizeCallbacks = undefined;
+		}
+	}
+	protected _runOnResizeCallbacks() {
+		if (!this._onResizeCallbacks) {
+			return;
+		}
+		for (const callback of this._onResizeCallbacks) {
+			callback(this._size.x, this._size.y);
+		}
 	}
 
 	//
