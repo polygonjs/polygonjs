@@ -4,7 +4,6 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 
 enum NullEventInput {
@@ -15,6 +14,7 @@ enum NullEventOutput {
 }
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../../core/event/EventContextType';
 class NullEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullEventParamsConfig();
 

@@ -8,11 +8,11 @@
  */
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypeAssert} from '../../poly/Assert';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import { EventContext } from '../../../core/event/EventContextType';
 
 enum FlagUpdateMode {
 	SET = 'set',

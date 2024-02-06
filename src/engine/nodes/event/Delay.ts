@@ -5,13 +5,14 @@
  *
  */
 import {TypedEventNode} from './_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import { EventContext } from '../../../core/event/EventContextType';
 
 const INPUT_NAME = 'in';
 const OUTPUT_NAME = 'out';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+
 class DelayEventParamsConfig extends NodeParamsConfig {
 	/** @param delay before dispatching (in milliseconds) */
 	delay = ParamConfig.INTEGER(1000, {

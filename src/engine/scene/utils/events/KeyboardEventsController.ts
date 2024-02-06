@@ -1,13 +1,12 @@
-import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
+import {BaseSceneEventsController} from './_BaseEventsController';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
-// import type {KeyboardEventActorNode} from '../actors/ActorsKeyboardEventsController';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../../core/event/KeyboardEventType';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {TimeController} from '../TimeController';
-// import {TimeController} from '../TimeController';
 import {ActorKeyboardEventsController} from '../actors/ActorsKeyboardEventsController';
 import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {JsType} from '../../../poly/registers/nodes/types/Js';
+import type {EventContext} from '../../../../core/event/EventContextType';
 
 const methodNameByEventType: Record<KeyboardEventType, EvaluatorKeyboardMethod[]> = {
 	[KeyboardEventType.keydown]: [JsType.ON_KEY, JsType.ON_KEYDOWN],

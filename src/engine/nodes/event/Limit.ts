@@ -4,7 +4,6 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 
@@ -18,6 +17,7 @@ enum LimitEventOutput {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../../core/event/EventContextType';
 class LimitEventParamsConfig extends NodeParamsConfig {
 	/** @param max number of events that can be processed */
 	maxCount = ParamConfig.INTEGER(5, {
@@ -39,8 +39,8 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 		return 'limit';
 	}
 
-	private _process_count: number = 0;
-	private _last_dispatched: boolean = false;
+	private _processCount: number = 0;
+	private _lastDispatched: boolean = false;
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
@@ -51,7 +51,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 			new EventConnectionPoint(
 				LimitEventInput.RESET,
 				EventConnectionPointType.BASE,
-				this.process_event_reset.bind(this)
+				this.processEventReset.bind(this)
 			),
 		]);
 
@@ -61,25 +61,25 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 		]);
 	}
 
-	override processEvent(event_context: EventContext<Event>) {}
+	override processEvent(eventContext: EventContext<Event>) {}
 
-	private processEventTrigger(event_context: EventContext<Event>) {
-		if (this._process_count < this.pv.maxCount) {
-			this._process_count += 1;
-			this.dispatchEventToOutput(LimitEventOutput.OUT, event_context);
+	private processEventTrigger(eventContext: EventContext<Event>) {
+		if (this._processCount < this.pv.maxCount) {
+			this._processCount += 1;
+			this.dispatchEventToOutput(LimitEventOutput.OUT, eventContext);
 		} else {
-			if (!this._last_dispatched) {
-				this._last_dispatched = true;
-				this.dispatchEventToOutput(LimitEventOutput.LAST, event_context);
+			if (!this._lastDispatched) {
+				this._lastDispatched = true;
+				this.dispatchEventToOutput(LimitEventOutput.LAST, eventContext);
 			}
 		}
 	}
-	private process_event_reset(event_context: EventContext<Event>) {
-		this._process_count = 0;
-		this._last_dispatched = false;
+	private processEventReset(eventContext: EventContext<Event>) {
+		this._processCount = 0;
+		this._lastDispatched = false;
 	}
 
 	static PARAM_CALLBACK_reset(node: LimitEventNode) {
-		node.process_event_reset({});
+		node.processEventReset({});
 	}
 }

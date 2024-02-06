@@ -1,5 +1,6 @@
 import {BaseViewerType} from '../_Base';
-import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
+import {BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
+import {EventContext} from '../../../../src/core/event/EventContextType';
 import {EmitterElementOrWindow} from '../../../core/event/CoreEventEmitter';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {allowCanvasKeyEventsListener} from '../../../core/event/CanvasKeyFocus';

@@ -7,12 +7,12 @@ import {PolyEventName} from './../../poly/utils/PolyEventName';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {EventConnectionPoint, EventConnectionPointType, BaseEventConnectionPoint} from '../utils/io/connections/Event';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {TypedEventNode} from './_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {isBooleanTrue} from '../../../core/Type';
+import {EventContext} from '../../../core/event/EventContextType';
 
 enum SceneNodeInput {
 	SET_FRAME = 'setFrame',

@@ -6,9 +6,9 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../../core/event/EventContextType';
 class ViewerParamsConfig extends NodeParamsConfig {
 	/** @param sets the class of the viewer */
 	className = ParamConfig.STRING('active');

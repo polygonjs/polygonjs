@@ -7,10 +7,10 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import { EventContext } from '../../../core/event/EventContextType';
 
 class BlockParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to block incoming events */

@@ -1,10 +1,10 @@
 import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseEventConnectionPoint} from '../utils/io/connections/Event';
 import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {Poly} from '../../Poly';
+import { EventContext } from '../../../core/event/EventContextType';
 
 type DispatchHook = (event_context: EventContext<Event>) => void;
 

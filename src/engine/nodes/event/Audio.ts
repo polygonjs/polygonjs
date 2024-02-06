@@ -7,13 +7,13 @@
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseNodeType} from '../_Base';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 import {NodeContext} from '../../poly/NodeContext';
 import {AudioListenerObjNode} from '../obj/AudioListener';
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from './../../../core/audio/PlayerCallbacksManager';
+import { EventContext } from '../../../core/event/EventContextType';
 
 export enum AudioEventOutput {
 	ON_STOP = 'onStop',

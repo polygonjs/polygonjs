@@ -6,7 +6,6 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 
@@ -15,6 +14,7 @@ enum ButtonEventOutput {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../../core/event/EventContextType';
 class ButtonEventParamsConfig extends NodeParamsConfig {
 	/** @param button to presse to trigger the event */
 	dispatch = ParamConfig.BUTTON(null, {

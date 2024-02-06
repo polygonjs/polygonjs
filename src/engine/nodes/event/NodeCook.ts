@@ -6,7 +6,6 @@
 import {TypedEventNode} from './_Base';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 
 enum CookMode {
 	ALL_TOGETHER = 'all together',
@@ -19,6 +18,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {EventContext} from '../../../core/event/EventContextType';
 class NodeCookEventParamsConfig extends NodeParamsConfig {
 	/** @param mask to select which nodes this will cook or listen to */
 	mask = ParamConfig.STRING('/geo*', {

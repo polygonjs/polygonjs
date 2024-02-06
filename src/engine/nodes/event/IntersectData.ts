@@ -11,11 +11,11 @@ import {AttribType, ATTRIBUTE_TYPES, AttribTypeMenuEntries} from '../../../core/
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {Intersection} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isString, isNumber, isArray, isVector} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {resolveIntersectGeometryAttribute} from '../../../core/geometry/intersect/CoreIntersect';
 import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {EventContext} from '../../../core/event/EventContextType';
 
 export enum TargetType {
 	SCENE_GRAPH = 'scene graph',

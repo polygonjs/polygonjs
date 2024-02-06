@@ -12,7 +12,7 @@ const OUTPUT_NAME = 'tick';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import { EventContext } from '../../../core/event/EventContextType';
 class TimerEventParamsConfig extends NodeParamsConfig {
 	/** @param period between each interval */
 	period = ParamConfig.INTEGER(1000);

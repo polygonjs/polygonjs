@@ -7,10 +7,10 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import { EventContext } from '../../../core/event/EventContextType';
 
 class MessageParamsConfig extends NodeParamsConfig {
 	/** @param toggle on for the message to be displayed in a popup */

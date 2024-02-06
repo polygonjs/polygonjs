@@ -12,6 +12,7 @@ import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
 import {AvailableRenderConfig} from '../../core/camera/CoreCameraRendererController';
+import {MouseHelper} from '../../core/event/MouseHelper';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -435,6 +436,10 @@ export abstract class TypedViewer<C extends Camera> {
 		}
 	}
 	protected _runOnResizeCallbacks() {
+		const canvas = this.canvas();
+		if (canvas) {
+			MouseHelper.resetCacheForCanvas(canvas);
+		}
 		if (!this._onResizeCallbacks) {
 			return;
 		}

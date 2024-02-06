@@ -1,28 +1,12 @@
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
-import {BaseNodeType} from '../../../nodes/_Base';
-import {Intersection} from 'three';
-import {BaseViewerType} from '../../../viewers/_Base';
-// import type {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
 import {EventData, EventType} from '../../../../core/event/EventData';
 import {PointerEventType} from '../../../../core/event/PointerEventType';
-// import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
 import {addToSetAtEntry} from '../../../../core/MapUtils';
 import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
+import type {EventContext} from '../../../../core/event/EventContextType';
 
-interface EventContextValue {
-	node?: BaseNodeType; // for node_cook
-	intersect?: Intersection; // for raycast
-}
-
-export interface EventContext<E extends Event> {
-	viewer?: Readonly<BaseViewerType>;
-	event?: Readonly<E>;
-	emitter?: CoreEventEmitter;
-	// camera?: Readonly<Camera>;
-	value?: EventContextValue;
-}
 export abstract class BaseSceneEventsController<
 	E extends Event,
 	T extends BaseInputEventNodeType

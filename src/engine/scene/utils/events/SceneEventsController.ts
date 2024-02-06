@@ -1,14 +1,7 @@
 import {addToSetAtEntry} from '../../../../core/MapUtils';
+import {EventContext} from '../../../../core/event/EventContextType';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
 import {PolyEventName} from '../../../poly/utils/PolyEventName';
-import {EventContext} from './_BaseEventsController';
-
-// export enum PolySceneEventType {
-// 	LOADED = 'sceneLoaded',
-// 	PLAY = 'play',
-// 	PAUSE = 'pause',
-// 	// TICK = 'tick',
-// }
 
 export class PolySceneEvent extends Event {
 	constructor(type: PolyEventName) {

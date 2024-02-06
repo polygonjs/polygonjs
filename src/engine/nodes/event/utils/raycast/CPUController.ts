@@ -1,5 +1,4 @@
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
-import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
 import {Object3D} from 'three';
 import {Intersection} from 'three';
@@ -19,12 +18,10 @@ import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {IntersectDataEventNode} from '../../IntersectData';
 import {BaseRaycastController} from './BaseRaycastController';
 import {resolveIntersectGeometryAttribute} from '../../../../../core/geometry/intersect/CoreIntersect';
+import {EventContext} from '../../../../../core/event/EventContextType';
 
 export class RaycastCPUController extends BaseRaycastController {
-	// private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
-	// private _mouse: Vector2 = new Vector2();
 	private _cursorArray: Number2 = [0, 0];
-	// private _raycaster = createRaycaster();
 	private _resolvedTargets: Object3D[] | undefined;
 
 	public readonly velocityController: RaycastCPUVelocityController;
@@ -51,35 +48,6 @@ export class RaycastCPUController extends BaseRaycastController {
 		// this._updateFromCursor(canvas);
 		viewer.raycastersController.raycaster0().setFromCamera(this._cursor, camera);
 	}
-	// protected override _remapCursor() {
-	// 	this._cursor.x = this._cursor.x * 2 - 1;
-	// 	this._cursor.y = -this._cursor.y * 2 + 1;
-	// }
-	// private _updateFromCursor(canvas: HTMLCanvasElement){
-	// 	if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
-	// 		// the canvas can have a size of 0 if it has been removed from the scene
-	// 		this._mouse.set(0, 0);
-	// 	} else {
-	// 		this._mouse.x = (this._offset.offsetX / canvas.offsetWidth) * 2 - 1;
-	// 		this._mouse.y = -(this._offset.offsetY / canvas.offsetHeight) * 2 + 1;
-	// 		this._mouse.toArray(this._mouse_array);
-	// 	}
-	// 	// there can be some conditions leading to an infinite mouse number, so we check here what we got
-	// 	if (isNaN(this._mouse.x) || !isFinite(this._mouse.x) || isNaN(this._mouse.y) || !isFinite(this._mouse.y)) {
-	// 		console.warn('invalid number detected');
-	// 		console.warn(
-	// 			this._mouse.toArray(),
-	// 			this._offset.offsetX,
-	// 			this._offset.offsetY,
-	// 			canvas.offsetWidth,
-	// 			canvas.offsetHeight
-	// 		);
-	// 		return;
-	// 	}
-	// 	if (isBooleanTrue(this._node.pv.tmouse)) {
-	// 		this._node.p.mouse.set(this._mouse_array);
-	// 	}
-	// };
 
 	processEvent(context: EventContext<MouseEvent>) {
 		this._prepareRaycaster(context);

@@ -7,7 +7,6 @@ import {NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {RaycastCPUController} from './utils/raycast/CPUController';
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './utils/raycast/CpuConstants';
 import {RaycastGPUController} from './utils/raycast/GPUController';
@@ -50,6 +49,7 @@ export const TARGET_TYPES: TargetType[] = [TargetType.SCENE_GRAPH, TargetType.NO
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
+import {EventContext} from '../../../core/event/EventContextType';
 
 class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param defines if the ray detection is done on the CPU or GPU (GPU being currently experimental) */

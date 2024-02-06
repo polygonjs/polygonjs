@@ -7,7 +7,6 @@
 import {Number2, Number3, Number4} from '../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypeAssert} from '../../poly/Assert';
 import {BaseParamType} from '../../params/_Base';
 import {ParamType} from '../../poly/ParamType';
@@ -22,6 +21,7 @@ import {Vector3} from 'three';
 import {Vector4} from 'three';
 import {IntegerParam} from '../../params/Integer';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {EventContext} from '../../../core/event/EventContextType';
 
 export enum SetParamParamType {
 	BOOLEAN = 'boolean',

@@ -40,7 +40,6 @@
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/Type';
 import {VisibleIfParamOptions} from '../../params/utils/OptionsController';
 
@@ -49,6 +48,7 @@ import {BaseNodeType} from '../_Base';
 import {gsap} from '../../../core/thirdParty/gsap/gsap';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {gsapLib} from '../../../core/thirdParty/gsap/gsapFactory';
+import {EventContext} from '../../../core/event/EventContextType';
 gsap.registerPlugin(ScrollTrigger);
 
 enum ScrollTriggerNodeInput {

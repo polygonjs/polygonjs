@@ -1,4 +1,3 @@
-import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
@@ -21,6 +20,7 @@ import {
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../../../core/Type';
 import {BaseRaycastController} from './BaseRaycastController';
+import { EventContext } from '../../../../../core/event/EventContextType';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;

@@ -7,13 +7,16 @@ export interface CursorPage {
 	clientY: number;
 }
 
-export class MouseHelperClass {
+class MouseHelperClass {
 	private static _instance: MouseHelperClass;
 
 	static instance() {
 		return (this._instance = this._instance || new MouseHelperClass());
 	}
 	private constructor() {
+		// We could potentially remove the 'resize' listener,
+		// as the viewers do not rely on it anymore.
+		// But this may still be required by the event nodes.
 		window.addEventListener('resize', this._resetCacheBound);
 		document.addEventListener('scroll', this._resetCacheBound);
 	}
@@ -34,6 +37,9 @@ export class MouseHelperClass {
 	private _resetCacheBound = this._resetCache.bind(this);
 	private _resetCache() {
 		this._rectByCanvas.clear();
+	}
+	resetCacheForCanvas(canvas: HTMLCanvasElement) {
+		this._rectByCanvas.delete(canvas);
 	}
 }
 

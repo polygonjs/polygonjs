@@ -288,6 +288,7 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 		this._cssRendererConfig?.cssRenderer.setSize(this._size.x, this._size.y);
 		this._effectComposer?.setSize(this._size.x, this._size.y);
 		this.camerasController().updateCameraAspect();
+		this._runOnResizeCallbacks();
 	}
 
 	// private _initDisplay() {

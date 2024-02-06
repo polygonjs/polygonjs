@@ -6,13 +6,13 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPointType} from '../utils/io/connections/Event';
 
 const OUTPUT_NAME = 'event';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import { EventContext } from '../../../core/event/EventContextType';
 class AnyEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to ensure events are transfered */
 	active = ParamConfig.BOOLEAN(1);

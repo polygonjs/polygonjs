@@ -5,11 +5,11 @@
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypedEventNode} from './_Base';
 import debounce from 'lodash-es/debounce';
 import type {DebouncedFunc} from 'lodash-es';
 import {BaseNodeType} from '../_Base';
+import { EventContext } from '../../../core/event/EventContextType';
 
 const callbackOption = {
 	callback: (node: BaseNodeType) => {

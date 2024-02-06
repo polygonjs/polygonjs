@@ -7,13 +7,13 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPointType} from '../utils/io/connections/Event';
 
 const INPUT_NAME = 'trigger';
 // const OUTPUTS_COUNT = 10;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EventContext} from '../../../core/event/EventContextType';
 class PassEventParamsConfig extends NodeParamsConfig {
 	/** @param number of possible outputs */
 	outputsCount = ParamConfig.INTEGER(5, {

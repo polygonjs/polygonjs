@@ -1,3 +1,6 @@
+import  {BaseConnectionPoint} from './_Base';
+import  {ParamType} from '../../../../poly/ParamType';
+import type{ EventContext } from '../../../../../core/event/EventContextType';
 //
 //
 // Event Data types
@@ -42,9 +45,7 @@ export interface EventConnectionPointData<T extends EventConnectionPointType> {
 	isArray?: boolean;
 }
 
-import {BaseConnectionPoint} from './_Base';
-import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
-import {ParamType} from '../../../../poly/ParamType';
+
 export class EventConnectionPoint<T extends EventConnectionPointType> extends BaseConnectionPoint {
 	protected override _json: EventConnectionPointData<T> | undefined;
 

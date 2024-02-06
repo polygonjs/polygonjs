@@ -4,7 +4,6 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
@@ -13,6 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {GsapCoreTimeline, gsapTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
 import {ModuleName} from '../../poly/registers/modules/Common';
+import { EventContext } from '../../../core/event/EventContextType';
 
 enum AnimationEventInput {
 	START = 'start',

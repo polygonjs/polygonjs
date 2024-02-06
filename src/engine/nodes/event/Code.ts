@@ -5,13 +5,13 @@
  */
 
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {Poly} from '../../Poly';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import { EventContext } from '../../../core/event/EventContextType';
 
 const DEFAULT_TS = `
 export class EventProcessor extends BaseCodeEventProcessor {

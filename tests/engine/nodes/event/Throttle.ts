@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ThrottleEventNode} from '../../../../src/engine/nodes/event/Throttle';
-import {EventContext} from '../../../../src/engine/scene/utils/events/_BaseEventsController';
+import {EventContext} from '../../../../src/core/event/EventContextType';
 export function testenginenodeseventThrottle(qUnit: QUnit) {
 	qUnit.test('event/throttle nodes simple', async (assert) => {
 		const geo1 = window.geo1;

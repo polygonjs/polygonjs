@@ -1,10 +1,10 @@
 import {TypedEventNode} from './_Base';
-import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
 import {EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {EventData, EventType} from '../../../core/event/EventData';
+import {EventContext} from '../../../core/event/EventContextType';
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	visibleIf: {active: 1},

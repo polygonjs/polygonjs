@@ -1,14 +1,15 @@
-import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
+import {BaseSceneEventsController} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {Raycaster, Vector2} from 'three';
 import {MouseEventType} from '../../../../core/event/MouseEventType';
 import {ACCEPTED_POINTER_EVENT_TYPES, PointerEventType} from '../../../../core/event/PointerEventType';
 import {TouchEventType} from '../../../../core/event/TouchEventType';
 import {ref} from '../../../../core/reactivity/CoreReactivity';
-import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {isTouchDevice} from '../../../../core/UserAgent';
+import {CursorHelper} from '../../../../core/event/CursorHelper';
+import type {EventContext} from '../../../../core/event/EventContextType';
 export interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
