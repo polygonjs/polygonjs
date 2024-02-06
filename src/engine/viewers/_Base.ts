@@ -146,7 +146,8 @@ export abstract class TypedViewer<C extends Camera> {
 		// OR... those could have been created when an element is shared by multiple scenes
 		// at different times
 		this._audioController?.unmount();
-		this._domElement.removeChild(this.canvas());
+		const canvas = this.canvas();
+		canvas.parentElement?.removeChild(canvas);
 		this.eventsController().unmount();
 		this.controlsController().unmount();
 

@@ -11,7 +11,7 @@ export function testenginenodescopVideo(qUnit: QUnit) {
 		file1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
 
 		const container = await file1.compute();
-		assert.ok(!file1.states.error.message());
+		assert.notOk(file1.states.error.message());
 		const texture = container.texture();
 		assert.equal(texture.image.videoWidth, 480);
 		assert.equal(texture.image.videoHeight, 204);

@@ -48,11 +48,15 @@ class VideoTextureLoader extends Loader<VideoTexture> {
 				onProgress(ev.loaded / ev.total);
 			}
 		};
-		video.onerror = (error) => {
+		const _onError = (error: string | Event) => {
 			if (onError) {
 				onError(new Error('failed to load video'));
 			}
 		};
+		video.onerror = _onError;
+		// video.addEventListener('abort', _onError);
+		// video.addEventListener('suspend', _onError);
+		// video.addEventListener('stalled', _onError);
 
 		const urlsCount = urls.length;
 		for (let i = 0; i < urlsCount; i++) {
