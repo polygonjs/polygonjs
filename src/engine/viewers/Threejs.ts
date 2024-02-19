@@ -399,7 +399,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	//
 	//
 	private _onResizeBound = this.onResize.bind(this);
-	// private _resizeRequired = false;
 	onResize() {
 		const renderUpdateRequired = this.updateSize();
 		if (!renderUpdateRequired) {
@@ -428,7 +427,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._scene.viewersRegister.markViewerAsSizeUpdated(this);
 		return true;
 	}
-	// private _rendererSizeUpdateRequired = false;
 	private _updateRendererSize() {
 		const canvas = this._canvas;
 		if (!canvas) {

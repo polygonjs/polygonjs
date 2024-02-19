@@ -1,12 +1,7 @@
-// import {Camera} from 'three';
 import {Vector2} from 'three';
 import {BaseViewerType} from '../_Base';
 
 export class ViewerCamerasController {
-	// private _is_active: boolean = false;
-	// private _camera_node: BaseThreejsCameraObjNodeType | undefined;
-	// private _camera: Camera;
-
 	private _size: Vector2 = new Vector2(100, 100);
 	private _aspect: number = 1;
 
@@ -38,16 +33,13 @@ export class ViewerCamerasController {
 
 	updateCameraAspect() {
 		this._viewer.updateCameraAspect(this._aspect, this._size);
-		// this.cameraNode().setupForAspectRatio(this._aspect);
 	}
 
 	async prepareCurrentCamera() {
-		//await this.cameraNode().compute(); // ensure the camera is cooked
-		await this._updateFromCameraContainer(); //container, graph_node_id)
+		await this._updateFromCameraContainer();
 	}
 
 	async _updateFromCameraContainer() {
 		this.updateCameraAspect();
-		// await this._viewer.controlsController()?.create_controls();
 	}
 }
