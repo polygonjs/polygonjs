@@ -4340,22 +4340,15 @@ three-bvh-csg@0.0.16:
   resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.16.tgz#b5fa39072acebfb1080249a05aeec8bd494b7780"
   integrity sha512-RgC5dY0hAKdfd1bmD3o2CDfmK9GTkvsA1ECzoqTMhSkjSc2zp1z4Wpa5+emLi/EosF5P6+aK2veTxTLZA9+Mhw==
 
-three-gpu-pathtracer@0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.16.tgz#0c89150576fe3f2dacfc0f5dfd16a349bf5e3b79"
-  integrity sha512-HZS7eAV44TjIRfd79CU2d/IuGFppKZhLzm26oITX/dw0LX2++6oysF+hE8LMiznHsFK9GHFVTVz4os8xxZEV8Q==
-  dependencies:
-    three-mesh-bvh "^0.5.19"
+three-gpu-pathtracer@0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.17.tgz#1099e08a23efa362a554cbe211ddb38653f15a7b"
+  integrity sha512-IiAKqfrVDXFE1wy/u3PajI93CtIzbWEF+uwsiQk7ajQ50MiDLN7gLCvHIoZ96I9GIiqvNdZnrHwgJdYT3f+okA==
 
-three-mesh-bvh@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.7.0.tgz#8327c3483060bb7fe3e0151d7863d338095527d4"
-  integrity sha512-Hj0Z1Rp02yy5H+/xtMBu/dYAeRsSONaBaVLZoST9sMpZxycHypRiUeMHucPOLWFHnpc5hwelOnONcLpkfhDg0Q==
-
-three-mesh-bvh@^0.5.19:
-  version "0.5.19"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.19.tgz#72d489856561d01ef7d4add81f0c82d3fb644d09"
-  integrity sha512-Q8huT0NautyR4afW0oMlOz8a4qm3b1jQ1ccMLF/TZ0rA4i58HljsnBjCLEDLQtIINZyLtZPdw60mrD81V/TZDA==
+three-mesh-bvh@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.7.2.tgz#165a7b36c6640edb7af2639081bb6adbc1318188"
+  integrity sha512-HKRGZDKIUwwjL2mApYIAN8AYA5WAfFvc50PY8TL/9aGWzrRN1WLfPKAvTjv35F8PdPZzTmzHotCvIMFEN9FUSw==
 
 three-subdivide@1.1.5:
   version "1.1.5"

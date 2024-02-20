@@ -17,6 +17,7 @@ export function testenginenodessopBVHVisualizer(qUnit: QUnit) {
 		BVH1.setInput(0, sphere1);
 		BVHVisualizer1.setInput(0, BVH1);
 
+		BVHVisualizer1.p.depth.set(12);
 		let container = await BVHVisualizer1.compute();
 		let coreGroup = container.coreContent()!;
 		assert.equal(coreGroup.threejsObjects().length, 2, '2 objects');
@@ -24,6 +25,15 @@ export function testenginenodessopBVHVisualizer(qUnit: QUnit) {
 		assert.equal((geo.attributes.position as BufferAttribute).array.length, 2883, '2883');
 		geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
 		assert.equal((geo.attributes.position as BufferAttribute).array.length, 5856, '5856');
+
+		BVHVisualizer1.p.depth.set(0);
+		container = await BVHVisualizer1.compute();
+		coreGroup = container.coreContent()!;
+		assert.equal(coreGroup.threejsObjects().length, 2, '2 objects');
+		geo = (coreGroup.threejsObjects()[0] as Mesh).geometry;
+		assert.equal((geo.attributes.position as BufferAttribute).array.length, 2883, '2883');
+		geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
+		assert.equal((geo.attributes.position as BufferAttribute).array.length, 24, '24');
 
 		BVHVisualizer1.p.depth.set(5);
 		container = await BVHVisualizer1.compute();
