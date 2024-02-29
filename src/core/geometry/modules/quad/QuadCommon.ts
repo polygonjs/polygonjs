@@ -9,28 +9,44 @@ export const QUAD_OBJECT_TYPES_SET: Set<QUADObjectType> = new Set(QUAD_OBJECT_TY
 
 export interface QUADTesselationParams {
 	triangles: boolean;
+	//
 	wireframe: boolean;
 	unsharedEdges: boolean;
 	wireframeColor: Color;
+	//
+	connections: boolean;
+	connectionsBetweenQuadsSharingEdge: boolean;
+	connectionsBetweenQuadsSharingPointOnly: boolean;
+	connectionsColor: Color;
+	//
 	center: boolean;
 	innerRadius: boolean;
 	outerRadius: boolean;
 	edgeCenterVectors: boolean;
 	edgeNearestPointVectors: boolean;
+	//
 	splitQuads: boolean;
 	pointAttributes: string;
 	primitiveAttributes: string;
 }
 export interface QUADOBJTesselationParams {
 	QUADTriangles: boolean;
+	//
 	QUADWireframe: boolean;
 	QUADUnsharedEdges: boolean;
 	QUADWireframeColor: Color;
+	//
+	QUADConnections: boolean;
+	QUADConnectionsBetweenQuadsSharingEdge: boolean;
+	QUADConnectionsBetweenQuadsSharingPointOnly: boolean;
+	QUADConnectionsColor: Color;
+	//
 	QUADCenter: boolean;
 	QUADInnerRadius: boolean;
 	QUADOuterRadius: boolean;
 	QUADEdgeCenterVectors: boolean;
 	QUADEdgeNearestPointVectors: boolean;
+	//
 	QUADSplitQuads: boolean;
 	QUADPointAttributes: string;
 	QUADPrimitiveAttributes: string;

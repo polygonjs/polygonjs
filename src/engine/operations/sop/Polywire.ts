@@ -14,6 +14,7 @@ import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointU
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {copyObject3DProperties} from '../../../core/geometry/modules/three/ThreejsObjectUtils';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -41,8 +42,8 @@ export class PolywireSopOperation extends BaseSopOperation {
 		closed: true,
 		attributesToCopy: '*',
 	};
-	static override type(): Readonly<'polywire'> {
-		return 'polywire';
+	static override type(): Readonly<SopType.POLYWIRE> {
+		return SopType.POLYWIRE;
 	}
 
 	override cook(inputCoreGroups: CoreGroup[], params: PolywireSopParams) {

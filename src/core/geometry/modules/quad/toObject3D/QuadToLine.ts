@@ -6,9 +6,8 @@ import {QuadPrimitive} from '../QuadPrimitive';
 import {stringMatchMask} from '../../../../String';
 import {ThreejsPrimitiveTriangle} from '../../three/ThreejsPrimitiveTriangle';
 import {prepareObject} from './QuadToObject3DCommon';
-import {quadGraphFromQuadObject} from '../graph/QuadGraphUtils';
 import {NEIGHBOUR_INDICES, HalfEdgeIndices, quadHalfEdgeIndices} from '../graph/QuadGraphCommon';
-import {NeighbourData} from '../graph/QuadGraph';
+import {NeighbourData, QuadGraph} from '../graph/QuadGraph';
 
 const _v4 = new Vector4();
 const _p0 = new Vector3();
@@ -38,8 +37,8 @@ function _createOrFindLineMaterial(color: Color) {
 	return material;
 }
 
-export function quadToLine(quadObject: QuadObject, options: QUADTesselationParams) {
-	const {splitQuads, unsharedEdges} = options;
+export function quadToLine(quadObject: QuadObject, graph:QuadGraph,options: QUADTesselationParams) {
+	const {splitQuads, unsharedEdges, wireframeColor} = options;
 	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
 	const indices = quadGeometry.index;
@@ -51,7 +50,6 @@ export function quadToLine(quadObject: QuadObject, options: QUADTesselationParam
 		const newIndices: number[] = new Array();
 		const positions: number[] = [];
 
-		const graph = quadGraphFromQuadObject(quadObject);
 		for (let i = 0; i < quadsCount; i++) {
 			const currentNode = graph.quadNode(i)!;
 
@@ -138,7 +136,7 @@ export function quadToLine(quadObject: QuadObject, options: QUADTesselationParam
 	};
 
 	const geometry = unsharedEdges ? buildUnsharedEdges() : splitQuads ? splitGeometry() : unsplitGeometry();
-	const material = _createOrFindLineMaterial(options.wireframeColor);
+	const material = _createOrFindLineMaterial(wireframeColor);
 	const lineSegments = new LineSegments(geometry, material);
 
 	// primitive attributes

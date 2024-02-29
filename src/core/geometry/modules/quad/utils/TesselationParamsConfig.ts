@@ -18,6 +18,22 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		wireframeColor = ParamConfig.COLOR([0, 0, 0], {
 			visibleIf: {wireframe: true},
 		});
+		/** @param connections */
+		connections = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+		});
+		/** @param connectionsBetweenQuadsSharingEdge */
+		connectionsBetweenQuadsSharingEdge = ParamConfig.BOOLEAN(true, {
+			visibleIf: {connections: true},
+		});
+		/** @param connectionsBetweenQuadsSharingPointOnly */
+		connectionsBetweenQuadsSharingPointOnly = ParamConfig.BOOLEAN(true, {
+			visibleIf: {connections: true},
+		});
+		/** @param connections color */
+		connectionsColor = ParamConfig.COLOR([0, 0, 0], {
+			visibleIf: {connections: true},
+		});
 		/** @param center */
 		center = ParamConfig.BOOLEAN(false, {
 			separatorBefore: true,
@@ -67,6 +83,22 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		/** @param wireframe color */
 		QUADWireframeColor = ParamConfig.COLOR([0, 0, 0], {
 			visibleIf: {QUADWireframe: true},
+		});
+		/** @param connections */
+		QUADConnections = ParamConfig.BOOLEAN(false, {
+			separatorBefore: true,
+		});
+		/** @param connectionsBetweenQuadsSharingEdge */
+		QUADConnectionsBetweenQuadsSharingEdge = ParamConfig.BOOLEAN(true, {
+			visibleIf: {QuadConnections: true},
+		});
+		/** @param connectionsBetweenQuadsSharingPointOnly */
+		QUADConnectionsBetweenQuadsSharingPointOnly = ParamConfig.BOOLEAN(true, {
+			visibleIf: {QuadConnections: true},
+		});
+		/** @param connections color */
+		QUADConnectionsColor = ParamConfig.COLOR([0, 0, 0], {
+			visibleIf: {QuadConnections: true},
 		});
 		/** @param center */
 		QUADCenter = ParamConfig.BOOLEAN(false, {

@@ -59,6 +59,7 @@ export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is 
 export interface ObjectContentCopyPropertiesOptions {
 	castShadow?: boolean;
 	receiveShadow?: boolean;
+	material?: Material | Material[];
 }
 export function objectContentCopyProperties(
 	src: ObjectContent<CoreObjectType>,
@@ -76,7 +77,7 @@ export function objectContentCopyProperties(
 	target.renderOrder = src.renderOrder;
 	target.frustumCulled = src.frustumCulled;
 	target.matrixAutoUpdate = src.matrixAutoUpdate;
-	if (src.material) {
+	if (src.material && options?.material == null) {
 		target.material = src.material;
 	}
 	target.userData = objectCloneDeep(src.userData);

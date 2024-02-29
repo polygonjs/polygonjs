@@ -404,11 +404,11 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		if (!renderUpdateRequired) {
 			return;
 		}
+		this._updateRendererSize();
 		if (this._renderFunc) {
-			this._updateRendererSize();
 			this._renderFunc(this.scene().timeController.delta());
-			this._runOnResizeCallbacks();
 		}
+		this._runOnResizeCallbacks();
 	}
 
 	override updateSize(): boolean {

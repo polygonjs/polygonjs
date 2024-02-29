@@ -1,4 +1,4 @@
-import {Material, Matrix4, Box3, Sphere, Object3D, Vector3} from 'three';
+import {Material, Matrix4, Box3, Sphere, Object3D, Vector3, Mesh} from 'three';
 import {QUADObjectType, QUADTesselationParams} from './QuadCommon';
 import {QuadGeometry} from './QuadGeometry';
 import {
@@ -67,10 +67,11 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 				// if they are false in the dest object
 				castShadow: dest.castShadow,
 				receiveShadow: dest.receiveShadow,
+				// lineSegments also have a material assigned
+				material: (dest as Mesh).material,
 			};
 			objectContentCopyProperties(src, dest, options);
 		};
-
 		if (object) {
 			if (isArray(object)) {
 				for (const element of object) {

@@ -156,6 +156,7 @@ export enum SopType {
 	POLAR_TRANSFORM = 'polarTransform',
 	POLYWIRE = 'polywire',
 	//
+	QUAD_CONNECTION = 'quadConnection',
 	QUAD_CORNERS = 'quadCorners',
 	QUAD_EXTRUDE = 'quadExtrude',
 	QUAD_PLANE = 'quadPlane',
