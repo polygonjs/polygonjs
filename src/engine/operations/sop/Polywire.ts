@@ -53,8 +53,8 @@ export class PolywireSopOperation extends BaseSopOperation {
 		const newObjects: Object3D[] = [];
 		for (const inputObject of inputObjects) {
 			const geometries: BufferGeometry[] = [];
-			if (inputObject instanceof LineSegments) {
-				this._createTube(inputObject, params, geometries);
+			if ((inputObject as LineSegments).isLineSegments) {
+				this._createTube(inputObject as LineSegments, params, geometries);
 			}
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
