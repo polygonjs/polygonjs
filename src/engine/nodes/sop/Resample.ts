@@ -92,8 +92,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			const coreObjects = coreGroup.threejsCoreObjects();
 			for (const coreObject of coreObjects) {
 				const object = coreObject.object();
-				if (object instanceof LineSegments) {
-					const resampledObject = this._resample(object);
+				if ((object as LineSegments).isLineSegments) {
+					const resampledObject = this._resample(object as LineSegments);
 					if (resampledObject) {
 						resampledObjects.push(resampledObject);
 					}
