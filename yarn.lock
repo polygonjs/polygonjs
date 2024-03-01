@@ -4345,10 +4345,10 @@ three-gpu-pathtracer@0.0.17:
   resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.17.tgz#1099e08a23efa362a554cbe211ddb38653f15a7b"
   integrity sha512-IiAKqfrVDXFE1wy/u3PajI93CtIzbWEF+uwsiQk7ajQ50MiDLN7gLCvHIoZ96I9GIiqvNdZnrHwgJdYT3f+okA==
 
-three-mesh-bvh@0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.7.2.tgz#165a7b36c6640edb7af2639081bb6adbc1318188"
-  integrity sha512-HKRGZDKIUwwjL2mApYIAN8AYA5WAfFvc50PY8TL/9aGWzrRN1WLfPKAvTjv35F8PdPZzTmzHotCvIMFEN9FUSw==
+three-mesh-bvh@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.7.3.tgz#91f2d7e26f230288b5b0a6bdf41bdd9620348945"
+  integrity sha512-3W6KjzmupjfE89GuHPT31kxKWZ4YGZPEZJNysJpiOZfQRsBQQgmK7v/VJPpjG6syhAvTnY+5Fr77EvIkTLpGSw==
 
 three-subdivide@1.1.5:
   version "1.1.5"
