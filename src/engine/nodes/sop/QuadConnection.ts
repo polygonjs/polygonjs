@@ -129,14 +129,13 @@ export class QuadConnectionSopNode extends QuadSopNode<QuadConnectionSopParamsCo
 
 		const {quadId0} = this.pv;
 		const mode = this.connectionMode();
-		const type = this.connectionType();
 		if (graph.quadNode(quadId0) == null) {
 			return;
 		}
 
 		const getQuadId1ByNeighbourIndex = () => {
 			graph.neighbourIdsSharingEdge(quadId0, _neighbourIdsSharingEdge);
-
+			const type = this.connectionType();
 			if (type == QuadConnectionType.STRAIGHT) {
 				return _neighbourIdsSharingEdge[this.pv.neighbourIndex];
 			} else {
@@ -145,9 +144,22 @@ export class QuadConnectionSopNode extends QuadSopNode<QuadConnectionSopParamsCo
 				return _neighbourIdsSharingPointOnly[this.pv.neighbourIndex];
 			}
 		};
+		const getConnectionTypeFromNeighbourId = (neighbourId: number): QuadConnectionType => {
+			graph.neighbourIdsSharingEdge(quadId0, _neighbourIdsSharingEdge);
+			graph.neighbourIdsSharingPoint(quadId0, _neighbourIdsSharingPoint);
+			arrayDifference(_neighbourIdsSharingPoint, _neighbourIdsSharingEdge, _neighbourIdsSharingPointOnly);
+
+			return _neighbourIdsSharingPointOnly.indexOf(neighbourId) >= 0
+				? QuadConnectionType.DIAGONAL
+				: QuadConnectionType.STRAIGHT;
+		};
 
 		const quadId1: number =
 			mode == QuadConnectionMode.NEIGHBOUR_INDEX ? getQuadId1ByNeighbourIndex() : this.pv.quadId1;
+		const type =
+			mode == QuadConnectionMode.NEIGHBOUR_INDEX
+				? this.connectionType()
+				: getConnectionTypeFromNeighbourId(this.pv.quadId1);
 
 		if (graph.quadNode(quadId1) == null) {
 			return;
