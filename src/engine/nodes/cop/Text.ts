@@ -55,14 +55,14 @@ export class TextCopNode extends TypedCopNode<TextCopParamConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	private __dataTexture: DataTexture | undefined;
+	private _dataTexture: DataTexture | undefined;
 	override async cook() {
-		const texture = this._dataTexture();
+		this._dataTexture = this._findOrCreateDataTexture();
 
 		const url = this.pv.font.split('/');
 		const fontNameFromUrl = url[url.length - 1].split('.')[0];
 		await loadAndUseFont({
-			texture,
+			texture: this._dataTexture,
 			text: this.pv.text,
 			fontFamily: sanitizeName(this.path()) + fontNameFromUrl,
 			fontSize: this.pv.fontSize,
@@ -74,32 +74,23 @@ export class TextCopNode extends TypedCopNode<TextCopParamConfig> {
 			textAlpha: this.pv.textAlpha,
 		});
 
-		await this.textureParamsController.update(texture);
+		await this.textureParamsController.update(this._dataTexture);
 
-		this.setTexture(texture);
+		this.setTexture(this._dataTexture);
 	}
 
-	private _dataTexture() {
-		return (this.__dataTexture = this.__dataTexture || this._createDataTexture());
-	}
-	private _dataTextureResolutionValid() {
-		if (this.__dataTexture) {
-			const image = this.__dataTexture.source.data;
-			this._requestedResolution(_v2);
-			return (image.width = _v2.x && image.height == _v2.y);
-		} else {
-			return false;
-		}
+	private _dataTextureResolutionValid(texture: DataTexture) {
+		const image = texture.source.data;
+		this._requestedResolution(_v2);
+		return image.width == _v2.x && image.height == _v2.y;
 	}
 	private _requestedResolution(target: Vector2) {
 		target.copy(this.pv.resolution);
 	}
-	private _createDataTexture() {
+	private _findOrCreateDataTexture() {
 		this._requestedResolution(_v2);
-		if (this.__dataTexture) {
-			if (this._dataTextureResolutionValid()) {
-				return this.__dataTexture;
-			}
+		if (this._dataTexture && this._dataTextureResolutionValid(this._dataTexture)) {
+			return this._dataTexture;
 		}
 		const size = _v2.x * _v2.y * 4;
 		const pixelBuffer = new Uint8Array(size);
