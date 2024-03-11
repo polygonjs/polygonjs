@@ -1,24 +1,84 @@
-import {Object3D} from 'three';
+import type {Object3D} from 'three';
 import {ObjectNamedFunction2} from './_Base';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
-import type {ObjectToContextmenuOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
-import type {ObjectToClickOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
-import type {ObjectToMouseClickOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsMouseClickController';
-import type {ObjectToHoverOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
-import type {ObjectToObjectPointerdownOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
-import type {ObjectToObjectPointerupOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
-import type {ObjectToSwipeOptions} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
+import type {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
+import type {
+	ObjectToContextmenuOptions,
+	RayObjectIntersectionsContextmenuController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsContextmenuController';
+import type {
+	ObjectToClickOptions,
+	RayObjectIntersectionsClickController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsClickController';
+import type {
+	ObjectToMouseClickOptions,
+	RayObjectIntersectionsMouseClickController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsMouseClickController';
+import type {
+	ObjectToHoverOptions,
+	RayObjectIntersectionsHoverController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsHoverController';
+import type {
+	ObjectToObjectPointerdownOptions,
+	RayObjectIntersectionsPointerdownController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerdownController';
+import type {
+	ObjectToObjectPointerupOptions,
+	RayObjectIntersectionsPointerupController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsPointerupController';
+import type {
+	ObjectToSwipeOptions,
+	RayObjectIntersectionsSwipeController,
+} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsSwipeController';
+import {Poly} from '../Poly';
+import type {RayObjectIntersectionsDoubleClickController} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsDoubleClickController';
+import type {RayObjectIntersectionsLongPressController} from '../scene/utils/actors/rayObjectIntersection/RayObjectIntersectionsLongPressController';
 
+type AvailableController =
+	| RayObjectIntersectionsClickController
+	| RayObjectIntersectionsDoubleClickController
+	| RayObjectIntersectionsMouseClickController
+	| RayObjectIntersectionsContextmenuController
+	| RayObjectIntersectionsHoverController
+	| RayObjectIntersectionsLongPressController
+	| RayObjectIntersectionsPointerdownController
+	| RayObjectIntersectionsPointerupController
+	| RayObjectIntersectionsSwipeController;
+type AvailableOoptions =
+	| ObjectToClickOptions
+	| ObjectToMouseClickOptions
+	| ObjectToContextmenuOptions
+	| ObjectToHoverOptions
+	| ObjectToObjectPointerdownOptions
+	| ObjectToObjectPointerupOptions
+	| ObjectToSwipeOptions;
+interface SetupObject {
+	object3D: Object3D;
+	evaluator: ActorEvaluator;
+	controller: AvailableController;
+	options: AvailableOoptions;
+}
+function setup(setupOptions: SetupObject) {
+	const {controller, object3D, evaluator, options} = setupOptions;
+	controller.addPropertiesForObject(object3D, options);
+
+	evaluator.onDispose(() => {
+		controller.removePropertiesForObject(object3D, options);
+	});
+
+	Poly.onObjectsAddRemoveHooks.assignOnRemoveHookCallback(object3D, (object) => {
+		controller.removePropertiesForObject(object3D, options);
+	});
+}
 export class addObjectToObjectClickCheck extends ObjectNamedFunction2<[ActorEvaluator, ObjectToClickOptions]> {
 	static override type() {
 		return 'addObjectToObjectClickCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToClickOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionClick;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionClick,
 		});
 	}
 }
@@ -27,11 +87,11 @@ export class addObjectToObjectDoubleClickCheck extends ObjectNamedFunction2<[Act
 		return 'addObjectToObjectDoubleClickCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToClickOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionDoubleClick;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionDoubleClick,
 		});
 	}
 }
@@ -42,11 +102,11 @@ export class addObjectToObjectMouseClickCheck extends ObjectNamedFunction2<
 		return 'addObjectToObjectMouseClickCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToMouseClickOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionMouseClick;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionMouseClick,
 		});
 	}
 }
@@ -58,11 +118,11 @@ export class addObjectToObjectContextmenuCheck extends ObjectNamedFunction2<
 		return 'addObjectToObjectContextmenuCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToContextmenuOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionContextmenu;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionContextmenu,
 		});
 	}
 }
@@ -72,11 +132,11 @@ export class addObjectToObjectHoveredCheck extends ObjectNamedFunction2<[ActorEv
 		return 'addObjectToObjectHoveredCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToHoverOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionHover;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionHover,
 		});
 	}
 }
@@ -88,11 +148,11 @@ export class addObjectToObjectLongPressCheck extends ObjectNamedFunction2<
 		return 'addObjectToObjectLongPressCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToContextmenuOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionLongPress;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionLongPress,
 		});
 	}
 }
@@ -104,11 +164,11 @@ export class addObjectToObjectPointerdownCheck extends ObjectNamedFunction2<
 		return 'addObjectToObjectPointerdownCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToObjectPointerdownOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionPointerdown;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionPointerdown,
 		});
 	}
 }
@@ -119,11 +179,11 @@ export class addObjectToObjectPointerupCheck extends ObjectNamedFunction2<
 		return 'addObjectToObjectPointerupCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToObjectPointerupOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionPointerup;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionPointerup,
 		});
 	}
 }
@@ -133,11 +193,11 @@ export class addObjectToObjectSwipeCheck extends ObjectNamedFunction2<[ActorEval
 		return 'addObjectToObjectSwipeCheck';
 	}
 	func(object3D: Object3D, evaluator: ActorEvaluator, options: ObjectToSwipeOptions) {
-		const controller = this.scene.actorsManager.rayObjectIntersectionSwipe;
-		controller.addPropertiesForObject(object3D, options);
-
-		evaluator.onDispose(() => {
-			controller.removePropertiesForObject(object3D, options);
+		setup({
+			object3D,
+			evaluator,
+			options,
+			controller: this.scene.actorsManager.rayObjectIntersectionSwipe,
 		});
 	}
 }

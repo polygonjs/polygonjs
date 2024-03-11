@@ -2,6 +2,10 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {VideoMode} from '../../../../src/engine/nodes/cop/Video';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {CoreUserAgent} from '../../../../src/core/UserAgent';
+
+const IS_CHROME = CoreUserAgent.isChrome();
+
 export function testenginenodescopVideo(qUnit: QUnit) {
 	qUnit.test('COP video simple mp4', async (assert) => {
 		const COP = window.COP;
@@ -23,6 +27,11 @@ export function testenginenodescopVideo(qUnit: QUnit) {
 	});
 	qUnit.test('COP video simple ogv', async (assert) => {
 		const COP = window.COP;
+
+		assert.notOk(IS_CHROME, 'not working on chrome anymore');
+		if (IS_CHROME) {
+			return;
+		}
 
 		const file1 = COP.createNode('video');
 		file1.p.urlsCount.set(1);

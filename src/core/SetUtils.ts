@@ -14,7 +14,13 @@ export function setToArray<T>(set: Set<T>, target: T[]): T[] {
 	});
 	return target;
 }
-
+export function setCopy<T>(src: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	src.forEach((elem) => {
+		target.add(elem);
+	});
+	return target;
+}
 export function setUnion<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
 	target.clear();
 	set0.forEach((val) => target.add(val));

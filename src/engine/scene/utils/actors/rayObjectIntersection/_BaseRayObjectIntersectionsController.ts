@@ -16,6 +16,7 @@ import {
 	CPUOptionsMax,
 	GPUOptionsDepthBufferRequired,
 } from './Common';
+import {arrayCopy} from '../../../../../core/ArrayUtils';
 
 const RAYCAST_UPDATE_OPTIONS: RaycasterUpdateOptions = {
 	pointsThreshold: 0.1,
@@ -54,6 +55,9 @@ export class BaseRayObjectIntersectionsController {
 	private _renderPixelController: RenderPixelController = new RenderPixelController();
 	constructor(protected actorsManager: ActorsManager) {
 		this._scene = actorsManager.scene;
+	}
+	objects(target: Object3D[]) {
+		arrayCopy(this._objects, target);
 	}
 	protected _setIntersectedState(objects: Object3D[], intersectedStateByObject: WeakMap<Object3D, boolean>) {
 		// prepare
@@ -243,7 +247,6 @@ export class BaseRayObjectIntersectionsController {
 		if (object == ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT) {
 			return;
 		}
-
 		const propertiesForObject = this._propertiesListByObject.get(object);
 		if (propertiesForObject) {
 			const propertyIndex = propertiesForObject.indexOf(properties);

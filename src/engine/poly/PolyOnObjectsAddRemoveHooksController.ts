@@ -39,6 +39,41 @@ function assignHookHandler(object: ObjectContent<CoreObjectType>, node: HookHand
 		ids.push(id);
 	}
 }
+type ObjectOnAddRemoveCallback = (object: ObjectContent<CoreObjectType>) => void;
+const onAddRemoveCallbackByObject = new WeakMap<
+	ObjectContent<CoreObjectType>,
+	Map<HandlerName, Set<ObjectOnAddRemoveCallback>>
+>();
+function assignOnAddRemoveHook(
+	object: ObjectContent<CoreObjectType>,
+	handlerName: HandlerName,
+	hook: ObjectOnAddRemoveCallback
+) {
+	let mapForObject = onAddRemoveCallbackByObject.get(object);
+	if (!mapForObject) {
+		mapForObject = new Map();
+		onAddRemoveCallbackByObject.set(object, mapForObject);
+	}
+	let callbacksForHandlerName = mapForObject.get(handlerName);
+	if (!callbacksForHandlerName) {
+		callbacksForHandlerName = new Set();
+		mapForObject.set(handlerName, callbacksForHandlerName);
+	}
+	callbacksForHandlerName.add(hook);
+}
+function runOnAddRemoveHooks(object: ObjectContent<CoreObjectType>, handlerName: HandlerName) {
+	const mapForObject = onAddRemoveCallbackByObject.get(object);
+	if (!mapForObject) {
+		return;
+	}
+	const callbacksForHandlerName = mapForObject.get(handlerName);
+	if (!callbacksForHandlerName) {
+		return;
+	}
+	for (const callback of callbacksForHandlerName) {
+		callback(object);
+	}
+}
 // function removeHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler, handlerName: HandlerName) {
 // 	let ids = hookHandlers(object, handlerName);
 // 	if (ids) {
@@ -71,13 +106,15 @@ function hookHandlers(object: ObjectContent<CoreObjectType>, handlerName: Handle
 // }
 function runHooks(scene: PolyScene, parent: ObjectContent<CoreObjectType>, handlerName: HandlerName) {
 	const children = parent.children;
-	for (let child of children) {
+	for (const child of children) {
 		child.traverse((grandChild) => {
 			runHookOnObject(grandChild, scene, handlerName);
 		});
 	}
 }
 function runHookOnObject(object: ObjectContent<CoreObjectType>, scene: PolyScene, handlerName: HandlerName) {
+	runOnAddRemoveHooks(object, handlerName);
+
 	if (object.parent) {
 		const ids = hookHandlers(object, handlerName);
 		if (!ids) {
@@ -188,6 +225,12 @@ export class PolyOnObjectsAddRemoveHooksController {
 	}
 	assignOnRemoveHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler) {
 		assignHookHandler(object, node, HandlerName.REMOVE);
+	}
+	assignOnAddHookCallback(object: ObjectContent<CoreObjectType>,callback: ObjectOnAddRemoveCallback) {
+		assignOnAddRemoveHook(object, HandlerName.ADD, callback);
+	}
+	assignOnRemoveHookCallback(object: ObjectContent<CoreObjectType>,callback: ObjectOnAddRemoveCallback) {
+		assignOnAddRemoveHook(object, HandlerName.REMOVE, callback);
 	}
 
 	runOnAddHooks(scene: PolyScene, parent: ObjectContent<CoreObjectType>) {

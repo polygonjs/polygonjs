@@ -17,6 +17,7 @@ export class BaseUserInputController {
 		if (object == ACTOR_COMPILATION_CONTROLLER_DUMMY_OBJECT) {
 			return;
 		}
+
 		pushOnArrayAtEntry(this._propertiesListByObject, object, properties);
 
 		const index = this._objects.indexOf(object);
@@ -30,16 +31,17 @@ export class BaseUserInputController {
 		}
 
 		const propertiesForObject = this._propertiesListByObject.get(object);
-		if (propertiesForObject) {
-			const propertyIndex = propertiesForObject.indexOf(properties);
-			propertiesForObject.splice(propertyIndex, 1);
+		if (!propertiesForObject) {
+			return;
+		}
+		const propertyIndex = propertiesForObject.indexOf(properties);
+		propertiesForObject.splice(propertyIndex, 1);
 
-			if (propertiesForObject.length == 0) {
-				const objectIndex = this._objects.indexOf(object);
-				if (objectIndex >= 0) {
-					this._objects.splice(objectIndex, 1);
-					this._propertiesListByObject.delete(object);
-				}
+		if (propertiesForObject.length == 0) {
+			const objectIndex = this._objects.indexOf(object);
+			if (objectIndex >= 0) {
+				this._objects.splice(objectIndex, 1);
+				this._propertiesListByObject.delete(object);
 			}
 		}
 	}
