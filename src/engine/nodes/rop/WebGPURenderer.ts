@@ -178,7 +178,7 @@ class WebGPURendererRopParamsConfig extends NodeParamsConfig {
 			WebGPURendererRopNode.PARAM_CALLBACK_updateSortObjects(node as WebGPURendererRopNode);
 		},
 	});
-	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, window.devicePixelRatio) for other devices */
+	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, globalThis.devicePixelRatio) for other devices */
 	tpixelRatio = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
@@ -406,7 +406,7 @@ export class WebGPURendererRopNode extends TypedRopNode<WebGPURendererRopParamsC
 		node._rendererByCanvas.forEach((renderer, canvas) => {
 			node._updateRendererPixelRatio(renderer);
 		});
-		window.dispatchEvent(new Event('resize'));
+		globalThis.dispatchEvent(new Event('resize'));
 	}
 	//
 	//

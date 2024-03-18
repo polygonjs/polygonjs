@@ -82,7 +82,7 @@ export class RenderersController {
 	}
 	private _getWebGL2Available(canvas?: HTMLCanvasElement) {
 		canvas = canvas || this.poly.canvasRegister.dummyCanvas();
-		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
+		return (globalThis.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
 	defaultWebGLRendererForCanvas(canvas: HTMLCanvasElement) {
 		let renderer = this._defaultRendererByCanvas.get(canvas);

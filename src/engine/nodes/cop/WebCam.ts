@@ -223,7 +223,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 						this.states.error.set('Unable to access the camera/webcam');
 					});
 			} else {
-				const isHttps = window.location.protocol.startsWith('https');
+				const isHttps = globalThis.location.protocol.startsWith('https');
 				if (isHttps) {
 					this.states.error.set(
 						'MediaDevices interface not available. Please check that your connection is secure (using https)'

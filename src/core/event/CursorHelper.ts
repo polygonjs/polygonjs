@@ -27,7 +27,7 @@ export class CursorHelper {
 			MouseHelper.setEventOffset(event, canvas, _offset);
 		}
 		if (
-			window.TouchEvent /* check first that TouchEvent is defined, since it does on firefox desktop */ &&
+			globalThis.TouchEvent /* check first that TouchEvent is defined, since it does on firefox desktop */ &&
 			event instanceof TouchEvent
 		) {
 			const touch = event.touches[0];

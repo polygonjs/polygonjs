@@ -21,7 +21,7 @@ export function applyDefaultStyle(element: HTMLElement) {
 export function createInfoLink() {
 	const message = document.createElement('a');
 
-	if (window.isSecureContext === false) {
+	if (globalThis.isSecureContext === false) {
 		message.href = document.location.href.replace(/^http:/, 'https:');
 		message.innerHTML = 'WEBXR NEEDS HTTPS';
 	} else {

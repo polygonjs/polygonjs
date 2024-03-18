@@ -114,7 +114,7 @@ class MapboxMapsControllerClass {
 		map.on('load', () => {
 			layersController.addLayers();
 			// this.mapboxEventController.camera_node_move_end(); // to update mapbox planes
-			window.dispatchEvent(new Event('resize')); // helps making sure it is resized correctly
+			globalThis.dispatchEvent(new Event('resize')); // helps making sure it is resized correctly
 		});
 
 		map.on('styledata', () => {

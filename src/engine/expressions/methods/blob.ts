@@ -18,7 +18,7 @@ import {BaseMethod} from './_Base';
 async function blobFromUrl(url: string) {
 	const response = await fetch(url);
 	const blob = await response.blob();
-	const urlCreator = window.URL || window.webkitURL;
+	const urlCreator = globalThis.URL || globalThis.webkitURL;
 	const blobUrl = urlCreator.createObjectURL(blob);
 	return blobUrl;
 }

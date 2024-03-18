@@ -278,11 +278,11 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 			return;
 		}
 
-		const devicePixelRatio = window.devicePixelRatio;
+		const devicePixelRatio = globalThis.devicePixelRatio;
 		this._renderer.setSize(this._size.x * devicePixelRatio, this._size.y * devicePixelRatio, false);
 
 		// const pixelRatio = this._renderer.getPixelRatio();
-		this.camerasController().computeSizeAndAspect(window.devicePixelRatio);
+		this.camerasController().computeSizeAndAspect(globalThis.devicePixelRatio);
 		// const size = this.camerasController().size;
 		// CoreCameraRendererController.setRendererSize(canvas, size);
 		this._cssRendererConfig?.cssRenderer.setSize(this._size.x, this._size.y);

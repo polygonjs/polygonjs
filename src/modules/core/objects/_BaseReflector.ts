@@ -112,10 +112,10 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 	private _onWindowResizeBound = this._onWindowResize.bind(this);
 	private _addWindowResizeEvent() {
-		window.addEventListener('resize', this._onWindowResizeBound.bind(this), false);
+		globalThis.addEventListener('resize', this._onWindowResizeBound.bind(this), false);
 	}
 	private _removeWindowResizeEvent() {
-		window.removeEventListener('resize', this._onWindowResizeBound.bind(this), false);
+		globalThis.removeEventListener('resize', this._onWindowResizeBound.bind(this), false);
 	}
 
 	private _onWindowResize() {

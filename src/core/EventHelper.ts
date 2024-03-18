@@ -27,8 +27,8 @@ export class EventHelper {
 
 		const dim = element.getBoundingClientRect();
 
-		position.x = ((position.x - window.scrollX) / dim.width) * 2 - 1;
-		position.y = -(((position.y - window.scrollY) / dim.height) * 2 - 1);
+		position.x = ((position.x - globalThis.scrollX) / dim.width) * 2 - 1;
+		position.y = -(((position.y - globalThis.scrollY) / dim.height) * 2 - 1);
 	}
 	static normalized_position_0_1(
 		event: TouchEvent | MouseEvent | PointerEvent,
@@ -39,8 +39,8 @@ export class EventHelper {
 
 		const dim = element.getBoundingClientRect();
 
-		position.x = (position.x - window.scrollX) / dim.width;
-		position.y = (position.y - window.scrollY) / dim.height;
+		position.x = (position.x - globalThis.scrollX) / dim.width;
+		position.y = (position.y - globalThis.scrollY) / dim.height;
 	}
 
 	elementPosition(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {

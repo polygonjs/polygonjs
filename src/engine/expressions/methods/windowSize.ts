@@ -30,7 +30,7 @@ export class WindowSizeExpression extends BaseMethod {
 
 	private _windowSize = new Vector2();
 	override async processArguments(args: any[]): Promise<Vector2> {
-		this._windowSize.set(window.innerWidth, window.innerHeight);
+		this._windowSize.set(globalThis.innerWidth, globalThis.innerHeight);
 		return this._windowSize;
 	}
 }

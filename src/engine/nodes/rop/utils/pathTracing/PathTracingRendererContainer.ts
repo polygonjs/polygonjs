@@ -235,8 +235,8 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 		this.webGLRenderer.setSize(w, h, setStyle);
 
 		this.pathTracingRenderer.setSize(
-			w * this.resolutionScale * window.devicePixelRatio,
-			h * this.resolutionScale * window.devicePixelRatio
+			w * this.resolutionScale * globalThis.devicePixelRatio,
+			h * this.resolutionScale * globalThis.devicePixelRatio
 		);
 		this.pathTracingRenderer.reset();
 	}

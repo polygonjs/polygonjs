@@ -1,8 +1,8 @@
 export class CoreFeaturesController {
 	static urlParams() {
 		// do not cache the url params, in case the url is changed via
-		// window.history.replaceState('', '', window.location.pathname);
-		return new URLSearchParams(window.location.search);
+		// globalThis.history.replaceState('', '', globalThis.location.pathname);
+		return new URLSearchParams(globalThis.location.search);
 	}
 	static urlParam(paramName: string) {
 		return this.urlParams().get(paramName);

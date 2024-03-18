@@ -27,7 +27,7 @@ export class PixelPostNode extends TypedPostNode<EffectPass, PixelPostParamsConf
 		// context.renderer.getSize(this._rendererSize);
 		const pass = new EffectPass(context.camera, effect);
 		// pass.uniforms.resolution.value = this._rendererSize;
-		// pass.uniforms.resolution.value.multiplyScalar(window.devicePixelRatio);
+		// pass.uniforms.resolution.value.multiplyScalar(globalThis.devicePixelRatio);
 		this.updatePass(pass);
 
 		return pass;

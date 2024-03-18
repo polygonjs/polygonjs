@@ -17,7 +17,7 @@ class MouseHelperClass {
 		// We could potentially remove the 'resize' listener,
 		// as the viewers do not rely on it anymore.
 		// But this may still be required by the event nodes.
-		window.addEventListener('resize', this._resetCacheBound);
+		globalThis.addEventListener('resize', this._resetCacheBound);
 		document.addEventListener('scroll', this._resetCacheBound);
 	}
 	private _rectByCanvas: Map<HTMLCanvasElement, DOMRect> = new Map();

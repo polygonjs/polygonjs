@@ -39,7 +39,7 @@ declare global {
 		): void;
 	}
 }
-class DeviceOrientationControls extends EventDispatcher<{change:any}> {
+class DeviceOrientationControls extends EventDispatcher<{change: any}> {
 	protected _relativeQuaternion = new Quaternion();
 	protected _blendedQuaternion = new Quaternion();
 	public enabled = true;
@@ -106,18 +106,18 @@ class DeviceOrientationControls extends EventDispatcher<{change:any}> {
 		// iOS 13+
 
 		if (
-			window.DeviceOrientationEvent !== undefined &&
+			globalThis.DeviceOrientationEvent !== undefined &&
 			// @ts-ignore
-			typeof window.DeviceOrientationEvent.requestPermission === 'function'
+			typeof globalThis.DeviceOrientationEvent.requestPermission === 'function'
 		) {
 			// @ts-ignore
-			window.DeviceOrientationEvent.requestPermission()
+			globalThis.DeviceOrientationEvent.requestPermission()
 				.then((response: any) => {
 					if (response == 'granted') {
-						window.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
-						window.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
-						window.addEventListener(
-							'deviceorientationabsolute',
+						globalThis.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
+						globalThis.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+						globalThis.addEventListener(
+							'deviceorientationabsolute' as any,
 							this._bound.onDeviceOrientationAbsoluteChangeEvent
 						);
 					}
@@ -126,17 +126,20 @@ class DeviceOrientationControls extends EventDispatcher<{change:any}> {
 					console.error('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:', error);
 				});
 		} else {
-			window.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
-			window.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
-			window.addEventListener('deviceorientationabsolute', this._bound.onDeviceOrientationAbsoluteChangeEvent);
+			globalThis.addEventListener('orientationchange', this._bound.onScreenOrientationChangeEvent);
+			globalThis.addEventListener('deviceorientation', this._bound.onDeviceOrientationChangeEvent);
+			globalThis.addEventListener(
+				'deviceorientationabsolute' as any,
+				this._bound.onDeviceOrientationAbsoluteChangeEvent
+			);
 		}
 
 		this.enabled = true;
 	}
 
 	disconnect(): void {
-		window.removeEventListener('orientationchange', this.onScreenOrientationChangeEvent);
-		window.removeEventListener('deviceorientation', this.onDeviceOrientationChangeEvent);
+		globalThis.removeEventListener('orientationchange', this.onScreenOrientationChangeEvent);
+		globalThis.removeEventListener('deviceorientation', this.onDeviceOrientationChangeEvent);
 
 		this.enabled = false;
 	}

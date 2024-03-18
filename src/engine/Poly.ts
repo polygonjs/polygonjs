@@ -43,9 +43,7 @@ import {BaseNamedFunction} from './functions/_Base';
 //
 
 declare global {
-	interface Window {
-		__POLYGONJS_POLY_INSTANCE__: PolyEngine;
-	}
+	var __POLYGONJS_POLY_INSTANCE__: PolyEngine;
 }
 
 // having __POLYGONJS_VERSION__ here really adds friction
@@ -85,13 +83,13 @@ export class PolyEngine {
 		// we are using a window globals to ensure 2 instances can never be created
 		// even when the js are compiled by different means,
 		// which can happen in the editor.
-		if (window.__POLYGONJS_POLY_INSTANCE__) {
-			return window.__POLYGONJS_POLY_INSTANCE__;
+		if (globalThis.__POLYGONJS_POLY_INSTANCE__) {
+			return globalThis.__POLYGONJS_POLY_INSTANCE__;
 		} else {
 			const instance = new PolyEngine();
-			window.__POLYGONJS_POLY_INSTANCE__ = instance;
+			globalThis.__POLYGONJS_POLY_INSTANCE__ = instance;
 			// this._instance = instance
-			return window.__POLYGONJS_POLY_INSTANCE__;
+			return globalThis.__POLYGONJS_POLY_INSTANCE__;
 		}
 		// return (this._instance = this._instance || new Poly());
 	}

@@ -17,8 +17,8 @@ export function isTouchDevice(): boolean {
 		isMobile() ||
 		isIOS() ||
 		isAndroid() ||
-		'ontouchstart' in window ||
-		((window as any).DocumentTouch != null && document instanceof (window as any).DocumentTouch)
+		'ontouchstart' in globalThis ||
+		((globalThis as any).DocumentTouch != null && document instanceof (globalThis as any).DocumentTouch)
 	);
 }
 export function isChrome(): boolean {
@@ -28,17 +28,17 @@ export function isSafari(): boolean {
 	return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 export function isPortrait(): boolean {
-	return window.innerHeight > window.innerWidth;
+	return globalThis.innerHeight > globalThis.innerWidth;
 }
 export function isLandscape(): boolean {
 	return !isPortrait();
 }
 export function screenOrientation() {
-	const windowOrientation = window.orientation;
+	const windowOrientation = globalThis.orientation;
 	if (windowOrientation != null) {
 		return windowOrientation;
 	}
-	const screenAngle: number | undefined = window?.screen?.orientation?.angle || 0;
+	const screenAngle: number | undefined = globalThis?.screen?.orientation?.angle || 0;
 	return screenAngle;
 }
 

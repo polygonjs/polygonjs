@@ -10,7 +10,7 @@ export class WindowController {
 	private _createGraphNode() {
 		const coreGraphNode = new CoreGraphNode(this._scene, 'SceneWindowController');
 
-		window.addEventListener('resize', this._onWindowResizeBound);
+		globalThis.addEventListener('resize', this._onWindowResizeBound);
 
 		return coreGraphNode;
 	}
@@ -21,6 +21,6 @@ export class WindowController {
 	}
 
 	dispose() {
-		window.removeEventListener('resize', this._onWindowResizeBound);
+		globalThis.removeEventListener('resize', this._onWindowResizeBound);
 	}
 }
