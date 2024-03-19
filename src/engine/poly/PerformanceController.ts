@@ -8,6 +8,6 @@ export class PolyPerformanceformanceController {
 		this._performanceManager = p;
 	}
 	performanceManager(): PerformanceManager {
-		return this._performanceManager || window.performance;
+		return this._performanceManager || globalThis.performance;
 	}
 }
