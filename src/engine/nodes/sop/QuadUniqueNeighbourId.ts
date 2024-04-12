@@ -84,7 +84,7 @@ export class QuadUniqueNeighbourIdSopNode extends QuadSopNode<QuadUniqueNeighbou
 		const stack: QuadNode[] = [firstQuad];
 		let maxColorId = 0;
 		while (stack.length > 0) {
-			const currentQuad = stack.pop()!;
+			const currentQuad = stack.shift()!;
 			const quadId = currentQuad.id;
 			if (!colorIdByQuadId.has(quadId) /* check if we have already visited it */) {
 				graph.neighbourIdsSharingEdge(quadId, neighbourIdsSharingEdge);
