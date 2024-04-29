@@ -1,14 +1,23 @@
-import {NamedFunction1} from './_Base';
+import {NamedFunction2} from './_Base';
+import {BaseSopNodeType} from '../nodes/sop/_Base';
+import {NodeContext} from '../poly/NodeContext';
+export interface CookNodeFunctionOptions {
+	onCookCompleted: () => void;
+}
+export interface CookNodeFunctionOptionsSerialized {
+	onCookCompleted: string;
+}
 
-export class cookNode extends NamedFunction1<[string]> {
+export class cookNode extends NamedFunction2<[BaseSopNodeType, CookNodeFunctionOptions]> {
 	static override type() {
 		return 'cookNode';
 	}
-	func(nodePath: string): void {
-		const node = this.scene.node(nodePath);
-		if (node) {
+	func(node: BaseSopNodeType, options: CookNodeFunctionOptions): void {
+		if (node && node.context() == NodeContext.SOP) {
 			node.setDirty();
-			node.compute();
+			node.compute().then(() => {
+				options.onCookCompleted();
+			});
 		}
 	}
 }

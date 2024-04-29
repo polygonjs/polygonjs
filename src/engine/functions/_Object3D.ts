@@ -13,6 +13,7 @@ export class getGeometryNodeObjects extends NamedFunction2<[BaseSopNodeType, Obj
 	public override async = true;
 	async func(node: BaseSopNodeType, objects: Object3D[]): Promise<void> {
 		dummyReadRefVal(getOrCreateNodeRef(node.path()).value);
+		dummyReadRefVal(this.scene.timeController.timeUniform().value);
 
 		if (node && node.context() == NodeContext.SOP) {
 			const geometryNode = node as BaseSopNodeType;

@@ -170,6 +170,7 @@ import {testenginenodesjsClamp} from './engine/nodes/js/Clamp';
 import {testenginenodesjsCode} from './engine/nodes/js/Code';
 import {testenginenodesjsCompare} from './engine/nodes/js/Compare';
 import {testenginenodesjsComplement} from './engine/nodes/js/Complement';
+import {testenginenodesjsCookNode} from './engine/nodes/js/CookNode';
 import {testenginenodesjsCross} from './engine/nodes/js/Cross';
 import {testenginenodesjsDeformGeometryCubeLattice} from './engine/nodes/js/DeformGeometryCubeLattice';
 import {testenginenodesjsDegToRad} from './engine/nodes/js/DegToRad';
@@ -773,6 +774,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodesjsCode,
 		testenginenodesjsCompare,
 		testenginenodesjsComplement,
+		testenginenodesjsCookNode,
 		testenginenodesjsCross,
 		testenginenodesjsDeformGeometryCubeLattice,
 		testenginenodesjsDegToRad,
