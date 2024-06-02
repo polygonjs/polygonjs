@@ -39,24 +39,24 @@ export function testenginenodessopQuadUniqueneighbourId(qUnit: QUnit) {
 		quadSmooth1.p.iterations.set(60);
 
 		plane1.p.size.set([1, 1]);
-		assert.deepEqual((await compute()).values, [0, 1], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1], 'colorIds 1x1');
 
 		plane1.p.size.set([2, 2]);
-		assert.deepEqual((await compute()).values, [0, 1, 2], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2], 'colorIds 2x2');
 
 		plane1.p.size.set([3, 3]);
-		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2], 'colorIds 3x3');
 
 		plane1.p.size.set([4, 4]);
-		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2], 'colorIds 4x4');
 
 		plane1.p.size.set([5, 5]);
-		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'colorIds 5x5');
 
 		plane1.p.size.set([20, 20]);
-		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3], 'colorIds 20x20');
 
 		plane1.p.size.set([50, 50]);
-		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4], 'colorIds');
+		assert.deepEqual((await compute()).values, [0, 1, 2, 3, 4], 'colorIds 50x50');
 	});
 }

@@ -96,15 +96,15 @@ export class QuadUniqueNeighbourIdSopNode extends QuadSopNode<QuadUniqueNeighbou
 						neighbourColorIds.add(colorId);
 					}
 				}
-				for (let i = 0; i < maxColorId; i++) {
+				for (let i = 0; i <= maxColorId; i++) {
 					if (!neighbourColorIds.has(i)) {
 						colorIdByQuadId.set(quadId, i);
 						break;
 					}
 				}
 				if (!colorIdByQuadId.has(quadId)) {
-					colorIdByQuadId.set(quadId, maxColorId);
 					maxColorId++;
+					colorIdByQuadId.set(quadId, maxColorId);
 				}
 
 				// traverse neighbours
