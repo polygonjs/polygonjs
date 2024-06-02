@@ -507,4 +507,30 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		assert.equal((await compute()).primitivesCount, 2);
 		assert.deepEqual((await compute()).attribValues, [0.5, 0.5]);
 	});
+	qUnit.test('sop/delete does not crash when processing 0 objects', async (assert) => {
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const copy1 = geo1.createNode('copy');
+		const delete1 = geo1.createNode('delete');
+		const delete2 = geo1.createNode('delete');
+
+		copy1.setInput(0, box1);
+		delete1.setInput(0, copy1);
+		delete2.setInput(0, delete1);
+
+		copy1.p.count.set(4);
+		copy1.p.t.x.set(1);
+
+		delete1.setAttribClass(AttribClass.OBJECT);
+		delete1.p.byExpression.set(1);
+		delete1.p.expression.set('@ptnum>=0');
+
+		delete2.setAttribClass(AttribClass.OBJECT);
+		delete2.p.byExpression.set(1);
+		delete2.p.expression.set('@P.x<2');
+
+		await delete2.compute();
+		assert.notOk(delete2.states.error.active());
+		assert.equal(delete2.states.error.message(), undefined, 'no error message');
+	});
 }

@@ -24,7 +24,7 @@ export class AttributeRequirementsController {
 		if (this._attributeNames) {
 			const lines: string[] = [];
 			if (this._attributeNames.size > 0) {
-				const objectLine = `const ${VAR_OBJECT} = entities[0].object();`;
+				const objectLine = `const ${VAR_OBJECT} = entities[0].object()`;
 				lines.push(objectLine);
 			}
 			for (const attribName of this._attributeNames) {

@@ -263,7 +263,7 @@ const Core = {
 
 function getEntitiesAttributes(entities: CoreEntity[], attribName: string) {
 	const firstEntity = entities[0];
-	if (firstEntity instanceof ThreejsPoint) {
+	if (firstEntity && firstEntity instanceof ThreejsPoint) {
 		return firstEntity.attribute(attribName);
 	} else {
 		return entities.map((e) => e.attribValue(attribName, new Vector4()));
@@ -422,7 +422,7 @@ export class FunctionGenerator extends BaseTraverser {
 			return `
 			const ${VAR_ENTITIES} = param.expressionController.entities();
 			
-			if(${VAR_ENTITIES}){
+			if(${VAR_ENTITIES} && ${VAR_ENTITIES}.length > 0){
 				return new Promise( async (resolve, reject)=>{
 					try {
 						const entityCallback = param.expressionController.entityCallback();
