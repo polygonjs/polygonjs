@@ -26,6 +26,8 @@ class RaySopParamsConfig extends NodeParamsConfig {
 	transformPoints = ParamConfig.BOOLEAN(DEFAULT.transformPoints);
 	/** @param copies the normals from the right geometry to the left one */
 	transferFaceNormals = ParamConfig.BOOLEAN(DEFAULT.transferFaceNormals);
+	/** @param copies the UVs */
+	transferUVs = ParamConfig.BOOLEAN(DEFAULT.transferUVs);
 	/** @param adds an attribute with the distance to the hit position on the target geometry */
 	addDistAttribute = ParamConfig.BOOLEAN(DEFAULT.addDistAttribute);
 }

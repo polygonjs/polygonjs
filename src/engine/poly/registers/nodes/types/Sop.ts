@@ -159,6 +159,7 @@ export enum SopType {
 	QUAD_CONNECTION = 'quadConnection',
 	QUAD_CORNERS = 'quadCorners',
 	QUAD_EXTRUDE = 'quadExtrude',
+	QUAD_FUSE = 'quadFuse',
 	QUAD_MIRROR = 'quadMirror',
 	QUAD_PLANE = 'quadPlane',
 	QUAD_SMOOTH = 'quadSmooth',

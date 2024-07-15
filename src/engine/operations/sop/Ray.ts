@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {BufferAttribute, Matrix4, Mesh, Triangle, Vector3} from 'three';
+import {BufferAttribute, Matrix4, Mesh, Triangle, Vector2, Vector3} from 'three';
 import {Intersection} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
@@ -12,8 +12,8 @@ import {BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {createRaycaster} from '../../../core/RaycastHelper';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
-import { CoreObjectType } from '../../../core/geometry/ObjectContent';
-import { CorePoint } from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',
@@ -25,8 +25,9 @@ interface RaySopParams extends DefaultOperationParams {
 	mode: number;
 	useNormals: boolean;
 	direction: Vector3;
-	transferFaceNormals: boolean;
 	transformPoints: boolean;
+	transferFaceNormals: boolean;
+	transferUVs: boolean;
 	addDistAttribute: boolean;
 }
 
@@ -34,7 +35,11 @@ const DIST_ATTRIB_NAME = 'dist';
 
 const objectWorldMat = new Matrix4();
 const objectWorldMatInverse = new Matrix4();
-const _points:CorePoint<CoreObjectType>[]=[]
+const _points: CorePoint<CoreObjectType>[] = [];
+const _uv0 = new Vector2();
+const _uv1 = new Vector2();
+const _uv2 = new Vector2();
+const _uv = new Vector2();
 
 export class RaySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: RaySopParams = {
@@ -43,6 +48,7 @@ export class RaySopOperation extends BaseSopOperation {
 		direction: new Vector3(0, -1, 0),
 		transformPoints: true,
 		transferFaceNormals: true,
+		transferUVs: false,
 		addDistAttribute: false,
 	};
 	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
@@ -145,8 +151,11 @@ export class RaySopOperation extends BaseSopOperation {
 
 		// find closest pt
 		const position = collisionGeometry.getAttribute('position') as BufferAttribute;
+		const uv = collisionGeometry.getAttribute('uv') as BufferAttribute | null;
 		coreGroup.points(_points);
-		for (const point of _points) {
+		const pointsCount = _points.length;
+		for (let i = 0; i < pointsCount; i++) {
+			const point = _points[i];
 			point.position(this._pointPos);
 			// apply object inverse matrix
 			this._pointPos.applyMatrix4(objectWorldMatInverse);
@@ -159,7 +168,7 @@ export class RaySopOperation extends BaseSopOperation {
 			if (isBooleanTrue(params.addDistAttribute)) {
 				point.setAttribValue(DIST_ATTRIB_NAME, this._hitPointInfo.distance);
 			}
-			if (isBooleanTrue(params.transferFaceNormals)) {
+			if (isBooleanTrue(params.transferFaceNormals) || isBooleanTrue(params.transferUVs)) {
 				// TODO: test if applying the object matrix is necessary (probably is)
 				this._triangle.setFromAttributeAndIndices(
 					position,
@@ -167,8 +176,17 @@ export class RaySopOperation extends BaseSopOperation {
 					indexArray[3 * this._hitPointInfo.faceIndex + 1],
 					indexArray[3 * this._hitPointInfo.faceIndex + 2]
 				);
-				this._triangle.getNormal(this._faceNormal);
-				point.setNormal(this._faceNormal);
+				if (isBooleanTrue(params.transferFaceNormals)) {
+					this._triangle.getNormal(this._faceNormal);
+					point.setNormal(this._faceNormal);
+				}
+				if (isBooleanTrue(params.transferUVs) && uv) {
+					_uv0.fromBufferAttribute(uv, indexArray[3 * this._hitPointInfo.faceIndex]);
+					_uv1.fromBufferAttribute(uv, indexArray[3 * this._hitPointInfo.faceIndex + 1]);
+					_uv2.fromBufferAttribute(uv, indexArray[3 * this._hitPointInfo.faceIndex + 2]);
+					this._triangle.getInterpolation(this._hitPointInfo.point, _uv0, _uv1, _uv2, _uv);
+					point.setAttribValue('uv', _uv);
+				}
 			}
 		}
 		return coreGroup;

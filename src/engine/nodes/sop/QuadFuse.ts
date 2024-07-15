@@ -1,11 +1,79 @@
-import {BufferGeometry, BufferAttribute, Vector2, Vector3, Vector4} from 'three';
-import {addToSetAtEntry} from '../../MapUtils';
+/**
+ * Fuses quads
+ *
+ *
+ */
+import {QuadSopNode} from './_BaseQuad';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreGroup} from '../../../core/geometry/Group';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {Vector2, Vector3, Vector4, BufferAttribute} from 'three';
+import {addToSetAtEntry} from '../../../core/MapUtils';
+
+class QuadFuseSopParamsConfig extends NodeParamsConfig {
+	/** @param tolerance */
+	tolerance = ParamConfig.FLOAT(0.1);
+}
+const ParamsConfig = new QuadFuseSopParamsConfig();
+
+export class QuadFuseSopNode extends QuadSopNode<QuadFuseSopParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return SopType.QUAD_FUSE;
+	}
+
+	protected override initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+	}
+
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		const objects = coreGroup.quadObjects();
+		if (!objects) {
+			this.states.error.set(`no quad objects found`);
+			return;
+		}
+		// _axis.copy(this.pv.axis).normalize();
+		// _plane.constant = -this.pv.center.dot(_axis);
+		// _plane.normal.copy(_axis);
+		const tolerance = this.pv.tolerance;
+		for (const object of objects) {
+			// this._fuseObject(object);
+			mergeFaces(object.geometry, tolerance);
+		}
+
+		this.setQuadObjects(objects);
+	}
+
+	// private _fuseObject(quadObject: QuadObject) {
+	// 	// const geometry = quadObject.geometry;
+	// 	// if (!geometry) {
+	// 	// 	return;
+	// 	// }
+	// 	// const position = geometry.attributes['position'];
+	// 	// const pointsCount = position.count;
+	// 	// const positions = position.array;
+	// 	// for (let i = 0; i < pointsCount; i++) {
+	// 	// 	_pos.fromArray(positions, i * 3);
+	// 	// 	_plane.projectPoint(_pos, _projectedPos);
+	// 	// 	_delta.copy(_pos).sub(_projectedPos);
+	// 	// 	_projectedPos.sub(_delta);
+	// 	// 	_projectedPos.toArray(positions, i * 3);
+	// 	// }
+	// 	// // if ((object as Mesh).isMesh) {
+	// 	// quadObjectInverse(quadObject);
+	// 	// }
+	// }
+}
 
 const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
 const tmpV4 = new Vector4();
 
-class Position {
+class QuadPointPosition {
 	public readonly originalPosition: Vector3 = new Vector3();
 	public readonly snappedPosition: Vector3 = new Vector3();
 	public readonly snappedKey: string;
@@ -14,8 +82,8 @@ class Position {
 		roundedPos(positionAttribute, this.index, this.snappedPosition, tolerance);
 		this.snappedKey = `${this.snappedPosition.x}:${this.snappedPosition.y}:${this.snappedPosition.z}`;
 	}
-	addAttribValue(geometry: BufferGeometry, attribName: string, targetArray: number[]) {
-		const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+	addAttribValue(geometry: QuadGeometry, attribName: string, targetArray: number[]) {
+		const attribute = geometry.attributes[attribName];
 		switch (attribute.itemSize) {
 			case 1: {
 				const val = attribute.getX(this.index);
@@ -42,10 +110,15 @@ class Position {
 }
 
 class Face {
-	constructor(public a: Position, public b: Position, public c: Position) {}
+	constructor(
+		public a: QuadPointPosition,
+		public b: QuadPointPosition,
+		public c: QuadPointPosition,
+		public d: QuadPointPosition
+	) {}
 }
 
-function averagePosition(positions: Set<Position>, target: Vector3) {
+function averagePosition(positions: Set<QuadPointPosition>, target: Vector3) {
 	target.set(0, 0, 0);
 	positions.forEach((position) => {
 		target.add(position.originalPosition);
@@ -66,29 +139,30 @@ function isFaceCollapsed(face: Face): boolean {
 	return (
 		face.a.snappedKey == face.b.snappedKey ||
 		face.a.snappedKey == face.c.snappedKey ||
-		face.b.snappedKey == face.c.snappedKey
+		face.a.snappedKey == face.d.snappedKey ||
+		face.b.snappedKey == face.c.snappedKey ||
+		face.b.snappedKey == face.d.snappedKey ||
+		face.c.snappedKey == face.d.snappedKey
 	);
 }
 const tmpAttribute: BufferAttribute = new BufferAttribute(new Float32Array(0), 0);
-const _positions: [Position, Position, Position] = [
-	new Position(tmpAttribute, 0, 0.1),
-	new Position(tmpAttribute, 0, 0.1),
-	new Position(tmpAttribute, 0, 0.1),
+const _positions: [QuadPointPosition, QuadPointPosition, QuadPointPosition, QuadPointPosition] = [
+	new QuadPointPosition(tmpAttribute, 0, 0.1),
+	new QuadPointPosition(tmpAttribute, 0, 0.1),
+	new QuadPointPosition(tmpAttribute, 0, 0.1),
+	new QuadPointPosition(tmpAttribute, 0, 0.1),
 ];
-export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
-	const index = geometry.getIndex();
-	if (!index) {
-		return;
-	}
-	const indexArray = index.array;
-	const positionAttribute = geometry.getAttribute('position') as BufferAttribute;
+export function mergeFaces(geometry: QuadGeometry, tolerance: number) {
+	const index = geometry.index;
+	const indexArray = index;
+	const positionAttribute = geometry.attributes['position'];
 	const positionsCount = positionAttribute.count;
-	const facesCount = indexArray.length / 3;
+	const facesCount = indexArray.length / 4;
 
-	const positions: Position[] = new Array(positionsCount);
+	const positions: QuadPointPosition[] = new Array(positionsCount);
 	const faces: Face[] = new Array(facesCount);
-	const pointsBySnappedPos: Map<string, Set<Position>> = new Map();
-	const firstPointBySnappedPos: Map<string, Position> = new Map();
+	const pointsBySnappedPos: Map<string, Set<QuadPointPosition>> = new Map();
+	const firstPointBySnappedPos: Map<string, QuadPointPosition> = new Map();
 	const averagePosBySnappedKey: Map<string, Vector3> = new Map();
 	const newIndexBySnappedKey: Map<string, number> = new Map();
 	const newPositions: number[] = [];
@@ -102,7 +176,7 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 	}
 
 	for (let i = 0; i < positionsCount; i++) {
-		const position = new Position(positionAttribute, i, tolerance);
+		const position = new QuadPointPosition(positionAttribute, i, tolerance);
 		positions[i] = position;
 
 		addToSetAtEntry(pointsBySnappedPos, position.snappedKey, position);
@@ -118,10 +192,11 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 	});
 
 	for (let i = 0; i < facesCount; i++) {
-		const a = positions[indexArray[i * 3]];
-		const b = positions[indexArray[i * 3 + 1]];
-		const c = positions[indexArray[i * 3 + 2]];
-		const face = new Face(a, b, c);
+		const a = positions[indexArray[i * 4]];
+		const b = positions[indexArray[i * 4 + 1]];
+		const c = positions[indexArray[i * 4 + 2]];
+		const d = positions[indexArray[i * 4 + 3]];
+		const face = new Face(a, b, c, d);
 		faces[i] = face;
 	}
 
@@ -133,7 +208,8 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 		_positions[0] = face.a;
 		_positions[1] = face.b;
 		_positions[2] = face.c;
-		for (let j = 0; j < 3; j++) {
+		_positions[3] = face.d;
+		for (let j = 0; j < 4; j++) {
 			const position = _positions[j];
 			let newIndex = newIndexBySnappedKey.get(position.snappedKey);
 			const averagePos = averagePosBySnappedKey.get(position.snappedKey)!;
@@ -154,7 +230,7 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 	geometry.setAttribute('position', new BufferAttribute(new Float32Array(newPositions), 3));
 	for (let k = 0; k < otherAttributeNamesCount; k++) {
 		const attribName = otherAttributeNames[k];
-		const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+		const attribute = geometry.attributes[attribName];
 		const newValues = newAttributeValues[attribName];
 		geometry.setAttribute(attribName, new BufferAttribute(new Float32Array(newValues), attribute.itemSize));
 	}
