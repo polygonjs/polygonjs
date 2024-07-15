@@ -233,6 +233,7 @@ import {PolywireSopNode} from '../../../nodes/sop/Polywire';
 import {QuadConnectionSopNode} from '../../../nodes/sop/QuadConnection';
 import {QuadCornersSopNode} from '../../../nodes/sop/QuadCorners';
 import {QuadExtrudeSopNode} from '../../../nodes/sop/QuadExtrude';
+import {QuadMirrorSopNode} from '../../../nodes/sop/QuadMirror';
 import {QuadPlaneSopNode} from '../../../nodes/sop/QuadPlane';
 import {QuadSmoothSopNode} from '../../../nodes/sop/QuadSmooth';
 import {QuadTriangulateSopNode} from '../../../nodes/sop/QuadTriangulate';
@@ -565,6 +566,7 @@ export interface GeoNodeChildrenMap {
 	quadConnection: QuadConnectionSopNode;
 	quadCorners: QuadCornersSopNode;
 	quadExtrude: QuadExtrudeSopNode;
+	quadMirror: QuadMirrorSopNode;
 	quadPlane: QuadPlaneSopNode;
 	quadSmooth: QuadSmoothSopNode;
 	quadTriangulate: QuadTriangulateSopNode;
@@ -1140,6 +1142,7 @@ export class SopRegister {
 		poly.registerNode(QuadConnectionSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadCornersSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadExtrudeSopNode, CATEGORY_SOP.QUAD);
+		poly.registerNode(QuadMirrorSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadPlaneSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadSmoothSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadTriangulateSopNode, CATEGORY_SOP.QUAD);
