@@ -7,7 +7,6 @@ import {TouchEventType} from '../../../../core/event/TouchEventType';
 import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {createRaycaster} from '../../../../core/RaycastHelper';
 import {SceneEventsDispatcher} from './EventsDispatcher';
-import {isTouchDevice} from '../../../../core/UserAgent';
 import {CursorHelper} from '../../../../core/event/CursorHelper';
 import type {EventContext} from '../../../../core/event/EventContextType';
 export interface RaycasterUpdateOptions {
@@ -70,7 +69,7 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 		// }
 
 		const eventType = event.type as PointerEventType | TouchEventType | MouseEventType;
-		if (eventType == PointerEventType.pointermove) {
+		if (eventType == PointerEventType.pointermove || eventType == TouchEventType.touchmove) {
 			// pointermove is not processed here,
 			// since callbacks such as onObjectHover
 			// should be triggered even if the pointer is not moving
@@ -115,11 +114,14 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 					return;
 				}
 				case PointerEventType.pointerup: {
-					if (!isTouchDevice()) {
-						actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
-						actorsManager.pointerup.onPointerup(eventContext.event);
-						return;
-					}
+					// We must not test for isTouchDevice() here
+					// as we may receive pointerup from a mobile,
+					// without touchend
+					// if (!isTouchDevice()) {
+					actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
+					actorsManager.pointerup.onPointerup(eventContext.event);
+					return;
+					// }
 				}
 				case PointerEventType.contextmenu: {
 					actorsManager.rayObjectIntersectionContextmenu.onContextmenu(eventContext.event);
@@ -128,11 +130,12 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 				case TouchEventType.touchend: {
 					// we also need to trigger onPointerup after touchend,
 					// as pointerup appears to not be triggered once the cursor has moved
-					if (isTouchDevice()) {
-						actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
-						actorsManager.pointerup.onPointerup(eventContext.event);
-						return;
-					}
+					// We must not test for isTouchDevice() here (see pointerup above)
+					// if (isTouchDevice()) {
+					actorsManager.rayObjectIntersectionPointerup.onPointerup(eventContext.event);
+					actorsManager.pointerup.onPointerup(eventContext.event);
+					return;
+					// }
 				}
 			}
 		}
