@@ -1,16 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three';
-import {ShaderMaterial} from 'three';
-import {WebGLRenderer} from 'three';
-import {Scene} from 'three';
-import {Camera} from 'three';
-import {BufferGeometry} from 'three';
-import {Geometry} from 'three/examples/jsm/deprecated/Geometry';
-import {Group} from 'three';
-import {Box3} from 'three';
-import {Object3D} from 'three';
+import {Object3D, Box3, Group, Scene, Camera, BufferGeometry, Material, ShaderMaterial, WebGLRenderer} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 
 export function VolumeParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -40,7 +31,7 @@ export class VolumeController {
 		renderer: WebGLRenderer,
 		scene: Scene,
 		camera: Camera,
-		geometry: BufferGeometry | Geometry,
+		geometry: BufferGeometry,
 		material: Material,
 		group: Group | null,
 		object: Object3D

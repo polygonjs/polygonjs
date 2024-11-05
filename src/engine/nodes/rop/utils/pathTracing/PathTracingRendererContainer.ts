@@ -6,12 +6,11 @@ import {
 	Mesh,
 	Object3D,
 	Vector2,
-	WebGLCapabilities,
-	WebGLMultipleRenderTargets,
 	WebGLRenderer,
 	WebGLRenderTarget,
 	Object3DEventMap,
 } from 'three';
+import {WebGLCapabilities} from 'three/src/renderers/webgl/WebGLCapabilities';
 import {Scene, Camera, MeshBasicMaterial} from 'three';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
@@ -241,14 +240,14 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 		this.pathTracingRenderer.reset();
 	}
 	setRenderTarget(
-		renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets | null,
+		renderTarget: WebGLRenderTarget | null,
 		activeCubeFace?: number | undefined,
 		activeMipmapLevel?: number | undefined
 	) {
 		this.webGLRenderer.setRenderTarget(renderTarget, activeCubeFace, activeMipmapLevel);
 	}
 	readRenderTargetPixels(
-		renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets,
+		renderTarget: WebGLRenderTarget,
 		x: number,
 		y: number,
 		width: number,

@@ -1,4 +1,15 @@
-import {BufferGeometry, BufferAttribute, Object3D, Mesh, Vector2, Vector3, Vector4, Quaternion, Color} from 'three';
+import {
+	BufferGeometry,
+	BufferAttribute,
+	Object3D,
+	Mesh,
+	Vector2,
+	Vector3,
+	Vector4,
+	Quaternion,
+	Color,
+	QuaternionTuple,
+} from 'three';
 import {InstanceAttrib} from '../../core/geometry/Instancer';
 import {ObjectNamedFunction3, ObjectNamedFunction4, ObjectNamedFunction6} from './_Base';
 import {markAttributeAsNeedsUpdateForFrame} from '../../core/geometry/Attribute';
@@ -66,7 +77,7 @@ function _setGeometryInstanceQuaternions(
 		return;
 	}
 	const doLerp = lerp < 1;
-	const instanceQuaternionArray = instanceQuaternionAttribute.array;
+	const instanceQuaternionArray: QuaternionTuple = instanceQuaternionAttribute.array as any as QuaternionTuple;
 	let i = 0;
 	for (let value of newValues) {
 		if (doLerp) {
@@ -304,7 +315,7 @@ export class setGeometryInstanceAttributeColor extends ObjectNamedFunction4<[str
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array ;
+		const instanceAttributeArray = instanceAttribute.array;
 		let i = 0;
 
 		for (let value of newValues) {
@@ -347,7 +358,7 @@ export class setGeometryInstanceAttributeQuaternion extends ObjectNamedFunction4
 			return;
 		}
 		const doLerp = lerp < 1;
-		const instanceAttributeArray = instanceAttribute.array ;
+		const instanceAttributeArray: QuaternionTuple = instanceAttribute.array as any as QuaternionTuple;
 		let i = 0;
 		for (let value of newValues) {
 			if (doLerp) {

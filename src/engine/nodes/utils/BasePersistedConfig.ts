@@ -101,7 +101,7 @@ export abstract class BasePersistedConfig {
 		let material_data: object | undefined = undefined;
 		this._withPreparedMaterial(material, () => {
 			try {
-				material_data = material.toJSON({});
+				material_data = material.toJSON();
 				if (material_data) {
 					// those properties are currently not handled in three.js
 					// TODO: wait for https://github.com/mrdoob/three.js/pull/21428

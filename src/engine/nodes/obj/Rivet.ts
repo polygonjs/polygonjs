@@ -16,7 +16,6 @@ import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {BufferGeometry} from 'three';
-import {Geometry} from 'three/examples/jsm/deprecated/Geometry';
 import {Material} from 'three';
 import {Mesh} from 'three';
 import {Vector3} from 'three';
@@ -210,7 +209,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		renderer?: WebGLRenderer,
 		scene?: Scene,
 		camera?: Camera,
-		geometry?: BufferGeometry | Geometry,
+		geometry?: BufferGeometry,
 		material?: Material,
 		group?: Group | null
 	) {

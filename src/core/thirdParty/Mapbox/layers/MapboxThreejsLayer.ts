@@ -6,6 +6,7 @@ import {
 	Scene,
 	Vector3,
 	WebGLRenderer,
+	Matrix4Tuple,
 	// Vector2,
 	// PlaneGeometry,
 } from 'three';
@@ -202,7 +203,7 @@ export class ThreejsLayer {
 			.multiply(rotationY)
 			.multiply(rotationZ);
 
-		this._camera.projectionMatrix.elements = matrix;
+		this._camera.projectionMatrix.elements = matrix as Matrix4Tuple;
 		this._camera.projectionMatrix = this.m.multiply(this.l);
 	}
 

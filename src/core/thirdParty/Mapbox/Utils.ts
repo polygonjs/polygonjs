@@ -1,5 +1,5 @@
 // THREE = require("../three97.js"); # Modified version to use 64-bit double precision floats for matrix math
-import {Vector3, Matrix4} from 'three';
+import {Vector3, Matrix4, Matrix4Tuple} from 'three';
 import mapboxgl from 'mapbox-gl';
 
 import {CoreMapboxConstants} from './Constants';
@@ -32,7 +32,24 @@ export class CoreMapboxUtils {
 		const f = 1.0 / Math.tan(fovy / 2);
 		const nf = 1 / (near - far);
 
-		const newMatrix = [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0];
+		const newMatrix: Matrix4Tuple = [
+			f / aspect,
+			0,
+			0,
+			0,
+			0,
+			f,
+			0,
+			0,
+			0,
+			0,
+			(far + near) * nf,
+			-1,
+			0,
+			0,
+			2 * far * near * nf,
+			0,
+		];
 
 		out.elements = newMatrix;
 		return out;
