@@ -25,6 +25,12 @@ varying vec3 v_POLY_globals1_position;
 #include <clipping_planes_pars_fragment>
 
 void main() {
+	vec4 diffuseColor = vec4( diffuse, opacity );
+
+
+
+	// /MAT/lineBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_globals1_position;
 
 	#include <clipping_planes_fragment>
 
@@ -35,12 +41,6 @@ void main() {
 	}
 
 	vec3 outgoingLight = vec3( 0.0 );
-	vec4 diffuseColor = vec4( diffuse, opacity );
-
-
-
-	// /MAT/lineBasicBuilder1/output1
-	diffuseColor.xyz = v_POLY_globals1_position;
 
 
 

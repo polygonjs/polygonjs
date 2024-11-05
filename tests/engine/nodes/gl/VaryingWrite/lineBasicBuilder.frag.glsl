@@ -26,15 +26,6 @@ varying vec3 ptColor;
 
 void main() {
 
-	#include <clipping_planes_fragment>
-
-	if ( mod( vLineDistance, totalSize ) > dashSize ) {
-
-		discard;
-
-	}
-
-	vec3 outgoingLight = vec3( 0.0 );
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
 
@@ -50,6 +41,15 @@ void main() {
 
 
 
+	#include <clipping_planes_fragment>
+
+	if ( mod( vLineDistance, totalSize ) > dashSize ) {
+
+		discard;
+
+	}
+
+	vec3 outgoingLight = vec3( 0.0 );
 
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>

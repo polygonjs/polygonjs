@@ -22,9 +22,6 @@ varying vec3 ptColor;
 
 void main() {
 
-	#include <clipping_planes_fragment>
-
-	vec3 outgoingLight = vec3( 0.0 );
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
 
@@ -36,6 +33,9 @@ void main() {
 	diffuseColor.xyz = v_POLY_varyingRead1_fragment;
 
 
+	#include <clipping_planes_fragment>
+
+	vec3 outgoingLight = vec3( 0.0 );
 
 
 	#include <logdepthbuf_fragment>

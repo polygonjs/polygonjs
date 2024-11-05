@@ -27,7 +27,6 @@ varying vec3 v_POLY_globals1_position;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 void main() {
-	#include <clipping_planes_fragment>
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	float v_POLY_vec3ToFloat1_x = v_POLY_globals1_position.x;
 	float v_POLY_vec3ToFloat1_y = v_POLY_globals1_position.y;
@@ -35,6 +34,7 @@ void main() {
 	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_vec3ToFloat1_x, 0.0, v_POLY_vec3ToFloat1_y);
 	
 	diffuseColor.xyz = v_POLY_floatToVec3_1_vec3;
+	#include <clipping_planes_fragment>
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 	vec3 totalEmissiveRadiance = emissive;
 	#include <logdepthbuf_fragment>

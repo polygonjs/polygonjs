@@ -36,7 +36,6 @@ varying vec2 v_POLY_attribute_uv;
 
 void main() {
 
-	#include <clipping_planes_fragment>
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
@@ -58,6 +57,7 @@ void main() {
 
 
 
+	#include <clipping_planes_fragment>
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>

@@ -20,8 +20,8 @@ uniform float opacity;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 void main() {
-	#include <clipping_planes_fragment>
 	vec4 diffuseColor = vec4( diffuse, opacity );
+	#include <clipping_planes_fragment>
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>

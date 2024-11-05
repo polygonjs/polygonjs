@@ -33,11 +33,11 @@ varying vec3 v_POLY_globals1_position;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 void main() {
-	#include <clipping_planes_fragment>
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	vec3 v_POLY_polarToCartesian1_xyz = polarToCartesian(v_POLY_globals1_position);
 	
 	diffuseColor.xyz = v_POLY_polarToCartesian1_xyz;
+	#include <clipping_planes_fragment>
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>

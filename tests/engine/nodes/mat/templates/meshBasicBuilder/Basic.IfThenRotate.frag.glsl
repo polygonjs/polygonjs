@@ -289,7 +289,6 @@ varying vec3 v_POLY_globals1_position;
 
 void main() {
 
-	#include <clipping_planes_fragment>
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
@@ -320,6 +319,7 @@ void main() {
 
 
 
+	#include <clipping_planes_fragment>
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 	#include <color_fragment>

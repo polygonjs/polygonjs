@@ -26,11 +26,11 @@ uniform float opacity;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 void main() {
-	#include <clipping_planes_fragment>
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	vec3 v_POLY_constant1_val = vec3(1.0, 0.0, 0.5);
 	
 	diffuseColor.xyz = v_POLY_constant1_val;
+	#include <clipping_planes_fragment>
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 	vec3 totalEmissiveRadiance = emissive;
 	#include <logdepthbuf_fragment>
