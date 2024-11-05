@@ -1,4 +1,4 @@
-import { Loader, LoadingManager, Group, Material } from 'three';
+import { Group, Loader, LoadingManager, Material } from "three";
 
 export class LDrawLoader extends Loader<Group> {
     materials: Material[];

@@ -1,14 +1,4 @@
-import {
-    Material,
-    LoadingManager,
-    Mapping,
-    Loader,
-    BufferGeometry,
-    Side,
-    Texture,
-    Vector2,
-    Wrapping,
-} from 'three';
+import { BufferGeometry, Loader, LoadingManager, Mapping, Material, Side, Texture, Vector2, Wrapping } from "three";
 
 export interface MaterialCreatorOptions {
     /**

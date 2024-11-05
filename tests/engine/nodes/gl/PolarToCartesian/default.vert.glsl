@@ -19,6 +19,7 @@ void main() {
 	#ifdef USE_TANGENT
 		vec3 objectTangent = vec3( tangent.xyz );
 	#endif
+	#include <morphinstance_vertex>
 	#include <morphcolor_vertex>
 	#include <batching_vertex>
 	#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )

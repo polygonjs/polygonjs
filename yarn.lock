@@ -562,6 +562,11 @@
     "@statoscope/types" "5.14.1"
     highcharts "^9.2.2"
 
+"@tweenjs/tween.js@~23.1.1":
+  version "23.1.3"
+  resolved "https://registry.yarnpkg.com/@tweenjs/tween.js/-/tween.js-23.1.3.tgz#eff0245735c04a928bb19c026b58c2a56460539d"
+  integrity sha512-vJmvvwFxYuGnF2axRtPYocag6Clbb5YS7kLL+SO/TeVFzHqDIWrNKYtcsPMibjDx9O+bu+psAy9NKfWklassUA==
+
 "@types/archy@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/archy/-/archy-0.0.32.tgz#8b572741dad9172dfbf289397af1bb41296d3e40"
@@ -775,11 +780,12 @@
   resolved "https://registry.yarnpkg.com/@types/stats.js/-/stats.js-0.17.0.tgz#0ed81d48e03b590c24da85540c1d952077a9fe20"
   integrity sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==
 
-"@types/three@0.161.0":
-  version "0.161.0"
-  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.161.0.tgz#e793547a2892d367c740950b2e82d36ffad3b496"
-  integrity sha512-VrgtT08x7SQYtMuhVJDVNBgOGdUCvb6o5DP/DI/sz7jVyHdoDr3rZc6w/OcHZlUCVf0UGYPtflAjUUfI49Dhsg==
+"@types/three@0.162.0":
+  version "0.162.0"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.162.0.tgz#79d170c88f14b2eaee6b76af00fc4016a533e586"
+  integrity sha512-0j5yZcVukVIhrhSIC7+LmBPkkMoMuEJ1AfYBZfgNytdYqYREMuiyXWhYOMeZLBElTEAlJIZn7r2W3vqTIgjWlg==
   dependencies:
+    "@tweenjs/tween.js" "~23.1.1"
     "@types/stats.js" "*"
     "@types/webxr" "*"
     fflate "~0.6.10"
@@ -3679,10 +3685,10 @@ postcss@^8.4.13, postcss@^8.4.27:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@6.34.1:
-  version "6.34.1"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.34.1.tgz#bdbff8def3301e861f0d45a39a188f3cafa7f252"
-  integrity sha512-xae6A2XNs61V3ohGHR+i9sQDvB4dWaoG/AICw0hg8sOYQWAYDlf+esWMRmO4hixMaYo3AJBJ9WAA7JF7OiGakw==
+postprocessing@6.36.3:
+  version "6.36.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.36.3.tgz#330eec2be86db36cf227114c97f227c7ad3c95ee"
+  integrity sha512-GtMLwoqg0xdYAgm9lbf6qlKay7HQPb8Z+xAPSzbCUspud/qBj3Y/orJSkqEQVlfxTtm7YAUSv+J39ir51/IwaQ==
 
 potpack@2.0.0, potpack@^2.0.0:
   version "2.0.0"
@@ -4339,10 +4345,10 @@ three-subdivide@1.1.5:
   resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.5.tgz#de688d328247380112bb1033aee88dcae435cd5b"
   integrity sha512-eEWMevrsHIMnC1xbsZSQZIB8QBr8XeXZhTSAdYrLm3ZC/yTdR4ocOZ2Qi+gEyPJFOt3iirQ+SQR0jCamk7e6FQ==
 
-three@0.161.0:
-  version "0.161.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.161.0.tgz#38aafaa82fe5467fde2e33933515d1b6beb17d91"
-  integrity sha512-LC28VFtjbOyEu5b93K0bNRLw1rQlMJ85lilKsYj6dgTu+7i17W+JCCEbvrpmNHF1F3NAUqDSWq50UD7w9H2xQw==
+three@0.162.0:
+  version "0.162.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.162.0.tgz#b15a511f1498e0c42d4d00bbb411c7527b06097e"
+  integrity sha512-xfCYj4RnlozReCmUd+XQzj6/5OjDNHBy5nT6rVwrOKGENAvpXe2z1jL+DZYaMu4/9pNsjH/4Os/VvS9IrH7IOQ==
 
 thunky@^1.0.2:
   version "1.1.0"

@@ -27,7 +27,7 @@ void main() {
 	#include <uv_vertex>
 	#include <batching_vertex>
 	#include <skinbase_vertex>
-
+	#include <morphinstance_vertex>
 	#ifdef USE_DISPLACEMENTMAP
 
 // removed:

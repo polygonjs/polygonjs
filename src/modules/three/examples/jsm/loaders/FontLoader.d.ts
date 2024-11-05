@@ -1,4 +1,4 @@
-import { Shape, Loader, LoadingManager } from 'three';
+import { Loader, LoadingManager, Shape } from "three";
 
 export class FontLoader extends Loader<Font> {
     constructor(manager?: LoadingManager);

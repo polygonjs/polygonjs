@@ -1,4 +1,4 @@
-import { BufferGeometry, Material, Mesh, Color } from 'three';
+import { BufferGeometry, Color, Material, Mesh } from "three";
 
 export class MarchingCubes extends Mesh {
     constructor(

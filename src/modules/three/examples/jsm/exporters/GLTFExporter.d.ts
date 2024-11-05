@@ -1,4 +1,4 @@
-import { Object3D, AnimationClip, Texture, Material, Mesh } from 'three';
+import { AnimationClip, Material, Mesh, Object3D, Texture } from "three";
 
 export interface GLTFExporterOptions {
     /**

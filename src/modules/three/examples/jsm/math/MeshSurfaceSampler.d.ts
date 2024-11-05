@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, Mesh, Vector2, Vector3 } from 'three';
+import { BufferGeometry, Color, Mesh, Vector2, Vector3 } from "three";
 
 export class MeshSurfaceSampler {
     distribution: Float32Array | null;

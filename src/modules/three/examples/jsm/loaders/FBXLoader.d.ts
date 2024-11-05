@@ -1,4 +1,4 @@
-import { Group, Loader, LoadingManager } from 'three';
+import { Group, Loader, LoadingManager } from "three";
 
 export class FBXLoader extends Loader<Group> {
     constructor(manager?: LoadingManager);

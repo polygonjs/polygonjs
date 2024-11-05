@@ -1,4 +1,4 @@
-import {Vector3} from 'three';
+import {Vector3, BufferGeometry} from 'three';
 import {
 	// setUnion,
 	setToArray,
@@ -19,7 +19,7 @@ const _edgeIds2 = new Set<string>();
 const _notVisited = new Set<string>();
 const _edgeIdsArray: string[] = [];
 
-export function triangleGraphFromGeometry(geometry: THREE.BufferGeometry): TriangleGraph | undefined {
+export function triangleGraphFromGeometry(geometry: BufferGeometry): TriangleGraph | undefined {
 	const index = geometry.getIndex();
 	if (!index) {
 		return;

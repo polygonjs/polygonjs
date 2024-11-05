@@ -342,6 +342,7 @@ void main() {
 
 
 
+	#include <morphinstance_vertex>
 	#include <morphcolor_vertex>
 	#include <batching_vertex>
 	#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )

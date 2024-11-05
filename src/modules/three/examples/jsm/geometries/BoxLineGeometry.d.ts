@@ -1,4 +1,4 @@
-import { BufferGeometry } from 'three';
+import { BufferGeometry } from "three";
 
 export class BoxLineGeometry extends BufferGeometry {
     constructor(

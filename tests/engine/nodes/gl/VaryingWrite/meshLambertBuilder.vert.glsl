@@ -36,6 +36,7 @@ void main() {
 	#endif
 	
 	ptColor = v_POLY_hsvToRgb1_rgb;
+	#include <morphinstance_vertex>
 	#include <morphcolor_vertex>
 	#include <batching_vertex>
 	#include <morphnormal_vertex>

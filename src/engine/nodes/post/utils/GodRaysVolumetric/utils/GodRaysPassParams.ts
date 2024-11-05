@@ -24,7 +24,7 @@ export interface GodraysPassParams {
 	/**
 	 * The color of the godrays.
 	 */
-	color: THREE.Color;
+	color: Color;
 }
 
 export const GodRaysPassDefaultParams: GodraysPassParams = {

@@ -2,7 +2,6 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {
-	Float64BufferAttribute,
 	Float32BufferAttribute,
 	Float16BufferAttribute,
 	Uint32BufferAttribute,
@@ -20,7 +19,6 @@ import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectConten
 import {corePointClassFactory, coreVertexClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 export enum AttribType {
-	Float64BufferAttribute = 'Float64BufferAttribute',
 	Float32BufferAttribute = 'Float32BufferAttribute',
 	Float16BufferAttribute = 'Float16BufferAttribute',
 	Uint32BufferAttribute = 'Uint32BufferAttribute',
@@ -33,7 +31,6 @@ export enum AttribType {
 }
 
 export const ATTRIB_TYPES: AttribType[] = [
-	AttribType.Float64BufferAttribute,
 	AttribType.Float32BufferAttribute,
 	AttribType.Float16BufferAttribute,
 	AttribType.Uint32BufferAttribute,
@@ -45,7 +42,6 @@ export const ATTRIB_TYPES: AttribType[] = [
 	AttribType.Int8BufferAttribute,
 ];
 const ATTRIB_CLASS_BY_TYPE = {
-	[AttribType.Float64BufferAttribute]: Float64BufferAttribute,
 	[AttribType.Float32BufferAttribute]: Float32BufferAttribute,
 	[AttribType.Float16BufferAttribute]: Float16BufferAttribute,
 	[AttribType.Uint32BufferAttribute]: Uint32BufferAttribute,
@@ -57,7 +53,6 @@ const ATTRIB_CLASS_BY_TYPE = {
 	[AttribType.Int8BufferAttribute]: Int8BufferAttribute,
 };
 const ARRAY_CLASS_BY_TYPE = {
-	[AttribType.Float64BufferAttribute]: Float64Array,
 	[AttribType.Float32BufferAttribute]: Float32Array,
 	[AttribType.Float16BufferAttribute]: Uint16Array,
 	[AttribType.Uint32BufferAttribute]: Uint32Array,

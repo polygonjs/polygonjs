@@ -77,6 +77,7 @@ void main() {
 
 // removed:
 //	#include <beginnormal_vertex>
+	#include <morphinstance_vertex>
 	#include <morphnormal_vertex>
 	#include <skinbase_vertex>
 	#include <skinnormal_vertex>

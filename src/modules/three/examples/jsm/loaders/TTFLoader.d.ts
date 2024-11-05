@@ -1,4 +1,4 @@
-import { Loader, LoadingManager } from 'three';
+import { Loader, LoadingManager } from "three";
 
 export class TTFLoader extends Loader<object> {
     constructor(manager?: LoadingManager);

@@ -1,4 +1,4 @@
-import { Mesh, Points } from 'three';
+import { Mesh, Points } from "three";
 
 export interface DRACOExporterOptions {
     decodeSpeed?: number;

@@ -212,6 +212,7 @@ void main() {
 
 
 
+	#include <morphinstance_vertex>
 	#include <morphcolor_vertex>
 	#include <batching_vertex>
 

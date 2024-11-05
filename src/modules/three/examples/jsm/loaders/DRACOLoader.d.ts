@@ -1,4 +1,4 @@
-import { Loader, LoadingManager, BufferGeometry } from 'three';
+import { BufferGeometry, Loader, LoadingManager } from "three";
 
 export class DRACOLoader extends Loader<BufferGeometry> {
     constructor(manager?: LoadingManager);

@@ -108,6 +108,7 @@ export function testenginenodesmatRayMarchingBuilder(qUnit: QUnit) {
 		'emissiveMapTransform',
 		'envMap',
 		'envMapIntensity',
+		'envMapRotation',
 		'flipEnvMap',
 		'fogColor',
 		'fogDensity',

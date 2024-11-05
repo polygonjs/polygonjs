@@ -1,4 +1,4 @@
-import { LoadingManager, DataTextureLoader, TextureDataType, PixelFormat } from 'three';
+import { DataTextureLoader, LoadingManager, PixelFormat, TextureDataType } from "three";
 
 export interface RGBE {
     width: number;

@@ -10,7 +10,7 @@ import {
 	WebGLRenderer,
 	Mesh,
 	WebGLRenderTarget,
-	WebGLRenderTargetOptions,
+	RenderTargetOptions,
 	Vector2,
 	Vector3,
 	Vector4,
@@ -42,7 +42,7 @@ export interface BaseReflectorOptions {
 	scene: Scene;
 }
 
-export const renderTargetParams: WebGLRenderTargetOptions = {
+export const renderTargetParams: RenderTargetOptions = {
 	minFilter: LinearFilter,
 	magFilter: LinearFilter,
 	// format: RGBAFormat,

@@ -2,7 +2,7 @@ import {
 	WebGLRenderer,
 	WebGLRendererParameters,
 	WebGLRenderTarget,
-	WebGLRenderTargetOptions,
+	RenderTargetOptions,
 	NoColorSpace,
 	NoToneMapping,
 } from 'three';
@@ -193,7 +193,7 @@ export class RenderersController {
 		return gl as WebGLRenderingContext | undefined;
 	}
 
-	createRenderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
+	createRenderTarget(width: number, height: number, parameters: RenderTargetOptions) {
 		if (this.webGL2Available()) {
 			const multiSampleRenderTarget = new WebGLRenderTarget(width, height, parameters);
 			multiSampleRenderTarget.samples = 2;

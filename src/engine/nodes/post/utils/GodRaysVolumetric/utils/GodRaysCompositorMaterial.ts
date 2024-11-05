@@ -1,15 +1,15 @@
-import {Vector2, ShaderMaterial} from 'three';
+import {Vector2,Color, ShaderMaterial, Texture,PerspectiveCamera} from 'three';
 import {Resizable} from 'postprocessing';
 
 import GodraysCompositorShader from '../gl/compositor.frag.glsl';
 import GodraysCompositorVertexShader from '../gl/compositor.vert.glsl';
 
 export interface GodraysCompositorMaterialProps {
-	godrays: THREE.Texture;
+	godrays: Texture;
 	edgeStrength: number;
 	edgeRadius: number;
-	color: THREE.Color;
-	camera: THREE.PerspectiveCamera;
+	color: Color;
+	camera: PerspectiveCamera;
 }
 
 export class GodraysCompositorMaterial extends ShaderMaterial implements Resizable {
@@ -41,7 +41,7 @@ export class GodraysCompositorMaterial extends ShaderMaterial implements Resizab
 	public updateUniforms(
 		edgeStrength: number,
 		edgeRadius: number,
-		color: THREE.Color,
+		color: Color,
 		near: number,
 		far: number
 	): void {
