@@ -1,6 +1,6 @@
 import {IUniformN} from '../../../utils/code/gl/Uniforms';
 
-export interface RayMarchingUniforms {
+export interface RayMarchingUniforms extends Record<string, IUniformN> {
 	MAX_STEPS: IUniformN;
 	MAX_DIST: IUniformN;
 	SURF_DIST: IUniformN;

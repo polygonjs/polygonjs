@@ -2,11 +2,15 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Material, MeshStandardMaterial} from 'three';
-import {MeshPhysicalMaterial} from 'three';
-import {MeshMatcapMaterial} from 'three';
-import {MeshNormalMaterial} from 'three';
-import {MeshToonMaterial} from 'three';
+import {
+	Material,
+	MeshStandardMaterial,
+	MeshPhongMaterial,
+	MeshPhysicalMaterial,
+	MeshMatcapMaterial,
+	MeshNormalMaterial,
+	MeshToonMaterial,
+} from 'three';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -37,7 +41,8 @@ type TextureBumpMapControllerCurrentMaterial =
 	| MeshNormalMaterial
 	| MeshPhysicalMaterial
 	| MeshStandardMaterial
-	| MeshToonMaterial;
+	| MeshToonMaterial
+	| MeshPhongMaterial;
 function _isValidMaterial(material?: Material): material is TextureBumpMapControllerCurrentMaterial {
 	if (!material) {
 		return false;

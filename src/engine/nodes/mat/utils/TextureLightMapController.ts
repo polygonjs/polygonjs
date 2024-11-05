@@ -2,11 +2,15 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Material, MeshBasicMaterial} from 'three';
-import {MeshLambertMaterial} from 'three';
-import {MeshStandardMaterial} from 'three';
-import {MeshPhysicalMaterial} from 'three';
-import {MeshToonMaterial} from 'three';
+import {
+	Material,
+	MeshBasicMaterial,
+	MeshPhongMaterial,
+	MeshLambertMaterial,
+	MeshStandardMaterial,
+	MeshPhysicalMaterial,
+	MeshToonMaterial,
+} from 'three';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -30,7 +34,8 @@ type TextureLightMapCurrentMaterial =
 	| MeshLambertMaterial
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
-	| MeshToonMaterial;
+	| MeshToonMaterial
+	| MeshPhongMaterial;
 function _isValidMaterial(material?: Material): material is TextureLightMapCurrentMaterial {
 	if (!material) {
 		return false;

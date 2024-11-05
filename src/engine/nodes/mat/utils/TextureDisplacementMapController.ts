@@ -2,11 +2,15 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Material, MeshMatcapMaterial} from 'three';
-import {MeshStandardMaterial} from 'three';
-import {MeshPhysicalMaterial} from 'three';
-import {MeshNormalMaterial} from 'three';
-import {MeshToonMaterial} from 'three';
+import {
+	Material,
+	MeshMatcapMaterial,
+	MeshPhongMaterial,
+	MeshStandardMaterial,
+	MeshPhysicalMaterial,
+	MeshNormalMaterial,
+	MeshToonMaterial,
+} from 'three';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -40,7 +44,8 @@ type TextureDisplacementMapControllerCurrentMaterial =
 	| MeshNormalMaterial
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
-	| MeshToonMaterial;
+	| MeshToonMaterial
+	| MeshPhongMaterial;
 function _isValidMaterial(material?: Material): material is TextureDisplacementMapControllerCurrentMaterial {
 	if (!material) {
 		return false;

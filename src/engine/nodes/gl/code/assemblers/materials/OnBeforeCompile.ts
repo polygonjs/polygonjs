@@ -1,4 +1,4 @@
-import {ShaderMaterial, Material, IUniform, Shader} from 'three';
+import {ShaderMaterial, Material, IUniform, WebGLProgramParametersWithUniforms} from 'three';
 import {PolyScene} from '../../../../../scene/PolyScene';
 import {GlParamConfig, GlParamConfigJSON} from '../../utils/GLParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
@@ -48,7 +48,7 @@ type RemoveParamConfigField<Type> = {
 export interface OnBeforeCompileDataJSON extends RemoveParamConfigField<OnBeforeCompileData> {
 	paramConfigs: GlParamConfigJSON<ParamType>[];
 }
-type OnBeforeCompile = (shader: Shader) => void;
+type OnBeforeCompile = (shader: WebGLProgramParametersWithUniforms) => void;
 
 export function assignUniformViaUserData(material: Material, uniformName: string, newUniform: IUniformTexture) {
 	const uniforms = MaterialUserDataUniforms.getUniforms(material);
@@ -114,7 +114,7 @@ export function copyOnBeforeCompileData(scene: PolyScene, params: CopyParams) {
 }
 
 function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeCompile {
-	const onBeforeCompile = (shader: Shader) => {
+	const onBeforeCompile = (shader: WebGLProgramParametersWithUniforms) => {
 		const data = OnBeforeCompileDataHandler.getData(material);
 		if (!data) {
 			return;

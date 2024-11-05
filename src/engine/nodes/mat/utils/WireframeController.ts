@@ -3,10 +3,15 @@ import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} fro
 import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
-import {Material, MeshBasicMaterial} from 'three';
-import {MeshStandardMaterial} from 'three';
-import {MeshPhysicalMaterial} from 'three';
-import {MeshToonMaterial} from 'three';
+import {
+	Material,
+	MeshBasicMaterial,
+	MeshStandardMaterial,
+	MeshPhysicalMaterial,
+	MeshToonMaterial,
+	MeshPhongMaterial,
+	MeshLambertMaterial,
+} from 'three';
 
 export interface WireframeControllers {
 	wireframe: WireframeController;
@@ -56,7 +61,13 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
-type WireframedMaterial = MeshToonMaterial | MeshBasicMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
+type WireframedMaterial =
+	| MeshToonMaterial
+	| MeshBasicMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshPhongMaterial
+	| MeshLambertMaterial;
 function isValidWireframeMaterial(material?: Material): material is WireframedMaterial {
 	if (!material) {
 		return false;

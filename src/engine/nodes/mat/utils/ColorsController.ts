@@ -4,8 +4,18 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ColorConversion} from '../../../../core/Color';
-import {Color, Material, MeshBasicMaterial, MeshStandardMaterial} from 'three';
-import {ShadowMaterial} from 'three';
+import {
+	Color,
+	Material,
+	MeshBasicMaterial,
+	MeshStandardMaterial,
+	ShadowMaterial,
+	PointsMaterial,
+	MeshToonMaterial,
+	MeshPhongMaterial,
+	MeshMatcapMaterial,
+	MeshLambertMaterial,
+} from 'three';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -24,7 +34,15 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-export type ColoredMaterial = MeshBasicMaterial | ShadowMaterial | MeshStandardMaterial;
+export type ColoredMaterial =
+	| MeshBasicMaterial
+	| ShadowMaterial
+	| MeshStandardMaterial
+	| PointsMaterial
+	| MeshToonMaterial
+	| MeshPhongMaterial
+	| MeshMatcapMaterial
+	| MeshLambertMaterial;
 export function isValidColoredMaterial(material?: Material): material is ColoredMaterial {
 	if (!material) {
 		return false;
