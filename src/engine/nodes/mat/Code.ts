@@ -68,8 +68,8 @@ export function CodeParamConfig<TBase extends Constructor>(Base: TBase) {
 			hideLabel: true,
 		});
 		extensions = ParamConfig.FOLDER(null);
-		derivatives = ParamConfig.BOOLEAN(1);
-		// fragDepth = ParamConfig.BOOLEAN(1);
+		clipCullDistance = ParamConfig.BOOLEAN(1);
+		multiDraw = ParamConfig.BOOLEAN(1);
 	};
 }
 
@@ -115,7 +115,8 @@ export class CodeMatNode extends PrimitiveMatNode<ShaderMaterial, CodeMatParamsC
 
 		this._material.vertexShader = this.pv.vertex;
 		this._material.fragmentShader = this.pv.fragment;
-		this._material.extensions.derivatives = isBooleanTrue(this.pv.derivatives);
+		this._material.extensions.clipCullDistance = isBooleanTrue(this.pv.clipCullDistance);
+		this._material.extensions.multiDraw = isBooleanTrue(this.pv.multiDraw);
 		this._material.needsUpdate = true;
 
 		this.setMaterial(this._material);

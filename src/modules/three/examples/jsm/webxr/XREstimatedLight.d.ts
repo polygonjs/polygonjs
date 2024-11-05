@@ -1,37 +1,37 @@
-import {DirectionalLight, Group, LightProbe, Object3DEventMap, Texture, WebGLRenderer} from 'three';
+import { DirectionalLight, Group, LightProbe, Object3DEventMap, Texture, WebGLRenderer } from "three";
 
 export class SessionLightProbe {
-	xrLight: XREstimatedLight;
-	renderer: WebGLRenderer;
-	lightProbe: LightProbe;
-	xrWebGLBinding: XRWebGLBinding | null;
-	estimationStartCallback: () => void;
-	frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
+    xrLight: XREstimatedLight;
+    renderer: WebGLRenderer;
+    lightProbe: LightProbe;
+    xrWebGLBinding: XRWebGLBinding | null;
+    estimationStartCallback: () => void;
+    frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
 
-	constructor(
-		xrLight: XREstimatedLight,
-		renderer: WebGLRenderer,
-		lightProbe: LightProbe,
-		environmentEstimation: boolean,
-		estimationStartCallback: () => void
-	);
+    constructor(
+        xrLight: XREstimatedLight,
+        renderer: WebGLRenderer,
+        lightProbe: LightProbe,
+        environmentEstimation: boolean,
+        estimationStartCallback: () => void,
+    );
 
-	updateReflection: () => void;
+    updateReflection: () => void;
 
-	onXRFrame: XRFrameRequestCallback;
+    onXRFrame: XRFrameRequestCallback;
 
-	dispose: () => void;
+    dispose: () => void;
 }
 
 export interface XREstimatedLightEventMap extends Object3DEventMap {
-	/**
-	 * Fires when the estimated lighting values start being updated.
-	 */
-	estimationstart: {};
-	/**
-	 * Fires when the estimated lighting values stop being updated.
-	 */
-	estimationend: {};
+    /**
+     * Fires when the estimated lighting values start being updated.
+     */
+    estimationstart: {};
+    /**
+     * Fires when the estimated lighting values stop being updated.
+     */
+    estimationend: {};
 }
 
 /**
@@ -49,21 +49,21 @@ export interface XREstimatedLightEventMap extends Object3DEventMap {
  * To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
  */
 export class XREstimatedLight extends Group<XREstimatedLightEventMap> {
-	lightProbe: LightProbe;
+    lightProbe: LightProbe;
 
-	directionalLight: DirectionalLight;
+    directionalLight: DirectionalLight;
 
-	/**
-	 * The environment map estimated by WebXR. This is only available if environmentEstimation is `true`.
-	 *
-	 * It can be used as the {@link Scene.environment}, for {@link MeshStandardMaterial.envMap}, or as the
-	 * {@link Scene.background}.
-	 */
-	environment: Texture;
+    /**
+     * The environment map estimated by WebXR. This is only available if environmentEstimation is `true`.
+     *
+     * It can be used as the {@link Scene.environment}, for {@link MeshStandardMaterial.envMap}, or as the
+     * {@link Scene.background}.
+     */
+    environment: Texture;
 
-	/**
-	 * @param renderer The renderer used to render the Scene. Mainly used to interact with WebXRManager.
-	 * @param environmentEstimation If `true`, use WebXR to estimate an environment map.
-	 */
-	constructor(renderer: WebGLRenderer, environmentEstimation?: boolean);
+    /**
+     * @param renderer The renderer used to render the Scene. Mainly used to interact with WebXRManager.
+     * @param environmentEstimation If `true`, use WebXR to estimate an environment map.
+     */
+    constructor(renderer: WebGLRenderer, environmentEstimation?: boolean);
 }

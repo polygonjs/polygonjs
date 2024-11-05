@@ -157,23 +157,28 @@ const codeMatNodePresetsCollectionFactory: PresetsCollectionFactory<CodeMatNode>
 	const antialiasedGridY = new BasePreset()
 		.addEntry(node.p.vertex, AntialiasedGridY.vertex)
 		.addEntry(node.p.fragment, AntialiasedGridY.fragment)
-		.addEntry(node.p.derivatives, true);
+		.addEntry(node.p.clipCullDistance, true)
+		.addEntry(node.p.multiDraw, true);
 	const antialiasedGridXZ = new BasePreset()
 		.addEntry(node.p.vertex, AntialiasedGridXZ.vertex)
 		.addEntry(node.p.fragment, AntialiasedGridXZ.fragment)
-		.addEntry(node.p.derivatives, true);
+		.addEntry(node.p.clipCullDistance, true)
+		.addEntry(node.p.multiDraw, true);
 	const antialiasedGridXYZ = new BasePreset()
 		.addEntry(node.p.vertex, AntialiasedGridXYZ.vertex)
 		.addEntry(node.p.fragment, AntialiasedGridXYZ.fragment)
-		.addEntry(node.p.derivatives, true);
+		.addEntry(node.p.clipCullDistance, true)
+		.addEntry(node.p.multiDraw, true);
 	const antialiasedGridLengthXZ = new BasePreset()
 		.addEntry(node.p.vertex, AntialiasedGridLengthXZ.vertex)
 		.addEntry(node.p.fragment, AntialiasedGridLengthXZ.fragment)
-		.addEntry(node.p.derivatives, true);
+		.addEntry(node.p.clipCullDistance, true)
+		.addEntry(node.p.multiDraw, true);
 	const antialiasedGridWeb = new BasePreset()
 		.addEntry(node.p.vertex, AntialiasedGridWeb.vertex)
 		.addEntry(node.p.fragment, AntialiasedGridWeb.fragment)
-		.addEntry(node.p.derivatives, true);
+		.addEntry(node.p.clipCullDistance, true)
+		.addEntry(node.p.multiDraw, true);
 
 	collection.setPresets({
 		antialiasedGridY,

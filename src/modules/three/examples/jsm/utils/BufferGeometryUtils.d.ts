@@ -1,14 +1,14 @@
 // https://threejs.org/docs/?q=buffergeome#examples/en/utils/BufferGeometryUtils
 
 import {
-	BufferAttribute,
-	BufferGeometry,
-	InterleavedBufferAttribute,
-	Line,
-	Mesh,
-	Points,
-	TrianglesDrawModes,
-} from 'three';
+    BufferAttribute,
+    BufferGeometry,
+    InterleavedBufferAttribute,
+    Line,
+    Mesh,
+    Points,
+    TrianglesDrawModes,
+} from "three";
 
 export function deepCloneAttribute(attribute: BufferAttribute): BufferAttribute;
 export function mergeGeometries(geometries: BufferGeometry[], useGroups?: boolean): BufferGeometry;
@@ -19,9 +19,9 @@ export function mergeVertices(geometry: BufferGeometry, tolerance?: number): Buf
 export function toTrianglesDrawMode(geometry: BufferGeometry, drawMode: TrianglesDrawModes): BufferGeometry;
 export function computeMorphedAttributes(object: Mesh | Line | Points): object;
 export function computeMikkTSpaceTangents(
-	geometry: BufferGeometry,
-	MikkTSpace: unknown,
-	negateSign?: boolean
+    geometry: BufferGeometry,
+    MikkTSpace: unknown,
+    negateSign?: boolean,
 ): BufferGeometry;
 export function mergeGroups(geometry: BufferGeometry): BufferGeometry;
 export function deinterleaveAttribute(geometry: BufferGeometry): void;
