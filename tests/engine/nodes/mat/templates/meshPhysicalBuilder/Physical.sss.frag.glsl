@@ -33,7 +33,9 @@ uniform float opacity;
 	uniform float clearcoat;
 	uniform float clearcoatRoughness;
 #endif
-
+#ifdef USE_DISPERSION
+	uniform float dispersion;
+#endif
 #ifdef USE_IRIDESCENCE
 	uniform float iridescence;
 	uniform float iridescenceIOR;
@@ -241,7 +243,7 @@ if(POLY_SSSModel.isActive){
 	vec3 n = inverseTransformDirection( normal, viewMatrix );
 	vec4 transmitted = getIBLVolumeRefraction(
 		n, v, material.roughness, material.diffuseColor, material.specularColor, material.specularF90,
-		pos, modelMatrix, viewMatrix, projectionMatrix, material.ior, material.thickness,
+		pos, modelMatrix, viewMatrix, projectionMatrix, material.dispersion, material.ior, material.thickness,
 		material.attenuationColor, material.attenuationDistance );
 	material.transmissionAlpha = mix( material.transmissionAlpha, transmitted.a, material.transmission );
 	totalDiffuse = mix( totalDiffuse, transmitted.rgb, material.transmission );

@@ -29,7 +29,7 @@ export class ExporterUSDZSopNode extends ExporterSopNode<ExporterUSDZSopParamsCo
 			const {scene, objects} = sceneData;
 
 			const exporter = new USDZExporter();
-			const result = await exporter.parse(scene);
+			const result = await exporter.parseAsync(scene);
 			console.log(result);
 			this._handleResult(result, objects, resolve);
 		});
