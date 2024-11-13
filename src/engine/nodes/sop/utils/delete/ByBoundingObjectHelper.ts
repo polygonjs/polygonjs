@@ -1,7 +1,7 @@
 import {DeleteSopNode} from '../../Delete';
 import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {Mesh, Vector3, Raycaster, Intersection, Box3} from 'three';
-import {CoreGroup} from '../../../../../core/geometry/Group';
+import {CoreGroup, Object3DWithGeometry} from '../../../../../core/geometry/Group';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';
 
 const UP = new Vector3(0, 1, 0);
@@ -19,10 +19,12 @@ export class ByBoundingObjectHelper {
 		if (!coreGroup2) {
 			return;
 		}
-		const boundingObject = coreGroup2?.threejsObjectsWithGeo()[0];
-		if (!boundingObject) {
-			return;
+		const boundingObjects = coreGroup2.threejsObjectsWithGeo();
+		for (const boundingObject of boundingObjects) {
+			this._evalForBoundingObject(points, coreGroup2, boundingObject);
 		}
+	}
+	private _evalForBoundingObject(points: CoreEntity[], coreGroup2: CoreGroup, boundingObject: Object3DWithGeometry) {
 		const mesh = boundingObject as Mesh;
 		if (!mesh.isMesh) {
 			return;

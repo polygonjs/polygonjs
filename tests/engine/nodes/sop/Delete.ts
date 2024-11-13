@@ -256,6 +256,53 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		container = await delete1.compute();
 		assert.equal(container.coreContent()!.pointsCount(), 823);
 	});
+	qUnit.test('sop/delete byBoundingObject 3 (multiple objects)', async (assert) => {
+		const geo1 = window.geo1;
+
+		const icosahedron1 = geo1.createNode('icosahedron');
+		const delete0 = geo1.createNode('delete');
+		const box1 = geo1.createNode('box');
+		const transform1 = geo1.createNode('transform');
+		const transform2 = geo1.createNode('transform');
+		const merge1 = geo1.createNode('merge');
+		const delete1 = geo1.createNode('delete');
+
+		delete1.setInput(0, icosahedron1);
+
+		icosahedron1.p.detail.set(9);
+		icosahedron1.p.pointsOnly.set(1);
+		delete0.setInput(0, icosahedron1);
+		transform1.setInput(0, box1);
+		transform2.setInput(0, box1);
+		merge1.setInput(0, transform1);
+		merge1.setInput(1, transform2);
+		delete1.setInput(0, delete0);
+		delete1.setInput(1, merge1);
+
+		delete0.setAttribClass(AttribClass.OBJECT);
+		delete0.p.invert.set(1);
+		delete0.p.keepPoints.set(1);
+		transform1.setApplyOn(TransformTargetType.GEOMETRY);
+		transform2.setApplyOn(TransformTargetType.GEOMETRY);
+
+		delete1.setAttribClass(AttribClass.POINT);
+		delete1.p.byBoundingObject.set(1);
+
+		async function pointsCount(): Promise<number> {
+			const container = await delete1.compute();
+			return container.coreContent()!.pointsCount();
+		}
+
+		transform1.p.t.y.set(1000);
+		transform2.p.t.y.set(-1000);
+		assert.equal(await pointsCount(), 1110, '1110 points');
+		transform1.p.t.y.set(1);
+		transform2.p.t.y.set(-1);
+		assert.equal(await pointsCount(), 920, '920 points');
+		transform1.p.t.y.set(1);
+		transform2.p.t.y.set(-1000);
+		assert.equal(await pointsCount(), 1015, '1015 points');
+	});
 
 	qUnit.test('sop/delete primitives', async (assert) => {
 		const geo1 = window.geo1;
