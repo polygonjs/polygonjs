@@ -141,6 +141,7 @@ import {DecomposeSopNode} from '../../../nodes/sop/Decompose';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DeleteByNameSopNode} from '../../../nodes/sop/DeleteByName';
+import {DeleteNonManifoldSopNode} from '../../../nodes/sop/DeleteNonManifold';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {EmptyObjectSopNode} from '../../../nodes/sop/EmptyObject';
@@ -474,6 +475,7 @@ export interface GeoNodeChildrenMap {
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
 	deleteByName: DeleteByNameSopNode;
+	deleteNonManifold: DeleteNonManifoldSopNode;
 	directionalLight: DirectionalLightSopNode;
 	drawRange: DrawRangeSopNode;
 	emptyObject: EmptyObjectSopNode;
@@ -713,6 +715,7 @@ import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoin
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DeleteByNameSopOperation} from '../../../operations/sop/DeleteByName';
+import {DeleteNonManifoldSopOperation} from '../../../operations/sop/DeleteNonManifold';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
 import {File3DSSopOperation} from '../../../operations/sop/File3DS';
@@ -836,6 +839,7 @@ export class SopRegister {
 		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DeleteByNameSopOperation);
+		poly.registerOperation(DeleteNonManifoldSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
 		poly.registerOperation(File3DSSopOperation);
@@ -1053,6 +1057,7 @@ export class SopRegister {
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DeleteByNameSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(DeleteNonManifoldSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -473,6 +473,7 @@ import {testenginenodessopDecal} from './engine/nodes/sop/Decal';
 import {testenginenodessopDelay} from './engine/nodes/sop/Delay';
 import {testenginenodessopDelete} from './engine/nodes/sop/Delete';
 import {testenginenodessopDeleteByName} from './engine/nodes/sop/DeleteByName';
+import {testenginenodessopDeleteNonManifold} from './engine/nodes/sop/DeleteNonManifold';
 import {testenginenodessopDirectionalLight} from './engine/nodes/sop/DirectionalLight';
 import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
@@ -1078,6 +1079,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopDelay,
 		testenginenodessopDelete,
 		testenginenodessopDeleteByName,
+		testenginenodessopDeleteNonManifold,
 		testenginenodessopDirectionalLight,
 		testenginenodessopDrawRange,
 		testenginenodessopEmptyObject,
