@@ -478,6 +478,7 @@ import {testenginenodessopDirectionalLight} from './engine/nodes/sop/Directional
 import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
 import {testenginenodessopEntityBuilder} from './engine/nodes/sop/EntityBuilder';
+import {testenginenodessopExtrudeOpenEdges} from './engine/nodes/sop/ExtrudeOpenEdges';
 import {testenginenodessopFace} from './engine/nodes/sop/Face';
 import {testenginenodessopFacet} from './engine/nodes/sop/Facet';
 import {testenginenodessopFile} from './engine/nodes/sop/File';
@@ -1085,6 +1086,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopDrawRange,
 		testenginenodessopEmptyObject,
 		testenginenodessopEntityBuilder,
+		testenginenodessopExtrudeOpenEdges,
 		testenginenodessopFace,
 		testenginenodessopFacet,
 		testenginenodessopFile,

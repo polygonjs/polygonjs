@@ -150,6 +150,7 @@ import {ExporterGLTFSopNode} from '../../../nodes/sop/ExporterGLTF';
 import {ExporterOBJSopNode} from '../../../nodes/sop/ExporterOBJ';
 import {ExporterPLYSopNode} from '../../../nodes/sop/ExporterPLY';
 import {ExporterSTLSopNode} from '../../../nodes/sop/ExporterSTL';
+import {ExtrudeOpenEdgesSopNode} from '../../../nodes/sop/ExtrudeOpenEdges';
 // import {ExporterUSDZSopNode} from '../../../nodes/sop/ExporterUSDZ';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FacetSopNode} from '../../../nodes/sop/Facet';
@@ -486,6 +487,7 @@ export interface GeoNodeChildrenMap {
 	exporterPLY: ExporterPLYSopNode;
 	exporterSTL: ExporterSTLSopNode;
 	// exporterUSDZ: ExporterUSDZSopNode;
+	extrudeOpenEdges: ExtrudeOpenEdgesSopNode;
 	face: FaceSopNode;
 	facet: FacetSopNode;
 	// file: FileSopNode;
@@ -1070,6 +1072,7 @@ export class SopRegister {
 		poly.registerNode(ExporterOBJSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(ExporterPLYSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(ExporterSTLSopNode, CATEGORY_SOP.OUTPUT);
+		poly.registerNode(ExtrudeOpenEdgesSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(ExporterUSDZSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(FacetSopNode, CATEGORY_SOP.MODIFIER);

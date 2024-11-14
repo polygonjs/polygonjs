@@ -112,6 +112,7 @@ export enum SopType {
 	DELETE_BY_NAME = 'deleteByName',
 	DELETE_NON_MANIFOLD = 'deleteNonManifold',
 	ENTITY_BUILDER = 'entityBuilder',
+	EXTRUDE_OPEN_EDGES = 'extrudeOpenEdges',
 	FACET = 'facet',
 	FUSE = 'fuse',
 	GROUND_PROJECTED_SKYBOX = 'groundProjectedSkybox',

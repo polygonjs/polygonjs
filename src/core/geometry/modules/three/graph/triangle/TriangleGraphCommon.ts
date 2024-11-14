@@ -22,7 +22,6 @@ export function edgeId(ids: PointIdPair): string {
 }
 export function triangleEdge(triangle: Number3, edgeIndex: number): PointIdPair {
 	const edgeIndices = EDGES[edgeIndex];
-	// const edge: Number2 = [triangle[edgeIndices[0]], triangle[edgeIndices[1]]];
 	return {
 		id0: triangle[edgeIndices[0]],
 		id1: triangle[edgeIndices[1]],

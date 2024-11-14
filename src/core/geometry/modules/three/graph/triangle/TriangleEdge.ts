@@ -21,3 +21,8 @@ export function triangleEdgeLength(edge: TriangleEdge, positions: TypedArray): n
 	_p1.fromArray(positions, edge.pointIdPair.id1 * 3);
 	return _p0.distanceTo(_p1);
 }
+
+export function triangleEdgePositions(edge: TriangleEdge, position: number[], pt0: Vector3, pt1: Vector3) {
+	pt0.fromArray(position, edge.pointIdPair.id0 * 3);
+	pt1.fromArray(position, edge.pointIdPair.id1 * 3);
+}

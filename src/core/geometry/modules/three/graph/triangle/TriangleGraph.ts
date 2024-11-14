@@ -16,16 +16,17 @@ export class TriangleGraph extends PrimitiveGraph {
 	constructor() {
 		super();
 	}
-	addTriangle(triangle: Number3): TriangleNode {
+	addTriangle(_triangleIndices: Number3): TriangleNode {
+		const triangleIndices: Number3 = [..._triangleIndices];
 		this._nextTriangleId++;
 		const triangleId = this._nextTriangleId;
-		const triangleNode = new TriangleNode(triangleId, triangle);
+		const triangleNode = new TriangleNode(triangleId, triangleIndices);
 		this._trianglesById.set(triangleId, triangleNode);
 		this._triangleIds.push(triangleId);
 		// add edges
 		const edges: TriangleEdge[] = [];
 		for (let i = 0; i < 3; i++) {
-			const pointIdPair = triangleEdge(triangle, i);
+			const pointIdPair = triangleEdge(triangleIndices, i);
 			const _edgeId = edgeId(pointIdPair);
 			let edge = this._edgesById.get(_edgeId);
 			if (!edge) {

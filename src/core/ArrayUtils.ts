@@ -86,7 +86,8 @@ export function uniqWithoutPreservingOrder<T>(array: Array<T>, target: Array<T>)
 export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>, target: Array<T>): Array<T> {
 	target.length = 0;
 
-	for (const elem of array) {
+	for (let i = 0; i < array.length; i++) {
+		const elem = array[i];
 		if (elem != null) {
 			target.push(elem);
 		}
@@ -96,26 +97,26 @@ export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>, ta
 }
 export function arrayMin<T>(array: Array<T>): T {
 	let min = array[0];
-	for (const element of array) {
-		if (element < min) {
-			min = element;
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] < min) {
+			min = array[i];
 		}
 	}
 	return min;
 }
 export function arrayMax<T>(array: Array<T>): T {
 	let max = array[0];
-	for (const element of array) {
-		if (element > max) {
-			max = element;
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] > max) {
+			max = array[i];
 		}
 	}
 	return max;
 }
 export function arraySum(array: number[]): number {
 	let sum = 0;
-	for (const element of array) {
-		sum += element;
+	for (let i = 0; i < array.length; i++) {
+		sum += array[i];
 	}
 	return sum;
 }
@@ -157,8 +158,8 @@ export function arrayXOR<T>(array0: Array<T>, array1: Array<T>, target: Array<T>
 }
 export function arrayToSet<T>(array: Array<T>, target: Set<T>): Set<T> {
 	target.clear();
-	for (const elem of array) {
-		target.add(elem);
+	for (let i = 0; i < array.length; i++) {
+		target.add(array[i]);
 	}
 	return target;
 }
@@ -261,12 +262,10 @@ export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>
 	// }
 }
 
-export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {
+export function arrayCopy<T>(srcArray: Readonly<Array<T> | ArrayLike<T>>, targetArray: Array<T>): void {
 	targetArray.length = srcArray.length;
-	let i = 0;
-	for (const srcItem of srcArray) {
-		targetArray[i] = srcItem;
-		i++;
+	for (let i = 0; i < srcArray.length; i++) {
+		targetArray[i] = srcArray[i];
 	}
 }
 

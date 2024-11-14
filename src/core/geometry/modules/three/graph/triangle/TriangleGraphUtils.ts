@@ -1,9 +1,5 @@
 import {Vector3, BufferGeometry} from 'three';
-import {
-	// setUnion,
-	setToArray,
-	setDifference,
-} from '../../../../../SetUtils';
+import {setToArray, setDifference} from '../../../../../SetUtils';
 import {TriangleGraph} from './TriangleGraph';
 import {randFloat} from '../../../../../math/_Module';
 import {sample} from '../../../../../ArrayUtils';
@@ -14,10 +10,9 @@ const _triangleIds: Set<number> = new Set();
 const _edgeIds0 = new Set<string>();
 const _edgeIds1 = new Set<string>();
 const _edgeIds2 = new Set<string>();
-// const _edgeIds3 = new Set<string>();
-// const _edgeIds10 = new Set<string>();
 const _notVisited = new Set<string>();
 const _edgeIdsArray: string[] = [];
+const _triangleIndices: Number3 = [0, 0, 0];
 
 export function triangleGraphFromGeometry(geometry: BufferGeometry): TriangleGraph | undefined {
 	const index = geometry.getIndex();
@@ -28,7 +23,8 @@ export function triangleGraphFromGeometry(geometry: BufferGeometry): TriangleGra
 	const graph = new TriangleGraph();
 	for (let i = 0; i < trianglesCount; i++) {
 		_v3.fromArray(index.array, i * 3);
-		graph.addTriangle(_v3.toArray() as Number3);
+		_v3.toArray(_triangleIndices);
+		graph.addTriangle(_triangleIndices);
 	}
 	return graph;
 }
