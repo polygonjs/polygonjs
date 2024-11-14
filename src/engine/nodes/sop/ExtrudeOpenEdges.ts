@@ -116,8 +116,10 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		arrayCopy(positionAttribute.array, newPositionValues);
 		arrayCopy(index.array, newIndexValues);
 
-		const filterMethod = FILTER_METHODS[this.pv.filterMethod];
-		unsharedEdgeIds = this._filterEdgeIds(graph, unsharedEdgeIds, newPositionValues, filterMethod);
+		if (this.pv.filterEdges) {
+			const filterMethod = FILTER_METHODS[this.pv.filterMethod];
+			unsharedEdgeIds = this._filterEdgeIds(graph, unsharedEdgeIds, newPositionValues, filterMethod);
+		}
 		for (const edgeId of unsharedEdgeIds) {
 			this._extrudeEdge(graph, edgeId, newPositionValues, newIndexValues);
 		}

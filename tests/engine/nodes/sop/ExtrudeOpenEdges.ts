@@ -30,8 +30,14 @@ export function testenginenodessopExtrudeOpenEdges(qUnit: QUnit) {
 			return {primitivesCount, index, positions};
 		}
 
+		extrudeOpenEdges1.p.filterEdges.set(true);
 		assert.deepEqual((await compute()).primitivesCount, 12, '12 prims');
 		assert.deepEqual((await compute()).index.length, 36, '30 indices');
 		assert.deepEqual((await compute()).positions.length, 30, '10 positions');
+
+		extrudeOpenEdges1.p.filterEdges.set(false);
+		assert.deepEqual((await compute()).primitivesCount, 18, '18 prims');
+		assert.deepEqual((await compute()).index.length, 54, '54 indices');
+		assert.deepEqual((await compute()).positions.length, 48, '16 positions');
 	});
 }
