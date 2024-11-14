@@ -82,4 +82,31 @@ export function testenginenodessopDeleteNonManifold(qUnit: QUnit) {
 		deleteNonManifold1.p.invert.set(1);
 		assert.deepEqual((await compute()).primitivesCount, 16, '16 prims');
 	});
+
+	qUnit.test('sop/deleteNonManifold sphere with fuse', async (assert) => {
+		const geo1 = window.geo1;
+		geo1.flags.display.set(false); // cancels geo node displayNodeController
+
+		const sphere1 = geo1.createNode('sphere');
+		const fuse1 = geo1.createNode('fuse');
+		const deleteNonManifold1 = geo1.createNode('deleteNonManifold');
+
+		fuse1.setInput(0, sphere1);
+		deleteNonManifold1.setInput(0, fuse1);
+
+		sphere1.p.resolution.set([5, 5]);
+		fuse1.p.dist.set(1.4);
+
+		async function compute() {
+			const container = await deleteNonManifold1.compute();
+			const coreGroup = container.coreContent()!;
+			const mesh = coreGroup.allObjects()[0] as Mesh;
+			const primitivesCount = ThreejsPrimitiveTriangle.entitiesCount(mesh);
+			return {primitivesCount};
+		}
+
+		assert.deepEqual((await compute()).primitivesCount, 8, '8 prims');
+		deleteNonManifold1.p.invert.set(1);
+		assert.deepEqual((await compute()).primitivesCount, 0, '0 prims');
+	});
 }

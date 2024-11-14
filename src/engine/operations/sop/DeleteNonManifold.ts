@@ -44,18 +44,20 @@ export class DeleteNonManifoldSopOperation extends BaseSopOperation {
 			return;
 		}
 		const edgeIds: string[] = [];
-		graph.edgeIds(edgeIds);
-
 		const triangleIds: number[] = [];
+		graph.edgeIds(edgeIds);
 		graph.triangleIds(triangleIds);
 		const sortedTriangleIds = sortTriangleIdsByScore(graph, triangleIds);
 
 		const selectedTriangleIds: Set<number> = new Set();
-		for (const triangleId of sortedTriangleIds) {
-			selectedTriangleIds.add(triangleId);
-			const status = manifoldStatus(graph, triangleIds, selectedTriangleIds);
-			if (status.nonManifoldEdges == 0) {
-				break;
+		let status = manifoldStatus(graph, triangleIds, selectedTriangleIds);
+		if (status.nonManifoldEdges > 0) {
+			for (const triangleId of sortedTriangleIds) {
+				selectedTriangleIds.add(triangleId);
+				status = manifoldStatus(graph, triangleIds, selectedTriangleIds);
+				if (status.nonManifoldEdges == 0) {
+					break;
+				}
 			}
 		}
 		if (invert) {
@@ -71,8 +73,8 @@ export class DeleteNonManifoldSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _cleanMesh(mesh: Mesh, triangleIdsToRemove: number[]) {
-		const triangles = triangleIdsToRemove.map((triangleId) => new ThreejsPrimitiveTriangle(mesh, triangleId));
+	private _cleanMesh(mesh: Mesh, triangleIdsToKeep: number[]) {
+		const triangles = triangleIdsToKeep.map((triangleId) => new ThreejsPrimitiveTriangle(mesh, triangleId));
 		if (triangles.length > 0) {
 			const newObject = threeMeshFromPrimitives(mesh, triangles) as Mesh;
 			if (newObject) {
