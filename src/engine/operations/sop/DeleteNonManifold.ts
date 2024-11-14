@@ -6,10 +6,11 @@ import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {Mesh} from 'three';
 import {triangleGraphFromGeometry} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraphUtils';
-import {setToArray} from '../../../core/SetUtils';
 import {ThreejsPrimitiveTriangle} from '../../../core/geometry/modules/three/ThreejsPrimitiveTriangle';
-import {arrayCopy, arrayDifference} from '../../../core/ArrayUtils';
 import {TriangleGraph} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraph';
+import {threeMeshFromPrimitives} from '../../../core/geometry/modules/three/builders/Mesh';
+import {setToArray} from '../../../core/SetUtils';
+import {arrayDifference} from '../../../core/ArrayUtils';
 interface DeleteNonManifoldSopParams extends DefaultOperationParams {
 	group: string;
 	invert: boolean;
@@ -44,99 +45,106 @@ export class DeleteNonManifoldSopOperation extends BaseSopOperation {
 		}
 		const edgeIds: string[] = [];
 		graph.edgeIds(edgeIds);
-		const edgesCount = edgeIds.length;
-		const nonManifoldTriangleIdsSet: Set<number> = new Set();
 
-		// get edges shared with more than 2 triangles, or less than 2 triangles
-		const nonManifoldEdgeIdsSet: Set<string> = new Set();
-		for (let i = 0; i < edgesCount; i++) {
-			const edgeId = edgeIds[i];
-			const edge = graph.edge(edgeId);
-			if (edge) {
-				if (edge.triangleIds.length == 1) {
-					// if the edge is shared with just 1 triangle, it is definitely non manifold
-					nonManifoldTriangleIdsSet.add(edge.triangleIds[0]);
-				} else if (edge.triangleIds.length > 2) {
-					nonManifoldEdgeIdsSet.add(edgeId);
-				}
+		const triangleIds: number[] = [];
+		graph.triangleIds(triangleIds);
+		const sortedTriangleIds = sortTriangleIdsByScore(graph, triangleIds);
+
+		const selectedTriangleIds: Set<number> = new Set();
+		for (const triangleId of sortedTriangleIds) {
+			selectedTriangleIds.add(triangleId);
+			const status = manifoldStatus(graph, triangleIds, selectedTriangleIds);
+			if (status.nonManifoldEdges == 0) {
+				break;
 			}
 		}
-
-		// get the triangle for those edges
-		const nonManifoldEdgeIds: string[] = [];
-		const potentiallyNonManifoldTriangleIdsSet: Set<number> = new Set();
-		setToArray(nonManifoldEdgeIdsSet, nonManifoldEdgeIds);
-		const nonManifoldEdgesCount = nonManifoldEdgeIds.length;
-		for (let i = 0; i < nonManifoldEdgesCount; i++) {
-			const edgeId = nonManifoldEdgeIds[i];
-			const edge = graph.edge(edgeId);
-			if (edge) {
-				for (const triangleId of edge.triangleIds) {
-					potentiallyNonManifoldTriangleIdsSet.add(triangleId);
-				}
-			}
-		}
-
-		// find triangles whose neighbours are either in the non manifold set, or not shared with any triangle
-		this._resolvePpotentiallyNonManifoldTriangleIds(
-			graph,
-			potentiallyNonManifoldTriangleIdsSet,
-			nonManifoldTriangleIdsSet
-		);
-		//
-		this._cleanMesh(mesh, graph, nonManifoldTriangleIdsSet, invert);
-	}
-	private _resolvePpotentiallyNonManifoldTriangleIds(
-		graph: TriangleGraph,
-		potentiallyNonManifoldTriangleIdsSet: Set<number>,
-		nonManifoldTriangleIdsSet: Set<number>
-	) {
-		potentiallyNonManifoldTriangleIdsSet.forEach((triangleId) => {
-			const edges = graph.edgesByTriangleId(triangleId);
-			if (edges) {
-				for (const edge of edges) {
-					for (const _triangleId of edge.triangleIds) {
-						if (_triangleId != triangleId) {
-							if (
-								nonManifoldTriangleIdsSet.has(_triangleId) == false &&
-								potentiallyNonManifoldTriangleIdsSet.has(_triangleId) == false
-							) {
-								return;
-							}
-						}
-					}
-				}
-			}
-			nonManifoldTriangleIdsSet.add(triangleId);
-		});
-	}
-	private _cleanMesh(mesh: Mesh, graph: TriangleGraph, nonManifoldTriangleIdsSet: Set<number>, invert: boolean) {
-		if (nonManifoldTriangleIdsSet.size == 0) {
-			return;
-		}
-		const allTriangleIdsSet: Set<number> = new Set();
-		graph.traverseTriangles((triangle) => {
-			allTriangleIdsSet.add(triangle.id);
-		});
-		const nonManifoldTriangleIds: number[] = [];
-		const allTriangleIds: number[] = [];
-		setToArray(nonManifoldTriangleIdsSet, nonManifoldTriangleIds);
-		setToArray(allTriangleIdsSet, allTriangleIds);
-		const triangleIdsToRemove: number[] = [];
-		if (invert == true) {
-			arrayCopy(nonManifoldTriangleIds, triangleIdsToRemove);
+		if (invert) {
+			const triangleIdsToRemove: number[] = [];
+			setToArray(selectedTriangleIds, triangleIdsToRemove);
+			this._cleanMesh(mesh, triangleIdsToRemove);
 		} else {
-			arrayDifference(allTriangleIds, nonManifoldTriangleIds, triangleIdsToRemove);
+			const selectedTriangleIdsArray: number[] = [];
+			setToArray(selectedTriangleIds, selectedTriangleIdsArray);
+			const triangleIdsToRemove: number[] = [];
+			arrayDifference(triangleIds, selectedTriangleIdsArray, triangleIdsToRemove);
+			this._cleanMesh(mesh, triangleIdsToRemove);
 		}
-		//
+	}
+
+	private _cleanMesh(mesh: Mesh, triangleIdsToRemove: number[]) {
 		const triangles = triangleIdsToRemove.map((triangleId) => new ThreejsPrimitiveTriangle(mesh, triangleId));
 		if (triangles.length > 0) {
-			const firstTriangle = triangles[0];
-			const builder = firstTriangle.builder();
-			const newObject = builder(mesh, triangles) as Mesh;
+			const newObject = threeMeshFromPrimitives(mesh, triangles) as Mesh;
+			if (newObject) {
+				mesh.geometry = newObject.geometry;
+			}
+		} else {
+			const newObject = threeMeshFromPrimitives(mesh, []) as Mesh;
 			if (newObject) {
 				mesh.geometry = newObject.geometry;
 			}
 		}
 	}
+}
+
+function sortTriangleIdsByScore(graph: TriangleGraph, triangleIds: number[]): number[] {
+	const scoreByTriangleId: number[] = [];
+	for (const triangleId of triangleIds) {
+		scoreByTriangleId.push(triangleScore(graph, triangleId));
+	}
+	const sortedTriangleIds = triangleIds.slice();
+	sortedTriangleIds.sort((a, b) => scoreByTriangleId[b] - scoreByTriangleId[a]);
+	return sortedTriangleIds;
+}
+
+function triangleScore(graph: TriangleGraph, triangleId: number) {
+	const edges = graph.edgesByTriangleId(triangleId);
+	let potentialNonManifoldEdges = 0;
+	let totalEdges = 0;
+	if (edges) {
+		for (const edge of edges) {
+			if (edge.triangleIds.length != 2) {
+				potentialNonManifoldEdges++;
+			}
+			totalEdges += edge.triangleIds.length;
+		}
+	}
+	totalEdges /= 3;
+	return potentialNonManifoldEdges * 10 + (totalEdges - 2);
+}
+
+interface ManifoldStatus {
+	nonManifoldEdges: number;
+	activeEdges: Map<string, number>;
+}
+function manifoldStatus(graph: TriangleGraph, triangleIds: number[], triangleIdsToRemove: Set<number>): ManifoldStatus {
+	let nonManifoldEdges = 0;
+	const activeEdges: Map<string, number> = new Map();
+
+	// Recalculate edge counts excluding removed faces
+	triangleIds.forEach((triangleId) => {
+		if (triangleIdsToRemove.has(triangleId)) return;
+
+		const edges = graph.edgesByTriangleId(triangleId);
+		if (edges) {
+			edges.forEach((edge) => {
+				if (!activeEdges.has(edge.id)) {
+					activeEdges.set(edge.id, 0);
+				}
+				activeEdges.set(edge.id, activeEdges.get(edge.id)! + 1);
+			});
+		}
+	});
+
+	// Count non-manifold edges
+	activeEdges.forEach((count, edge) => {
+		if (count !== 2) {
+			nonManifoldEdges++;
+		}
+	});
+
+	return {
+		nonManifoldEdges,
+		activeEdges,
+	};
 }

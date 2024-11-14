@@ -132,6 +132,7 @@ export enum SopType {
 	MAPBOX_TRANSFORM = 'mapboxTransform',
 	MATERIAL = 'material',
 	MATERIAL_PROPERTIES = 'materialProperties',
+	MEASURE = 'measure',
 	MERGE = 'merge',
 	METABALL = 'metaball',
 	MIRROR = 'mirror',

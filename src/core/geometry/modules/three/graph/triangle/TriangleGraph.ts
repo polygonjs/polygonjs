@@ -4,9 +4,11 @@ import {Number3} from '../../../../../../types/GlobalTypes';
 import {triangleEdge, edgeId} from './TriangleGraphCommon';
 import {setToArray} from '../../../../../../core/SetUtils';
 import {PrimitiveGraph} from '../../../../entities/primitive/PrimitiveGraph';
+import {arrayCopy} from '../../../../../ArrayUtils';
 
 export class TriangleGraph extends PrimitiveGraph {
 	private _nextTriangleId = -1;
+	private _triangleIds: number[] = [];
 	private _trianglesById: Map<number, TriangleNode> = new Map();
 	private _edgesByTriangleId: Map<number, TriangleEdge[]> = new Map();
 	private _edgesById: Map<string, TriangleEdge> = new Map();
@@ -19,7 +21,7 @@ export class TriangleGraph extends PrimitiveGraph {
 		const triangleId = this._nextTriangleId;
 		const triangleNode = new TriangleNode(triangleId, triangle);
 		this._trianglesById.set(triangleId, triangleNode);
-
+		this._triangleIds.push(triangleId);
 		// add edges
 		const edges: TriangleEdge[] = [];
 		for (let i = 0; i < 3; i++) {
@@ -81,6 +83,9 @@ export class TriangleGraph extends PrimitiveGraph {
 	// 		}
 	// 	}
 	// }
+	triangleIds(target: number[]) {
+		return arrayCopy(this._triangleIds, target);
+	}
 	triangle(triangleId: number) {
 		return this._trianglesById.get(triangleId);
 	}

@@ -512,6 +512,7 @@ import {testenginenodessopMapboxLayer} from './engine/nodes/sop/MapboxLayer';
 import {testenginenodessopMapboxPlane} from './engine/nodes/sop/MapboxPlane';
 import {testenginenodessopMaterial} from './engine/nodes/sop/Material';
 import {testenginenodessopMaterialProperties} from './engine/nodes/sop/MaterialProperties';
+import {testenginenodessopMeasure} from './engine/nodes/sop/Measure';
 import {testenginenodessopMerge} from './engine/nodes/sop/Merge';
 import {testenginenodessopMetaball} from './engine/nodes/sop/Metaball';
 import {testenginenodessopMirror} from './engine/nodes/sop/Mirror';
@@ -1118,6 +1119,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopMapboxPlane,
 		testenginenodessopMaterial,
 		testenginenodessopMaterialProperties,
+		testenginenodessopMeasure,
 		testenginenodessopMerge,
 		testenginenodessopMetaball,
 		testenginenodessopMirror,

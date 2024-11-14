@@ -99,3 +99,18 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		return 3;
 	}
 }
+
+export function triangleArea(triangle: ThreejsPrimitiveTriangle): number {
+	const positionAttribute = (triangle.object() as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+	const index = (triangle.object() as Mesh).geometry.index;
+	if (!(positionAttribute && index)) {
+		return 0;
+	}
+	const primitiveIndex = triangle.index();
+	const positionArray = positionAttribute.array;
+	const indexArray = index.array;
+	_triangle.a.fromArray(positionArray, indexArray[primitiveIndex * 3 + 0] * 3);
+	_triangle.b.fromArray(positionArray, indexArray[primitiveIndex * 3 + 1] * 3);
+	_triangle.c.fromArray(positionArray, indexArray[primitiveIndex * 3 + 2] * 3);
+	return _triangle.getArea();
+}
