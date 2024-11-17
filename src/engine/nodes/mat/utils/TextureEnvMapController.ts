@@ -2,22 +2,27 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial, MeshPhysicalMaterial, Material} from 'three';
+import {MeshStandardMaterial, MeshPhysicalMaterial, Material, Euler, Vector3} from 'three';
 import {DefaultOperationParams} from '../../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../../core/Walker';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
+import {degToRad, radToDeg} from 'three/src/math/MathUtils';
 // import {TypedSopNode} from '../../sop/_Base';
 
 export interface EnvMapOperationParams extends DefaultOperationParams {
 	useEnvMap: boolean;
 	envMap: TypedNodePathParamValue;
 	envMapIntensity: number;
+	envMapRotation: Vector3;
 }
 export const ENV_MAP_OPERATION_DEFAULT_PARAMS: EnvMapOperationParams = {
 	useEnvMap: false,
 	envMap: new TypedNodePathParamValue(''),
 	envMapIntensity: 1,
+	envMapRotation: new Vector3(0, 0, 0),
 };
+const _rotationInDegrees = new Vector3();
+const _euler = new Euler();
 const DEFAULT_PARAMS = ENV_MAP_OPERATION_DEFAULT_PARAMS;
 
 export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -31,6 +36,10 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		envMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureEnvMapController, 'useEnvMap'));
 		/** @param environment intensity */
 		envMapIntensity = ParamConfig.FLOAT(DEFAULT_PARAMS.envMapIntensity, {visibleIf: {useEnvMap: 1}});
+		/** @param environment rotation */
+		envMapRotation = ParamConfig.VECTOR3(DEFAULT_PARAMS.envMapRotation.toArray(), {
+			visibleIf: {useEnvMap: 1},
+		});
 	};
 }
 
@@ -100,6 +109,12 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	override async updateMaterial(material: TextureEnvMapControllerCurrentMaterial) {
 		await this._update(material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 		material.envMapIntensity = this.node.pv.envMapIntensity;
+		_rotationInDegrees.copy(this.node.pv.envMapRotation);
+		const x = degToRad(_rotationInDegrees.x);
+		const y = degToRad(_rotationInDegrees.y);
+		const z = degToRad(_rotationInDegrees.z);
+		_euler.set(x, y, z);
+		material.envMapRotation.copy(_euler);
 		// mat.refractionRatio = this.node.pv.refractionRatio; // TODO: consider re-allowing this for Phong and Basic materials
 	}
 	override getTextures(material: TextureEnvMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
@@ -115,5 +130,8 @@ export class TextureEnvMapController extends BaseTextureMapController {
 			this.node.p.envMap.setNode(mapNode, {relative: true});
 		}
 		this.node.p.envMapIntensity.set(material.envMapIntensity);
+		this.node.p.envMapRotation.x.set(radToDeg(material.envMapRotation.x));
+		this.node.p.envMapRotation.y.set(radToDeg(material.envMapRotation.y));
+		this.node.p.envMapRotation.z.set(radToDeg(material.envMapRotation.z));
 	}
 }

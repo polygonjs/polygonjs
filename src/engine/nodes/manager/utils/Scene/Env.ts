@@ -4,6 +4,11 @@ import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {RootManagerNode} from '../../Root';
+import {Euler, Vector3} from 'three';
+import {degToRad} from 'three/src/math/MathUtils';
+
+const _rotationInDegrees = new Vector3();
+const _euler = new Euler();
 
 const CallbackOptions = {
 	cook: false,
@@ -28,6 +33,10 @@ export function SceneEnvParamConfig<TBase extends Constructor>(Base: TBase) {
 			// dependentOnFoundNode: false,
 			...CallbackOptions,
 		});
+		/** @param environment map intensity */
+		environmentIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvironment: 1}, ...CallbackOptions});
+		/** @param environment map rotation */
+		environmentRotation = ParamConfig.VECTOR3([0, 0, 0], {visibleIf: {useEnvironment: 1}, ...CallbackOptions});
 	};
 }
 
@@ -57,6 +66,13 @@ export class SceneEnvController {
 				scene.environment = null;
 				this.node.states.error.set('environment node not found');
 			}
+			scene.environmentIntensity = pv.environmentIntensity;
+			_rotationInDegrees.copy(pv.environmentRotation);
+			const x = degToRad(_rotationInDegrees.x);
+			const y = degToRad(_rotationInDegrees.y);
+			const z = degToRad(_rotationInDegrees.z);
+			_euler.set(x, y, z);
+			scene.environmentRotation.copy(_euler);
 		} else {
 			scene.environment = null;
 		}
