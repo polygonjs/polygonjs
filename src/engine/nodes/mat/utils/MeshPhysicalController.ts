@@ -134,6 +134,11 @@ When transmission is non-zero, opacity should be set to 1.  */
 		});
 		/** @param attenuation color */
 		attenuationColor = ParamConfig.COLOR([1, 1, 1]);
+		/** @param dispersion */
+		dispersion = ParamConfig.FLOAT(0, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
 	};
 }
 
@@ -222,6 +227,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		mat.thickness = pv.thickness;
 		mat.attenuationDistance = pv.attenuationDistance;
 		mat.attenuationColor = pv.attenuationColor;
+		mat.dispersion = pv.dispersion;
 		// }
 		await Promise.all([
 			this._update(material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap),
@@ -338,6 +344,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		material.attenuationColor.toArray(tmpN3);
 		p.attenuationColor.set(tmpN3);
 		p.attenuationColor.setConversion(ColorConversion.NONE);
+		p.dispersion.set(material.dispersion);
 		//
 		p.iridescence.set(material.iridescence);
 		p.iridescenceIOR.set(material.iridescenceIOR);
