@@ -92,15 +92,7 @@ export class RaySopOperation extends BaseSopOperation {
 	private _computeWithProjectRay(coreGroup: CoreGroup, coreGroupCollision: CoreGroup, params: RaySopParams) {
 		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(coreGroupCollision);
 
-		if (isBooleanTrue(params.addDistAttribute)) {
-			if (!coreGroup.hasPointAttrib(DIST_ATTRIB_NAME)) {
-				const allObjects = coreGroup.allObjects();
-				for (const object of allObjects) {
-					const corePointClass = corePointClassFactory(object);
-					corePointClass.addNumericAttribute(object, DIST_ATTRIB_NAME, 1, -1);
-				}
-			}
-		}
+		this._addDistAttribute(coreGroup, params);
 
 		let direction: Vector3, firstIntersect: Intersection;
 		coreGroup.points(_points);
@@ -130,6 +122,8 @@ export class RaySopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 	private _computeWithMinDist(coreGroup: CoreGroup, coreGroupCollision: CoreGroup, params: RaySopParams) {
+		this._addDistAttribute(coreGroup, params);
+
 		const coreGroupCollisionObject = coreGroupCollision.threejsObjectsWithGeo()[0];
 		const collisionGeometry = coreGroupCollisionObject.geometry as BufferGeometryWithBVH;
 		const indexArray = collisionGeometry.getIndex()?.array;
@@ -190,5 +184,19 @@ export class RaySopOperation extends BaseSopOperation {
 			}
 		}
 		return coreGroup;
+	}
+
+	private _addDistAttribute(coreGroup: CoreGroup, params: RaySopParams) {
+		if (isBooleanTrue(params.addDistAttribute) == false) {
+			return;
+		}
+		if (coreGroup.hasPointAttrib(DIST_ATTRIB_NAME) == true) {
+			return;
+		}
+		const allObjects = coreGroup.allObjects();
+		for (const object of allObjects) {
+			const corePointClass = corePointClassFactory(object);
+			corePointClass.addNumericAttribute(object, DIST_ATTRIB_NAME, 1, -1);
+		}
 	}
 }
