@@ -19,6 +19,7 @@ import {TypeAssert} from '../../poly/Assert';
 const _p0 = new Vector3();
 const _p1 = new Vector3();
 const _box = new Box3();
+const _n = new Vector3();
 
 export enum ExtrudeOpenEdgesFilterMethod {
 	BELOW_Y = 'belowY',
@@ -89,8 +90,9 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		if (!geometry) return;
 
 		const positionAttribute = geometry.getAttribute('position') as BufferAttribute;
+		const normalAttribute = geometry.getAttribute('normal') as BufferAttribute;
 		const index = geometry.getIndex();
-		if (!(positionAttribute && index)) {
+		if (!(positionAttribute && normalAttribute && index)) {
 			return;
 		}
 
@@ -112,8 +114,10 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		setToArray(unsharedEdgeIdsSet, unsharedEdgeIds);
 
 		const newPositionValues: number[] = [];
+		const newNormalValues: number[] = [];
 		const newIndexValues: number[] = [];
 		arrayCopy(positionAttribute.array, newPositionValues);
+		arrayCopy(normalAttribute.array, newNormalValues);
 		arrayCopy(index.array, newIndexValues);
 
 		if (this.pv.filterEdges) {
@@ -121,10 +125,11 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 			unsharedEdgeIds = this._filterEdgeIds(graph, unsharedEdgeIds, newPositionValues, filterMethod);
 		}
 		for (const edgeId of unsharedEdgeIds) {
-			this._extrudeEdge(graph, edgeId, newPositionValues, newIndexValues);
+			this._extrudeEdge(graph, edgeId, newPositionValues, newNormalValues, newIndexValues);
 		}
 
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(newPositionValues), 3));
+		geometry.setAttribute('normal', new BufferAttribute(new Float32Array(newNormalValues), 3));
 		geometry.setIndex(newIndexValues);
 	}
 	private _filterEdgeIds(
@@ -157,7 +162,13 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		}
 		TypeAssert.unreachable(filterMethod);
 	}
-	private _extrudeEdge(graph: TriangleGraph, edgeId: string, newPositionValues: number[], newIndexValues: number[]) {
+	private _extrudeEdge(
+		graph: TriangleGraph,
+		edgeId: string,
+		newPositionValues: number[],
+		newNormalValues: number[],
+		newIndexValues: number[]
+	) {
 		const edge = graph.edge(edgeId);
 		if (!edge) return;
 		const otherTriangleId = edge.triangleIds[0];
@@ -169,18 +180,15 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		// If not, we don't invert.
 		const id0Index = otherTriangle.triangle.indexOf(edge.pointIdPair.id0);
 		const id1Index = otherTriangle.triangle.indexOf(edge.pointIdPair.id1);
-		// with "id1Index - id0Index == 1", we check that the 2 indices are consecutive:
-		// with indices [a,b,c],
-		// we therefore check that they are a-b or b-c.
-		// But they are a-c, then comparing that an index is less than the other is not useful,
-		// as the actual edge would be c-a.
-		const invertRequired = id0Index < id1Index && id1Index - id0Index == 1;
+		const invertRequired =
+			(id0Index == 0 && id1Index == 1) || (id0Index == 1 && id1Index == 2) || (id0Index == 2 && id1Index == 0);
 
 		//
 		const pointIdPair = edge.pointIdPair;
 		triangleEdgePositions(edge, newPositionValues, _p0, _p1);
 		_p0.add(this.pv.offset);
 		_p1.add(this.pv.offset);
+		_n.copy(_p1).sub(_p0).cross(this.pv.offset);
 
 		const p0Index = newPositionValues.length / 3;
 		const p1Index = p0Index + 1;
@@ -188,11 +196,15 @@ export class ExtrudeOpenEdgesSopNode extends TypedSopNode<ExtrudeOpenEdgesSopPar
 		newPositionValues.push(_p1.x, _p1.y, _p1.z);
 
 		if (invertRequired) {
+			_n.multiplyScalar(-1);
 			newIndexValues.push(pointIdPair.id1, pointIdPair.id0, p0Index);
 			newIndexValues.push(pointIdPair.id1, p0Index, p1Index);
 		} else {
 			newIndexValues.push(pointIdPair.id0, pointIdPair.id1, p0Index);
 			newIndexValues.push(p0Index, pointIdPair.id1, p1Index);
 		}
+
+		newNormalValues.push(_n.x, _n.y, _n.z);
+		newNormalValues.push(_n.x, _n.y, _n.z);
 	}
 }
