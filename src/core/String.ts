@@ -1,6 +1,5 @@
 import {isNumberValid} from './Type';
-import {arrayUniq, range} from './ArrayUtils';
-import {arrayPushItems} from './ArrayUtils';
+import {arrayPushItems, arrayUniq, range} from './ArrayUtils';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
