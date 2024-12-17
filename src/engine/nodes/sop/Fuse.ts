@@ -14,7 +14,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {pushOnArrayAtEntry} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromObject} from '../../../core/geometry/Constant';
 import {arrayUniq} from '../../../core/ArrayUtils';
-import {mergeFaces} from '../../../core/geometry/operation/Fuse';
+import {mergeFaces, mergeFacesWithUnsharedEdges} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {Attribute} from '../../../core/geometry/Attribute';
@@ -48,6 +48,8 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		step: 0.001,
 	});
+	/** @param fuse only open edges */
+	onlyOpenEdges = ParamConfig.BOOLEAN(false);
 	/** @param recompute normals */
 	computeNormals = ParamConfig.BOOLEAN(1);
 }
@@ -98,7 +100,11 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (!index) {
 			return;
 		}
-		mergeFaces(geometry, this.pv.dist);
+		if (this.pv.onlyOpenEdges == true) {
+			mergeFacesWithUnsharedEdges(geometry, this.pv.dist);
+		} else {
+			mergeFaces(geometry, this.pv.dist);
+		}
 	}
 	private _filterLineSegments(object: LineSegments) {
 		const geometry = object.geometry;

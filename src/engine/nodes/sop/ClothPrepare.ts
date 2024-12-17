@@ -96,7 +96,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 
 			const attrib = corePointClass.attribute(mesh, attribName) as BufferAttribute;
 			attrib.needsUpdate = true;
-			const array = attrib.array
+			const array = attrib.array;
 			const points: CorePoint<CoreObjectType>[] = [];
 			pointsFromObject(mesh, points);
 			await param.expressionController.computeExpressionForPoints(points, (point, value: number) => {
