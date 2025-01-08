@@ -5,9 +5,7 @@ import {threeMeshFromPrimitives} from './builders/Mesh';
 import {Attribute} from '../../Attribute';
 
 const _triangle = new Triangle();
-const _p0 = new Vector3();
-const _p1 = new Vector3();
-const _p2 = new Vector3();
+
 const normalsComputedWithPositionAttributeVersion: Map<string, number> = new Map();
 export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 	constructor(object: Mesh, index: number) {
@@ -34,19 +32,8 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		primitiveIndex: number,
 		target: Vector3
 	): Vector3 {
-		if (!(object && object.geometry)) {
-			return target;
-		}
-
-		const positionAttribute = (object as any as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-		if (!positionAttribute) {
-			return target;
-		}
-		const positionArray = positionAttribute.array;
-		_p0.fromArray(positionArray, primitiveIndex * 3 + 0);
-		_p1.fromArray(positionArray, primitiveIndex * 3 + 1);
-		_p2.fromArray(positionArray, primitiveIndex * 3 + 2);
-		target.copy(_p0).add(_p1).add(_p2).divideScalar(3);
+		setTriangle(object, primitiveIndex, _triangle);
+		target.copy(_triangle.a).add(_triangle.b).add(_triangle.c).divideScalar(3);
 		return target;
 	}
 	static override normal<T extends CoreObjectType>(
@@ -54,17 +41,7 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		primitiveIndex: number,
 		target: Vector3
 	): Vector3 {
-		if (!(object && object.geometry)) {
-			return target;
-		}
-		const positionAttribute = (object as any as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-		if (!positionAttribute) {
-			return target;
-		}
-		const positionArray = positionAttribute.array;
-		_triangle.a.fromArray(positionArray, primitiveIndex * 3 + 0);
-		_triangle.b.fromArray(positionArray, primitiveIndex * 3 + 1);
-		_triangle.c.fromArray(positionArray, primitiveIndex * 3 + 2);
+		setTriangle(object, primitiveIndex, _triangle);
 		_triangle.getNormal(target);
 		return target;
 	}
@@ -98,19 +75,41 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 	protected static override stride() {
 		return 3;
 	}
+
+	static setTriangle<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Triangle
+	) {
+		setTriangle(object, primitiveIndex, target);
+	}
 }
 
 export function triangleArea(triangle: ThreejsPrimitiveTriangle): number {
-	const positionAttribute = (triangle.object() as Mesh).geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-	const index = (triangle.object() as Mesh).geometry.index;
-	if (!(positionAttribute && index)) {
-		return 0;
-	}
-	const primitiveIndex = triangle.index();
-	const positionArray = positionAttribute.array;
-	const indexArray = index.array;
-	_triangle.a.fromArray(positionArray, indexArray[primitiveIndex * 3 + 0] * 3);
-	_triangle.b.fromArray(positionArray, indexArray[primitiveIndex * 3 + 1] * 3);
-	_triangle.c.fromArray(positionArray, indexArray[primitiveIndex * 3 + 2] * 3);
+	setTriangle(triangle.object(), triangle.index(), _triangle);
 	return _triangle.getArea();
+}
+
+export function setTriangle<T extends CoreObjectType>(
+	object: ObjectContent<T> | undefined,
+	primitiveIndex: number,
+	target: Triangle
+) {
+	if (!(object && object.geometry)) {
+		return;
+	}
+	const geometry = (object as any as Mesh).geometry;
+	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+	if (!positionAttribute) {
+		return;
+	}
+	const index = geometry.getIndex();
+	if (!index) {
+		return;
+	}
+	const indexArray = index.array;
+	const positionArray = positionAttribute.array;
+	target.a.fromArray(positionArray, indexArray[primitiveIndex * 3 + 0] * 3);
+	target.b.fromArray(positionArray, indexArray[primitiveIndex * 3 + 1] * 3);
+	target.c.fromArray(positionArray, indexArray[primitiveIndex * 3 + 2] * 3);
 }

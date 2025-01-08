@@ -15,16 +15,20 @@ export class ByBoundingObjectHelper {
 	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
 
 	constructor(private node: DeleteSopNode) {}
-	evalForEntities(points: CoreEntity[], coreGroup2?: CoreGroup) {
+	evalForEntities(entities: CoreEntity[], coreGroup2?: CoreGroup) {
 		if (!coreGroup2) {
 			return;
 		}
 		const boundingObjects = coreGroup2.threejsObjectsWithGeo();
 		for (const boundingObject of boundingObjects) {
-			this._evalForBoundingObject(points, coreGroup2, boundingObject);
+			this._evalForBoundingObject(entities, coreGroup2, boundingObject);
 		}
 	}
-	private _evalForBoundingObject(points: CoreEntity[], coreGroup2: CoreGroup, boundingObject: Object3DWithGeometry) {
+	private _evalForBoundingObject(
+		entities: CoreEntity[],
+		coreGroup2: CoreGroup,
+		boundingObject: Object3DWithGeometry
+	) {
 		const mesh = boundingObject as Mesh;
 		if (!mesh.isMesh) {
 			return;
@@ -36,15 +40,16 @@ export class ByBoundingObjectHelper {
 		// _bbox.copy(geo.boundingBox!).applyMatrix4(boundingObject.matrixWorld);
 		_bbox.setFromObject(boundingObject);
 
-		for (const point of points) {
-			point.position(_pointPosition);
+		for (let i = 0; i < entities.length; i++) {
+			const entity = entities[i];
+			entity.position(_pointPosition);
 
 			if (_bbox.containsPoint(_pointPosition)) {
 				if (
 					this._isPositionInObject(_pointPosition, mesh, UP) &&
 					this._isPositionInObject(_pointPosition, mesh, DOWN)
 				) {
-					this.node.entitySelectionHelper.select(point);
+					this.node.entitySelectionHelper.select(entity);
 				}
 			}
 		}
