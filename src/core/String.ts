@@ -210,6 +210,9 @@ export function stringMatchMask(word: string, mask: string) {
 	// ".*" => Matches any string that contains zero or more characters
 	mask = mask.split('*').join('.*');
 
+	// ? needs to be escaped, otherwise it will be used inside the regex
+	mask = mask.split('?').join('\\?');
+
 	// "^"  => Matches any string with the following at the beginning of it
 	// "$"  => Matches any string with that in front at the end of it
 	mask = `^${mask}$`;

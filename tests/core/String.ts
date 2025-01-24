@@ -41,6 +41,11 @@ export function testcoreString(qUnit: QUnit) {
 
 		assert.ok(CoreString.matchMask('abc', 'a* d*'));
 		assert.notOk(CoreString.matchMask('abc', 'e* d*'));
+
+		assert.ok(
+			CoreString.matchMask('http://subdomain.mydomain.com/?param=1', 'http://*.mydomain.com/?param=1'),
+			'works with ?'
+		);
 	});
 	qUnit.test('string matchMask with exclusion', (assert) => {
 		assert.notOk(CoreString.matchMask('abc', '* ^ab*'), '* ^ab*');
