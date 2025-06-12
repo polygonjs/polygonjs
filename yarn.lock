@@ -686,9 +686,9 @@ __metadata:
     qunit: "npm:2.19.4"
     terser-webpack-plugin: "npm:5.3.1"
     three: "npm:^0.167.1"
-    three-bvh-csg: "npm:0.0.16"
+    three-bvh-csg: "npm:0.0.17"
     three-gpu-pathtracer: "npm:0.0.17"
-    three-mesh-bvh: "npm:^0.8.2"
+    three-mesh-bvh: "npm:^0.9.0"
     three-subdivide: "npm:1.1.5"
     tone: "npm:14.7.77"
     ts-declaration-webpack-plugin: "npm:1.2.3"
@@ -6616,13 +6616,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three-bvh-csg@npm:0.0.16":
-  version: 0.0.16
-  resolution: "three-bvh-csg@npm:0.0.16"
+"three-bvh-csg@npm:0.0.17":
+  version: 0.0.17
+  resolution: "three-bvh-csg@npm:0.0.17"
   peerDependencies:
     three: ">=0.151.0"
     three-mesh-bvh: ">=0.6.6"
-  checksum: 10c0/b3224d00f7be74def79628e7c6269297d703ad57d56f487a83bb6d7c7fc383d858688c6868b0bc5a701b36856b759e88ec9ad7d96213e08454533a839e8e26d8
+  checksum: 10c0/e5e3a6450aac9033df4fb0c688caabcf7b11d8fcf71744f78b2d2fe145f6c63b1c890f984e8aa7adc006447f4dc990631fa831e10391264412f2eea46f175b17
   languageName: node
   linkType: hard
 
@@ -6637,12 +6637,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three-mesh-bvh@npm:^0.8.2":
-  version: 0.8.3
-  resolution: "three-mesh-bvh@npm:0.8.3"
+"three-mesh-bvh@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "three-mesh-bvh@npm:0.9.0"
   peerDependencies:
     three: ">= 0.159.0"
-  checksum: 10c0/d1f052d4606498acf57e08e28d01c84157eb388d46be8e03bc839630dc4eb919d5bb5e2ed4e9113d39cbc3cda29f09212e3450e1bb21de6615ec330f2575fc28
+  checksum: 10c0/76629dd6264fe4af877745669b1947ce8f3d5cf45c613daef062c3a8964a2a61f29b9f26f004ab1a57e935307f0a6eafebd97a3e4af437f1c3429bc4b27e630e
   languageName: node
   linkType: hard
 
