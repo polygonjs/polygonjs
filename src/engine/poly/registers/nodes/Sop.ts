@@ -191,6 +191,7 @@ import {LightProbeSopNode} from '../../../nodes/sop/LightProbe';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {LodSopNode} from '../../../nodes/sop/Lod';
 import {LookAtSopNode} from '../../../nodes/sop/LookAt';
+import {ManifoldTestSopNode} from '../../../nodes/sop/ManifoldTest';
 import {MapboxCameraSopNode} from '../../../nodes/sop/MapboxCamera';
 import {MapboxLayerSopNode} from '../../../nodes/sop/MapboxLayer';
 import {MapboxPlaneSopNode} from '../../../nodes/sop/MapboxPlane';
@@ -528,6 +529,7 @@ export interface GeoNodeChildrenMap {
 	line: LineSopNode;
 	lod: LodSopNode;
 	lookAt: LookAtSopNode;
+	manifoldTest: ManifoldTestSopNode;
 	mapboxCamera: MapboxCameraSopNode;
 	mapboxLayer: MapboxLayerSopNode;
 	mapboxPlane: MapboxPlaneSopNode;
@@ -1112,6 +1114,7 @@ export class SopRegister {
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(LookAtSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(ManifoldTestSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MapboxCameraSopNode, CATEGORY_SOP.MAPS);
 		poly.registerNode(MapboxLayerSopNode, CATEGORY_SOP.MAPS);
 		poly.registerNode(MapboxPlaneSopNode, CATEGORY_SOP.MAPS);
