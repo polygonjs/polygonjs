@@ -99,6 +99,7 @@ import {ContactShadowsSopNode} from '../../../nodes/sop/ContactShadows';
 import {ConvexHullSopNode} from '../../../nodes/sop/ConvexHull';
 import {CopySopNode} from '../../../nodes/sop/Copy';
 import {CurveFromPointsSopNode} from '../../../nodes/sop/CurveFromPoints';
+import {CurveFillSopNode} from '../../../nodes/sop/CurveFill';
 import {CurveGetPointSopNode} from '../../../nodes/sop/CurveGetPoint';
 //
 import {CSGArcSopNode} from '../../../nodes/sop/CSGArc';
@@ -436,6 +437,7 @@ export interface GeoNodeChildrenMap {
 	convexHull: ConvexHullSopNode;
 	copy: CopySopNode;
 	curveFromPoints: CurveFromPointsSopNode;
+	curveFill: CurveFillSopNode;
 	curveGetPoint: CurveGetPointSopNode;
 	//
 	CSGArc: CSGArcSopNode;
@@ -1023,6 +1025,7 @@ export class SopRegister {
 		poly.registerNode(ConvexHullSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CurveFromPointsSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(CurveFillSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CurveGetPointSopNode, CATEGORY_SOP.MODIFIER);
 		// CSG
 		poly.registerNode(CSGArcSopNode, [CATEGORY_SOP.CSG, CATEGORY_SOP.PRIMITIVES_2D]);

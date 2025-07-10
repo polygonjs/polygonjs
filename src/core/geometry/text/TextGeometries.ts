@@ -34,7 +34,7 @@ export async function textBuildGeometries(
 		case TextType.FLAT:
 			return createGeometriesFromTypeFlat({shapes});
 		case TextType.LINE:
-			return createGeometriesFromTypeLine({shapes: shapesFromFont(shapes)});
+			return createGeometriesFromTypeLine({...params, shapes: shapesFromFont(shapes)});
 		case TextType.STROKE:
 			return await createGeometriesFromTypeStroke({
 				shapes: shapesFromFont(shapes),

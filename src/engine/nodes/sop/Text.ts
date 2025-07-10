@@ -59,9 +59,10 @@ class TextSopParamsConfig extends NodeParamsConfig {
 	segments = ParamConfig.INTEGER(1, {
 		range: [1, 20],
 		rangeLocked: [true, false],
-		visibleIf: {
-			type: TEXT_TYPES.indexOf(TextType.MESH),
-		},
+		// visibleIf: {
+		// 	type: TEXT_TYPES.indexOf(TextType.MESH),
+		// 	type: TEXT_TYPES.indexOf(TextType.LINE),
+		// },
 	});
 	/** @param bevelEnabled */
 	bevelEnabled = ParamConfig.BOOLEAN(false, {

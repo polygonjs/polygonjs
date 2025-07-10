@@ -1,13 +1,14 @@
 import {Shape, Path, BufferGeometry, Float32BufferAttribute} from 'three';
 
 interface TextLinesParams {
+	curveSegments: number;
 	shapes?: Array<Array<Shape | Path>>;
 }
 
 export function createGeometriesFromTypeLine(params: TextLinesParams) {
-	return params.shapes?.map((shapes) => createGeometryFromTypeLine(shapes));
+	return params.shapes?.map((shapes) => createGeometryFromTypeLine(params.curveSegments, shapes));
 }
-function createGeometryFromTypeLine(shapes?: Array<Shape | Path>) {
+function createGeometryFromTypeLine(curveSegments: number, shapes?: Array<Shape | Path>) {
 	if (!shapes) {
 		return;
 	}
@@ -17,7 +18,7 @@ function createGeometryFromTypeLine(shapes?: Array<Shape | Path>) {
 
 	for (let i = 0; i < shapes.length; i++) {
 		const shape = shapes[i];
-		const points = shape.getPoints();
+		const points = shape.getPoints(curveSegments);
 		for (let j = 0; j < points.length; j++) {
 			const point = points[j];
 			positions.push(point.x);
