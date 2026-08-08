@@ -5,6 +5,24 @@
 [![Discord][discord-img]][discord-url]
 [![Forum][forum-img]][forum-url]
 
+## ⚠️ This repository is in maintenance mode
+
+**Polygonjs v1 is no longer actively developed.** It has been superseded by **Polygon v2**, available on the same website: [https://polygonjs.com](https://polygonjs.com).
+
+What this means:
+
+- No new features are planned for this repository.
+- Only critical fixes are considered, and even those are not guaranteed.
+- New projects should start with Polygon v2 instead.
+
+Existing v1 projects keep working. The npm packages stay published, and the documentation below stays available for reference.
+
+If you have purchased a license for Polygonjs v1, you can find in your [account page](https://polygonjs.com/dashboard/account) a link to purchase Polygon v2 for the same price you paid for v1.
+
+---
+
+## About Polygonjs v1 (this repository)
+
 Polygonjs is a node-based **3D WebGL design tool**.
 
 --- [Home Page](https://polygonjs.com/) --- [Documentation](https://polygonjs.com/docs) --- [Try Demo](https://polygonjs.com/demo) ---
@@ -17,11 +35,11 @@ Polygonjs is also **designed to be extended**. This means that if it does not ha
 
 The editor can be used both from the web or locally. The web version is convenient to discover the editor, but the local version is recommended for production, since it has the following advantages:
 
--   quick access to models and textures on your computer
--   tree shaked exports: It exports only the nodes you use.
--   git integration: Every files is saved as text, either json or javascript.
--   version tracking: It is an npm module, and has its version in package.json just like other dependencies
--   integration to any web project (such as threejs, vuejs, react, vanilla)
+- quick access to models and textures on your computer
+- tree shaked exports: It exports only the nodes you use.
+- git integration: Every files is saved as text, either json or javascript.
+- version tracking: It is an npm module, and has its version in package.json just like other dependencies
+- integration to any web project (such as threejs, vuejs, react, vanilla)
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.003.jpg?v=1)
 
@@ -59,26 +77,26 @@ or
 
 The nodes are grouped in contexts, each for a specific type of task:
 
--   [ANIM](https://polygonjs.com/docs/nodes/anim) nodes create animations.
--   [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes generate and modify audio.
--   [COP](https://polygonjs.com/docs/nodes/cop) nodes import and update textures.
--   [EVENT](https://polygonjs.com/docs/nodes/event) nodes trigger or react to scene events.
--   [GL](https://polygonjs.com/docs/nodes/gl) nodes create GLSL shaders.
--   [JS](https://polygonjs.com/docs/nodes/js) nodes add state & events to scene objects.
--   [MAT](https://polygonjs.com/docs/nodes/mat) nodes create materials.
--   [OBJ](https://polygonjs.com/docs/nodes/obj) nodes add objects to your scene.
--   [POST](https://polygonjs.com/docs/nodes/post) nodes set up post processing.
--   [ROP](https://polygonjs.com/docs/nodes/rop) nodes set up the renderers.
--   [SOP](https://polygonjs.com/docs/nodes/sop) nodes handle procedural modelling.
+- [ANIM](https://polygonjs.com/docs/nodes/anim) nodes create animations.
+- [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes generate and modify audio.
+- [COP](https://polygonjs.com/docs/nodes/cop) nodes import and update textures.
+- [EVENT](https://polygonjs.com/docs/nodes/event) nodes trigger or react to scene events.
+- [GL](https://polygonjs.com/docs/nodes/gl) nodes create GLSL shaders.
+- [JS](https://polygonjs.com/docs/nodes/js) nodes add state & events to scene objects.
+- [MAT](https://polygonjs.com/docs/nodes/mat) nodes create materials.
+- [OBJ](https://polygonjs.com/docs/nodes/obj) nodes add objects to your scene.
+- [POST](https://polygonjs.com/docs/nodes/post) nodes set up post processing.
+- [ROP](https://polygonjs.com/docs/nodes/rop) nodes set up the renderers.
+- [SOP](https://polygonjs.com/docs/nodes/sop) nodes handle procedural modelling.
 
 ## Plugins
 
 Polygonjs is designed to be extensible. You can create your own plugins to add custom nodes. There are currently 4 official plugins:
 
--   [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to add 3D objects to Mapbox maps.
--   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get more pleasant lighting.
--   [Mediapipe Facemesh](https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh) to track a face from a webcam feed
--   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
+- [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to add 3D objects to Mapbox maps.
+- [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get more pleasant lighting.
+- [Mediapipe Facemesh](https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh) to track a face from a webcam feed
+- [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
 
 <div align="center">
   <a href="https://github.com/polygonjs/plugin-mapbox" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-mapbox/main/doc/mapbox_examples.256.jpg" /></a>
@@ -106,14 +124,14 @@ Polygonjs is based on the powerful webgl library [Threejs](https://threejs.org/)
 
 For this, you can directly access the threejs objects. There are 2 ways to do so:
 
--   **From the scene**
+- **From the scene**
 
 ```javascript
 const scene = new PolyScene(); // this is the polygonjs scene
 const threejsScene = scene.threejsScene(); // and it contains the threejs scene
 ```
 
--   **From any node**
+- **From any node**
 
 ```javascript
 const scene = new PolyScene();
